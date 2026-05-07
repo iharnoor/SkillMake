@@ -34,7 +34,10 @@ async function getClient() {
   if (cachedClient) return cachedClient;
   const env = await getEnv();
   if (!env.HYDRADB_API_KEY || !env.HYDRADB_TENANT_ID) return null;
-  const client = new HydraDBClient({ token: env.HYDRADB_API_KEY });
+  const client = new HydraDBClient({
+    token: env.HYDRADB_API_KEY,
+    baseUrl: "https://api.hydradb.com",
+  });
   cachedClient = {
     client,
     tenantId: env.HYDRADB_TENANT_ID,
