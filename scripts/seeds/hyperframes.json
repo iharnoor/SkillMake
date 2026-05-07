@@ -1,0 +1,72 @@
+{
+  "sourceUrl": "https://github.com/heygen-com/hyperframes",
+  "skill": {
+    "name": "hyperframes",
+    "description": "Use when authoring video compositions as plain HTML and rendering them to MP4 with HyperFrames — agent-first, no React, no build step. CLI: npx hyperframes init / preview / render / lint.",
+    "whenToUse": [
+      "Programmatic MP4 generation from HTML for agent-driven video pipelines",
+      "Deterministic, reproducible video rendering in CI (no React, no bundler)",
+      "Authoring compositions with data-start / data-duration / data-track-index timing on plain HTML",
+      "Adding pre-built motion blocks (GSAP, Lottie, CSS, Three.js) via the catalog"
+    ],
+    "keyConcepts": [
+      {
+        "term": "HTML composition",
+        "explanation": "A composition is a single HTML file. Each element carries data-start, data-duration, and data-track-index attributes (in seconds and integer track index). HyperFrames captures the headless-Chrome page and encodes frames to MP4. No React, no JSX, no build — plain HTML and CSS."
+      },
+      {
+        "term": "CLI commands",
+        "explanation": "init scaffolds a new project, preview live-reloads in headless Chrome while authoring, render encodes the composition to MP4, lint validates timing structure and catches overlapping or malformed data-* attributes."
+      },
+      {
+        "term": "Frame adapter",
+        "explanation": "Pattern for plugging in motion engines — GSAP, Lottie, CSS animations, Web Animations API, Three.js. Each adapter integrates with the deterministic frame loop so animations advance per-frame, not per-wall-clock-second."
+      },
+      {
+        "term": "Catalog blocks",
+        "explanation": "Reusable composition fragments installed via `npx hyperframes add <block-name>` — pre-built motion patterns like animated titles, parallax scenes, lower-thirds. Keeps repeated patterns out of every project."
+      },
+      {
+        "term": "Determinism",
+        "explanation": "Same HTML always produces the same MP4. The renderer drives time per-frame, not Date.now()/Math.random()-based, so output is reproducible in CI. Non-deterministic JS must be seeded or avoided."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx hyperframes init my-video",
+        "purpose": "Scaffold a new HyperFrames project — creates a composition HTML file, package config, and example timing attributes."
+      },
+      {
+        "signature": "npx hyperframes preview",
+        "purpose": "Live-reload the composition in headless Chrome. Use during authoring to iterate on timing and visuals."
+      },
+      {
+        "signature": "npx hyperframes render",
+        "purpose": "Render the composition to MP4. Deterministic — same HTML always produces the same video, suitable for CI pipelines."
+      },
+      {
+        "signature": "npx hyperframes lint",
+        "purpose": "Validate composition structure and timing attributes. Catches missing data-start / data-duration, overlapping tracks, malformed adapter usage."
+      },
+      {
+        "signature": "npx hyperframes add <block-name>",
+        "purpose": "Install a catalog block (reusable motion component) into the current project."
+      },
+      {
+        "signature": "Timing data attributes",
+        "purpose": "Per-element timing on HTML elements within a composition. data-start in seconds, data-duration in seconds, data-track-index for layering.",
+        "example": "<div data-start=\"0\" data-duration=\"2\" data-track-index=\"0\">\n  Title appears at 0s for 2s on track 0\n</div>"
+      }
+    ],
+    "gotchas": [
+      "Renders are fully deterministic — non-deterministic JS (Math.random, Date.now, network fetches at render time) will break frame-stable output unless seeded.",
+      "Each composition runs in headless Chrome; APIs needing a real GPU/audio context may need a software fallback.",
+      "Animations must advance via the frame loop or a frame adapter; pure setInterval/setTimeout-driven animation will desync from the rendered timeline.",
+      "data-* timing is authoritative — overlap or contradictions across tracks won't crash the renderer but will produce a confusing MP4. Run lint."
+    ],
+    "category": "tool",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/heygen-com/hyperframes"
+  }
+}

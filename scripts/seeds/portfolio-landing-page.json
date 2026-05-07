@@ -1,0 +1,49 @@
+{
+  "sourceUrl": "https://astro.build/",
+  "skill": {
+    "name": "portfolio-landing-page",
+    "description": "Use when building a creator portfolio (hero, selected work grid, case-study sections, contact) — opinionated Astro + Tailwind layout that ships in under an hour without dragging in a CMS.",
+    "whenToUse": [
+      "Designer / developer / video-maker portfolio that needs to look intentional",
+      "Self-hosted alternative to Read.cv / Cargo / Squarespace",
+      "Writing-friendly portfolio where case studies are MDX, not Figma exports",
+      "Static-first build that deploys to Cloudflare Pages / Vercel / Netlify in one click"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Astro content collections",
+        "explanation": "src/content/work/*.mdx for case studies, src/content/posts/*.mdx for writing, both typed via Zod schemas in src/content/config.ts. Astro handles routing, frontmatter validation, and MDX rendering with zero JS shipped to the browser."
+      },
+      {
+        "term": "hero / work-grid / case-study / contact sections",
+        "explanation": "The four sections every creator portfolio needs. Hero = name + one-line + immediate proof. Work grid = 6–9 thumbnails with hover states. Case study = long-form story per project (problem, solution, result). Contact = email + social + maybe Cal.com."
+      },
+      {
+        "term": "image optimisation",
+        "explanation": "<Image src={...} /> from astro:assets generates AVIF + WebP + JPG fallback per breakpoint. For video thumbnails, use a poster image and lazy-load the actual video tag below the fold. Set priority on the hero image only."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "src/content/config.ts schema",
+        "purpose": "Zod schema that validates every case study's frontmatter at build time — title, date, hero image, role, client, link.",
+        "example": "import { z, defineCollection } from 'astro:content';\nconst work = defineCollection({\n  type: 'content',\n  schema: ({ image }) => z.object({\n    title: z.string(),\n    date: z.coerce.date(),\n    hero: image(),\n    role: z.string(),\n    client: z.string().optional(),\n    link: z.string().url().optional(),\n    summary: z.string().max(200),\n  }),\n});\nexport const collections = { work };"
+      },
+      {
+        "signature": "src/pages/work/[...slug].astro dynamic route",
+        "purpose": "Generates one HTML page per case study at build time using getStaticPaths + getCollection.",
+        "example": "---\nimport { getCollection } from 'astro:content';\nexport async function getStaticPaths() {\n  const entries = await getCollection('work');\n  return entries.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));\n}\nconst { entry } = Astro.props;\nconst { Content } = await entry.render();\n---\n<Layout title={entry.data.title}><Content /></Layout>"
+      }
+    ],
+    "gotchas": [
+      "Don't ship a JS framework just for the work grid — Astro renders it as static HTML; reach for islands only when you need real interactivity (e.g. filter toggles).",
+      "Big hero videos kill mobile LCP. Use a poster image, lazy-load video on intersection, and offer a still fallback.",
+      "Single column on mobile, 2–3 column work grid on tablet, 3+ on desktop. Don't try to fit 4 columns on a phone.",
+      "Keep case studies under 1500 words; readers skim. Use pull-quotes and headings every 200–300 words."
+    ],
+    "category": "concept",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/withastro/astro"
+  }
+}

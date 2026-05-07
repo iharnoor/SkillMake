@@ -1,0 +1,63 @@
+{
+  "sourceUrl": "https://github.com/openai/whisper",
+  "skill": {
+    "name": "video-transcript-to-blog",
+    "description": "Use when turning a YouTube/podcast transcript into a clean, SEO-tagged blog post with chapters, pull-quotes, and Markdown frontmatter — Whisper transcription plus an LLM cleanup pass that preserves the speaker's voice.",
+    "whenToUse": [
+      "Repurposing a long-form video or podcast as a publishable blog post",
+      "Turning a recorded interview into a quote-rich written piece",
+      "Generating SEO metadata + chapter markers from spoken content",
+      "Producing show-notes-style writeups that link back to the video timestamp"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Whisper model choice",
+        "explanation": "openai-whisper or whisper.cpp gives the best free quality. 'small' for English-only short clips, 'large-v3' for multilingual or technical content. Hosted alternatives: OpenAI /audio/transcriptions, Deepgram, AssemblyAI — pick by latency vs cost."
+      },
+      {
+        "term": "two-pass cleanup",
+        "explanation": "Raw transcripts have filler words, false starts, and timestamp noise. Pass 1 strips fillers and punctuates. Pass 2 reorganises by topic, adds H2/H3 headings, and pulls quotable lines into blockquotes — without paraphrasing core claims."
+      },
+      {
+        "term": "voice preservation",
+        "explanation": "The cleanup prompt must explicitly forbid paraphrasing technical claims, numbers, and named entities. The author's cadence stays; only stutters, repeats, and vocal tics get stripped."
+      },
+      {
+        "term": "chapter detection",
+        "explanation": "Use the transcript timestamps to anchor chapter breaks. An LLM identifies natural topic shifts (every 60–180s of audio); each becomes an H2 with a link back to the source video at that timestamp."
+      },
+      {
+        "term": "frontmatter generation",
+        "explanation": "Final pass extracts title, slug, description, og:image hint, primary keyword, and reading time into YAML frontmatter consumable by any static site (Astro, Next, Hugo, Jekyll)."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "whisper <input.mp3> --model small --output_format vtt",
+        "purpose": "Local-first transcription with timestamped output. VTT preserves cue timings useful for chapter anchoring.",
+        "example": "whisper podcast.mp3 --model small.en --output_format vtt --output_dir ./transcripts"
+      },
+      {
+        "signature": "OpenAI /audio/transcriptions (hosted alternative)",
+        "purpose": "Cloud transcription when local GPU is unavailable. response_format=verbose_json returns segment-level timestamps required for chapter detection.",
+        "example": "const audio = fs.createReadStream('pod.mp3');\nconst t = await openai.audio.transcriptions.create({\n  file: audio,\n  model: 'whisper-1',\n  response_format: 'verbose_json',\n  timestamp_granularities: ['segment'],\n});"
+      },
+      {
+        "signature": "cleanup-prompt template",
+        "purpose": "Two-pass prompt for the LLM rewrite. Pass it the raw transcript chunk + a system prompt that forbids paraphrasing technical claims, numbers, and named entities.",
+        "example": "SYSTEM: You are an editor. Your job is to remove filler (uh, um, like, you know), repeats, and false starts from this transcript. Preserve every technical claim, number, name, and quote verbatim. Add punctuation and paragraph breaks. Output Markdown.\n\nUSER: <transcript>"
+      }
+    ],
+    "gotchas": [
+      "Whisper hallucinates on long silences; chunk audio into ≤10-minute segments before transcription.",
+      "Speaker diarization is unreliable below 'large-v3'; for interviews use a paid service (Deepgram, AssemblyAI) when speaker tags matter.",
+      "Don't paraphrase technical claims in cleanup — readers will catch invented numbers or product names and lose trust.",
+      "Long blog posts benefit from a separate 'pull-quotes' extraction pass; trying to do it inline with cleanup hurts both.",
+      "Keep the source video timestamp on each chapter heading — it's the highest-converting CTA back to the original."
+    ],
+    "category": "concept",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/openai/whisper"
+  }
+}

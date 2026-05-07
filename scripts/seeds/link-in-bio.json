@@ -1,0 +1,48 @@
+{
+  "sourceUrl": "https://nextjs.org/docs",
+  "skill": {
+    "name": "link-in-bio",
+    "description": "Use when building a self-owned alternative to Linktree — single-page minimal link list with analytics, theming, scheduled-link toggles, and zero monthly fees, deployed under your own domain.",
+    "whenToUse": [
+      "Replacing a paid Linktree / Beacons / Bento page with one you own",
+      "Single page hosting all your distribution links: YouTube, newsletter, course, socials",
+      "Adding click analytics + UTM tracking without sending users through a third party",
+      "Toggling time-bound promo links (event signups, launch days) without redeploying"
+    ],
+    "keyConcepts": [
+      {
+        "term": "links-as-config",
+        "explanation": "A single links.json (or MDX file) holding the full link list — title, url, icon, scheduledFrom/To, hidden. The page is a server component reading this file at request time so toggling a link is one commit (or one Cloudflare KV write if you want runtime control)."
+      },
+      {
+        "term": "analytics-without-tracking",
+        "explanation": "Each link points to /go/<slug> on your domain, which logs the click + UTM source then 302-redirects to the destination. Aggregate counts only — no cookies, no fingerprinting. Counts go to KV / Plausible / a tiny SQLite."
+      },
+      {
+        "term": "scheduled visibility",
+        "explanation": "scheduledFrom and scheduledTo on each link let you stage a launch link in advance and let it expire automatically. Page filters by `now()` server-side; no Cron, no scheduler."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "links.json shape",
+        "purpose": "One source of truth for the page. Order = display order. Hidden links can sit in the file as drafts.",
+        "example": "[\n  { \"title\": \"Latest video — 5 ways to ship faster\", \"url\": \"https://youtu.be/xxx\", \"icon\": \"youtube\", \"highlight\": true },\n  { \"title\": \"Free newsletter\", \"url\": \"https://yourdomain.com/n\", \"icon\": \"mail\" },\n  { \"title\": \"Q1 cohort — 3 spots left\", \"url\": \"https://yourdomain.com/cohort\", \"icon\": \"calendar\", \"scheduledFrom\": \"2026-01-15\", \"scheduledTo\": \"2026-02-15\" }\n]"
+      },
+      {
+        "signature": "/go/[slug] redirect route",
+        "purpose": "Logs the click then 302s to the underlying URL. The slug maps back to the link entry; logs are aggregated counts only.",
+        "example": "// app/go/[slug]/route.ts\nimport { redirect } from 'next/navigation';\nimport links from '@/links.json';\nimport { incrementClick } from '@/lib/analytics';\nexport async function GET(_req: Request, ctx: { params: Promise<{ slug: string }> }) {\n  const { slug } = await ctx.params;\n  const link = links.find((l) => l.slug === slug);\n  if (!link) return new Response('Not found', { status: 404 });\n  await incrementClick(slug);\n  redirect(link.url);\n}"
+      }
+    ],
+    "gotchas": [
+      "Don't hand the page hundreds of links — 5–8 is the sweet spot. The whole point is curation, not a sitemap.",
+      "Highlight one link only (latest, current launch). More than one and the eye doesn't know where to land.",
+      "Mobile is 95% of traffic. Test on a real phone, single-column, 16+ pt body, 48+ pt tap targets.",
+      "If you're going to skip /go/ analytics, at least add UTM params per link so destination analytics knows the source."
+    ],
+    "category": "concept",
+    "audience": "creators",
+    "videoUrls": []
+  }
+}

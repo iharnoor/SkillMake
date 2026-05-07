@@ -1,0 +1,49 @@
+{
+  "sourceUrl": "https://elevenlabs.io/docs/quickstart",
+  "skill": {
+    "name": "ai-voiceover-pipeline",
+    "description": "Use when scripting → AI voice → matched-timing video — ElevenLabs/PlayHT TTS aligned to HyperFrames or Remotion captions for screencast and tutorial-style videos at scale.",
+    "whenToUse": [
+      "Producing voiceover for tutorials, explainers, and product demos without recording",
+      "Generating consistent narration across many videos with the same voice",
+      "Aligning generated audio to on-screen captions or Remotion / HyperFrames timing",
+      "Localising one script into multiple voices for multilingual variants"
+    ],
+    "keyConcepts": [
+      {
+        "term": "voice cloning vs preset voices",
+        "explanation": "Cloned voices need 1–10 minutes of clean source audio (mono, no music, ≤44.1kHz). Preset voices ship with the platform — start there. Use a clone only if a specific creator brand voice matters; ElevenLabs Pro and PlayHT both offer this."
+      },
+      {
+        "term": "alignment data (per-word timestamps)",
+        "explanation": "ElevenLabs returns alignment JSON: per-character or per-word offsets in milliseconds. Use this to drive caption timing, scene cuts, or HyperFrames data-start values. Without alignment, you're back to manual sync."
+      },
+      {
+        "term": "script chunking",
+        "explanation": "TTS quality drops on multi-paragraph scripts; chunk by sentence or paragraph (≤300 chars), generate each independently, then concat. Lets you re-roll one bad sentence without redoing the whole render."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "ElevenLabs text-to-speech with alignment",
+        "purpose": "POST a script chunk + voice id, get back MP3 + per-character alignment timestamps in one round trip.",
+        "example": "// pnpm add @elevenlabs/elevenlabs-js\nimport { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';\nconst client = new ElevenLabsClient({ apiKey: process.env.ELEVEN_API_KEY });\nconst result = await client.textToSpeech.convertWithTimestamps('21m00Tcm4TlvDq8ikWAM', {\n  text: 'In this tutorial, we will…',\n  modelId: 'eleven_multilingual_v2',\n});\n// result.audio_base64 → MP3\n// result.alignment.character_start_times_seconds → per-char offsets"
+      },
+      {
+        "signature": "alignment → caption timing",
+        "purpose": "Group character offsets into word-level cues, then render as VTT or as HyperFrames data-start attributes.",
+        "example": "function toWordCues(text, charStarts) {\n  const cues = [];\n  let i = 0;\n  for (const word of text.split(/\\s+/)) {\n    const start = charStarts[i];\n    i += word.length + 1; // +1 for space\n    const end = charStarts[i] ?? charStarts[charStarts.length - 1];\n    cues.push({ word, start, end });\n  }\n  return cues;\n}"
+      }
+    ],
+    "gotchas": [
+      "Background music must be added AFTER TTS so it doesn't bleed into the cloned voice training set.",
+      "Punctuation drives prosody — periods make pauses, commas don't. Adjust the script for cadence, not just grammar.",
+      "Numbers, units, and acronyms are pronounced inconsistently — expand them in the script ('100 GB' → 'one hundred gigabytes' or 'GB' depending on which the voice handles cleanly).",
+      "ElevenLabs throttles low tiers aggressively at concurrent generations; chunk + sequence rather than parallelise on a Starter plan."
+    ],
+    "category": "concept",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/elevenlabs/elevenlabs-js"
+  }
+}

@@ -1,0 +1,187 @@
+import { z } from "zod";
+
+export const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+const YOUTUBE_RE =
+  /^https?:\/\/(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)[\w-]{6,}/i;
+
+const GITHUB_REPO_RE = /^https?:\/\/(?:www\.)?github\.com\/[\w.-]+\/[\w.-]+\/?$/i;
+
+export const VideoUrl = z
+  .string()
+  .url()
+  .max(500)
+  .refine((s) => YOUTUBE_RE.test(s), "must be a YouTube watch, shorts, or youtu.be URL");
+
+export const GithubRepoUrl = z
+  .string()
+  .url()
+  .max(300)
+  .refine((s) => GITHUB_REPO_RE.test(s), "must be a https://github.com/owner/repo URL");
+
+export function parseGithubRepo(url: string): { owner: string; repo: string } | null {
+  if (!GITHUB_REPO_RE.test(url)) return null;
+  try {
+    const path = new URL(url).pathname.replace(/^\/|\/$/g, "");
+    const [owner, repo] = path.split("/");
+    if (!owner || !repo) return null;
+    return { owner, repo: repo.replace(/\.git$/, "") };
+  } catch {
+    return null;
+  }
+}
+
+export const AUDIENCES = ["creators", "devops", "ai", "design", "marketing", "general"] as const;
+export type Audience = (typeof AUDIENCES)[number];
+
+export function youtubeIdFromUrl(url: string): string | null {
+  try {
+    const u = new URL(url);
+    if (u.hostname.endsWith("youtu.be")) return u.pathname.slice(1) || null;
+    if (u.searchParams.get("v")) return u.searchParams.get("v");
+    const m = u.pathname.match(/^\/(?:shorts|embed)\/([\w-]+)/);
+    return m ? m[1] : null;
+  } catch {
+    return null;
+  }
+}
+
+export const SkillSchema = z.object({
+  name: z
+    .string()
+    .min(2)
+    .max(48)
+    .regex(SLUG_RE, "must be lowercase-kebab-case slug")
+    .describe("URL-safe kebab-case slug, e.g. 'remotion-rendering'"),
+  description: z
+    .string()
+    .min(20)
+    .max(220)
+    .describe(
+      "Single sentence (<220 chars) describing exactly when an agent should load this skill. Start with 'Use when...'."
+    ),
+  whenToUse: z
+    .array(z.string().min(8).max(200))
+    .describe("Aim for 2–4 bullet triggers — concrete situations that should activate this skill."),
+  keyConcepts: z
+    .array(
+      z.object({
+        term: z.string().min(2).max(80),
+        explanation: z.string().min(10).max(500),
+      })
+    )
+    .describe("Aim for 3–6 core terms an agent must understand. Keep explanations grounded in source text."),
+  apiReference: z
+    .array(
+      z.object({
+        signature: z
+          .string()
+          .min(2)
+          .max(300)
+          .describe(
+            "Short label or function/component signature (e.g. 'Mount <SignIn /> with React Router', '<SignIn /> props')."
+          ),
+        purpose: z.string().min(8).max(280),
+        example: z
+          .string()
+          .max(2400)
+          .optional()
+          .describe(
+            "The full code block VERBATIM as shown in the docs (imports, JSX, route paths, prop names). Do not abbreviate."
+          ),
+      })
+    )
+    .describe(
+      "One entry per distinct code block in the docs. Be exhaustive — every setup snippet matters. Empty array only if docs have no code."
+    ),
+  gotchas: z
+    .array(z.string().min(8).max(280))
+    .describe("Up to ~8 non-obvious pitfalls explicitly stated in the docs. Empty array if none found."),
+  category: z
+    .enum(["framework", "library", "api", "platform", "tool", "language", "concept", "other"])
+    .describe("High-level category for marketplace browsing."),
+  audience: z
+    .enum(AUDIENCES)
+    .default("creators")
+    .describe(
+      "Who this skill is primarily for. We launched with 'creators'; other audiences are added as the marketplace expands."
+    ),
+  videoUrls: z
+    .array(VideoUrl)
+    .max(6)
+    .default([])
+    .describe(
+      "Optional YouTube tutorial/demo URLs the creator attached as evidence the skill works. Empty array if none."
+    ),
+  repoUrl: GithubRepoUrl
+    .optional()
+    .describe(
+      "Optional canonical GitHub repository for the underlying tool/library. Used to display star counts and link to source. Leave empty for workflow skills with no repo."
+    ),
+});
+
+export type Skill = z.infer<typeof SkillSchema>;
+
+export function renderSkillMarkdown(skill: Skill, sourceUrl: string, generatedAt: string): string {
+  const lines: string[] = [];
+  lines.push("---");
+  lines.push(`name: ${skill.name}`);
+  lines.push(`description: ${escapeYaml(skill.description)}`);
+  lines.push(`source: ${sourceUrl}`);
+  lines.push(`generated: ${generatedAt}`);
+  lines.push(`category: ${skill.category}`);
+  lines.push(`audience: ${skill.audience}`);
+  lines.push("---");
+  lines.push("");
+  if (skill.videoUrls.length > 0) {
+    lines.push("## Tutorials");
+    lines.push("");
+    for (const v of skill.videoUrls) lines.push(`- ${v}`);
+    lines.push("");
+  }
+  lines.push("## When to use");
+  lines.push("");
+  for (const t of skill.whenToUse) lines.push(`- ${t}`);
+  lines.push("");
+  lines.push("## Key concepts");
+  lines.push("");
+  for (const c of skill.keyConcepts) {
+    lines.push(`### ${c.term}`);
+    lines.push("");
+    lines.push(c.explanation);
+    lines.push("");
+  }
+  if (skill.apiReference.length > 0) {
+    lines.push("## API reference");
+    lines.push("");
+    for (const a of skill.apiReference) {
+      lines.push("```");
+      lines.push(a.signature);
+      lines.push("```");
+      lines.push("");
+      lines.push(a.purpose);
+      if (a.example) {
+        lines.push("");
+        lines.push("```");
+        lines.push(a.example);
+        lines.push("```");
+      }
+      lines.push("");
+    }
+  }
+  if (skill.gotchas.length > 0) {
+    lines.push("## Gotchas");
+    lines.push("");
+    for (const g of skill.gotchas) lines.push(`- ${g}`);
+    lines.push("");
+  }
+  lines.push("---");
+  lines.push(`Generated by SkillMake from ${sourceUrl} on ${generatedAt}.`);
+  lines.push("Verify against source before relying on details.");
+  return lines.join("\n");
+}
+
+function escapeYaml(s: string): string {
+  if (/[:#\n"']/.test(s)) return JSON.stringify(s);
+  return s;
+}

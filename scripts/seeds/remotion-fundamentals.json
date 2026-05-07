@@ -1,0 +1,73 @@
+{
+  "sourceUrl": "https://www.remotion.dev/docs/the-fundamentals",
+  "skill": {
+    "name": "remotion-fundamentals",
+    "description": "Use when authoring videos as React components — Composition registration, durationInFrames + fps timing, useCurrentFrame, Sequencing, and rendering to MP4 via the Remotion CLI or Remotion Lambda.",
+    "whenToUse": [
+      "Authoring videos as React components instead of After Effects timelines",
+      "Programmatic video generation from data (per-user reels, weekly recaps, dashboards)",
+      "Server-side rendering of MP4s from a CI pipeline or webhook",
+      "Composing multiple animated layers with React state and props"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Composition",
+        "explanation": "The top-level unit Remotion renders. Registered in the Root component with a unique id, fps, durationInFrames, width, height, and a component reference. A project can hold many Compositions; the CLI selects one by id at render time."
+      },
+      {
+        "term": "useCurrentFrame",
+        "explanation": "Hook that returns the integer frame index Remotion is currently rendering. All animation in Remotion is a pure function of this number — no setTimeout, no requestAnimationFrame, no Date.now(). Determinism comes from the frame loop, not wall clock."
+      },
+      {
+        "term": "interpolate / spring",
+        "explanation": "Helpers for mapping the current frame to numeric values. interpolate(frame, [inFrame, outFrame], [from, to]) for linear; spring({frame, fps, config}) for natural motion. Combine with useVideoConfig() to get fps."
+      },
+      {
+        "term": "Sequence + Series",
+        "explanation": "Composition primitives for time-windowing. <Sequence from={30} durationInFrames={60}> only mounts its children for that frame range. <Series> chains sequences without manual offset arithmetic."
+      },
+      {
+        "term": "render targets",
+        "explanation": "npx remotion render renders locally with headless Chromium; @remotion/lambda renders distributed across AWS Lambda for long videos at scale; Remotion Studio gives a dev preview with timeline scrubbing."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "registerRoot(Root) — entry point",
+        "purpose": "Tells Remotion which component holds the Composition registry. Required at the top of remotion.config.ts or src/index.ts.",
+        "example": "import { registerRoot } from 'remotion';\nimport { Root } from './Root';\nregisterRoot(Root);"
+      },
+      {
+        "signature": "<Composition /> registry props",
+        "purpose": "Register a renderable composition. id is the CLI selector, fps + durationInFrames define timing, width/height define resolution.",
+        "example": "<Composition\n  id=\"MyVideo\"\n  component={MyVideo}\n  durationInFrames={150}\n  fps={30}\n  width={1920}\n  height={1080}\n/>"
+      },
+      {
+        "signature": "useCurrentFrame() + interpolate()",
+        "purpose": "Drive any prop from frame number. Combine with extrapolateLeft/Right: 'clamp' so values don't run past the keyframes.",
+        "example": "import { useCurrentFrame, interpolate } from 'remotion';\nconst Title = () => {\n  const frame = useCurrentFrame();\n  const opacity = interpolate(frame, [0, 30], [0, 1], { extrapolateRight: 'clamp' });\n  return <h1 style={{ opacity }}>Hello</h1>;\n};"
+      },
+      {
+        "signature": "npx remotion render <id> out.mp4",
+        "purpose": "Render a Composition by id to an MP4 file via headless Chromium. --concurrency, --crf, and --codec are common flags.",
+        "example": "npx remotion render MyVideo out/video.mp4 --concurrency=8 --crf=18"
+      },
+      {
+        "signature": "<Sequence from={X} durationInFrames={Y}>",
+        "purpose": "Mount children for a frame window only. Frame numbers inside are relative to the sequence's start (frame 0 inside Sequence = global frame X).",
+        "example": "<Sequence from={30} durationInFrames={60}>\n  <Title />\n</Sequence>"
+      }
+    ],
+    "gotchas": [
+      "Animation must be a pure function of useCurrentFrame — Math.random or Date.now will break frame-stable rendering. Seed any randomness with the frame.",
+      "Audio assets that exceed durationInFrames are silently truncated; check durationInFrames === Math.ceil(audioDuration * fps).",
+      "Lambda rendering caps at 30 minutes per render and 10 GB output by default — split long videos into chunks and concat.",
+      "useEffect runs per-mount, not per-frame; use useMemo + useCurrentFrame for per-frame computation.",
+      "delayRender + continueRender is the only way to make Remotion wait for async data (fonts, fetch); forgetting continueRender hangs the renderer."
+    ],
+    "category": "framework",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/remotion-dev/remotion"
+  }
+}

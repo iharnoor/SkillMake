@@ -1,0 +1,39 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "skillmake",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-04-28",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  },
+
+  // Custom domain. Both apex and www point at the same Worker.
+  // The zone for skillmake.xyz must be in this Cloudflare account first; once
+  // it is, `wrangler deploy` provisions the routes automatically.
+  "routes": [
+    { "pattern": "skillmake.xyz", "custom_domain": true },
+    { "pattern": "www.skillmake.xyz", "custom_domain": true }
+  ],
+
+  "kv_namespaces": [
+    {
+      "binding": "MARKETPLACE_KV",
+      "id": "756cd32fe63f4928ba9ae8d57b7aa1ba",
+      "preview_id": "8897dac05f3a4a2dae202240cea69165"
+    }
+  ],
+
+  // Secrets are set out-of-band (CLI or Workers Builds dashboard):
+  //   wrangler secret put ANTHROPIC_API_KEY
+  //   wrangler secret put HYDRADB_API_KEY
+  //   wrangler secret put HYDRADB_TENANT_ID
+  //   wrangler secret put ADMIN_TOKEN     # gates /admin/*; rotating it logs every curator out
+  //   wrangler secret put GITHUB_TOKEN    # optional; raises ★ stars rate limit 60→5000/hr
+  // Optional non-secret overrides go here (e.g. SKILLMAKE_MODEL).
+  "vars": {}
+}

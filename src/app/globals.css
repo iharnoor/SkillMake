@@ -1,26 +1,167 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0b0d10;
+  --bg-elevated: #111418;
+  --surface: #15191e;
+  --border: #232830;
+  --border-strong: #2f3540;
+  --fg: #e8ecf1;
+  --fg-muted: #8b94a3;
+  --fg-dim: #5a6271;
+  --accent: #a8ff60;
+  --accent-soft: #a8ff6022;
+  --warn: #ffb547;
+  --danger: #ff6e6e;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-dim: var(--fg-dim);
+  --color-surface: var(--surface);
+  --color-elevated: var(--bg-elevated);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Intentionally no background gradients — skills.sh-style minimalism. */
+
+::selection {
+  background: var(--accent);
+  color: #0b0d10;
 }
+
+.grid-bg {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--border) 60%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--border) 60%, transparent) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 40%, transparent 80%);
+}
+
+.mono {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-feature-settings: "ss01", "cv11", "calt";
+}
+
+.btn-accent {
+  background: var(--accent);
+  color: #0b0d10;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: transform 80ms ease, filter 120ms ease;
+}
+.btn-accent:hover { filter: brightness(1.08); }
+.btn-accent:active { transform: translateY(1px); }
+.btn-accent:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid var(--border-strong);
+  transition: background 120ms ease, border-color 120ms ease;
+}
+.btn-ghost:hover { background: var(--surface); border-color: var(--accent); }
+
+.input-shell {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.input-shell:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  border: 1px solid var(--border);
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+}
+
+.tag-accent {
+  color: var(--accent);
+  border-color: color-mix(in oklab, var(--accent) 40%, var(--border));
+  background: var(--accent-soft);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+}
+
+.skill-pre {
+  background: #0a0c10;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: #d6dde6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 560px;
+  overflow: auto;
+}
+
+.skill-pre .yaml-key { color: #ffb547; }
+.skill-pre .yaml-val { color: #a8ff60; }
+.skill-pre .heading { color: #6cc3ff; font-weight: 600; }
+.skill-pre .bullet { color: var(--fg-muted); }
+
+.scan {
+  position: relative;
+  overflow: hidden;
+}
+.scan::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, var(--accent-soft) 50%, transparent 100%);
+  animation: scan 1.6s ease-in-out infinite;
+}
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+.pulse-dot { animation: pulse-dot 1.4s ease-in-out infinite; }

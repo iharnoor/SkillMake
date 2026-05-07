@@ -1,0 +1,55 @@
+{
+  "sourceUrl": "https://ffmpeg.org/documentation.html",
+  "skill": {
+    "name": "shorts-from-long-video",
+    "description": "Use when slicing a long video into 3–5 highlight short clips with hook detection, safe-area subtitles, and 9:16 reframing — transcript-driven cuts via Whisper plus FFmpeg encoding.",
+    "whenToUse": [
+      "Multiplying a single long-form video into Shorts/Reels/TikToks",
+      "Finding the best 30–90s moments without watching the whole video",
+      "Producing 9:16 reframes from a 16:9 master with safe-area captions",
+      "Batch-generating clip variants for A/B testing across platforms"
+    ],
+    "keyConcepts": [
+      {
+        "term": "hook detection",
+        "explanation": "Run an LLM over the timestamped transcript to score each 30–90s window for hook-worthiness: clear payoff, an opinion, a number, a story, surprise. Take the top N segments — typically 3–5 per hour of source. Avoid windows that depend on prior context the viewer won't have."
+      },
+      {
+        "term": "9:16 reframe",
+        "explanation": "Turning a 1920×1080 master into a 1080×1920 short. Either crop-center (works for talking heads), follow the speaker (face-detected via OpenCV/MediaPipe), or letterbox top + caption bottom (safe default when there's no clear subject)."
+      },
+      {
+        "term": "safe-area captions",
+        "explanation": "Mobile UI overlays the top ~250 px and bottom ~300 px of a 9:16 frame; captions go in the middle 1300px-tall band. Burn them in with FFmpeg's drawtext or render to SRT and rely on the platform; burned-in is safer for reach."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "ffmpeg crop + scale to 9:16",
+        "purpose": "Center-crop a 1920×1080 source to 1080×1920 by scaling first then cropping the wide axis.",
+        "example": "ffmpeg -i in.mp4 -vf \"crop=1080:1920:(in_w-1080)/2:0\" -ss 00:01:23 -t 60 -c:v libx264 -crf 18 -c:a aac out.mp4"
+      },
+      {
+        "signature": "ffmpeg drawtext for burned-in captions",
+        "purpose": "Burn each caption line at a specific timestamp range, in the safe middle band of a 9:16 frame.",
+        "example": "ffmpeg -i in.mp4 -vf \"drawtext=fontfile=/System/Library/Fonts/Supplemental/Arial.ttf:text='caption':fontcolor=white:fontsize=56:box=1:boxcolor=black@0.5:boxborderw=20:x=(w-text_w)/2:y=h*0.55:enable='between(t,1.5,4.0)'\" out.mp4"
+      },
+      {
+        "signature": "hook-detection prompt template",
+        "purpose": "Single-shot LLM prompt that takes the timestamped transcript and returns a JSON list of {start, end, hook} candidates ranked by score.",
+        "example": "Score every 30–90s window of this transcript on these axes: clear payoff (0–3), opinion strength (0–3), surprise (0–3), self-contained (0–3). Return JSON [{startSec, endSec, score, hook, reason}]. Top 5 only."
+      }
+    ],
+    "gotchas": [
+      "Mid-sentence cuts kill watch time — extend the window to the next sentence boundary even if it pushes past 90s.",
+      "Center-crop fails for two-person interviews; fall back to face tracking or letterbox-with-caption.",
+      "Burned-in captions must use a font installed on the renderer, not a font name only — FFmpeg silently substitutes Arial.",
+      "TikTok/Shorts strip files >60s on upload via API; respect the platform max even if your hook is 75s.",
+      "Audio normalisation matters for Reels (target -14 LUFS) — FFmpeg's loudnorm filter handles it in two passes."
+    ],
+    "category": "concept",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/FFmpeg/FFmpeg"
+  }
+}

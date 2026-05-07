@@ -1,0 +1,49 @@
+{
+  "sourceUrl": "https://github.com/openai/whisper",
+  "skill": {
+    "name": "podcast-show-notes",
+    "description": "Use when turning a recorded podcast episode into publishable show notes — Whisper transcript with timestamps, chapter summaries, pull-quote tweets, and an SEO-formatted episode page in one pass.",
+    "whenToUse": [
+      "Producing show notes the moment an episode is recorded, not three days later",
+      "Generating chapter markers that podcast apps and YouTube understand",
+      "Extracting tweetable pull-quotes for promo without re-listening",
+      "Writing the episode landing page (title, description, transcript, links) automatically"
+    ],
+    "keyConcepts": [
+      {
+        "term": "chapter markers",
+        "explanation": "Apple Podcasts, Spotify, and YouTube all read chapter markers in slightly different formats. The lowest-common-denominator: a list of {start (HH:MM:SS), title} that each platform's metadata field accepts. Generate from Whisper segment timestamps + LLM topic detection."
+      },
+      {
+        "term": "pull-quote extraction",
+        "explanation": "Run an LLM over the transcript with prompt: 'Find 5 quotable lines: short (≤200 chars), self-contained, opinion or surprising.' Output is a tweet-ready list with timestamps so each can be linked back to the audio moment."
+      },
+      {
+        "term": "show-notes structure",
+        "explanation": "What works: 1-line episode hook → guest bio (if any) → chapter markers with timestamps → 'links mentioned' list → pull-quotes → full transcript at the bottom (collapsible). The structure is identical across episodes; only the content varies."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Whisper verbose JSON for segment timestamps",
+        "purpose": "Run with response_format=verbose_json so each segment has start/end seconds — required for chapter detection and pull-quote linking.",
+        "example": "whisper episode.mp3 --model large-v3 --output_format json --word_timestamps True\n# OR via OpenAI hosted:\nconst t = await openai.audio.transcriptions.create({\n  file: fs.createReadStream('episode.mp3'),\n  model: 'whisper-1',\n  response_format: 'verbose_json',\n  timestamp_granularities: ['segment', 'word'],\n});"
+      },
+      {
+        "signature": "chapter detection prompt",
+        "purpose": "LLM pass over segments to find natural topic shifts. Returns JSON list of chapters with start time + title.",
+        "example": "From this timestamped transcript, identify 5–10 natural chapter breaks. Each chapter should be 3–10 minutes. Title each in 4–8 words.\n\nReturn JSON: [{\"start\": \"HH:MM:SS\", \"title\": \"...\"}]\n\nTRANSCRIPT:\n<segments>"
+      }
+    ],
+    "gotchas": [
+      "Whisper timestamps drift on long files (>1 hour) — re-anchor every 30 minutes by chunking the audio and offsetting timestamps after merge.",
+      "Two-host shows need diarization to attribute pull-quotes correctly — Whisper alone doesn't do this; pair with pyannote or use Deepgram/AssemblyAI.",
+      "Don't auto-publish chapter titles — read them once. LLM-generated titles can be technically correct but tone-deaf to the actual conversation.",
+      "Pull-quotes work best as 1–2 sentences ≤200 chars; longer ones don't fit on Twitter and feel like blog snippets."
+    ],
+    "category": "concept",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/openai/whisper"
+  }
+}

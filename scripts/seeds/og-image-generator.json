@@ -1,0 +1,49 @@
+{
+  "sourceUrl": "https://github.com/vercel/satori",
+  "skill": {
+    "name": "og-image-generator",
+    "description": "Use when shipping per-post social cards across an entire creator site — Satori-driven JSX-to-SVG-to-PNG pipeline with brand-consistent templates and dynamic per-post variables (title, author, date, tag).",
+    "whenToUse": [
+      "Generating Open Graph cards for every blog post / video / project on a creator site",
+      "Replacing manually-designed Figma-export-per-post with a single template",
+      "Producing 1200×630 PNG cards on demand at the edge with no wkhtmltoimage / Puppeteer dependency",
+      "Driving cards from MDX frontmatter or a CMS without designer involvement"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Satori",
+        "explanation": "Vercel's library that renders JSX → SVG using a subset of CSS (flex layout, fonts, basic transforms). Output SVG is then rasterised to PNG via @resvg/resvg-js or sharp. Runs in the edge runtime, ~5ms render times."
+      },
+      {
+        "term": "branded template",
+        "explanation": "One JSX function per layout variant — hero, default, talk, podcast. Accepts {title, subtitle, image, accent} and returns the same composition every time. Makes the whole site visually coherent across hundreds of posts."
+      },
+      {
+        "term": "font loading",
+        "explanation": "Satori needs the font as an ArrayBuffer — not a URL. Fetch the .ttf/.woff from Google Fonts at build (or store in /public) and pass to satori({fonts: [{name, data, weight, style}]}). Variable fonts not yet supported."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Next.js opengraph-image.tsx route",
+        "purpose": "App Router convention: a file named opengraph-image.tsx exports a default async function returning JSX. Next + Satori auto-render it as the OG card for the parent route.",
+        "example": "// app/posts/[slug]/opengraph-image.tsx\nimport { ImageResponse } from 'next/og';\nexport const size = { width: 1200, height: 630 };\nexport const contentType = 'image/png';\nexport default async function Image({ params }: { params: { slug: string } }) {\n  const post = await getPost(params.slug);\n  return new ImageResponse(\n    (\n      <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', background: '#0b0d10', color: '#e8ecf1', padding: 80 }}>\n        <div style={{ fontSize: 56, fontWeight: 700 }}>{post.title}</div>\n        <div style={{ marginTop: 'auto', fontSize: 28, color: '#a8ff60' }}>{post.author} · {post.date}</div>\n      </div>\n    ),\n    { ...size }\n  );\n}"
+      },
+      {
+        "signature": "Satori standalone (non-Next)",
+        "purpose": "For Astro / Hono / static-site builds — render JSX with satori() then rasterise with @resvg/resvg-js.",
+        "example": "import satori from 'satori';\nimport { Resvg } from '@resvg/resvg-js';\nimport fs from 'node:fs/promises';\n\nconst font = await fs.readFile('./fonts/Inter-Bold.ttf');\nconst svg = await satori(<Card title={post.title} />, {\n  width: 1200, height: 630,\n  fonts: [{ name: 'Inter', data: font, weight: 700, style: 'normal' }],\n});\nconst png = new Resvg(svg).render().asPng();\nawait fs.writeFile(`./public/og/${post.slug}.png`, png);"
+      }
+    ],
+    "gotchas": [
+      "Satori supports only a subset of CSS — no grid, no calc(), no transitions. Stick to flex.",
+      "Variable fonts are not supported; load each weight/style as a separate static font file.",
+      "External images need to be fetched and inlined as base64 unless your runtime supports remote URLs (Next /og handles this; standalone needs manual inlining).",
+      "Don't generate cards on every request without caching — Satori is fast but the rasterise step is CPU-bound. Cache by content hash."
+    ],
+    "category": "tool",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/vercel/satori"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "sourceUrl": "https://elevenlabs.io/docs/product/dubbing/overview",
+  "skill": {
+    "name": "video-translation-pipeline",
+    "description": "Use when localising a creator video into multiple languages — Whisper transcription, LLM translation, voice cloning per language, alignment to original timing, and burned-in subtitles in one pipeline.",
+    "whenToUse": [
+      "Translating a YouTube video into 3–10 languages at once",
+      "Voice-cloning the original creator into a target language so it still sounds 'like them'",
+      "Producing a dubbed track aligned to the original video's mouth/cut timing",
+      "Generating burned-in subtitles when a platform doesn't accept SRT (TikTok, Instagram)"
+    ],
+    "keyConcepts": [
+      {
+        "term": "transcribe-translate-synthesise loop",
+        "explanation": "Three discrete stages: (1) Whisper transcribes the original; (2) LLM translates the transcript per target language, preserving names and technical terms; (3) ElevenLabs (or comparable) synthesises a cloned voice in each target. Stages stay decoupled so you can re-run any step independently."
+      },
+      {
+        "term": "timing alignment",
+        "explanation": "Translated text is rarely the same length as the source — German is ~30% longer than English; Japanese is ~15% shorter. Either time-stretch the synthesised audio (sox tempo, Rubber Band) to match cuts, or re-cut the video per language. Stretching by ±15% is invisible; beyond that, sounds robotic."
+      },
+      {
+        "term": "subtitle burn-in vs sidecar SRT",
+        "explanation": "YouTube + Vimeo accept .srt as separate tracks (best — viewers can disable). TikTok / Reels need burned-in. For burn-in, use FFmpeg's subtitles filter with a font that has glyph coverage for the target language (Noto Sans is the safe default)."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "ElevenLabs Dubbing endpoint (one-shot)",
+        "purpose": "Hosted pipeline that does transcribe + translate + synthesise + align in one call. Use this if the cost is fine; build the pipeline manually only when you need control over each stage.",
+        "example": "const res = await fetch('https://api.elevenlabs.io/v1/dubbing', {\n  method: 'POST',\n  headers: { 'xi-api-key': process.env.ELEVEN_API_KEY!, 'content-type': 'application/json' },\n  body: JSON.stringify({\n    source_url: 'https://yourbucket.com/source.mp4',\n    target_lang: 'es',\n    source_lang: 'en',\n    num_speakers: 1,\n    watermark: false,\n  }),\n});\nconst { dubbing_id } = await res.json();\n// poll GET /v1/dubbing/{id} until status === 'dubbed'"
+      },
+      {
+        "signature": "FFmpeg subtitle burn-in",
+        "purpose": "Burn translated subs into the video as a track. The subs file should be SRT or ASS; ASS gives more typography control.",
+        "example": "ffmpeg -i source.mp4 -vf \"subtitles=subs_es.srt:force_style='FontName=Noto Sans,FontSize=20,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,Outline=2'\" -c:v libx264 -crf 18 -c:a copy out_es.mp4"
+      }
+    ],
+    "gotchas": [
+      "Don't translate idiom-heavy speech literally — instruct the LLM to localise meaning, not words. 'Bite the bullet' in Spanish is not 'morder la bala'.",
+      "Voice clones trained on English can sound off in tonal languages (Mandarin, Vietnamese). Test before committing — sometimes a native preset voice in the target language wins.",
+      "When subtitle text is longer than the source, drop a few words rather than time-stretch the audio. Viewers don't read 14-word subtitles in 2 seconds anyway.",
+      "Numbers, units, and brand names should be locked in a glossary the LLM consumes per call — otherwise '$5,000' becomes '5000 dólares' in one chunk and 'cinco mil dólares' in another."
+    ],
+    "category": "concept",
+    "audience": "creators",
+    "videoUrls": []
+  }
+}

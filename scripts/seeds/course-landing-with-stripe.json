@@ -1,0 +1,49 @@
+{
+  "sourceUrl": "https://docs.stripe.com/checkout/quickstart",
+  "skill": {
+    "name": "course-landing-with-stripe",
+    "description": "Use when shipping a course or digital-product landing page with email capture, Stripe Checkout, webhook fulfillment, and post-purchase drip emails — end-to-end in one pass with no SaaS subscription.",
+    "whenToUse": [
+      "Selling a course / template / mini-product without using Gumroad/Teachable/Podia",
+      "Owning the customer email + analytics rather than handing them to a platform",
+      "Wiring Stripe Checkout → webhook → grant access → drip onboarding emails",
+      "Adding upsell/order-bump in a way that keeps the checkout single-page"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Checkout vs Payment Intents",
+        "explanation": "Stripe Checkout is the hosted page — fastest to ship, takes 30 minutes, handles taxes/cards/Apple Pay automatically. Payment Intents is for custom UI; only worth it if Checkout's brand fit blocks the sale. Default: Checkout."
+      },
+      {
+        "term": "fulfillment via webhook",
+        "explanation": "Stripe redirects on success but you can't trust client-side success. The webhook (checkout.session.completed) is the source of truth for fulfillment: grant access, send delivery email, log to analytics. Verify the signature with stripe.webhooks.constructEvent."
+      },
+      {
+        "term": "drip onboarding",
+        "explanation": "5-email sequence triggered on purchase: day 0 (delivery + welcome), day 1 (first lesson + community link), day 3 (second lesson + ask for feedback), day 7 (bonus + cross-sell), day 30 (testimonial ask). Resend + Inngest is the cleanest stack for this."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Create Checkout Session",
+        "purpose": "Server-side route the landing page POSTs to. Returns the hosted Checkout URL; client redirects.",
+        "example": "// app/api/checkout/route.ts\nimport Stripe from 'stripe';\nimport { NextResponse } from 'next/server';\nconst stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);\nexport async function POST(req: Request) {\n  const { email } = await req.json();\n  const session = await stripe.checkout.sessions.create({\n    mode: 'payment',\n    customer_email: email,\n    line_items: [{ price: process.env.STRIPE_PRICE_ID!, quantity: 1 }],\n    success_url: `${process.env.SITE_URL}/thanks?session_id={CHECKOUT_SESSION_ID}`,\n    cancel_url: `${process.env.SITE_URL}/`,\n    allow_promotion_codes: true,\n  });\n  return NextResponse.json({ url: session.url });\n}"
+      },
+      {
+        "signature": "Webhook handler with signature verification",
+        "purpose": "Verifies the Stripe signature, then fulfills the order. Anything not behind this verification is unsafe.",
+        "example": "// app/api/stripe-webhook/route.ts\nexport const runtime = 'nodejs';\nexport async function POST(req: Request) {\n  const sig = req.headers.get('stripe-signature')!;\n  const body = await req.text();\n  let event;\n  try {\n    event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!);\n  } catch {\n    return new Response('bad sig', { status: 400 });\n  }\n  if (event.type === 'checkout.session.completed') {\n    const s = event.data.object;\n    await grantAccess(s.customer_email!, s.metadata?.product_id);\n    await sendDeliveryEmail(s.customer_email!);\n    await scheduleDrip(s.customer_email!);\n  }\n  return new Response('ok');\n}"
+      }
+    ],
+    "gotchas": [
+      "Never grant access from the success page — always wait for the webhook. Otherwise a bad actor can spoof the success URL.",
+      "Set the webhook to deliver to your prod URL, not localhost. Use Stripe CLI's `stripe listen --forward-to` for local dev.",
+      "Tax handling: enable automatic_tax in Checkout if you sell internationally — manual tax math gets you in trouble fast.",
+      "Always store the email + Stripe customer id in your DB on fulfillment so refunds and re-deliveries work without searching Stripe."
+    ],
+    "category": "concept",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/stripe/stripe-node"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "sourceUrl": "https://tailwindcss.com/docs/theme",
+  "skill": {
+    "name": "brand-system-from-reference",
+    "description": "Use when starting a creator brand from a moodboard or reference site — extract colors, type pairings, spacing tokens into a single JSON token file consumable by Tailwind v4 / CSS custom properties / Figma.",
+    "whenToUse": [
+      "Bootstrapping a creator brand without hiring a designer",
+      "Translating a Figma moodboard into a working Tailwind theme",
+      "Auditing an existing site for token consistency and producing a single source of truth",
+      "Cross-platform brand: same tokens drive web (Tailwind), email (inline CSS), and social cards (Satori)"
+    ],
+    "keyConcepts": [
+      {
+        "term": "token taxonomy",
+        "explanation": "Three layers: primitives (raw colors, font sizes, spacing values), semantic tokens (bg/fg/accent/danger), component tokens (button.bg, button.fg). Most creator brands need only primitives + semantic; component tokens are over-engineering for a one-person site."
+      },
+      {
+        "term": "color palette extraction",
+        "explanation": "From a reference image: vision-LLM or k-means cluster pixels → 5-8 dominant colors. Then build a 50–950 scale per accent color via OKLCH lightness ramps (more perceptually uniform than HSL). Store as primitives, name them by role (accent, neutral, danger), not by color (red, blue)."
+      },
+      {
+        "term": "type pairing",
+        "explanation": "Default to one display font + one text font; variable font on at least one slot. Display = serif or geometric sans for headings; text = humanist sans or workhorse serif for body. Pair via x-height match — both fonts should have similar lowercase height when set at the same size."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "tokens.json shape",
+        "purpose": "Single source of truth — consumed by Tailwind config, CSS variables build, Figma sync, and OG card generator.",
+        "example": "{\n  \"color\": {\n    \"primitive\": {\n      \"accent\": { \"50\": \"#f6ffea\", \"500\": \"#a8ff60\", \"900\": \"#3d6614\" },\n      \"neutral\": { \"50\": \"#f5f6f7\", \"500\": \"#5a6271\", \"900\": \"#0b0d10\" }\n    },\n    \"semantic\": {\n      \"bg\": \"{color.primitive.neutral.900}\",\n      \"fg\": \"{color.primitive.neutral.50}\",\n      \"accent\": \"{color.primitive.accent.500}\"\n    }\n  },\n  \"font\": {\n    \"display\": \"Geist, system-ui, sans-serif\",\n    \"text\": \"Geist, system-ui, sans-serif\",\n    \"mono\": \"Geist Mono, ui-monospace, monospace\"\n  },\n  \"size\": { \"sm\": \"14px\", \"base\": \"16px\", \"lg\": \"18px\", \"xl\": \"24px\" },\n  \"radius\": { \"sm\": \"4px\", \"md\": \"8px\", \"lg\": \"14px\" }\n}"
+      },
+      {
+        "signature": "Tailwind v4 @theme inline integration",
+        "purpose": "Tailwind v4 reads CSS variables directly via @theme; emit primitives + semantic tokens as :root vars and reference them in @theme inline.",
+        "example": ":root {\n  --color-bg: #0b0d10;\n  --color-fg: #e8ecf1;\n  --color-accent: #a8ff60;\n}\n@theme inline {\n  --color-background: var(--color-bg);\n  --color-foreground: var(--color-fg);\n  --color-accent: var(--color-accent);\n}"
+      }
+    ],
+    "gotchas": [
+      "Don't extract 12 colors and call it a palette — 3 anchors (bg, fg, accent) plus 1–2 supports is plenty for a creator brand.",
+      "Avoid pairing two display fonts; the eye fights itself. One personality + one neutral.",
+      "OKLCH ramps look better than HSL for accent shades, but Safari <16 lacks support — emit a sRGB fallback.",
+      "Token names that describe role (accent / danger / muted) survive rebrands; names that describe color (red / blue) don't."
+    ],
+    "category": "concept",
+    "audience": "creators",
+    "videoUrls": []
+  }
+}

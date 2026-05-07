@@ -1,0 +1,48 @@
+{
+  "sourceUrl": "https://www.anthropic.com/news/claude-3-5-sonnet",
+  "skill": {
+    "name": "content-repurposing",
+    "description": "Use when expanding one long-form video or essay into a multi-platform pack — Twitter thread, LinkedIn post, Reels/Shorts script, newsletter blurb — preserving voice and key beats from the source transcript.",
+    "whenToUse": [
+      "Multiplying one creator artifact (video, essay, podcast) into 4–6 platform-native posts",
+      "Maintaining a single creator voice across Twitter, LinkedIn, Reels, and email",
+      "Avoiding 'literally the same caption everywhere' which kills engagement",
+      "Producing a publishable batch in one pass instead of hand-writing each variant"
+    ],
+    "keyConcepts": [
+      {
+        "term": "platform native voice",
+        "explanation": "Each platform rewards a different shape: Twitter = punchy + numbered + ends with quote-tweet bait; LinkedIn = first-person story + soft CTA; Reels = hook in first 3 words + short sentences; Newsletter = warmer + section breaks + one big idea. The same source text rewritten for each."
+      },
+      {
+        "term": "beat extraction",
+        "explanation": "Pull 5–8 'beats' from the source — discrete claims, stories, numbers, or moments. Each beat becomes a tweet, a LinkedIn paragraph, or a Reel hook. The pack stays coherent because every variant covers the same beats in different shapes."
+      },
+      {
+        "term": "voice anchoring",
+        "explanation": "Pin a 200-word voice sample (an existing post by the creator) into every prompt as a style anchor. Without this, output drifts toward 'generic LinkedIn-speak' and feels off-brand. Voice sample > tone instructions every time."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "extract-beats prompt",
+        "purpose": "First pass over the source transcript or essay. Returns JSON list of beats with type (claim/story/number/moment) and a 1-line summary each.",
+        "example": "From the source below, extract 5–8 beats. For each: type (claim|story|number|moment), one-line summary, and 1–2 quotable lines verbatim. Return JSON.\n\nSOURCE: <transcript>"
+      },
+      {
+        "signature": "platform-rewrite prompt with voice anchor",
+        "purpose": "Second pass: per platform, generate the post(s) using the extracted beats and a voice sample.",
+        "example": "STYLE ANCHOR (creator's existing post — match tone, cadence, sentence length):\n<voice-sample>\n\nBEATS:\n<json-from-pass-1>\n\nWrite a 7-tweet thread for Twitter using these beats. Each tweet ≤220 chars. Open with the strongest hook beat. Close with a quote-tweet-bait question."
+      }
+    ],
+    "gotchas": [
+      "Don't try to write all 5 platforms in one prompt — output collapses to mush. Run platform-by-platform with the same beat list.",
+      "Voice anchor must be the creator's own writing, not a 'pretend you're <famous person>' instruction.",
+      "Reels/Shorts scripts must include scene directions ([cut], [zoom], [text overlay]); pure prose makes the script useless to the editor.",
+      "LinkedIn truncates after ~210 chars before 'see more' — front-load the most interesting beat."
+    ],
+    "category": "concept",
+    "audience": "creators",
+    "videoUrls": []
+  }
+}

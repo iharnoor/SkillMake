@@ -32,10 +32,19 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# local marketplace storage (swap to Postgres for production)
+/data/skills.json
 
 # vercel
 .vercel
 
+# cloudflare workers / opennext build artifacts
+/.wrangler/
+/.open-next/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.prod-admin-token.local

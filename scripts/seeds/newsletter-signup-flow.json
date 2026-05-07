@@ -1,0 +1,49 @@
+{
+  "sourceUrl": "https://resend.com/docs",
+  "skill": {
+    "name": "newsletter-signup-flow",
+    "description": "Use when adding newsletter signup with double opt-in to a creator site — Resend-backed confirmation flow plus a 5-email welcome sequence triggered on confirmation, no third-party form widget.",
+    "whenToUse": [
+      "Replacing ConvertKit/MailerLite/Substack for a small creator newsletter",
+      "Owning the subscriber list and metadata in your own database",
+      "Compliance with GDPR / CAN-SPAM via real double opt-in (not just an unsubscribe link)",
+      "Triggering a welcome / lead-magnet sequence the moment someone confirms"
+    ],
+    "keyConcepts": [
+      {
+        "term": "double opt-in",
+        "explanation": "User submits email → server stores it as 'pending' with a signed confirmation token → confirmation email goes out → user clicks → token verified → row flips to 'confirmed'. Required for compliance and dramatically improves deliverability (mailbox providers trust confirmed lists)."
+      },
+      {
+        "term": "confirmation token",
+        "explanation": "Don't store random UUIDs; sign a stateless token with HMAC(email + expiry + secret). Lets you verify without a database read on the click, and tokens auto-expire (24h is standard). Same pattern as our admin session cookie."
+      },
+      {
+        "term": "welcome drip",
+        "explanation": "On confirmation: send email 1 immediately (welcome + delivery), schedule emails 2–5 over the next 7–14 days. Schedule via a queue (Inngest, Trigger.dev, or just a Cloudflare Cron + KV state). Don't run setTimeout on a serverless function — it dies before firing."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "POST /api/newsletter — initial signup",
+        "purpose": "Insert pending row, sign confirmation token, send confirmation email via Resend.",
+        "example": "// app/api/newsletter/route.ts\nimport { Resend } from 'resend';\nimport { signToken } from '@/lib/tokens';\nconst resend = new Resend(process.env.RESEND_API_KEY!);\nexport async function POST(req: Request) {\n  const { email } = await req.json();\n  await db.subscribers.upsert({ email, status: 'pending', createdAt: new Date() });\n  const token = await signToken({ email, exp: Date.now() + 86400000 });\n  await resend.emails.send({\n    from: 'You <hello@yourdomain.com>',\n    to: email,\n    subject: 'Confirm your subscription',\n    html: `<p>Click to confirm: <a href=\"https://yourdomain.com/confirm?t=${token}\">Confirm</a></p>`,\n  });\n  return Response.json({ ok: true });\n}"
+      },
+      {
+        "signature": "GET /confirm?t=<token> — confirmation",
+        "purpose": "Verify token, flip subscriber to confirmed, kick off welcome drip.",
+        "example": "// app/confirm/route.ts\nimport { redirect } from 'next/navigation';\nexport async function GET(req: Request) {\n  const token = new URL(req.url).searchParams.get('t');\n  const payload = await verifyToken(token);\n  if (!payload) redirect('/confirm-failed');\n  await db.subscribers.update({ where: { email: payload.email }, data: { status: 'confirmed', confirmedAt: new Date() } });\n  await scheduleWelcomeDrip(payload.email);\n  redirect('/confirm-success');\n}"
+      }
+    ],
+    "gotchas": [
+      "Don't send the lead magnet in the initial signup email — that defeats double opt-in. Send it AFTER confirmation.",
+      "Set up SPF + DKIM + DMARC on your sending domain before launch or 30%+ of confirmations land in spam.",
+      "Resend's free tier caps at 3000/mo and 100/day; the rate cap bites first when you launch a popup signup.",
+      "Always include an unsubscribe link in every email, even confirmation emails — required by GDPR and CAN-SPAM."
+    ],
+    "category": "concept",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/resend/resend-node"
+  }
+}
