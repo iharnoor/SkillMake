@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { listSkillsByStatus } from "@/lib/storage";
-import { youtubeIdFromUrl } from "@/lib/skill-schema";
+import { resolveVideoEmbed } from "@/lib/skill-schema";
 import { ReviewActions } from "@/components/admin/ReviewActions";
 import { LogoutButton } from "@/components/admin/LogoutButton";
 
@@ -50,8 +50,8 @@ export default async function AdminQueuePage() {
         <div className="space-y-4">
           {pending.map((entry) => {
             const videos = entry.skill.videoUrls
-              .map((url) => ({ url, vid: youtubeIdFromUrl(url) }))
-              .filter((v): v is { url: string; vid: string } => Boolean(v.vid));
+              .map((url) => resolveVideoEmbed(url))
+              .filter((v): v is NonNullable<typeof v> => v !== null);
             return (
               <article key={entry.id} className="card p-6">
                 <div className="flex items-center gap-2 mb-3 flex-wrap">
@@ -84,18 +84,31 @@ export default async function AdminQueuePage() {
                   <div className="mb-5 grid sm:grid-cols-2 gap-3">
                     {videos.map((v) => (
                       <div
-                        key={v.vid}
-                        className="aspect-video rounded-md overflow-hidden border border-[color:var(--border)]"
+                        key={v.src}
+                        className="aspect-video rounded-md overflow-hidden border border-[color:var(--border)] bg-black"
                       >
-                        <iframe
-                          src={`https://www.youtube-nocookie.com/embed/${v.vid}`}
-                          title={`Tutorial ${v.vid}`}
-                          loading="lazy"
-                          allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
-                          referrerPolicy="strict-origin-when-cross-origin"
-                          allowFullScreen
-                          className="w-full h-full"
-                        />
+                        {v.kind === "self-hosted" ? (
+                          <video
+                            src={v.src}
+                            title={v.title}
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                            preload="metadata"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <iframe
+                            src={v.src}
+                            title={v.title}
+                            loading="lazy"
+                            allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allowFullScreen
+                            className="w-full h-full"
+                          />
+                        )}
                       </div>
                     ))}
                   </div>

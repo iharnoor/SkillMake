@@ -3,6 +3,7 @@ import { listSkills } from "@/lib/storage";
 import { MarketplaceSearch } from "@/components/MarketplaceSearch";
 import { AUDIENCES, type Audience } from "@/lib/skill-schema";
 import { formatStars } from "@/lib/github";
+import { GithubIcon } from "@/components/GithubIcon";
 
 export const dynamic = "force-dynamic";
 
@@ -90,22 +91,21 @@ export default async function Home() {
         </div>
       ) : (
         <div className="mt-6">
-          <div className="grid grid-cols-[2.5ch_1fr_1fr_6ch] gap-x-6 mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] pb-2 border-b border-[color:var(--border)]">
+          <div className="grid grid-cols-[2.5ch_1fr_1fr_8ch] gap-x-6 mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] pb-2 border-b border-[color:var(--border)]">
             <span className="text-right">#</span>
             <span>name</span>
             <span>source</span>
-            <span className="text-right">★</span>
+            <span className="text-right">github</span>
           </div>
           {entries.map((e, i) => (
-            <Link
+            <div
               key={e.id}
-              href={`/marketplace/${e.id}`}
-              className="grid grid-cols-[2.5ch_1fr_1fr_6ch] gap-x-6 py-3 border-b border-[color:var(--border)] hover:bg-[color:var(--bg-elevated)]/50 transition group"
+              className="grid grid-cols-[2.5ch_1fr_1fr_8ch] gap-x-6 py-3 border-b border-[color:var(--border)] hover:bg-[color:var(--bg-elevated)]/50 transition group"
             >
-              <span className="mono text-[12px] text-[color:var(--fg-dim)] tabular-nums text-right">
+              <span className="mono text-[12px] text-[color:var(--fg-dim)] tabular-nums text-right self-start mt-1">
                 {i + 1}
               </span>
-              <span className="min-w-0">
+              <Link href={`/marketplace/${e.id}`} className="min-w-0">
                 <div className="flex items-baseline gap-2 flex-wrap">
                   <span className="mono text-[14px] text-[color:var(--fg)] group-hover:text-[color:var(--accent)] transition truncate">
                     {e.skill.name}
@@ -117,7 +117,7 @@ export default async function Home() {
                 <div className="text-[12px] text-[color:var(--fg-muted)] line-clamp-1 mt-0.5">
                   {e.skill.description}
                 </div>
-              </span>
+              </Link>
               <span className="mono text-[11px] text-[color:var(--fg-dim)] truncate self-start mt-1">
                 {hostFromUrl(e.sourceUrl)}
                 {e.skill.videoUrls.length > 0 && (
@@ -126,14 +126,23 @@ export default async function Home() {
                   </span>
                 )}
               </span>
-              <span className="mono text-[12px] tabular-nums self-start mt-1 text-right">
-                {e.stars != null ? (
-                  <span className="text-[color:var(--fg)]">{formatStars(e.stars)}</span>
-                ) : (
-                  <span className="text-[color:var(--fg-dim)]">—</span>
-                )}
-              </span>
-            </Link>
+              {e.skill.repoUrl ? (
+                <a
+                  href={e.skill.repoUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mono text-[12px] tabular-nums self-start mt-1 inline-flex items-center justify-end gap-1.5 text-[color:var(--fg)] hover:text-[color:var(--accent)] transition"
+                  title={`★ ${e.stars ?? 0} on ${new URL(e.skill.repoUrl).pathname.replace(/^\//, "")}`}
+                >
+                  <GithubIcon className="text-[14px] opacity-70 group-hover:opacity-100" />
+                  {e.stars != null ? formatStars(e.stars) : "—"}
+                </a>
+              ) : (
+                <span className="mono text-[12px] tabular-nums self-start mt-1 text-right text-[color:var(--fg-dim)]">
+                  —
+                </span>
+              )}
+            </div>
           ))}
         </div>
       )}

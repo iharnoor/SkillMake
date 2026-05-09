@@ -1,0 +1,89 @@
+{
+  "sourceUrl": "https://motion.dev/docs",
+  "skill": {
+    "name": "framer-motion",
+    "description": "Use when adding animations, transitions, gestures, or scroll effects to React/Next.js — Motion (formerly Framer Motion) patterns: motion.div, AnimatePresence, layout/layoutId, springs, variants, whileInView.",
+    "whenToUse": [
+      "Animating React components declaratively with initial/animate/exit + transition props",
+      "Orchestrating page transitions, list reorders, and shared-element layout animations",
+      "Scroll-triggered reveals (whileInView), parallax, and pinned scroll sections",
+      "Gesture handling — drag, hover, tap, pan — with spring physics instead of CSS keyframes"
+    ],
+    "keyConcepts": [
+      {
+        "term": "motion components",
+        "explanation": "motion.div / motion.span / motion(Component) replace plain DOM nodes and accept animate, initial, exit, whileHover, whileTap, whileInView, drag, layout, and transition props. They render as the underlying element — no extra wrapper — and only opt into animation when those props are present."
+      },
+      {
+        "term": "AnimatePresence",
+        "explanation": "Wraps conditional renders so unmounting children can run an exit animation before they leave the tree. Only animates DIRECT children; intermediate wrappers between AnimatePresence and the conditionally-mounted node break exit animations. Each conditional child needs a stable key."
+      },
+      {
+        "term": "layout / layoutId",
+        "explanation": "Pass `layout` to auto-animate any size/position change a component undergoes. Pass `layoutId=\"shared-id\"` on two components in different parts of the tree to morph between them as one unmounts and the other mounts — the foundation of shared-element transitions."
+      },
+      {
+        "term": "whileInView + viewport",
+        "explanation": "Scroll-triggered animation without manually wiring IntersectionObserver. Pass viewport={{ once: true }} to fire the animation only the first time the element enters; otherwise it replays on every re-entry."
+      },
+      {
+        "term": "spring vs tween",
+        "explanation": "Two transition types: tween is duration-based (use for choreographed reveals, page transitions); spring is physics-based via stiffness/damping/mass (use for gestures, drag release, organic motion). Default to spring for natural-feeling interaction; tween for timed sequences."
+      },
+      {
+        "term": "variants + stagger",
+        "explanation": "Variants are named animation states attached to a parent that propagate to children, enabling orchestrated sequences. transition.staggerChildren on the parent variant offsets each child's animation in time without per-child math."
+      },
+      {
+        "term": "motion/react vs framer-motion",
+        "explanation": "The package was renamed: new code should import from `motion/react` (or `motion/react-client` for Next.js client boundary). The legacy `framer-motion` import still works for back-compat but isn't where new APIs land."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "import { motion } from 'motion/react'",
+        "purpose": "Preferred import path. Use 'motion/react-client' inside Next.js Server Components to mark the client boundary; 'framer-motion' still works as a legacy alias.",
+        "example": "import { motion } from 'motion/react';\n\nexport function Card() {\n  return (\n    <motion.div\n      initial={{ opacity: 0, y: 20 }}\n      animate={{ opacity: 1, y: 0 }}\n      transition={{ type: 'spring', stiffness: 200, damping: 20 }}\n    />\n  );\n}"
+      },
+      {
+        "signature": "AnimatePresence with conditional render",
+        "purpose": "Wrap exits so unmounting children animate out. Each child needs a stable key. Use mode='wait' to fully unmount the previous child before mounting the next.",
+        "example": "import { AnimatePresence, motion } from 'motion/react';\n\n<AnimatePresence mode=\"wait\">\n  {open && (\n    <motion.div\n      key=\"panel\"\n      initial={{ opacity: 0 }}\n      animate={{ opacity: 1 }}\n      exit={{ opacity: 0 }}\n    />\n  )}\n</AnimatePresence>"
+      },
+      {
+        "signature": "Variants + staggerChildren",
+        "purpose": "Define named states on a parent and let children inherit them. staggerChildren offsets each child's animation in sequence without manual delays.",
+        "example": "const list = {\n  hidden: {},\n  show: { transition: { staggerChildren: 0.08 } },\n};\nconst item = {\n  hidden: { opacity: 0, y: 12 },\n  show: { opacity: 1, y: 0 },\n};\n\n<motion.ul variants={list} initial=\"hidden\" animate=\"show\">\n  {items.map((i) => (\n    <motion.li key={i.id} variants={item}>{i.label}</motion.li>\n  ))}\n</motion.ul>"
+      },
+      {
+        "signature": "whileInView with viewport once",
+        "purpose": "Scroll-reveal pattern. once: true prevents replay on every re-entry; amount controls how much of the element must be visible before firing.",
+        "example": "<motion.section\n  initial={{ opacity: 0, y: 40 }}\n  whileInView={{ opacity: 1, y: 0 }}\n  viewport={{ once: true, amount: 0.3 }}\n  transition={{ duration: 0.6 }}\n/>"
+      },
+      {
+        "signature": "Shared-element transition with layoutId",
+        "purpose": "Two components with the same layoutId in different trees morph between each other as one unmounts and the other mounts.",
+        "example": "// In list view\n<motion.img layoutId={`hero-${id}`} src={src} />\n\n// In detail view\n<motion.img layoutId={`hero-${id}`} src={src} />"
+      },
+      {
+        "signature": "Drag + spring release",
+        "purpose": "Gesture handling with built-in spring physics on release. dragConstraints can be a ref or numeric box.",
+        "example": "<motion.div\n  drag\n  dragConstraints={{ top: 0, left: 0, right: 200, bottom: 200 }}\n  dragTransition={{ bounceStiffness: 600, bounceDamping: 12 }}\n/>"
+      }
+    ],
+    "gotchas": [
+      "Package was renamed — new code should import from 'motion/react'. The 'framer-motion' import is a legacy alias and may lag behind new APIs.",
+      "AnimatePresence only animates DIRECT children that mount/unmount. A wrapper div between AnimatePresence and the conditional node silently disables exit animations.",
+      "Conditionally rendered children of AnimatePresence need a stable, unique key — without it, React reuses the node and exit never fires.",
+      "layout animations require both the `layout` prop AND a layout-affecting style change (size, flex direction, grid position). Color-only changes won't trigger them.",
+      "whileInView replays on every viewport re-entry by default. Pass viewport={{ once: true }} for marketing-style reveals.",
+      "Animating non-transformable properties (height, width, top, left) is expensive and triggers layout. Prefer transform/scale/translate; use the `layout` prop for genuine size changes.",
+      "In Next.js App Router, motion components are client-only — import from 'motion/react-client' or mark the file 'use client'.",
+      "Motion 11+ requires React 18+. Reduced-motion users still get instant transitions unless you opt out with MotionConfig reducedMotion='never'."
+    ],
+    "category": "library",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/motiondivision/motion"
+  }
+}

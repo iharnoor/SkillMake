@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { getApprovedSkill } from "@/lib/storage";
 import { SkillPreview } from "@/components/SkillPreview";
 import { InstallCommand } from "@/components/InstallCommand";
-import { youtubeIdFromUrl } from "@/lib/skill-schema";
+import { resolveVideoEmbed } from "@/lib/skill-schema";
+import { GithubIcon } from "@/components/GithubIcon";
+import { formatStars } from "@/lib/github";
 
 export const dynamic = "force-dynamic";
 
@@ -13,8 +15,8 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ id
   if (!entry) notFound();
 
   const videos = entry.skill.videoUrls
-    .map((url) => ({ url, id: youtubeIdFromUrl(url) }))
-    .filter((v): v is { url: string; id: string } => Boolean(v.id));
+    .map((url) => resolveVideoEmbed(url))
+    .filter((v): v is NonNullable<typeof v> => v !== null);
 
   return (
     <div className="max-w-4xl mx-auto px-6 pt-12 pb-20">
@@ -36,7 +38,7 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ id
         {entry.skill.description}
       </p>
 
-      <div className="mt-3">
+      <div className="mt-3 flex items-center gap-3 flex-wrap">
         <a
           href={entry.sourceUrl}
           target="_blank"
@@ -45,6 +47,21 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ id
         >
           source: {entry.sourceUrl} ↗
         </a>
+        {entry.skill.repoUrl && (
+          <a
+            href={entry.skill.repoUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 btn-ghost rounded-md px-3 py-1.5 text-[12px] mono text-[color:var(--fg)] hover:text-[color:var(--accent)] transition"
+            title="Open the upstream repository on GitHub"
+          >
+            <GithubIcon className="text-[14px]" />
+            <span>{new URL(entry.skill.repoUrl).pathname.replace(/^\//, "").replace(/\/$/, "")}</span>
+            {entry.stars != null && (
+              <span className="text-[color:var(--fg-muted)]">· ★ {formatStars(entry.stars)}</span>
+            )}
+          </a>
+        )}
       </div>
 
       {videos.length > 0 && (
@@ -54,16 +71,32 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ id
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             {videos.map((v) => (
-              <div key={v.id} className="aspect-video rounded-md overflow-hidden border border-[color:var(--border)]">
-                <iframe
-                  src={`https://www.youtube-nocookie.com/embed/${v.id}`}
-                  title={`Tutorial video ${v.id}`}
-                  loading="lazy"
-                  allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                  className="w-full h-full"
-                />
+              <div
+                key={v.src}
+                className="aspect-video rounded-md overflow-hidden border border-[color:var(--border)] bg-black"
+              >
+                {v.kind === "self-hosted" ? (
+                  <video
+                    src={v.src}
+                    title={v.title}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <iframe
+                    src={v.src}
+                    title={v.title}
+                    loading="lazy"
+                    allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                    className="w-full h-full"
+                  />
+                )}
               </div>
             ))}
           </div>

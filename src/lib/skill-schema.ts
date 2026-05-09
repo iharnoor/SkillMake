@@ -5,13 +5,27 @@ export const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const YOUTUBE_RE =
   /^https?:\/\/(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)[\w-]{6,}/i;
 
+const HYPERFRAMES_RE = /^https?:\/\/hyperframes\.dev\/p\/[\w-]+/i;
+
+// Self-hosted MP4 served from skillmake.xyz/v/<slug>.mp4 (or any /v/ path on
+// the same origin during dev). Used for the launch demo videos that we render
+// with HyperFrames and ship as static assets — auth-free, embed-friendly.
+const SELF_HOSTED_VIDEO_RE = /^https?:\/\/(?:[\w.-]+)\/v\/[\w.-]+\.mp4$/i;
+
 const GITHUB_REPO_RE = /^https?:\/\/(?:www\.)?github\.com\/[\w.-]+\/[\w.-]+\/?$/i;
 
+// Accepts a YouTube watch/shorts/youtu.be URL, a hyperframes.dev project URL,
+// or a self-hosted /v/<slug>.mp4 URL. The HF project URL is kept for legacy
+// entries; new attachments should use self-hosted paths since hyperframes.dev
+// project URLs auth-redirect and don't render in iframes.
 export const VideoUrl = z
   .string()
   .url()
   .max(500)
-  .refine((s) => YOUTUBE_RE.test(s), "must be a YouTube watch, shorts, or youtu.be URL");
+  .refine(
+    (s) => YOUTUBE_RE.test(s) || HYPERFRAMES_RE.test(s) || SELF_HOSTED_VIDEO_RE.test(s),
+    "must be a YouTube URL, hyperframes.dev project URL, or /v/<slug>.mp4 URL"
+  );
 
 export const GithubRepoUrl = z
   .string()
@@ -44,6 +58,35 @@ export function youtubeIdFromUrl(url: string): string | null {
   } catch {
     return null;
   }
+}
+
+export type VideoEmbed =
+  | { kind: "youtube"; id: string; src: string; title: string }
+  | { kind: "hyperframes"; src: string; title: string }
+  | { kind: "self-hosted"; src: string; title: string };
+
+/** Resolve a videoUrl into an iframe- or video-embeddable src + display kind.
+ *  Self-hosted mp4s are rendered with a native <video> element since they live
+ *  on our own origin and don't need an iframe sandbox; hyperframes.dev URLs
+ *  fall back to iframe (kept for backwards compat with legacy entries that
+ *  used HF project URLs before we self-hosted). */
+export function resolveVideoEmbed(url: string): VideoEmbed | null {
+  if (SELF_HOSTED_VIDEO_RE.test(url)) {
+    return { kind: "self-hosted", src: url, title: "Demo video" };
+  }
+  const yt = youtubeIdFromUrl(url);
+  if (yt) {
+    return {
+      kind: "youtube",
+      id: yt,
+      src: `https://www.youtube-nocookie.com/embed/${yt}`,
+      title: `Tutorial video ${yt}`,
+    };
+  }
+  if (HYPERFRAMES_RE.test(url)) {
+    return { kind: "hyperframes", src: url, title: "HyperFrames demo" };
+  }
+  return null;
 }
 
 export const SkillSchema = z.object({
