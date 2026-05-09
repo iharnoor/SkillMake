@@ -2,14 +2,19 @@
   "sourceUrl": "https://fal.ai/models/fal-ai/kling-video",
   "skill": {
     "name": "kling-motion-web-p",
-    "description": "Use when building luxury or agency-style landing pages with Kling image-to-video AI assets, GPT Image source stills, pinned 'stop scroll' storytelling sections, 3D hero scenes, and scroll-driven frame sequences.",
+    "description": "Use when building luxury landing pages with Kling image-to-video AI, GPT Image stills, pinned 'stop scroll' scenes, and scroll-driven frame sequences. Requires FAL_KEY env var (fal.ai) — ask user before any call.",
     "whenToUse": [
+      "Before any Kling/fal call: confirm FAL_KEY is set; if missing, stop and ask the user to set it (https://fal.ai/dashboard/keys) — do not silently fall back to another model",
       "Luxury or agency-style landing pages where motion sells the product",
       "Pinned 'stop scroll' storytelling sections with scroll-scrubbed video or frame sequences",
       "3D product or architecture hero scenes (rotating globes, space stations, exploded views)",
       "AI-generated hero assets — GPT Image stills + Kling image-to-video — integrated as hero or sequence"
     ],
     "keyConcepts": [
+      {
+        "term": "FAL_KEY (required)",
+        "explanation": "Every Kling generation goes through fal.ai, which authenticates via the FAL_KEY env var. The @fal-ai/client picks it up from process.env.FAL_KEY automatically; otherwise call fal.config({ credentials: process.env.FAL_KEY }). Before any generation step, verify FAL_KEY is set — if missing, halt and ask the user to grab one at https://fal.ai/dashboard/keys and export it. Never hard-code the key, never check it into source, and never silently substitute a different provider."
+      },
       {
         "term": "stop scroll",
         "explanation": "A pinned/sticky storytelling section with extra parent height (250–400vh). The visual stage stays sticky at top:0 while scroll progress drives the animation. Text beats fade or translate in sequence as the asset frame changes. Always ship a reduced-motion fallback that stacks a still frame and the text vertically."
@@ -37,6 +42,11 @@
     ],
     "apiReference": [
       {
+        "signature": "FAL_KEY precondition (run first)",
+        "purpose": "Before invoking any Kling/fal endpoint, fail fast when FAL_KEY is missing and surface a copy-pasteable instruction. Ask the user instead of silently degrading or switching models.",
+        "example": "if (!process.env.FAL_KEY) {\n  throw new Error(\n    'FAL_KEY is required for Kling generation.\\n' +\n    'Get one at https://fal.ai/dashboard/keys, then:\\n' +\n    '  export FAL_KEY=fal-...'\n  );\n}\nimport { fal } from '@fal-ai/client';\nfal.config({ credentials: process.env.FAL_KEY });\nconst result = await fal.subscribe(\n  'fal-ai/kling-video/v3/standard/image-to-video',\n  { input: { prompt, image_url } }\n);"
+      },
+      {
         "signature": "<video autoplay muted loop playsinline>",
         "purpose": "Standard hero-loop tag for Kling-generated 5-second cinematic videos with stable center mass.",
         "example": "<video\n  autoplay\n  muted\n  loop\n  playsinline\n  src=\"/hero.mp4\"\n  class=\"hero-video\"\n></video>"
@@ -57,6 +67,8 @@
       }
     ],
     "gotchas": [
+      "FAL_KEY env var is required for every Kling/fal call. If it isn't set, stop and ask the user to set it (https://fal.ai/dashboard/keys) before retrying — never silently fall back to a different model.",
+      "Never hard-code FAL_KEY or commit it. Read from process.env.FAL_KEY only; treat it like any other API secret.",
       "Heavy dark radial overlays make product media look muddy — use the lightest mask that preserves readability, and remove overlays entirely when inspecting the video.",
       "fal/Kling rejects images below its minimum dimensions; pad small or oddly-shaped stills onto a 1280x720 or 1024x1024 canvas before upload.",
       "Scroll-driven heroes must not autoplay or loop — pause the video and set currentTime from scroll progress.",
