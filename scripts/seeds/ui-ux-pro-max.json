@@ -1,5 +1,5 @@
 {
-  "sourceUrl": "https://github.com/lst97/ui-ux-pro-max",
+  "sourceUrl": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
   "skill": {
     "name": "ui-ux-pro-max",
     "description": "Use when designing distinctive web or mobile UI — a curated bank of 50+ visual styles, 161 color palettes, 57 font pairings, 99 UX heuristics, and 25 chart types, with built-in shadcn/ui MCP integration.",
@@ -64,6 +64,6 @@
     "category": "tool",
     "audience": "creators",
     "videoUrls": [],
-    "repoUrl": "https://github.com/lst97/ui-ux-pro-max"
+    "repoUrl": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"
   }
 }
