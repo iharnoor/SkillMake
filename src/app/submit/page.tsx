@@ -1,12 +1,17 @@
 import Link from "next/link";
+import { after } from "next/server";
+import { headers } from "next/headers";
 import { Converter } from "@/components/Converter";
 import { Benchmarks } from "@/components/Benchmarks";
 import { loadBenchmarks } from "@/lib/benchmarks";
 import { getEnv } from "@/lib/env";
+import { track } from "@/lib/metrics";
 
 export const dynamic = "force-dynamic";
 
 export default async function SubmitPage() {
+  const h = await headers();
+  after(() => track("submit_started", { headers: h }));
   const [summary, env] = await Promise.all([loadBenchmarks(), getEnv()]);
   // Without an AI provider, the docs→SKILL.md converter can't run. Show a
   // honest "curator-only for now" notice instead of letting users hit a 503

@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { after } from "next/server";
+import { headers } from "next/headers";
 import { getApprovedSkill } from "@/lib/storage";
 import { SkillPreview } from "@/components/SkillPreview";
 import { InstallCommand } from "@/components/InstallCommand";
 import { resolveVideoEmbed } from "@/lib/skill-schema";
 import { GithubIcon } from "@/components/GithubIcon";
 import { formatStars } from "@/lib/github";
+import { track } from "@/lib/metrics";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +16,11 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ id
   const { id } = await params;
   const entry = await getApprovedSkill(id);
   if (!entry) notFound();
+
+  // Browse → install funnel: pair each marketplace_view with /i/<slug> hits.
+  // headers() must be read here, not inside the after() callback.
+  const h = await headers();
+  after(() => track("marketplace_view", { slug: entry.skill.name, headers: h }));
 
   const videos = entry.skill.videoUrls
     .map((url) => resolveVideoEmbed(url))

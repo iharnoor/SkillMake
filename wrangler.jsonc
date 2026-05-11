@@ -28,6 +28,16 @@
     }
   ],
 
+  // Custom server-side events (install hits, marketplace views, etc.) for
+  // measuring who actually uses skillmake. Queryable via the Workers
+  // Analytics Engine SQL API and visible in the Cloudflare dashboard.
+  "analytics_engine_datasets": [
+    {
+      "binding": "METRICS",
+      "dataset": "skillmake_metrics"
+    }
+  ],
+
   // Secrets are set out-of-band (CLI or Workers Builds dashboard):
   //   wrangler secret put ANTHROPIC_API_KEY
   //   wrangler secret put HYDRADB_API_KEY

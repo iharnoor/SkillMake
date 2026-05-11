@@ -14,6 +14,7 @@ interface EnvShape {
   ADMIN_TOKEN?: string;
   GITHUB_TOKEN?: string;
   MARKETPLACE_KV?: KVNamespace;
+  METRICS?: AnalyticsEngineDataset;
 }
 
 let cached: EnvShape | null = null;
@@ -40,6 +41,7 @@ export async function getEnv(): Promise<EnvShape> {
     ADMIN_TOKEN: cf.env?.ADMIN_TOKEN ?? proc.ADMIN_TOKEN,
     GITHUB_TOKEN: cf.env?.GITHUB_TOKEN ?? proc.GITHUB_TOKEN,
     MARKETPLACE_KV: cf.env?.MARKETPLACE_KV,
+    METRICS: cf.env?.METRICS,
   };
   return cached;
 }

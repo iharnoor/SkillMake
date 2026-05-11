@@ -1,4 +1,6 @@
+import { after } from "next/server";
 import { findApprovedByName } from "@/lib/storage";
+import { track } from "@/lib/metrics";
 
 export const runtime = "nodejs";
 
@@ -13,10 +15,11 @@ export const runtime = "nodejs";
  * header so callers can verify integrity if they want to.
  */
 
-export async function GET(_req: Request, ctx: { params: Promise<{ name: string }> }) {
+export async function GET(req: Request, ctx: { params: Promise<{ name: string }> }) {
   const { name } = await ctx.params;
   const entry = await findApprovedByName(name);
   if (!entry) return new Response("Not found", { status: 404 });
+  after(() => track("install_hit", { slug: name, headers: req.headers }));
   return new Response(entry.markdown, {
     headers: {
       "content-type": "text/markdown; charset=utf-8",

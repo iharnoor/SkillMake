@@ -1,9 +1,12 @@
 import Link from "next/link";
+import { after } from "next/server";
+import { headers } from "next/headers";
 import { listSkills } from "@/lib/storage";
 import { MarketplaceSearch } from "@/components/MarketplaceSearch";
 import { AUDIENCES, type Audience } from "@/lib/skill-schema";
 import { formatStars } from "@/lib/github";
 import { GithubIcon } from "@/components/GithubIcon";
+import { track } from "@/lib/metrics";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +19,11 @@ const ASCII = String.raw` ____  _    _ _ _                 _
 |____/|_|\_\_|_|_|_| |_| |_|\__,_|_|\_\___|`;
 
 export default async function Home() {
+  // Read headers BEFORE `after()` — request-time APIs can't be called inside
+  // an after() callback from a Server Component.
+  const h = await headers();
+  after(() => track("home_view", { headers: h }));
+
   const all = await listSkills();
   // Sort by ★ stars desc, ties and starless skills fall back to createdAt desc.
   // Starless entries (workflow skills, no canonical repo) end up at the bottom
