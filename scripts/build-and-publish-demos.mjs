@@ -305,7 +305,13 @@ async function fetchProdStars() {
 }
 
 async function loadSeeds() {
-  const files = (await readdir(SEEDS_DIR)).filter((f) => f.endsWith(".json")).sort();
+  // SEED_FILTER is a substring matched against the seed filename (e.g. SEED_FILTER=mp-
+  // renders only the mp-*.json seeds). Empty/unset = render all.
+  const filter = process.env.SEED_FILTER || "";
+  const files = (await readdir(SEEDS_DIR))
+    .filter((f) => f.endsWith(".json"))
+    .filter((f) => (filter ? f.includes(filter) : true))
+    .sort();
   const seeds = [];
   for (const f of files) {
     const raw = await readFile(path.join(SEEDS_DIR, f), "utf-8");
@@ -354,6 +360,12 @@ async function main() {
       results.push({ slug, status: "render-fail", error: e.message });
       continue;
     }
+    // SKIP_PUBLISH=1 stops after render — useful when self-hosting via public/v/.
+    if (process.env.SKIP_PUBLISH === "1") {
+      console.log("OK (publish skipped)");
+      results.push({ slug, status: "rendered-only" });
+      continue;
+    }
     process.stdout.write("OK · publish … ");
 
     // Publish (yes piped via stdin)
@@ -377,11 +389,12 @@ async function main() {
 
   console.log("\n=== summary ===");
   for (const r of results) {
-    const stars = "";
     if (r.status === "ok") console.log(`✓ ${r.slug.padEnd(30)} ${r.url}`);
+    else if (r.status === "rendered-only") console.log(`✓ ${r.slug.padEnd(30)} (rendered, publish skipped)`);
     else console.log(`✗ ${r.slug.padEnd(30)} ${r.status}: ${r.error ?? ""}`);
   }
-  console.log(`\n${results.filter((r) => r.status === "ok").length}/${results.length} published`);
+  const okCount = results.filter((r) => r.status === "ok" || r.status === "rendered-only").length;
+  console.log(`\n${okCount}/${results.length} ${process.env.SKIP_PUBLISH === "1" ? "rendered" : "published"}`);
 }
 
 main().catch((e) => {
