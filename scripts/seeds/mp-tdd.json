@@ -1,0 +1,74 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/tdd/SKILL.md",
+  "skill": {
+    "name": "mp-tdd",
+    "description": "Use when building features or fixing bugs test-first — red-green-refactor in vertical tracer-bullet slices, tests verifying behavior through public interfaces so they survive internal refactors.",
+    "whenToUse": [
+      "Adding a new feature where you want behavior locked down before the implementation drifts",
+      "Fixing a bug by writing the regression test first, then the fix",
+      "User explicitly says 'red-green-refactor', 'TDD this', or 'test-first'",
+      "Replacing implementation-coupled tests that break on refactor with integration-style behavior tests"
+    ],
+    "keyConcepts": [
+      {
+        "term": "behavior over implementation",
+        "explanation": "Tests verify behavior through public interfaces, not implementation details. Code can change entirely; tests shouldn't. A good test reads like a specification — 'user can checkout with valid cart' tells you exactly what capability exists. If renaming an internal function breaks the test, it was testing implementation."
+      },
+      {
+        "term": "good vs bad tests",
+        "explanation": "Good tests are integration-style: exercise real code paths through public APIs, describe WHAT the system does. Bad tests are coupled to implementation: mock internal collaborators, test private methods, or verify through external means (querying the DB directly instead of using the interface). Warning sign: test breaks on refactor while behavior is unchanged."
+      },
+      {
+        "term": "horizontal-slice anti-pattern",
+        "explanation": "DO NOT write all tests first, then all implementation. Bulk-writing tests produces tests of IMAGINED behavior — shape of data structures, function signatures — not actual user-facing behavior. They become insensitive to real changes (pass when behavior breaks, fail when it's fine) because you committed to test structure before understanding the implementation."
+      },
+      {
+        "term": "vertical tracer-bullet slice",
+        "explanation": "One test → one implementation → repeat. Each test responds to what you learned from the previous cycle. Because you JUST wrote the code, you know exactly what behavior matters and how to verify it. This is the correct shape of red-green-refactor."
+      },
+      {
+        "term": "the tracer bullet (first cycle)",
+        "explanation": "Write ONE test that confirms ONE thing about the system. RED: write the test → it fails. GREEN: minimal code to pass → it passes. This proves the path works end-to-end before you scale up. Then incremental loop: one test, minimal code, again."
+      },
+      {
+        "term": "deep modules + interface design",
+        "explanation": "Before writing code, look for opportunities to create deep modules — small interface, deep implementation. Design interfaces FOR testability. The interface is the test surface, so getting it right means tests will actually survive."
+      },
+      {
+        "term": "refactor only on GREEN",
+        "explanation": "After all tests pass, look for refactor candidates — extract duplication, deepen modules, apply SOLID where natural. Run tests after each refactor step. Never refactor while RED — get to GREEN first."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Horizontal (WRONG) vs Vertical (RIGHT) workflow",
+        "purpose": "The shape of the loop is the whole skill. Horizontal slicing produces crap tests; vertical tracer bullets produce tests that survive refactors.",
+        "example": "WRONG (horizontal):\n  RED:   test1, test2, test3, test4, test5\n  GREEN: impl1, impl2, impl3, impl4, impl5\n\nRIGHT (vertical):\n  RED→GREEN: test1→impl1\n  RED→GREEN: test2→impl2\n  RED→GREEN: test3→impl3\n  ..."
+      },
+      {
+        "signature": "Planning checklist (before any code)",
+        "purpose": "Reach agreement on the interface and which behaviors matter most before writing the first test. You can't test everything — focus testing effort on critical paths and complex logic.",
+        "example": "- [ ] Confirm with user what interface changes are needed\n- [ ] Confirm with user which behaviors to test (prioritize)\n- [ ] Identify opportunities for deep modules (small interface, deep implementation)\n- [ ] Design interfaces for testability\n- [ ] List the behaviors to test (not implementation steps)\n- [ ] Get user approval on the plan\n\nAsk: \"What should the public interface look like? Which behaviors are most important to test?\""
+      },
+      {
+        "signature": "Per-cycle checklist",
+        "purpose": "Run this against every single tracer bullet cycle so tests don't drift into implementation-coupling.",
+        "example": "[ ] Test describes behavior, not implementation\n[ ] Test uses public interface only\n[ ] Test would survive internal refactor\n[ ] Code is minimal for this test\n[ ] No speculative features added"
+      }
+    ],
+    "gotchas": [
+      "Don't write all tests first then all implementation — bulk tests test imagined behavior, not actual behavior.",
+      "If renaming an internal function breaks a test while behavior is unchanged, the test was implementation-coupled.",
+      "Mocking internal collaborators is a smell. Prefer integration-style tests through public APIs.",
+      "Never refactor while RED. Get to GREEN first, then refactor with the test net in place.",
+      "Write only enough code to pass the current test. Don't anticipate future tests.",
+      "You can't test everything. Confirm with the user which behaviors matter most before writing tests.",
+      "Verifying through external means (querying the DB instead of using the interface) couples tests to implementation.",
+      "Run tests after each refactor step, not at the end — small reversible moves keep refactoring safe."
+    ],
+    "category": "concept",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

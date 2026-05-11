@@ -1,0 +1,74 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/improve-codebase-architecture/SKILL.md",
+  "skill": {
+    "name": "mp-improve-codebase-architecture",
+    "description": "Use when looking for deepening opportunities — refactors that turn shallow modules into deep ones, informed by CONTEXT.md domain language and prior ADRs. Aim: testability and AI-navigability.",
+    "whenToUse": [
+      "User wants to improve architecture, find refactor opportunities, or consolidate tightly-coupled modules",
+      "Codebase has shallow pass-through modules whose interface is nearly as complex as their implementation",
+      "Pure functions extracted just for testability while the real bugs hide in how they're called",
+      "Preparing a codebase to be more AI-navigable by concentrating complexity behind small interfaces"
+    ],
+    "keyConcepts": [
+      {
+        "term": "module",
+        "explanation": "Anything with an interface and an implementation — a function, class, package, or slice. Don't drift into 'component', 'service', 'API', or 'boundary'; consistent vocabulary is the point."
+      },
+      {
+        "term": "interface (broader than type signature)",
+        "explanation": "Everything a caller must know to use the module: types, invariants, error modes, ordering constraints, configuration. Not just the function signature. The interface is the test surface."
+      },
+      {
+        "term": "depth",
+        "explanation": "Leverage at the interface — a lot of behaviour behind a small interface. Deep = high leverage. Shallow = interface nearly as complex as the implementation. Deep modules are the goal."
+      },
+      {
+        "term": "seam",
+        "explanation": "Where an interface lives — a place behaviour can be altered without editing the implementation in place. Use this word, not 'boundary'. One adapter = hypothetical seam. Two adapters = real seam."
+      },
+      {
+        "term": "leverage vs locality",
+        "explanation": "Two complementary benefits of depth. Leverage: what CALLERS get — a lot of behaviour for a tiny interface. Locality: what MAINTAINERS get — change, bugs, and knowledge concentrated in one place instead of scattered across N callers."
+      },
+      {
+        "term": "deletion test",
+        "explanation": "Imagine deleting the module. If complexity vanishes, it was a pass-through — delete it. If complexity reappears across N callers, it was earning its keep. Apply this to anything you suspect is shallow."
+      },
+      {
+        "term": "informed by domain model",
+        "explanation": "This skill is informed by, not separate from, the project's domain. Read CONTEXT.md and any ADRs in the area first. Domain language gives names to good seams; ADRs record decisions you should not re-litigate. Use CONTEXT.md vocabulary in candidate names — 'the Order intake module', not 'the FooBarHandler' or 'the Order service'."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Process — 1. Explore",
+        "purpose": "Use the Agent tool with subagent_type=Explore to walk the codebase. Don't follow rigid heuristics — explore organically and note friction. Apply the deletion test to anything suspected of being shallow.",
+        "example": "Friction signals to note:\n- Understanding one concept requires bouncing between many small modules\n- Modules where the interface is nearly as complex as the implementation (shallow)\n- Pure functions extracted just for testability, while bugs hide in how they're called (no locality)\n- Tightly-coupled modules leaking across seams\n- Parts of the codebase that are untested or hard to test through their current interface"
+      },
+      {
+        "signature": "Process — 2. Present candidates (numbered list)",
+        "purpose": "For each deepening opportunity show four sections. Use CONTEXT.md vocabulary for the domain and the architecture glossary (module, interface, seam, depth, leverage, locality) for the architecture. Do NOT propose new interfaces yet — let the user pick a candidate first.",
+        "example": "- Files: which files/modules are involved\n- Problem: why the current architecture is causing friction\n- Solution: plain English description of what would change\n- Benefits: explained in terms of locality, leverage, and how tests improve\n\nThen ask: \"Which of these would you like to explore?\""
+      },
+      {
+        "signature": "Process — 3. Grilling loop with inline side effects",
+        "purpose": "Once a candidate is picked, drop into a grilling conversation walking the design tree. Apply doc side effects inline as decisions crystallise.",
+        "example": "- Naming the deepened module after a new concept → add the term to CONTEXT.md (lazily create if missing)\n- Sharpening a fuzzy term during the conversation → update CONTEXT.md right there\n- User rejects the candidate with a load-bearing reason → offer an ADR framed as \"Want me to record this so future reviews don't re-suggest it?\" — only when the reason would actually be needed by a future explorer\n- Exploring alternative interfaces for the deepened module → see INTERFACE-DESIGN.md"
+      }
+    ],
+    "gotchas": [
+      "Use the exact architecture glossary — module, interface, implementation, depth, seam, adapter, leverage, locality. Don't drift into 'component', 'service', 'API', or 'boundary'.",
+      "Apply the deletion test: a module whose deletion makes complexity vanish was a pass-through, not a deep module.",
+      "Don't propose interfaces during step 2 — list candidates, let the user pick, then grill on the chosen one.",
+      "Use CONTEXT.md vocabulary for domain names — 'Order intake module', not 'FooBarHandler' or 'Order service'.",
+      "One adapter is a hypothetical seam; you need at least two adapters before claiming a real seam.",
+      "ADR conflicts: only surface a candidate that contradicts an existing ADR when the friction warrants reopening it, and mark it clearly ('contradicts ADR-0007 — but worth reopening because…').",
+      "Beware pure functions extracted just for testability — they often have leverage but no locality, leaving bugs in the call-site glue.",
+      "If a candidate is rejected with a load-bearing reason, offer an ADR — but only when a future explorer would need it; skip ephemeral ('not worth it now') and self-evident reasons."
+    ],
+    "category": "concept",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

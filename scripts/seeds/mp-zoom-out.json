@@ -1,0 +1,49 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/zoom-out/SKILL.md",
+  "skill": {
+    "name": "mp-zoom-out",
+    "description": "Use when unfamiliar with a section of code and you need the agent to go up a layer of abstraction — produce a map of relevant modules and callers using CONTEXT.md vocabulary, not implementation detail.",
+    "whenToUse": [
+      "You've landed in unfamiliar code and need the bigger picture before editing",
+      "Trying to understand how a module fits into the wider system before refactoring or fixing a bug",
+      "Onboarding to a feature area where the call graph isn't obvious from the file you're in",
+      "Maintainer asks 'zoom out' — they want a map, not a deep-dive into the current function"
+    ],
+    "keyConcepts": [
+      {
+        "term": "go up a layer of abstraction",
+        "explanation": "When invoked, the agent stops staring at the current function and produces a higher-level view: which modules participate in this area, which callers depend on them, where the seams are. Detail-first responses defeat the purpose."
+      },
+      {
+        "term": "map of modules and callers",
+        "explanation": "The deliverable is a MAP — a structured list of relevant modules and the places that call them, not a tour of one file. Trace inbound and outbound dependencies so the reader can see the surrounding shape, not just the centre."
+      },
+      {
+        "term": "use the domain glossary",
+        "explanation": "Use CONTEXT.md vocabulary throughout. 'The Order intake module' beats 'OrderController' because the former survives renames; the glossary is the stable layer above the code."
+      },
+      {
+        "term": "disable-model-invocation",
+        "explanation": "This skill has `disable-model-invocation: true` in its frontmatter — it does not self-trigger from descriptions of code. The user invokes it explicitly when they want to zoom out. Don't auto-fire it on every unfamiliar file."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "The skill body (verbatim)",
+        "purpose": "The entire skill is a short instruction to the agent. There are no templates or step lists beyond this — the discipline IS the brevity.",
+        "example": "I don't know this area of code well. Go up a layer of abstraction. Give me a map of all the relevant modules and callers, using the project's domain glossary vocabulary."
+      }
+    ],
+    "gotchas": [
+      "Produce a MAP, not a deep-dive. If you find yourself reading line-by-line, you're zoomed in, not out.",
+      "Use CONTEXT.md vocabulary — module names from the glossary, not class names from the file you happened to open.",
+      "This skill is `disable-model-invocation: true` — it's user-triggered, not auto-loaded. Don't fire it on every unfamiliar file.",
+      "Include callers, not just the module of interest. The map is incomplete without the inbound edges.",
+      "If CONTEXT.md doesn't exist or is sparse, that's worth flagging — a zoom-out request is often the moment to start one."
+    ],
+    "category": "concept",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

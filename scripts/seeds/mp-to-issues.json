@@ -1,0 +1,74 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/to-issues/SKILL.md",
+  "skill": {
+    "name": "mp-to-issues",
+    "description": "Use when breaking a plan, spec, or PRD into independently-grabbable tracker issues — vertical tracer-bullet slices that cut through every layer end-to-end, each one demoable on its own.",
+    "whenToUse": [
+      "Converting a PRD or design doc into implementation tickets ready for AFK agents",
+      "Splitting a large feature into thin slices a single contributor (human or agent) can finish in one sitting",
+      "Marking which slices are HITL (human interaction required) vs AFK (agent-mergeable)",
+      "Sequencing tickets so blockers ship first and downstream slices can reference real issue IDs"
+    ],
+    "keyConcepts": [
+      {
+        "term": "vertical tracer-bullet slice",
+        "explanation": "Each issue is a thin vertical slice that cuts through ALL integration layers — schema, API, UI, tests — end-to-end. Not a horizontal slice of one layer. A completed slice is demoable or verifiable on its own. Prefer many thin slices over few thick ones."
+      },
+      {
+        "term": "HITL vs AFK",
+        "explanation": "Slices are tagged HITL (human-in-the-loop — requires architectural decision, design review, or external access) or AFK (agent-mergeable without human interaction). Prefer AFK over HITL where possible — that's where the leverage is."
+      },
+      {
+        "term": "quiz the user before publishing",
+        "explanation": "Present the proposed breakdown as a numbered list with title, type (HITL/AFK), blocked-by, and user stories covered. Ask whether granularity feels right (too coarse/too fine), whether dependencies are correct, whether any slices should merge or split, whether HITL/AFK tags are right. Iterate until approved."
+      },
+      {
+        "term": "publish in dependency order",
+        "explanation": "Publish issues in dependency order — blockers first — so you can reference real issue IDs in the 'Blocked by' field of downstream slices. Skipping this leaves dangling references."
+      },
+      {
+        "term": "respect domain glossary",
+        "explanation": "Issue titles and descriptions must use the project's CONTEXT.md vocabulary and respect ADRs in the area you're touching. Drift from canonical terms means downstream contributors won't trust the issue."
+      },
+      {
+        "term": "no file paths or code in issues",
+        "explanation": "Issue bodies describe end-to-end behavior, not layer-by-layer implementation. Avoid specific file paths or code snippets — they go stale fast. Exception: a prototype-derived state machine / reducer / schema / type shape can be inlined when it encodes a decision more precisely than prose. Trim to decision-rich parts, not a working demo."
+      },
+      {
+        "term": "do NOT modify the parent issue",
+        "explanation": "When breaking a parent issue into slices, do not close or modify the parent. The parent stays as the tracking thread; child issues link back via the 'Parent' field of the template."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Vertical-slice rules",
+        "purpose": "The shape every slice must have. Failing these turns 'issues' into a layer-by-layer to-do list that can't be parallelised.",
+        "example": "- Each slice delivers a narrow but COMPLETE path through every layer (schema, API, UI, tests)\n- A completed slice is demoable or verifiable on its own\n- Prefer many thin slices over few thick ones"
+      },
+      {
+        "signature": "Per-slice review summary (present to user)",
+        "purpose": "What you show the user for each proposed slice when quizzing for approval. The user signs off before any issue is published.",
+        "example": "- Title: short descriptive name\n- Type: HITL / AFK\n- Blocked by: which other slices (if any) must complete first\n- User stories covered: which user stories this addresses (if the source has them)\n\nAsk:\n- Does the granularity feel right? (too coarse / too fine)\n- Are the dependency relationships correct?\n- Should any slices be merged or split further?\n- Are the correct slices marked as HITL and AFK?"
+      },
+      {
+        "signature": "Issue body template",
+        "purpose": "Use this template verbatim for every published issue. Apply the ready-for-agent triage label unless instructed otherwise.",
+        "example": "## Parent\n\nA reference to the parent issue (omit if no parent).\n\n## What to build\n\nA concise description of this vertical slice. Describe the end-to-end behavior, not layer-by-layer implementation. Avoid file paths or code snippets — they go stale. Inline a prototype-derived snippet only when it encodes a decision more precisely than prose.\n\n## Acceptance criteria\n\n- [ ] Criterion 1\n- [ ] Criterion 2\n- [ ] Criterion 3\n\n## Blocked by\n\n- A reference to the blocking ticket (if any)\n\nOr \"None - can start immediately\" if no blockers."
+      }
+    ],
+    "gotchas": [
+      "Each slice must cut through EVERY layer. A schema-only or UI-only ticket is a horizontal slice and can't be demoed standalone.",
+      "Prefer AFK over HITL where possible — HITL slices block on humans and don't parallelise.",
+      "Publish in dependency order so 'Blocked by' fields can reference real issue IDs, not 'TBD'.",
+      "Use the project's CONTEXT.md vocabulary in titles and descriptions — don't invent new terminology.",
+      "Avoid specific file paths or code snippets in issue bodies — they rot fast.",
+      "Exception: inline a prototype-derived state machine / schema / type shape when it encodes a decision more precisely than prose, trimmed to the decision-rich parts.",
+      "Do NOT close or modify the parent issue when splitting it into slices — the parent stays as the tracking thread.",
+      "Quiz the user on granularity, dependencies, and HITL/AFK tags BEFORE publishing — once the issues are live they're expensive to restructure."
+    ],
+    "category": "concept",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

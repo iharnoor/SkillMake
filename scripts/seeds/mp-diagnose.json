@@ -1,0 +1,69 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/diagnose/SKILL.md",
+  "skill": {
+    "name": "mp-diagnose",
+    "description": "Use when chasing hard bugs or perf regressions — disciplined reproduce→minimise→hypothesise→instrument→fix→regression-test loop, with feedback loop quality treated as the actual skill.",
+    "whenToUse": [
+      "User says 'diagnose this' / 'debug this' or reports something throwing, failing, or broken",
+      "Performance regression where timing changed and you need a reliable measurement harness",
+      "Non-deterministic / flaky bug that needs a higher reproduction rate before it's debuggable",
+      "Bug that's been re-fixed twice and you want a regression test seam that survives refactors"
+    ],
+    "keyConcepts": [
+      {
+        "term": "feedback loop (Phase 1)",
+        "explanation": "The actual skill. A fast, deterministic, agent-runnable pass/fail signal for the bug. Bisection, hypothesis-testing, and instrumentation only consume this signal — without one, no amount of code reading helps. Treat the loop as a product: make it faster, sharper, more deterministic. A 2-second deterministic loop is a debugging superpower; a 30-second flaky one is barely better than nothing."
+      },
+      {
+        "term": "ways to construct a loop",
+        "explanation": "In rough order: failing test at the right seam, curl/HTTP script, CLI invocation with snapshot diff, headless browser, captured-trace replay, throwaway harness, property/fuzz loop, git-bisect harness, differential old-vs-new run, and as last resort a HITL bash script that drives a human. Be aggressive, creative, refuse to give up."
+      },
+      {
+        "term": "non-deterministic bugs",
+        "explanation": "The goal is not a clean repro but a higher reproduction rate. Loop the trigger 100×, parallelise, add stress, narrow timing windows, inject sleeps. A 50%-flake bug is debuggable; 1% is not — keep raising the rate until it is."
+      },
+      {
+        "term": "ranked hypotheses (Phase 3)",
+        "explanation": "Generate 3–5 falsifiable hypotheses before testing any of them — single-hypothesis generation anchors on the first plausible idea. Each must state a prediction: 'If X is the cause, then changing Y makes the bug disappear / changing Z makes it worse.' Show the ranked list to the user before testing; they often re-rank instantly."
+      },
+      {
+        "term": "tagged debug logs",
+        "explanation": "Every probe gets a unique prefix like `[DEBUG-a4f2]`. Cleanup at the end becomes a single grep. Untagged logs survive into prod; tagged logs die. One breakpoint beats ten logs — prefer debugger/REPL inspection when the env supports it, then targeted logs at hypothesis-distinguishing boundaries. Never 'log everything and grep'."
+      },
+      {
+        "term": "correct seam for regression test",
+        "explanation": "A seam where the test exercises the real bug pattern as it occurs at the call site. A single-caller test for a bug that needs multiple callers, or a unit test that can't replicate the triggering chain, gives false confidence. If no correct seam exists, that itself is the finding — flag it and hand off to architecture work after the fix."
+      },
+      {
+        "term": "perf branch",
+        "explanation": "For performance regressions, logs are usually wrong. Establish a baseline measurement (timing harness, performance.now(), profiler, query plan), then bisect. Measure first, fix second."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Phase 5 — write the regression test before the fix",
+        "purpose": "Only when a correct seam exists: turn the minimised repro into a failing test at that seam, watch it fail, apply the fix, watch it pass, then re-run the Phase 1 loop against the original un-minimised scenario.",
+        "example": "1. Turn the minimised repro into a failing test at the correct seam\n2. Watch it fail\n3. Apply the fix\n4. Watch it pass\n5. Re-run the Phase 1 feedback loop against the original (un-minimised) scenario"
+      },
+      {
+        "signature": "Phase 6 — done-checklist before declaring done",
+        "purpose": "Cleanup gate. All four boxes plus the post-mortem question must be answered before claiming the bug is fixed.",
+        "example": "- [ ] Original repro no longer reproduces (re-run Phase 1 loop)\n- [ ] Regression test passes (or absence of seam is documented)\n- [ ] All [DEBUG-...] instrumentation removed (grep the prefix)\n- [ ] Throwaway prototypes deleted or clearly marked\n- [ ] Correct hypothesis stated in the commit / PR message\n\nThen: what would have prevented this bug?"
+      }
+    ],
+    "gotchas": [
+      "Do not proceed past Phase 1 without a feedback loop you believe in — staring at code without a signal wastes hours.",
+      "Confirm the loop reproduces the SAME failure mode the user described, not a different failure that happens to be nearby. Wrong bug = wrong fix.",
+      "Don't anchor on the first plausible hypothesis. Generate 3–5 ranked, falsifiable ones before testing any.",
+      "Tag every debug log with a unique prefix like [DEBUG-a4f2] so cleanup is a single grep — untagged logs end up in production.",
+      "For perf regressions, logs lie. Measure first with a baseline harness, then bisect.",
+      "Change one variable at a time when instrumenting; multi-variable probes destroy signal.",
+      "Writing a regression test at the wrong seam gives false confidence — if no correct seam exists, that's the finding, not 'good enough'.",
+      "If you genuinely can't build a loop, stop and say so explicitly. Ask for env access, a captured artifact (HAR / log dump / core dump), or permission to add temporary prod instrumentation."
+    ],
+    "category": "concept",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

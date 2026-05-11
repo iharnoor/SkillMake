@@ -1,0 +1,69 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/prototype/SKILL.md",
+  "skill": {
+    "name": "mp-prototype",
+    "description": "Use when building throwaway code that answers a single design question — routes to a runnable terminal app (logic/state) or several switchable UI variations (visual) and is deleted once the question is answered.",
+    "whenToUse": [
+      "Sanity-checking a state machine or data model with a tiny interactive terminal app before committing",
+      "Generating several radically different UI variations on one route to compare visually",
+      "User says 'prototype this', 'let me play with it', or 'try a few designs'",
+      "Exercising hard-to-reason-about cases by pushing them through the model interactively"
+    ],
+    "keyConcepts": [
+      {
+        "term": "a prototype answers a question",
+        "explanation": "Throwaway code that answers a single question. The QUESTION decides the shape — getting the branch wrong wastes the whole prototype. If ambiguous and the user isn't reachable, default to whichever branch matches the surrounding code (backend module → logic; page/component → UI) and state the assumption at the top."
+      },
+      {
+        "term": "LOGIC branch",
+        "explanation": "For 'does this logic / state model feel right?' Build a tiny interactive terminal app that pushes the state machine through cases hard to reason about on paper. After every action, print the full relevant state so the user can see what changed."
+      },
+      {
+        "term": "UI branch",
+        "explanation": "For 'what should this look like?' Generate several RADICALLY different UI variations on a single route, switchable via a URL search param and a floating bottom bar. Variations should be far apart, not minor tweaks — the point is to surface preference, not to A/B-test margins."
+      },
+      {
+        "term": "throwaway from day one",
+        "explanation": "Mark the code as a prototype so a casual reader sees it isn't production. Locate it close to where it will actually be used (next to the module or page it's prototyping for) so context is obvious. For UI routes, obey the project's existing routing convention — don't invent new top-level structure."
+      },
+      {
+        "term": "one command to run",
+        "explanation": "The user must start the prototype without thinking. Use whatever the project's existing task runner supports — `pnpm <name>`, `python <path>`, `bun <path>`. No multi-step setup."
+      },
+      {
+        "term": "no persistence by default",
+        "explanation": "State lives in memory. Persistence is the thing the prototype is checking, not something it should depend on. If the question explicitly involves a DB, hit a scratch DB or a local file with a clear 'PROTOTYPE — wipe me' name."
+      },
+      {
+        "term": "capture the answer when done",
+        "explanation": "The answer is the only thing worth keeping from a prototype. Record it somewhere durable — commit message, ADR, issue, or NOTES.md next to the prototype — along with the question it was answering. Then delete the prototype or fold the validated decision into real code."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Rules that apply to both branches",
+        "purpose": "Six rules that hold whether you're prototyping logic or UI. Skipping them turns a prototype into permanent rot.",
+        "example": "1. Throwaway from day one, clearly marked as such — and located near where it'll actually be used\n2. One command to run — use the project's existing task runner\n3. No persistence by default — state in memory; if you must persist, use a 'PROTOTYPE — wipe me' scratch store\n4. Skip the polish — no tests, no abstractions, error handling only as needed to run\n5. Surface the state — print or render the full relevant state after every action / variant switch\n6. Delete or absorb when done — don't leave it rotting"
+      },
+      {
+        "signature": "Picking a branch",
+        "purpose": "Identify which question is being answered before you start coding. The wrong branch wastes the prototype.",
+        "example": "\"Does this logic / state model feel right?\" → LOGIC.md (terminal app)\n\"What should this look like?\"           → UI.md (switchable variations on one route)\n\nIf ambiguous and the user isn't around:\n- backend module → logic\n- page or component → UI\nState the assumption at the top of the prototype."
+      }
+    ],
+    "gotchas": [
+      "Pick the right branch first. Building a UI prototype when the question is about state logic (or vice versa) wastes the whole thing.",
+      "Locate the prototype near where it'll actually be used — not in a /prototypes/ junk drawer where context is lost.",
+      "Don't add persistence by default. Persistence is what the prototype is checking, not a dependency.",
+      "Skip tests, abstractions, and polish. The point is to learn something fast and delete it.",
+      "After every action (logic) or variant switch (UI), surface the full relevant state — otherwise you can't see what changed.",
+      "UI variations should be radically different — minor tweaks don't answer 'what should this look like?'",
+      "The answer is the only thing worth keeping. Capture it (commit message / ADR / issue / NOTES.md) before deleting.",
+      "Don't invent new top-level routing structure for a UI prototype — obey the project's existing routing convention."
+    ],
+    "category": "concept",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}
