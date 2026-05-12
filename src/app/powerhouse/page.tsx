@@ -42,6 +42,43 @@ export default async function PowerhousePage() {
       </p>
 
       <SkillEntry
+        entry={pp}
+        fallbackSlug="printingpress"
+        title="printingpress"
+        tagline="every API has a secret identity, this finds it"
+        description="Generates a Go CLI + MCP server from an OpenAPI spec, HAR file, or live website — with local SQLite mirror, FTS5 search, and compound commands the underlying API can't answer natively."
+        body={
+          <>
+            <p>
+              Generates a Go CLI + MCP server from an OpenAPI spec, HAR file, or live website. The
+              output isn&apos;t a passthrough wrapper — it&apos;s a domain-shaped CLI with a local
+              SQLite mirror, FTS5 search, and compound commands like{" "}
+              <span className="mono">stale</span>, <span className="mono">orphans</span>,{" "}
+              <span className="mono">health</span>, <span className="mono">similar</span>, and{" "}
+              <span className="mono">bottleneck</span> that the underlying API can&apos;t answer
+              natively.
+            </p>
+            <p>
+              Every generated CLI auto-emits JSON when piped, ships a{" "}
+              <span className="mono">--compact</span> mode (60–80% fewer tokens), exposes typed
+              exit codes, and supports <span className="mono">--dry-run</span>. Four verification
+              gates — scorecard, dogfood, proof-of-behavior, live smoke — gate ship-readiness. No
+              spec? Drive the site in a browser and the press infers the API from captured HAR.
+            </p>
+            <CodeBlock>
+              {`# 1. Install the binary (Go 1.26.3+)\ngo install github.com/mvanhorn/cli-printing-press/v4/cmd/printing-press@latest\n\n# 2. Install the skills (recommended)\ngit clone https://github.com/mvanhorn/cli-printing-press.git\nclaude --plugin-dir .\n\n# Or starter pack via npx\nnpx -y @mvanhorn/printing-press install starter-pack`}
+            </CodeBlock>
+            <p className="mono text-[12px] text-[color:var(--fg-dim)] leading-relaxed">
+              Trigger:{" "}
+              <span className="text-[color:var(--accent)]">/printing-press &lt;app-name | url&gt;</span>
+              . Reprint / polish / publish slash commands handle regen, fixes, and library
+              publishing.
+            </p>
+          </>
+        }
+      />
+
+      <SkillEntry
         entry={last72}
         fallbackSlug="last72hours"
         title="last72hours"
@@ -108,43 +145,6 @@ export default async function PowerhousePage() {
       />
 
       <SkillEntry
-        entry={pp}
-        fallbackSlug="printingpress"
-        title="printingpress"
-        tagline="every API has a secret identity, this finds it"
-        description="Generates a Go CLI + MCP server from an OpenAPI spec, HAR file, or live website — with local SQLite mirror, FTS5 search, and compound commands the underlying API can't answer natively."
-        body={
-          <>
-            <p>
-              Generates a Go CLI + MCP server from an OpenAPI spec, HAR file, or live website. The
-              output isn&apos;t a passthrough wrapper — it&apos;s a domain-shaped CLI with a local
-              SQLite mirror, FTS5 search, and compound commands like{" "}
-              <span className="mono">stale</span>, <span className="mono">orphans</span>,{" "}
-              <span className="mono">health</span>, <span className="mono">similar</span>, and{" "}
-              <span className="mono">bottleneck</span> that the underlying API can&apos;t answer
-              natively.
-            </p>
-            <p>
-              Every generated CLI auto-emits JSON when piped, ships a{" "}
-              <span className="mono">--compact</span> mode (60–80% fewer tokens), exposes typed
-              exit codes, and supports <span className="mono">--dry-run</span>. Four verification
-              gates — scorecard, dogfood, proof-of-behavior, live smoke — gate ship-readiness. No
-              spec? Drive the site in a browser and the press infers the API from captured HAR.
-            </p>
-            <CodeBlock>
-              {`# 1. Install the binary (Go 1.26.3+)\ngo install github.com/mvanhorn/cli-printing-press/v4/cmd/printing-press@latest\n\n# 2. Install the skills (recommended)\ngit clone https://github.com/mvanhorn/cli-printing-press.git\nclaude --plugin-dir .\n\n# Or starter pack via npx\nnpx -y @mvanhorn/printing-press install starter-pack`}
-            </CodeBlock>
-            <p className="mono text-[12px] text-[color:var(--fg-dim)] leading-relaxed">
-              Trigger:{" "}
-              <span className="text-[color:var(--accent)]">/printing-press &lt;app-name | url&gt;</span>
-              . Reprint / polish / publish slash commands handle regen, fixes, and library
-              publishing.
-            </p>
-          </>
-        }
-      />
-
-      <SkillEntry
         entry={htmle}
         fallbackSlug="html-everything"
         title="html-everything"
@@ -184,17 +184,17 @@ export default async function PowerhousePage() {
           How they compose
         </h2>
         <p className="text-[15px] text-[color:var(--fg-muted)] leading-relaxed">
+          <a href="#printingpress" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">printingpress</a>{" "}
+          is the heavyweight: point it at an API and it prints you the CLI to talk to it without
+          re-discovering its surface for every agent.{" "}
           <a href="#last72hours" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">last72hours</a>{" "}
           is for the immediate pulse — what spiked today.{" "}
           <a href="#last30days" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">last30days</a>{" "}
           is the wider lens — what the month has built. Both stay grounded in real posts with
           inline citations.{" "}
-          <a href="#printingpress" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">printingpress</a>{" "}
-          is orthogonal: once you&apos;ve identified the system worth integrating with, it prints
-          you the CLI to talk to it without re-discovering its surface for every agent.{" "}
           <a href="#html-everything" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">html-everything</a>{" "}
-          is the artifact step — whatever the other three produced, it wraps into one shareable
-          HTML file you can send.
+          is the artifact step — whatever the others produced, it wraps into one shareable HTML
+          file you can send.
         </p>
       </section>
 
