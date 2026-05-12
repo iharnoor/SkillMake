@@ -117,6 +117,18 @@ export default async function Home({
               </Link>
             );
           })}
+          <Link
+            href="/tricks"
+            className="text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
+          >
+            tricks
+          </Link>
+          <Link
+            href="/powerhouse"
+            className="text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
+          >
+            powerhouse
+          </Link>
         </div>
         <span className="mono text-[11px] text-[color:var(--fg-dim)] tabular-nums">
           {entries.length}

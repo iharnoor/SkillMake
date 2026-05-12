@@ -42,18 +42,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 Submit
               </Link>
               <Link
-                href="/tricks"
-                className="px-3 py-1.5 rounded-md text-sm text-[color:var(--fg-muted)] hover:text-[color:var(--fg)] transition"
-              >
-                Tricks
-              </Link>
-              <Link
-                href="/powerhouse"
-                className="px-3 py-1.5 rounded-md text-sm text-[color:var(--fg-muted)] hover:text-[color:var(--fg)] transition"
-              >
-                Powerhouse
-              </Link>
-              <Link
                 href="/security"
                 className="px-3 py-1.5 rounded-md text-sm text-[color:var(--fg-muted)] hover:text-[color:var(--fg)] transition"
               >
