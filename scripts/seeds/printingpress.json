@@ -1,0 +1,95 @@
+{
+  "sourceUrl": "https://github.com/mvanhorn/cli-printing-press",
+  "skill": {
+    "name": "printingpress",
+    "description": "Use when you want to auto-generate an agent-native Go CLI and MCP server from an API spec, HAR file, or website — with local SQLite mirror, FTS5 search, and compound commands the underlying API can't answer natively.",
+    "whenToUse": [
+      "Turning an OpenAPI / GraphQL / HAR / website into a token-efficient CLI + MCP server an agent can actually drive",
+      "Adding a local SQLite mirror to an API so the agent can run `search`, `stale`, `orphans`, and `bottleneck` queries the API itself can't answer",
+      "Generating both a Cobra CLI binary (`<api>-pp-cli`) and an MCP server (`<api>-pp-mcp`) from a single source — same data layer, two surfaces",
+      "Browser-sniffing a website that has no published API and emitting a working CLI from captured DevTools HAR traffic"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Agent-native CLI design",
+        "explanation": "Generated CLIs auto-emit JSON when piped, ship a `--compact` mode that drops 60–80% of output tokens, expose typed exit codes for control flow, and support `--dry-run` everywhere. The whole shape is tuned for an LLM driving the binary, not a human reading help text."
+      },
+      {
+        "term": "Secret-identity architecture",
+        "explanation": "Printing Press doesn't just wrap endpoints — it identifies what each API really represents (a graph, a queue, a calendar, a CRM) and architects the CLI around that. Output is the GOAT CLI for that domain, with compound commands (`health`, `similar`, `bottleneck`) layered on top of the raw verbs."
+      },
+      {
+        "term": "Local SQLite + FTS5",
+        "explanation": "Every generated CLI ships a domain-specific SQLite schema, FTS5 full-text search, and incremental sync with cursor tracking. `sync` populates the mirror; downstream commands query SQLite, not the remote API — fewer round trips, offline capable, agent-cacheable."
+      },
+      {
+        "term": "Four verification gates",
+        "explanation": "Generated projects must pass four gates before they're considered done: structural scorecard, dogfood test, proof-of-behavior, and a live smoke test (GET-only, never mutates). `printing-press scorecard` / `dogfood` / `verify` / `auth doctor` each target one of these."
+      },
+      {
+        "term": "Slash-command workflow",
+        "explanation": "The binary alone skips Printing Press's curated agent loop. `/printing-press <name|url>` is the primary entry point inside Claude Code — `/printing-press-reprint`, `/printing-press-polish`, and `/printing-press-publish` cover regen, targeted fixes, and library publishing respectively."
+      },
+      {
+        "term": "Browser-sniff mode",
+        "explanation": "When a website has no published API, pass it a URL and either a DevTools HAR export or a live browser launch. The press captures real traffic, infers the API, and emits a CLI from the captured calls — no spec required."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Prerequisites",
+        "purpose": "Go 1.26.3+ and Claude Code. Optional: GitHub CLI v2.90+ or npm/npx for skill installation.",
+        "example": "# Verify\ngo version          # >= 1.26.3\nclaude --version    # any recent Claude Code"
+      },
+      {
+        "signature": "Install the binary",
+        "purpose": "Installs the `printing-press` CLI from source.",
+        "example": "go install github.com/mvanhorn/cli-printing-press/v4/cmd/printing-press@latest"
+      },
+      {
+        "signature": "Install the skills (recommended — clone the repo)",
+        "purpose": "Clone the repo and let Claude Code pick up its `.claude/plugins` directory. This is the recommended path because it gives you the full slash-command set + agent loop.",
+        "example": "git clone https://github.com/mvanhorn/cli-printing-press.git\nclaude --plugin-dir ."
+      },
+      {
+        "signature": "Install the skills (alternative — gh skill install)",
+        "purpose": "If you don't want a local clone, install the skills directly into Claude Code's user scope.",
+        "example": "gh skill install mvanhorn/cli-printing-press --agent claude-code --scope user"
+      },
+      {
+        "signature": "Starter pack via npx",
+        "purpose": "Bootstrap a starter set of pre-built CLIs (77+ across travel, commerce, media, productivity) without compiling from source.",
+        "example": "npx -y @mvanhorn/printing-press install starter-pack"
+      },
+      {
+        "signature": "Primary slash commands",
+        "purpose": "Drive the full generate / regen / polish / publish loop from inside Claude Code.",
+        "example": "/printing-press <app-name>          # generate CLI from API name\n/printing-press https://example.com # generate from website (browser-sniff)\n/printing-press-reprint <api>       # regenerate under latest machine\n/printing-press-polish <api>        # targeted fixes and diagnostics\n/printing-press-publish <api>       # publish to library"
+      },
+      {
+        "signature": "Verification gates",
+        "purpose": "Run the four gates on a generated project. `auth doctor` diagnoses missing/suspicious tokens without exposing full values.",
+        "example": "printing-press scorecard --dir . --spec ./openapi.json\nprinting-press dogfood   --dir . --spec ./openapi.json\nprinting-press verify    --dir . --spec ./openapi.json --api-key $TOKEN\nprinting-press auth doctor"
+      },
+      {
+        "signature": "Generated CLI verbs",
+        "purpose": "Every generated CLI exposes a baseline verb set; domain-specific workflow + insight commands are layered on top.",
+        "example": "<api>-pp-cli sync\n<api>-pp-cli search \"query string\"\n<api>-pp-cli sql \"select * from items where stale = 1\"\n<api>-pp-cli list | get | create | update | delete"
+      }
+    ],
+    "gotchas": [
+      "The slash command is the primary interface — running `printing-press` standalone skips Printing Press's curated agent loop and you'll get a lower-quality CLI.",
+      "Browser-sniff mode is manual: you drive the site, the press captures traffic. Expect to repeat the flow until the captured HAR covers every endpoint you care about.",
+      "Live smoke tests are read-only by design — Phase 5 verification uses GET only and will not mutate data. Don't rely on `verify` to catch write-path bugs.",
+      "The scorecard grades structure, not correctness. A Grade A scorecard means the generated CLI follows the patterns; it does not guarantee bug-free real-world behavior.",
+      "`regen-merge` is macOS/Linux only — Windows users can't reconcile diffs through that subcommand and need to regenerate fresh.",
+      "Generated CLIs detect auth from the API spec (OAuth, Bearer, Basic). If the spec is incomplete, run `printing-press auth doctor` before assuming the CLI works end-to-end.",
+      "Requires Go 1.26.3+ — older Go installs will fail at `go install` time with an obscure module error.",
+      "The `--compact` token-savings claim (60–80%) is measured against the default JSON output; if you pipe through `jq` you may re-inflate the savings."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mvanhorn/cli-printing-press"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "sourceUrl": "https://github.com/iharnoor/last72hours-skill",
+  "skill": {
+    "name": "last72hours",
+    "description": "Use when you want a 72-hour viral radar on a topic across Reddit, X, TikTok, Instagram, Hacker News, YouTube, and GitHub — synthesized to a clickable HTML mirror plus an optional editorial leaderboard rendered in Paper.design.",
+    "whenToUse": [
+      "Spotting what's spiking right now (last 72 hours) on a launch, news beat, or competitor across 7 platforms in one pass",
+      "Producing a clickable HTML brief with source links and engagement counts, instead of manually sweeping Reddit/X/TikTok/HN",
+      "Generating an editorial-scorecard leaderboard artboard in Paper.design straight from the radar output (via Paper MCP)",
+      "Running a free-only Reddit + X subscan when you don't want to burn ScrapeCreators credits on IG/TikTok"
+    ],
+    "keyConcepts": [
+      {
+        "term": "72-hour viral radar",
+        "explanation": "Scrapes the past 72 hours of activity across Reddit, X, TikTok, Instagram, Hacker News, YouTube, and GitHub (plus optional Bluesky) for a given topic. Each item carries URL, score, and quoted snippet — the synthesis stays grounded in real posts, not training data."
+      },
+      {
+        "term": "Self-contained HTML mirror",
+        "explanation": "Output is a single static HTML page with no external dependencies — clickable source links, embedded counts, no JS framework. Lives under `LAST72_OUTPUT_DIR` (defaults to `~/Documents/Last72Hours`) so the brief survives the agent session."
+      },
+      {
+        "term": "Paper.design artboard via MCP",
+        "explanation": "Optional: if Paper Desktop is running and its MCP server is attached, the skill builds an editorial-scorecard leaderboard artboard from the same radar data and exports a 2× PNG preview. Auto-skips cleanly when Paper isn't attached."
+      },
+      {
+        "term": "Free vs paid sources",
+        "explanation": "Free with browser cookies: Reddit, X (via AUTH_TOKEN/CT0), Hacker News, YouTube, GitHub. Paid via ScrapeCreators: Instagram and TikTok. The bundled `last72-reddit-x` subagent runs a Reddit + X-only sweep when you want to avoid SCRAPECREATORS_API_KEY charges entirely."
+      },
+      {
+        "term": "Built on last30days",
+        "explanation": "Sibling/downstream of [[last30days]] — same evidence-grounded synthesis pattern, same engine plumbing, narrower time window. Install both; they coexist as separate slash commands."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Install the dependency (last30days-skill)",
+        "purpose": "last72hours layers on top of the last30days engine — install that first.",
+        "example": "git clone https://github.com/mvanhorn/last30days-skill ~/.last30days-skill\nln -s ~/.last30days-skill/skills/last30days ~/.claude/skills/last30days"
+      },
+      {
+        "signature": "Install last72hours",
+        "purpose": "Clone the repo and symlink the skill folder into Claude Code's user skills directory.",
+        "example": "git clone https://github.com/iharnoor/last72hours-skill ~/.last72hours-skill\nln -s ~/.last72hours-skill/skills/last72hours ~/.claude/skills/last72hours"
+      },
+      {
+        "signature": "Optional: attach Paper Desktop MCP",
+        "purpose": "Enables the editorial-scorecard leaderboard artboard step. Skip if you don't have Paper Desktop running.",
+        "example": "claude mcp add paper --transport http http://127.0.0.1:29979/mcp --scope user"
+      },
+      {
+        "signature": "/last72hours <topic>",
+        "purpose": "User-invocable slash command. Triggers the full radar-and-synthesize pipeline. Output lands in `LAST72_OUTPUT_DIR` (defaults to `~/Documents/Last72Hours`).",
+        "example": "/last72hours AI coding agents\n/last72hours nvidia earnings\n/last72hours claude code skills"
+      },
+      {
+        "signature": "Reddit + X-only subagent",
+        "purpose": "Run a fast, free pulse without burning ScrapeCreators credits on IG/TikTok. Useful for dev-channel-heavy topics.",
+        "example": "# Invoked from inside the host agent via the Task tool —\n# pick the `last72-reddit-x` subagent shipped at agents/last72-reddit-x.md\n# (no IG/TikTok scraping, no SCRAPECREATORS_API_KEY required)"
+      },
+      {
+        "signature": "Required & optional env vars",
+        "purpose": "Reddit, HN, YouTube, GitHub are free with no keys. X needs either browser cookies (free) or XAI_API_KEY (paid). Instagram + TikTok need SCRAPECREATORS_API_KEY.",
+        "example": "SCRAPECREATORS_API_KEY=...   # Instagram, TikTok (paid)\nAUTH_TOKEN=...               # X auth cookie (free, from browser)\nCT0=...                      # X CSRF cookie (free, from browser)\nXAI_API_KEY=...              # Alternative X API (paid)\nBSKY_HANDLE=...              # Optional Bluesky\nBSKY_APP_PASSWORD=...\nLAST72_OUTPUT_DIR=~/Documents/Last72Hours"
+      }
+    ],
+    "gotchas": [
+      "Requires the upstream `last30days-skill` to be installed first — it provides the shared engine plumbing this skill calls into.",
+      "Instagram and TikTok scraping costs ScrapeCreators credits. If you only need a pulse, use the `last72-reddit-x` subagent — it skips both platforms entirely.",
+      "X scraping defaults to browser cookies (AUTH_TOKEN + CT0). Cookies expire — refresh them when X results suddenly drop to zero.",
+      "Paper.design artboard generation is opt-in: it runs only when Paper Desktop's MCP server is attached. Without it the skill still produces the HTML mirror — it just skips the visual leaderboard step.",
+      "Output is deterministic per topic + window — re-running on the same topic within the 72h window will overwrite, not append. Move or rename the HTML if you want to keep the prior pass.",
+      "Time window is fixed at 72 hours — for longer recency, switch to [[last30days]] rather than trying to widen this skill.",
+      "Self-contained HTML means no external CDN calls — it works offline, but also means no live engagement counters. Numbers are frozen at scan time."
+    ],
+    "category": "tool",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/iharnoor/last72hours-skill"
+  }
+}

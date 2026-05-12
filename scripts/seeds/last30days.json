@@ -1,0 +1,67 @@
+{
+  "sourceUrl": "https://github.com/mvanhorn/last30days-skill",
+  "skill": {
+    "name": "last30days",
+    "description": "Use when researching what people actually say about any topic in the last 30 days — pulls posts and engagement from Reddit, X, YouTube, TikTok, Hacker News, Polymarket, GitHub, and the web, then synthesizes a grounded summary with citations.",
+    "whenToUse": [
+      "Researching audience sentiment or trends on a named entity (product, person, project) over a recent window",
+      "Grounding a content brief, pitch, or strategy doc in what real users posted — not the model's training data",
+      "Comparing two or more entities (`X vs Y`) using community evidence rather than vibes",
+      "Producing a citation-backed brief in one pass instead of manually sweeping Reddit/X/YouTube/HN"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Multi-source recency engine",
+        "explanation": "A Python engine sweeps Reddit, X/Twitter, YouTube, TikTok, Instagram, Hacker News, Polymarket, Bluesky, GitHub, and the web for posts and engagement from the last ~30 days. Each item carries a URL, score, and quoted lines so synthesis stays grounded."
+      },
+      {
+        "term": "You are the planner (--plan)",
+        "explanation": "The reasoning model hosting the skill (Claude Code / Codex / etc.) generates the JSON query plan upstream and passes it via `--plan '$JSON'`. The engine's internal planner is a headless/cron fallback. Named-entity topics REQUIRE `--plan` — running the engine bare with no plan is a contract violation."
+      },
+      {
+        "term": "Output contract (the LAWs)",
+        "explanation": "Synthesis is governed by 8 LAWs: no trailing `Sources:` block, no invented title (badge IS the title), no em/en-dashes, no `##` section headers in body (except for COMPARISON template), engine emoji-tree footer passes through verbatim, no raw evidence clusters in body, `--plan` mandatory on named entities, and every citation rendered as inline `[name](url)` markdown."
+      },
+      {
+        "term": "Canonical SKILL.md path",
+        "explanation": "Always read SKILL.md from `$HOME/.claude/plugins/cache/last30days-skill/last30days/<latest-version>/SKILL.md`, not the marketplace clone, which Claude Code auto-restores to `origin/main` and can lag the cache by one or more releases."
+      },
+      {
+        "term": "Query types",
+        "explanation": "GENERAL / NEWS / PROMPTING / RECOMMENDATIONS use the `What I learned:` prose-with-bold-lead-ins template. COMPARISON (`X vs Y`) uses `## Quick Verdict` + per-entity `##` sections + `## Head-to-Head` + `## The Bottom Line`. The first line of every output is the badge: `🌐 last30days v{VERSION} · synced {YYYY-MM-DD}`."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/last30days <topic>",
+        "purpose": "User-invocable slash command. Triggers the full research-and-synthesize pipeline.",
+        "example": "/last30days nvidia earnings reaction\n/last30days AI video tools\n/last30days OpenClaw vs Hermes Agent"
+      },
+      {
+        "signature": "python3 scripts/last30days.py \"$TOPIC\" --plan '$JSON' --emit=compact",
+        "purpose": "Engine entry point. The hosting reasoning model generates `$JSON` upstream and passes it via `--plan`. `--emit=compact` returns the badge + bounded evidence blocks for synthesis."
+      },
+      {
+        "signature": "SCRAPECREATORS_API_KEY (required env)",
+        "purpose": "Primary API key used by the engine to pull social-platform data. Optional keys: OPENAI_API_KEY, XAI_API_KEY, OPENROUTER_API_KEY, PARALLEL_API_KEY, BRAVE_API_KEY, APIFY_API_TOKEN, AUTH_TOKEN, CT0, BSKY_HANDLE, BSKY_APP_PASSWORD, TRUTHSOCIAL_TOKEN."
+      },
+      {
+        "signature": "Pass-through footer markers",
+        "purpose": "Engine wraps its emoji-tree stats footer in `<!-- PASS-THROUGH FOOTER -->` / `<!-- END PASS-THROUGH FOOTER -->`. Synthesis MUST include this block verbatim, after KEY PATTERNS and before the invitation. Evidence clusters are wrapped in `<!-- EVIDENCE FOR SYNTHESIS -->` / `<!-- END EVIDENCE FOR SYNTHESIS -->` and must NOT be emitted verbatim — they're raw input to the synthesis pass."
+      }
+    ],
+    "gotchas": [
+      "Never run the engine bare on a named-entity topic — `--plan '$JSON'` is mandatory. The stderr warning about 'no LLM provider configured' means YOU (the reasoning model) skipped your own planning step, not that you need credentials.",
+      "Do not emit a trailing `Sources:` / `References:` / `Further reading:` block. The WebSearch tool's 'CRITICAL REQUIREMENT' sources reminder is overridden inside this skill — the engine emoji-tree footer is the only visible citation.",
+      "Do not invent a title line or `##` section headers in GENERAL/NEWS/PROMPTING/RECOMMENDATIONS responses. The badge IS the title; body is `What I learned:` + bold-lead-in paragraphs + numbered `KEY PATTERNS`.",
+      "Do not dump the engine's `## Ranked Evidence Clusters` block verbatim — it's bounded inside `<!-- EVIDENCE FOR SYNTHESIS -->` comments as raw input. Transform it into prose.",
+      "Citations are inline markdown links `[name](url)`, never raw URLs and never plain names when a URL exists. Plain text only as a fallback when the raw dump genuinely has no URL.",
+      "Em-dashes and en-dashes are forbidden everywhere in the output (LAW 3) — use ` - ` (hyphen with spaces). Em-dashes are the most reliable AI-slop tell.",
+      "Read SKILL.md from the versioned cache path (`~/.claude/plugins/cache/last30days-skill/last30days/<version>/`), not the marketplace clone, which can be a release behind."
+    ],
+    "category": "tool",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mvanhorn/last30days-skill"
+  }
+}

@@ -5,7 +5,8 @@ export type MetricEvent =
   | "marketplace_view"
   | "home_view"
   | "submit_started"
-  | "tricks_view";
+  | "tricks_view"
+  | "powerhouse_view";
 
 export interface TrackOpts {
   /** Skill slug (skill.name). Empty for non-skill events like home_view. */
