@@ -15,7 +15,7 @@ interface ConvertResponse {
 
 // Audiences we are actively curating right now. Others are visible but disabled
 // so creators see the roadmap.
-const LIVE_AUDIENCES: Audience[] = ["creators"];
+const LIVE_AUDIENCES: Audience[] = ["creators", "engineers"];
 
 const YOUTUBE_RE =
   /^https?:\/\/(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)[\w-]{6,}/i;

@@ -45,7 +45,7 @@ export function parseGithubRepo(url: string): { owner: string; repo: string } | 
   }
 }
 
-export const AUDIENCES = ["creators", "devops", "ai", "design", "marketing", "general"] as const;
+export const AUDIENCES = ["creators", "engineers", "devops", "ai", "design", "marketing", "general"] as const;
 export type Audience = (typeof AUDIENCES)[number];
 
 export function youtubeIdFromUrl(url: string): string | null {

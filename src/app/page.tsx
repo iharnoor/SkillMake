@@ -10,7 +10,7 @@ import { track } from "@/lib/metrics";
 
 export const dynamic = "force-dynamic";
 
-const LIVE_AUDIENCES: Audience[] = ["creators"];
+const LIVE_AUDIENCES: Audience[] = ["creators", "engineers"];
 
 const ASCII = String.raw` ____  _    _ _ _                 _
 / ___|| | _(_) | |_ __ ___   __ _| | _____
