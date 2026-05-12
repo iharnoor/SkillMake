@@ -2,48 +2,51 @@ import Link from "next/link";
 import { after } from "next/server";
 import { headers } from "next/headers";
 import { track } from "@/lib/metrics";
-import { findApprovedByName } from "@/lib/storage";
+import { findApprovedByName, type MarketplaceEntry } from "@/lib/storage";
+import { InstallCommand } from "@/components/InstallCommand";
+import { GithubIcon } from "@/components/GithubIcon";
+import { formatStars } from "@/lib/github";
 
 export const dynamic = "force-dynamic";
-
-async function marketplaceHref(name: string): Promise<string> {
-  const entry = await findApprovedByName(name);
-  return entry ? `/marketplace/${entry.id}` : `/i/${name}`;
-}
 
 export default async function PowerhousePage() {
   const h = await headers();
   after(() => track("powerhouse_view", { headers: h }));
 
-  const [last72Href, last30Href, ppHref, htmleHref] = await Promise.all([
-    marketplaceHref("last72hours"),
-    marketplaceHref("last30days"),
-    marketplaceHref("printingpress"),
-    marketplaceHref("html-everything"),
+  const [last72, last30, pp, htmle] = await Promise.all([
+    findApprovedByName("last72hours"),
+    findApprovedByName("last30days"),
+    findApprovedByName("printingpress"),
+    findApprovedByName("html-everything"),
   ]);
 
   return (
-    <div className="max-w-3xl mx-auto px-6 pt-16 pb-24">
-      <div className="mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] mb-2">
+    <div className="max-w-4xl mx-auto px-6 pt-12 pb-24">
+      <Link
+        href="/"
+        className="mono text-[12px] text-[color:var(--fg-muted)] hover:text-[color:var(--accent)]"
+      >
+        ← all skills
+      </Link>
+
+      <div className="mt-6 mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)]">
         Powerhouse
       </div>
-      <h1 className="text-3xl sm:text-4xl tracking-[-0.02em] font-semibold">
-        Three skills that turn the agent into a research desk.
+      <h1 className="text-3xl sm:text-4xl tracking-[-0.02em] font-semibold mt-2">
+        Four skills that turn the agent into a research desk.
       </h1>
-      <p className="text-[color:var(--fg-muted)] mt-3 leading-relaxed">
+      <p className="text-[color:var(--fg-muted)] mt-3 leading-relaxed max-w-2xl">
         These don&apos;t shrink tokens — they expand what the agent can answer. Recency-grounded
-        research from real posts, and a generator that prints token-efficient CLIs from any API
-        spec. Install one curl, undo one rm.
+        research from real posts, a generator that prints token-efficient CLIs from any API spec,
+        and a one-shot blob-to-HTML packager. Install one curl, undo one rm.
       </p>
 
-      <Skill
-        index={1}
-        slug="last72hours"
-        marketplaceHref={last72Href}
-        video="/v/last72hours.mp4"
-        title="last72hours — 72-hour viral radar across 7 platforms"
+      <SkillEntry
+        entry={last72}
+        fallbackSlug="last72hours"
+        title="last72hours"
         tagline="what spiked in the last three days, with sources"
-        repo="https://github.com/iharnoor/last72hours-skill"
+        description="72-hour viral radar across Reddit, X, TikTok, Instagram, Hacker News, YouTube, and GitHub — emits a clickable HTML brief plus an optional Paper.design leaderboard via MCP."
         body={
           <>
             <p>
@@ -70,14 +73,12 @@ export default async function PowerhousePage() {
         }
       />
 
-      <Skill
-        index={2}
-        slug="last30days"
-        marketplaceHref={last30Href}
-        video="/v/last30days.mp4"
-        title="last30days — research what people actually said in the last 30 days"
+      <SkillEntry
+        entry={last30}
+        fallbackSlug="last30days"
+        title="last30days"
         tagline="evidence-grounded synthesis, no model hallucination"
-        repo="https://github.com/mvanhorn/last30days-skill"
+        description="Research what people actually said in the last ~30 days — pulls posts and engagement from Reddit, X, YouTube, TikTok, HN, Polymarket, GitHub, and the web, then synthesizes a brief with inline citations."
         body={
           <>
             <p>
@@ -106,14 +107,12 @@ export default async function PowerhousePage() {
         }
       />
 
-      <Skill
-        index={3}
-        slug="printingpress"
-        marketplaceHref={ppHref}
-        video="/v/printingpress.mp4"
-        title="printingpress — print the best agent-designed CLI of all time"
+      <SkillEntry
+        entry={pp}
+        fallbackSlug="printingpress"
+        title="printingpress"
         tagline="every API has a secret identity, this finds it"
-        repo="https://github.com/mvanhorn/cli-printing-press"
+        description="Generates a Go CLI + MCP server from an OpenAPI spec, HAR file, or live website — with local SQLite mirror, FTS5 search, and compound commands the underlying API can't answer natively."
         body={
           <>
             <p>
@@ -145,14 +144,12 @@ export default async function PowerhousePage() {
         }
       />
 
-      <Skill
-        index={4}
-        slug="html-everything"
-        marketplaceHref={htmleHref}
-        video="/v/html-everything.mp4"
-        title="html-everything — any blob → one editorial HTML page"
+      <SkillEntry
+        entry={htmle}
+        fallbackSlug="html-everything"
+        title="html-everything"
         tagline="markdown, json, plain text, or a url → one .html file"
-        repo="https://github.com/iharnoor/html-everything"
+        description="Any blob → one self-contained editorial HTML page with auto-linkified URLs, content-aware theming, and no external deps beyond Google Fonts."
         body={
           <>
             <p>
@@ -163,11 +160,11 @@ export default async function PowerhousePage() {
               <span className="mono">rm</span>.
             </p>
             <p>
-              Output uses Archivo Black for display, Inter Tight for body, JetBrains Mono for code.
-              Styling subtly shifts based on detected content type — a market-cap rundown doesn&apos;t
-              come out looking like a sports recap. Files land in{" "}
-              <span className="mono">~/Documents/html-everything/</span> by default — override with{" "}
-              <span className="mono">HTMLE_OUTPUT_DIR</span>.
+              Output uses Archivo Black for display, Inter Tight for body, JetBrains Mono for
+              code. Styling subtly shifts based on detected content type — a market-cap rundown
+              doesn&apos;t come out looking like a sports recap. Files land in{" "}
+              <span className="mono">~/Documents/html-everything/</span> by default — override
+              with <span className="mono">HTMLE_OUTPUT_DIR</span>.
             </p>
             <CodeBlock>
               {`# Install\ngit clone https://github.com/iharnoor/html-everything ~/Developer/html-everything\nln -s ~/Developer/html-everything/skills/html-everything ~/.claude/skills/html-everything`}
@@ -187,15 +184,15 @@ export default async function PowerhousePage() {
           How they compose
         </h2>
         <p className="text-[15px] text-[color:var(--fg-muted)] leading-relaxed">
-          <Link href={last72Href} className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">last72hours</Link>{" "}
+          <a href="#last72hours" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">last72hours</a>{" "}
           is for the immediate pulse — what spiked today.{" "}
-          <Link href={last30Href} className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">last30days</Link>{" "}
+          <a href="#last30days" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">last30days</a>{" "}
           is the wider lens — what the month has built. Both stay grounded in real posts with
           inline citations.{" "}
-          <Link href={ppHref} className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">printingpress</Link>{" "}
+          <a href="#printingpress" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">printingpress</a>{" "}
           is orthogonal: once you&apos;ve identified the system worth integrating with, it prints
           you the CLI to talk to it without re-discovering its surface for every agent.{" "}
-          <Link href={htmleHref} className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">html-everything</Link>{" "}
+          <a href="#html-everything" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">html-everything</a>{" "}
           is the artifact step — whatever the other three produced, it wraps into one shareable
           HTML file you can send.
         </p>
@@ -217,63 +214,114 @@ export default async function PowerhousePage() {
   );
 }
 
-function Skill({
-  index,
-  slug,
-  marketplaceHref,
-  video,
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  Entry component — mirror the marketplace skill page layout              */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function SkillEntry({
+  entry,
+  fallbackSlug,
   title,
   tagline,
-  repo,
+  description,
   body,
 }: {
-  index: number;
-  slug: string;
-  marketplaceHref: string;
-  video: string;
+  entry: MarketplaceEntry | null;
+  fallbackSlug: string;
   title: string;
   tagline: string;
-  repo: string;
+  description: string;
   body: React.ReactNode;
 }) {
+  const marketplaceHref = entry ? `/marketplace/${entry.id}` : `/i/${fallbackSlug}`;
+  const audience = entry?.skill.audience;
+  const category = entry?.skill.category;
+  const repoUrl = entry?.skill.repoUrl;
+  const stars = entry?.stars;
+  const videoUrl = entry?.skill.videoUrls.find((u) => /\/v\/[\w.-]+\.mp4$/i.test(u));
+
   return (
-    <section className="mt-14">
-      <div className="flex items-baseline gap-3 mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)]">
-        <span>#{index.toString().padStart(2, "0")}</span>
-        <span>·</span>
-        <span>{tagline}</span>
+    <section id={fallbackSlug} className="mt-14 scroll-mt-20">
+      <div className="mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)]">
+        {tagline}
       </div>
-      <h2 className="text-2xl sm:text-[28px] tracking-tight font-semibold mt-2">{title}</h2>
+
+      <div className="mt-3 flex items-center gap-2 flex-wrap">
+        {audience && <span className="tag tag-accent">{audience}</span>}
+        {category && <span className="tag">{category}</span>}
+      </div>
+
+      <h2 className="text-2xl sm:text-[28px] tracking-tight font-semibold mt-3 mono">
+        {title}
+      </h2>
+      <p className="text-[color:var(--fg-muted)] text-[15px] mt-2 leading-relaxed">
+        {description}
+      </p>
+
       <div className="mt-3 flex items-center gap-3 flex-wrap text-[12px] mono">
         <Link
           href={marketplaceHref}
           className="text-[color:var(--accent)] hover:underline underline-offset-4 decoration-1"
         >
-          marketplace/{slug} →
+          marketplace/{fallbackSlug} →
         </Link>
-        <span className="text-[color:var(--fg-dim)]">·</span>
-        <a
-          href={repo}
-          target="_blank"
-          rel="noreferrer"
-          className="text-[color:var(--fg-muted)] hover:text-[color:var(--fg)] transition"
-        >
-          {repo.replace(/^https:\/\/github\.com\//, "")} ↗
-        </a>
+        {repoUrl && (
+          <a
+            href={repoUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 btn-ghost rounded-md px-3 py-1.5 text-[12px] mono text-[color:var(--fg)] hover:text-[color:var(--accent)] transition"
+            title="Open the upstream repository on GitHub"
+          >
+            <GithubIcon className="text-[14px]" />
+            <span>{new URL(repoUrl).pathname.replace(/^\//, "").replace(/\/$/, "")}</span>
+            {stars != null && (
+              <span className="text-[color:var(--fg-muted)]">· ★ {formatStars(stars)}</span>
+            )}
+          </a>
+        )}
       </div>
-      <div className="aspect-video rounded-md overflow-hidden border border-[color:var(--border)] bg-black mt-5">
-        <video
-          src={video}
-          title={`${slug} demo`}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          className="w-full h-full object-cover"
-        />
+
+      {videoUrl ? (
+        <div className="card p-4 mt-6">
+          <div className="aspect-video rounded-md overflow-hidden border border-[color:var(--border)] bg-black">
+            <video
+              src={videoUrl}
+              title={`${fallbackSlug} demo`}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="card p-4 mt-6">
+          <div className="aspect-video rounded-md overflow-hidden border border-[color:var(--border)] bg-black">
+            <video
+              src={`/v/${fallbackSlug}.mp4`}
+              title={`${fallbackSlug} demo`}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      )}
+
+      <div className="card p-6 mt-5">
+        <div className="mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] mb-3">
+          One-line install
+        </div>
+        <InstallCommand skillName={fallbackSlug} />
       </div>
-      <div className="text-[15px] text-[color:var(--fg-muted)] leading-relaxed space-y-3 mt-5">
+
+      <div className="text-[15px] text-[color:var(--fg-muted)] leading-relaxed space-y-3 mt-6">
         {body}
       </div>
     </section>
