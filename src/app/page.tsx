@@ -18,22 +18,35 @@ const ASCII = String.raw` ____  _    _ _ _                 _
  ___) |   <| | | | | | | | | (_| |   <  __/
 |____/|_|\_\_|_|_|_| |_| |_|\__,_|_|\_\___|`;
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ audience?: string }>;
+}) {
   // Read headers BEFORE `after()` — request-time APIs can't be called inside
   // an after() callback from a Server Component.
   const h = await headers();
   after(() => track("home_view", { headers: h }));
 
+  // Audience pill click → ?audience=<name>. Only LIVE audiences accept a click,
+  // so unknown / not-yet-live values fall back to the unfiltered view.
+  const params = await searchParams;
+  const requested = params.audience as Audience | undefined;
+  const activeAudience: Audience | null =
+    requested && LIVE_AUDIENCES.includes(requested) ? requested : null;
+
   const all = await listSkills();
   // Sort by ★ stars desc, ties and starless skills fall back to createdAt desc.
   // Starless entries (workflow skills, no canonical repo) end up at the bottom
   // of the list. Same primary signal as deepwiki/skills.sh.
-  const entries = [...all].sort((a, b) => {
-    const sa = a.stars ?? -1;
-    const sb = b.stars ?? -1;
-    if (sb !== sa) return sb - sa;
-    return b.createdAt.localeCompare(a.createdAt);
-  });
+  const entries = [...all]
+    .filter((e) => (activeAudience ? e.skill.audience === activeAudience : true))
+    .sort((a, b) => {
+      const sa = a.stars ?? -1;
+      const sb = b.stars ?? -1;
+      if (sb !== sa) return sb - sa;
+      return b.createdAt.localeCompare(a.createdAt);
+    });
 
   return (
     <div className="max-w-5xl mx-auto px-6 pt-12 pb-24">
@@ -61,30 +74,53 @@ export default async function Home() {
         curl --create-dirs -fsSL skillmake.xyz/i/&lt;name&gt; -o ~/.claude/skills/&lt;name&gt;/SKILL.md
       </div>
 
-      {/* Filter row + count, separated only by a hairline. */}
+      {/* Filter row + count, separated only by a hairline. Click a live pill
+          to filter the list by audience; "all" clears the filter. */}
       <div className="mt-14 flex items-baseline justify-between gap-4 flex-wrap border-b border-[color:var(--border)] pb-3">
         <div className="flex items-center gap-5 mono text-[12px]">
-          <span className="text-[color:var(--fg)]">all</span>
+          <Link
+            href="/"
+            className={
+              activeAudience === null
+                ? "text-[color:var(--fg)] underline underline-offset-4 decoration-1"
+                : "text-[color:var(--fg-muted)] hover:text-[color:var(--fg)] transition"
+            }
+          >
+            all
+          </Link>
           {AUDIENCES.filter((a) => a !== "general").map((a) => {
             const live = LIVE_AUDIENCES.includes(a);
+            const selected = activeAudience === a;
+            if (!live) {
+              return (
+                <span
+                  key={a}
+                  className="text-[color:var(--fg-dim)]"
+                  title="coming soon"
+                >
+                  {a}
+                  <span className="text-[10px] ml-1 opacity-60">·soon</span>
+                </span>
+              );
+            }
             return (
-              <span
+              <Link
                 key={a}
+                href={`/?audience=${a}`}
                 className={
-                  live
-                    ? "text-[color:var(--accent)]"
-                    : "text-[color:var(--fg-dim)]"
+                  selected
+                    ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+                    : "text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
                 }
-                title={live ? "" : "coming soon"}
               >
                 {a}
-                {!live && <span className="text-[10px] ml-1 opacity-60">·soon</span>}
-              </span>
+              </Link>
             );
           })}
         </div>
         <span className="mono text-[11px] text-[color:var(--fg-dim)] tabular-nums">
-          {entries.length} approved
+          {entries.length}
+          {activeAudience ? ` ${activeAudience}` : " approved"}
         </span>
       </div>
 
@@ -94,8 +130,27 @@ export default async function Home() {
 
       {entries.length === 0 ? (
         <div className="mono text-[12px] text-[color:var(--fg-dim)] mt-12">
-          // no skills yet. Be the first —{" "}
-          <Link href="/submit" className="text-[color:var(--accent)]">submit one</Link>.
+          {activeAudience ? (
+            <>
+              // no {activeAudience} skills yet.{" "}
+              <Link href="/" className="text-[color:var(--accent)]">
+                show all
+              </Link>{" "}
+              or{" "}
+              <Link href="/submit" className="text-[color:var(--accent)]">
+                submit one
+              </Link>
+              .
+            </>
+          ) : (
+            <>
+              // no skills yet. Be the first —{" "}
+              <Link href="/submit" className="text-[color:var(--accent)]">
+                submit one
+              </Link>
+              .
+            </>
+          )}
         </div>
       ) : (
         <div className="mt-6">
