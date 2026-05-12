@@ -88,21 +88,8 @@ export default async function Home({
           >
             all
           </Link>
-          {AUDIENCES.filter((a) => a !== "general").map((a) => {
-            const live = LIVE_AUDIENCES.includes(a);
+          {AUDIENCES.filter((a) => a !== "general" && LIVE_AUDIENCES.includes(a)).map((a) => {
             const selected = activeAudience === a;
-            if (!live) {
-              return (
-                <span
-                  key={a}
-                  className="text-[color:var(--fg-dim)]"
-                  title="coming soon"
-                >
-                  {a}
-                  <span className="text-[10px] ml-1 opacity-60">·soon</span>
-                </span>
-              );
-            }
             return (
               <Link
                 key={a}
@@ -129,6 +116,16 @@ export default async function Home({
           >
             powerhouse
           </Link>
+          {AUDIENCES.filter((a) => a !== "general" && !LIVE_AUDIENCES.includes(a)).map((a) => (
+            <span
+              key={a}
+              className="text-[color:var(--fg-dim)]"
+              title="coming soon"
+            >
+              {a}
+              <span className="text-[10px] ml-1 opacity-60">·soon</span>
+            </span>
+          ))}
         </div>
         <span className="mono text-[11px] text-[color:var(--fg-dim)] tabular-nums">
           {entries.length}
