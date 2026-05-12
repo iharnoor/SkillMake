@@ -1,0 +1,80 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/misc/setup-pre-commit/SKILL.md",
+  "skill": {
+    "name": "mp-setup-pre-commit",
+    "description": "Use when adding Husky pre-commit hooks to a repo — installs husky + lint-staged + Prettier, wires `npx lint-staged`, `npm run typecheck`, and `npm run test` into .husky/pre-commit.",
+    "whenToUse": [
+      "Greenfielding pre-commit hygiene on a repo that doesn't have any pre-commit hooks yet",
+      "Adding Prettier auto-formatting via lint-staged so staged files are cleaned before commit",
+      "Gating commits on typecheck and tests so broken main is harder to ship",
+      "Adapting the hook for non-npm package managers (pnpm / yarn / bun)"
+    ],
+    "keyConcepts": [
+      {
+        "term": "husky + lint-staged + prettier trio",
+        "explanation": "Husky owns the .husky/ git hook scripts. lint-staged runs commands against only staged files (fast). Prettier is the formatter lint-staged invokes. Three devDependencies, one cohesive flow."
+      },
+      {
+        "term": "detect package manager first",
+        "explanation": "Check for package-lock.json (npm) / pnpm-lock.yaml (pnpm) / yarn.lock (yarn) / bun.lockb (bun). Use whichever lockfile is present. Default to npm if unclear. The pre-commit script body adapts accordingly."
+      },
+      {
+        "term": "no shebang on Husky v9+",
+        "explanation": "Husky v9 dropped the shebang requirement in hook files. Just write the commands. Older Husky scripts that start with `#!/bin/sh` still work but aren't needed."
+      },
+      {
+        "term": "omit missing scripts",
+        "explanation": "If package.json has no `typecheck` or `test` script, the pre-commit shouldn't reference them — the hook would fail every commit. Omit those lines and tell the user."
+      },
+      {
+        "term": "Prettier config only if missing",
+        "explanation": "Don't overwrite an existing Prettier config. Only create .prettierrc when no Prettier config exists in the repo (any of .prettierrc, .prettierrc.json, prettier.config.js, prettier key in package.json)."
+      },
+      {
+        "term": "commit through the new hook as the smoke test",
+        "explanation": "Once everything is wired, the natural smoke test is to stage + commit the new pre-commit setup itself. If the commit succeeds, the hook is wired correctly. If it fails, you know which step to fix."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Install (npm example)",
+        "purpose": "Install all three as devDependencies, then init Husky.",
+        "example": "npm install -D husky lint-staged prettier\nnpx husky init"
+      },
+      {
+        "signature": ".husky/pre-commit",
+        "purpose": "Three commands: format staged files, typecheck, run tests. Adapt `npm` to the detected package manager.",
+        "example": "npx lint-staged\nnpm run typecheck\nnpm run test"
+      },
+      {
+        "signature": ".lintstagedrc",
+        "purpose": "Run Prettier against every staged file; skip unknown file types (images, binaries).",
+        "example": "{\n  \"*\": \"prettier --ignore-unknown --write\"\n}"
+      },
+      {
+        "signature": ".prettierrc (default if none exists)",
+        "purpose": "Matt's defaults — 2-space indent, double quotes, semicolons, ES5 trailing commas.",
+        "example": "{\n  \"useTabs\": false,\n  \"tabWidth\": 2,\n  \"printWidth\": 80,\n  \"singleQuote\": false,\n  \"trailingComma\": \"es5\",\n  \"semi\": true,\n  \"arrowParens\": \"always\"\n}"
+      },
+      {
+        "signature": "Verification checklist",
+        "purpose": "Confirm the four artefacts exist before the smoke-test commit.",
+        "example": "[ ] .husky/pre-commit exists and is executable\n[ ] .lintstagedrc exists\n[ ] package.json `prepare` script is \"husky\"\n[ ] Prettier config exists\n[ ] `npx lint-staged` runs clean"
+      }
+    ],
+    "gotchas": [
+      "Detect the package manager BEFORE editing the pre-commit body — using `npm run` in a pnpm-only repo will fail at commit time.",
+      "Omit `typecheck` / `test` lines if those scripts don't exist in package.json — otherwise every commit fails.",
+      "Don't overwrite an existing Prettier config. Detect and skip the .prettierrc step if one exists in any supported form.",
+      "Husky v9+ does NOT need a shebang in hook files. Older guides that start with `#!/bin/sh` are stale.",
+      "`prettier --ignore-unknown` is critical — without it, binary files break lint-staged.",
+      "lint-staged runs ONLY on staged files (fast). typecheck and test run against the whole project — those can be slow, plan accordingly.",
+      "The final commit is the smoke test. If it fails, the hook is wrong — fix it before staging more changes on top.",
+      "If the team already has a different pre-commit setup (e.g. simple-git-hooks, lefthook), this skill will conflict — confirm before installing."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

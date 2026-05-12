@@ -1,0 +1,52 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/personal/edit-article/SKILL.md",
+  "skill": {
+    "name": "mp-edit-article",
+    "description": "Use when editing an article draft — split by headings, model content as a DAG of dependencies, confirm the section order with the author, then tighten each section to ≤240 chars per paragraph.",
+    "whenToUse": [
+      "Restructuring a long-form draft where some sections depend on concepts introduced in others",
+      "Tightening prose paragraph-by-paragraph against a hard character ceiling",
+      "Confirming the section outline with the author before any rewriting starts",
+      "Cutting redundancy where the same idea appears under two different headings"
+    ],
+    "keyConcepts": [
+      {
+        "term": "sections from headings",
+        "explanation": "First step is to divide the article into sections based on its headings, and think about the main points to make during each section. The heading structure is the skeleton — don't rewrite it before understanding it."
+      },
+      {
+        "term": "directed acyclic graph of dependencies",
+        "explanation": "Information depends on other information. A reader needs concept A before concept B if B uses A's vocabulary. Model the article as a DAG and pick a section order that respects every dependency edge. Reordering for flow without respecting dependencies confuses readers."
+      },
+      {
+        "term": "confirm sections with the user",
+        "explanation": "Before any rewriting starts, surface the proposed section order to the author and get sign-off. Editing inside an unconfirmed structure wastes work — if the structure changes after, half your edits get thrown out."
+      },
+      {
+        "term": "240 chars per paragraph ceiling",
+        "explanation": "When rewriting a section, use maximum 240 characters per paragraph. That's roughly two short sentences. Forces brevity — long paragraphs hide weak arguments inside soft connective tissue."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Process (numbered)",
+        "purpose": "Two steps. Structure first, prose second. Don't merge them.",
+        "example": "1. Divide article into sections based on headings\n   - Think about the main points per section\n   - Model the content as a DAG of dependencies\n   - Pick a section order that respects every dependency edge\n   - Confirm the section order with the user BEFORE rewriting\n\n2. For each section:\n   2a. Rewrite to improve clarity, coherence, and flow\n   2b. Use maximum 240 characters per paragraph"
+      }
+    ],
+    "gotchas": [
+      "Confirm the section order with the user BEFORE rewriting any prose. Restructuring after edits wastes work.",
+      "The DAG matters: B depends on A means A must come first, even if B reads more interestingly upfront.",
+      "240 chars per paragraph is a HARD ceiling — about two short sentences. Soft connective tissue is the first thing to cut.",
+      "Don't merge structure-editing and prose-editing into one pass. Structure first, prose second.",
+      "If a section feels redundant with another, the answer is usually 'merge them', not 'rewrite both'.",
+      "Headings are the skeleton — don't rename them in step 1. Understand the structure as given, then propose changes in step 1's confirmation.",
+      "Avoid edits that shift voice — keep the author's tone unless they ask for a tonal change.",
+      "Long paragraphs often hide weak arguments inside connective phrases. The 240-char ceiling surfaces those without needing to call them out."
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

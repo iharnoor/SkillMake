@@ -1,0 +1,70 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/setup-matt-pocock-skills/SKILL.md",
+  "skill": {
+    "name": "mp-setup-matt-pocock-skills",
+    "description": "Use when bootstrapping a repo so Matt's engineering skills (to-issues, to-prd, triage, diagnose, tdd, etc.) know the issue tracker, triage labels, and domain doc layout — writes AGENTS.md/CLAUDE.md + docs/agents/.",
+    "whenToUse": [
+      "Before the first use of to-issues, to-prd, triage, diagnose, tdd, improve-codebase-architecture, or zoom-out in a new repo",
+      "When those skills appear to be missing context about the issue tracker, triage labels, or domain docs",
+      "Switching the project from GitHub Issues to GitLab Issues, or to local-markdown issue tracking",
+      "Adding an `## Agent skills` block to an existing CLAUDE.md / AGENTS.md without overwriting other content"
+    ],
+    "keyConcepts": [
+      {
+        "term": "issue tracker (Section A)",
+        "explanation": "Where issues live for this repo — GitHub, GitLab, local-markdown under .scratch/, or 'other' (Jira/Linear). Skills like to-issues, triage, to-prd, qa need this so they call the right CLI (gh / glab) or follow your custom workflow. The skill proposes a default based on `git remote` and lets you override."
+    },
+      {
+        "term": "triage label vocabulary (Section B)",
+        "explanation": "Maps the five canonical triage roles (needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix) to the actual label strings your tracker uses. Without this mapping, the triage skill creates duplicate labels (e.g. `bug:triage` vs `needs-triage`)."
+      },
+      {
+        "term": "domain docs (Section C)",
+        "explanation": "Tells improve-codebase-architecture / diagnose / tdd where to read CONTEXT.md and ADRs. Single-context (one CONTEXT.md at root) vs multi-context (CONTEXT-MAP.md + per-context CONTEXT.md files, typically a monorepo)."
+      },
+      {
+        "term": "prompt-driven, not deterministic",
+        "explanation": "Not a script. The skill EXPLORES the repo first (git remote, existing CLAUDE.md/AGENTS.md, CONTEXT.md, docs/adr/), then PRESENTS findings and asks each of the three sections one at a time, with explainers for users who don't know the terms."
+      },
+      {
+        "term": "edit-only, never replace",
+        "explanation": "Edits the existing CLAUDE.md if present, else AGENTS.md if present. Never creates AGENTS.md when CLAUDE.md exists (or vice versa). If an `## Agent skills` block already exists, updates it in-place rather than appending a duplicate."
+      },
+      {
+        "term": "disable-model-invocation",
+        "explanation": "Frontmatter sets `disable-model-invocation: true` — this skill doesn't self-trigger. The user invokes it explicitly when bootstrapping a repo. Don't expect it to run silently the first time an engineering skill is called."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "The `## Agent skills` block written into CLAUDE.md / AGENTS.md",
+        "purpose": "Standard 3-section markdown block linking to docs/agents/*.md files. One-line summary per section so the agent doesn't have to load the doc unless it needs to.",
+        "example": "## Agent skills\n\n### Issue tracker\n[one-line summary]. See `docs/agents/issue-tracker.md`.\n\n### Triage labels\n[one-line summary]. See `docs/agents/triage-labels.md`.\n\n### Domain docs\n[one-line summary — single-context | multi-context]. See `docs/agents/domain.md`."
+      },
+      {
+        "signature": "docs/agents/* output files",
+        "purpose": "Three per-topic doc files seeded from templates bundled in the skill folder.",
+        "example": "docs/agents/issue-tracker.md   — github | gitlab | local-markdown | other\ndocs/agents/triage-labels.md  — canonical-role → your-tracker-label\ndocs/agents/domain.md         — single-context | multi-context layout + reading rules"
+      },
+      {
+        "signature": "Process (numbered)",
+        "purpose": "Five steps. Explore → present findings → confirm draft → write → done. Each section explained one-at-a-time, not dumped together.",
+        "example": "1. Explore — git remote, CLAUDE.md, AGENTS.md, CONTEXT.md, docs/adr/, .scratch/\n2. Present + ask — Section A (tracker), B (triage labels), C (domain docs) ONE AT A TIME\n3. Confirm — show drafts of the block + 3 docs; let user edit\n4. Write — edit existing CLAUDE.md OR AGENTS.md (never both); update existing `## Agent skills` block in-place\n5. Done — tell user which engineering skills will now read these files"
+      }
+    ],
+    "gotchas": [
+      "disable-model-invocation: true — this skill won't self-fire. User must invoke it before running the other engineering skills.",
+      "If CLAUDE.md exists, edit it. If only AGENTS.md exists, edit it. Never create the other file. If neither exists, ASK — don't pick.",
+      "An existing `## Agent skills` block must be UPDATED in-place, not duplicated.",
+      "Default issue tracker is inferred from `git remote -v` (GitHub → github, GitLab → gitlab), with local-markdown / 'other' as fallbacks.",
+      "Triage labels default to the canonical names if no override is needed — only customize when the tracker already has different label strings.",
+      "Walk the user through Sections A / B / C one at a time. Don't dump all three explainers at once.",
+      "Each section's explainer assumes the user doesn't know what 'issue tracker', 'triage labels', or 'domain docs' mean in this context. Don't skip the explainer.",
+      "For 'other' issue trackers, write docs/agents/issue-tracker.md from scratch using the user's prose description rather than a bundled template."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

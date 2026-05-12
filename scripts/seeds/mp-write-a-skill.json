@@ -1,0 +1,75 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/productivity/write-a-skill/SKILL.md",
+  "skill": {
+    "name": "mp-write-a-skill",
+    "description": "Use when authoring a new agent skill — covers structure, progressive disclosure, when to add scripts, when to split files, and the trigger-rich description format that controls whether your agent picks the skill at all.",
+    "whenToUse": [
+      "Writing a brand-new SKILL.md from scratch with frontmatter, instructions, and trigger keywords",
+      "Deciding whether the skill needs companion files (REFERENCE.md, EXAMPLES.md, scripts/)",
+      "Tightening a skill's description so the agent actually loads it for the right requests",
+      "Reviewing a draft skill against a checklist of common authorship mistakes"
+    ],
+    "keyConcepts": [
+      {
+        "term": "the description is the trigger",
+        "explanation": "The description is the ONLY thing the agent sees when deciding which skill to load. It sits in the system prompt alongside every other installed skill. Two sentences: (1) what it does, (2) 'Use when [specific triggers]'. Max 1024 chars, written in third person."
+      },
+      {
+        "term": "progressive disclosure",
+        "explanation": "Keep SKILL.md under 100 lines. Move detail to REFERENCE.md, EXAMPLES.md, or scripts/. The agent reads SKILL.md every time the skill loads; reference files only when needed. This is the token-efficiency rule."
+      },
+      {
+        "term": "scripts for deterministic work",
+        "explanation": "Add a script (bash / node / python) when the operation is deterministic (validation, formatting), the same code would be regenerated repeatedly, or errors need explicit handling. Scripts save tokens AND are more reliable than regenerated code."
+      },
+      {
+        "term": "split files",
+        "explanation": "Split into separate files when SKILL.md exceeds 100 lines, content covers distinct domains (e.g. finance vs sales schemas), or advanced features are rarely needed. Reference files should be ONE level deep — don't nest."
+      },
+      {
+        "term": "good vs bad description",
+        "explanation": "Good: 'Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when user mentions PDFs, forms, or document extraction.' Bad: 'Helps with documents.' The bad example gives the agent no way to distinguish this from other document skills."
+      },
+      {
+        "term": "draft → review → iterate",
+        "explanation": "Gather requirements first (task / use cases / scripts? / reference materials?). Draft SKILL.md + companions. Then REVIEW with the user: does this cover your cases? anything missing? any section over/under-detailed? Iterate before shipping."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Skill directory structure",
+        "purpose": "Standard layout. SKILL.md is required; everything else is conditional.",
+        "example": "skill-name/\n├── SKILL.md           # Main instructions (required)\n├── REFERENCE.md       # Detailed docs (if needed)\n├── EXAMPLES.md        # Usage examples (if needed)\n└── scripts/           # Utility scripts (if needed)\n    └── helper.js"
+      },
+      {
+        "signature": "SKILL.md template",
+        "purpose": "Frontmatter + Quick start + Workflows + Advanced features link.",
+        "example": "---\nname: skill-name\ndescription: Brief description of capability. Use when [specific triggers].\n---\n\n# Skill Name\n\n## Quick start\n\n[Minimal working example]\n\n## Workflows\n\n[Step-by-step processes with checklists for complex tasks]\n\n## Advanced features\n\n[Link to separate files: See [REFERENCE.md](REFERENCE.md)]"
+      },
+      {
+        "signature": "Description format",
+        "purpose": "Two sentences, third person, max 1024 chars. First sentence = what it does. Second sentence = 'Use when [triggers]'.",
+        "example": "Good:  \"Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when user mentions PDFs, forms, or document extraction.\"\n\nBad:   \"Helps with documents.\""
+      },
+      {
+        "signature": "Review checklist",
+        "purpose": "Run before shipping. Each item catches a common mistake.",
+        "example": "[ ] Description includes triggers (\"Use when...\")\n[ ] SKILL.md under 100 lines\n[ ] No time-sensitive info\n[ ] Consistent terminology\n[ ] Concrete examples included\n[ ] References one level deep"
+      }
+    ],
+    "gotchas": [
+      "The description is the ONLY signal the agent uses to pick this skill. Vague descriptions get skipped — list concrete triggers.",
+      "Keep SKILL.md under 100 lines. Beyond that, split into REFERENCE.md / EXAMPLES.md / scripts/.",
+      "Write descriptions in THIRD person, not first. 'Extracts text…' not 'I extract text…'.",
+      "Don't include time-sensitive info (dates, version numbers, 'as of October 2026'). Skills outlive the context they were written in.",
+      "Use consistent terminology — don't call the same concept 'component', 'module', and 'service' across one skill.",
+      "References go ONE level deep (SKILL.md → REFERENCE.md). Don't make agents traverse a tree.",
+      "Add scripts for deterministic work — generated code drifts, scripts don't.",
+      "Always review the draft with the user before shipping. The author often misses missing cases the user spots in 10 seconds."
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

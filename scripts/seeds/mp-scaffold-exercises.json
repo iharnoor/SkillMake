@@ -1,0 +1,75 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/misc/scaffold-exercises/SKILL.md",
+  "skill": {
+    "name": "mp-scaffold-exercises",
+    "description": "Use when scaffolding course exercise directories (sections, problems, solutions, explainers) that pass `pnpm ai-hero-cli internal lint` — Matt's AI Hero course tooling convention.",
+    "whenToUse": [
+      "Stubbing a new section of exercises from a plan with section / exercise / variant names",
+      "Renumbering or moving exercises while preserving git history",
+      "Fixing lint failures from `pnpm ai-hero-cli internal lint` — missing readme.md, broken links, .gitkeep files",
+      "Working inside the AI Hero course repo or a fork that shares the `exercises/` convention"
+    ],
+    "keyConcepts": [
+      {
+        "term": "section / exercise numbering",
+        "explanation": "Sections live at `exercises/XX-section-name/` (e.g. `01-retrieval-skill-building`). Exercises at `exercises/XX.YY-exercise-name/` (e.g. `01.03-retrieval-with-bm25`). Section number = XX, exercise number = XX.YY. Names are lowercase-dash-case."
+      },
+      {
+        "term": "exercise variants — problem / solution / explainer",
+        "explanation": "Each exercise needs at least one of: `problem/` (student workspace with TODOs), `solution/` (reference implementation), `explainer/` (concept-only, no TODOs). When stubbing without explicit plan info, default to `explainer/`."
+      },
+      {
+        "term": "readme.md required, non-empty",
+        "explanation": "Each variant subfolder needs a `readme.md` with real content (even a single title line works) and no broken links. The lint tolerates readme-only exercises, but bare empty folders fail."
+      },
+      {
+        "term": "main.ts when there's code",
+        "explanation": "If the variant subfolder has actual code (not just a readme), it also needs a `main.ts` with >1 line. For stubs, readme-only is fine — no `main.ts` required."
+      },
+      {
+        "term": "git mv for renames",
+        "explanation": "Use `git mv` (NOT plain `mv`) to rename / renumber exercise directories. Plain `mv` loses git history and makes blame on the renumbered file useless."
+      },
+      {
+        "term": "no .gitkeep, no speaker-notes.md",
+        "explanation": "The linter explicitly bans `.gitkeep` files (use a real readme instead) and `speaker-notes.md` (handled separately). Also bans `pnpm run exercise` commands in readmes — they're a stale convention."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Workflow",
+        "purpose": "Five-step loop ending with the AI Hero lint pass. Iterate steps 4–5 until clean.",
+        "example": "1. Parse the plan — extract section / exercise / variant names\n2. Create directories with mkdir -p\n3. Create stub readmes — one per variant folder, title + 1-line description\n4. Run `pnpm ai-hero-cli internal lint`\n5. Fix errors, re-run until clean"
+      },
+      {
+        "signature": "Stubbing from a plan",
+        "purpose": "Concrete example: given a plan with three exercises in Section 05, produce dir tree + readmes.",
+        "example": "mkdir -p exercises/05-memory-skill-building/05.01-introduction-to-memory/explainer\nmkdir -p exercises/05-memory-skill-building/05.02-short-term-memory/{explainer,problem,solution}\nmkdir -p exercises/05-memory-skill-building/05.03-long-term-memory/explainer\n\n# then per dir:\necho '# Introduction to Memory' > exercises/05-memory-skill-building/05.01-introduction-to-memory/explainer/readme.md"
+      },
+      {
+        "signature": "Renumbering with history preserved",
+        "purpose": "Use git mv to keep blame coherent.",
+        "example": "git mv exercises/01-retrieval/01.03-embeddings exercises/01-retrieval/01.04-embeddings"
+      },
+      {
+        "signature": "Minimal readme template",
+        "purpose": "Smallest content that passes the lint.",
+        "example": "# Exercise Title\n\nDescription here"
+      }
+    ],
+    "gotchas": [
+      "This skill targets Matt's AI Hero course conventions (`pnpm ai-hero-cli internal lint`) — it won't work in arbitrary monorepos without that CLI.",
+      "Default to `explainer/` when stubbing without an explicit plan — student-facing problem/solution sets need real content, not stubs.",
+      "Every variant subfolder must have a non-empty `readme.md`. Empty file or missing file = lint fail.",
+      "No `.gitkeep` files. The linter rejects them — use a real `readme.md` instead.",
+      "No `speaker-notes.md` and no `pnpm run exercise` commands in readmes — both are explicitly banned.",
+      "Use `git mv` for renames so blame survives. Plain `mv` + add/remove fragments history.",
+      "If a subfolder has code, it needs both a `readme.md` AND a `main.ts` (>1 line). Stubs are exempt from main.ts.",
+      "Run lint after every move — error messages are clearer when one batch of edits is being evaluated, not three layered batches."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

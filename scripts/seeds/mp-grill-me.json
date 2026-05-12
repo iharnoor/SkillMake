@@ -1,0 +1,55 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md",
+  "skill": {
+    "name": "mp-grill-me",
+    "description": "Use when you want the agent to interview you relentlessly about a plan or design — one question at a time, recommended answer included, walking the decision tree until you've reached shared understanding.",
+    "whenToUse": [
+      "User says 'grill me' or wants their design stress-tested before writing code",
+      "Resolving each branch of a multi-decision plan one dependency at a time",
+      "Sanity-checking ambiguous requirements with the agent acting as a sceptical reviewer",
+      "Lightweight alternative to mp-grill-with-docs when there's no CONTEXT.md / ADR layer yet"
+    ],
+    "keyConcepts": [
+      {
+        "term": "relentless interview",
+        "explanation": "The agent's job is to interview you until you've reached SHARED understanding — not until you've answered N questions. Stop only when both sides can describe the plan the same way. Vague answers earn follow-ups."
+      },
+      {
+        "term": "one question at a time",
+        "explanation": "Ask the questions one at a time. Batching kills the rhythm and lets the user dodge specifics. Wait for the answer, then move on. This is the same discipline as mp-grill-with-docs but without the doc side-effects."
+      },
+      {
+        "term": "recommended answer included",
+        "explanation": "For each question, provide your recommended answer. This is the grilling part — you're not interviewing neutrally, you're proposing a stance and letting the user push back or accept."
+      },
+      {
+        "term": "walk the design tree",
+        "explanation": "Resolve dependencies between decisions one-by-one — early questions surface trade-offs that change later ones. Don't jump around; walk the branches in dependency order so each question's answer is informed by the previous one."
+      },
+      {
+        "term": "explore the codebase instead of asking",
+        "explanation": "If a question can be answered by reading the code, READ THE CODE — don't ask the user. Asking what's already inspectable wastes their time and signals the agent isn't paying attention."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "The full skill body (verbatim)",
+        "purpose": "Short skill — the entire body is four sentences. The discipline is in the brevity.",
+        "example": "Interview me relentlessly about every aspect of this plan until we reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one. For each question, provide your recommended answer.\n\nAsk the questions one at a time.\n\nIf a question can be answered by exploring the codebase, explore the codebase instead."
+      }
+    ],
+    "gotchas": [
+      "Ask ONE question at a time. Batching kills the grilling rhythm.",
+      "Include your recommended answer with each question — neutrality is not grilling.",
+      "Walk the design tree in dependency order; jumping around makes earlier answers wasted context.",
+      "If a question can be answered by reading the code, read the code — don't ask.",
+      "Lighter than mp-grill-with-docs — no CONTEXT.md / ADR side effects. Use grill-me for early exploration, mp-grill-with-docs once docs are involved.",
+      "Stop when shared understanding is reached, not when N questions have been asked. Sometimes that's 3 questions, sometimes 30.",
+      "Vague user answers earn follow-ups — accepting hand-wavy responses defeats the purpose of grilling."
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

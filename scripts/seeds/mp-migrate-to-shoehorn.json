@@ -1,0 +1,76 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/misc/migrate-to-shoehorn/SKILL.md",
+  "skill": {
+    "name": "mp-migrate-to-shoehorn",
+    "description": "Use when refactoring TypeScript TEST files away from `as` type assertions to @total-typescript/shoehorn — fromPartial() for partial type-safe data, fromAny() for intentionally-wrong inputs.",
+    "whenToUse": [
+      "Test code is full of `as Request`, `as User`, `as unknown as X` and you want type-safe partial fixtures instead",
+      "Passing only a few properties from a large object type into a function-under-test",
+      "Deliberately injecting wrong-shaped data to test error paths, without losing autocomplete",
+      "Auditing test files for `as` assertions across a codebase with a single grep"
+    ],
+    "keyConcepts": [
+      {
+        "term": "shoehorn is tests-only",
+        "explanation": "@total-typescript/shoehorn is for TEST code. Never use it in production code — you lose the type safety that justified writing TypeScript in the first place. Matt is explicit about this."
+      },
+      {
+        "term": "why `as` is a smell in tests",
+        "explanation": "`as Type` forces TypeScript to trust you, must specify target type manually, and the double-as pattern (`as unknown as Type`) for intentionally wrong data is ugly. Shoehorn keeps the IDE helpful while letting you pass partials."
+      },
+      {
+        "term": "fromPartial()",
+        "explanation": "Pass partial data that still type-checks against the full type. Use for the common case: you only care about a few properties of a large input."
+      },
+      {
+        "term": "fromAny()",
+        "explanation": "Pass intentionally wrong data — e.g. `{ body: { id: 123 } }` where the type wants `id: string`. Keeps autocomplete on the surrounding object while waving through the deliberately-wrong field. Replaces `as unknown as Type`."
+      },
+      {
+        "term": "fromExact()",
+        "explanation": "Force a full object (every property must be present). Useful as a step before refactoring to fromPartial later — you can ratchet the test from 'must be exact' to 'partial is fine' as the type stabilises."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Install",
+        "purpose": "Single dev dependency.",
+        "example": "npm i @total-typescript/shoehorn"
+      },
+      {
+        "signature": "fromPartial — replace `as Type`",
+        "purpose": "Most common migration. Pass only what the test cares about.",
+        "example": "import { fromPartial } from \"@total-typescript/shoehorn\";\n\nit(\"gets user by id\", () => {\n  getUser(\n    fromPartial({\n      body: { id: \"123\" },\n    }),\n  );\n});"
+      },
+      {
+        "signature": "fromAny — replace `as unknown as Type`",
+        "purpose": "When you're feeding the function deliberately-wrong data to test error handling.",
+        "example": "import { fromAny } from \"@total-typescript/shoehorn\";\n\ngetUser(fromAny({ body: { id: 123 } }));"
+      },
+      {
+        "signature": "Migration grep",
+        "purpose": "Find every TypeScript test file using `as` type assertions in one go.",
+        "example": "grep -r \" as [A-Z]\" --include=\"*.test.ts\" --include=\"*.spec.ts\""
+      },
+      {
+        "signature": "Workflow checklist",
+        "purpose": "Steps to run in order. Type-check at the end catches mismatched migrations.",
+        "example": "[ ] Install: npm i @total-typescript/shoehorn\n[ ] Find test files with `as` assertions (grep above)\n[ ] Replace `as Type` → fromPartial()\n[ ] Replace `as unknown as Type` → fromAny()\n[ ] Add imports from @total-typescript/shoehorn\n[ ] Run tsc --noEmit to verify"
+      }
+    ],
+    "gotchas": [
+      "TESTS ONLY. Don't sneak shoehorn into production code — it bypasses the type system on purpose.",
+      "`fromPartial` requires the type to be inferrable from the call site. If the function signature uses generics, you may need to annotate.",
+      "`fromAny` keeps autocomplete on the SURROUNDING object, not on the deliberately-wrong field. The wrong field is still 'any'.",
+      "If a test was passing because `as` silenced a real bug, the shoehorn migration will surface it — that's a win, not a regression.",
+      "Watch for `as const` — that's a different construct (literal type assertion) and should NOT be migrated to shoehorn.",
+      "After migration, run the full tsc --noEmit, not just per-file. Type errors can propagate from helpers that consumed the old `as` shapes.",
+      "fromExact is rarely the right starting point — prefer fromPartial unless the test needs exhaustive shape verification.",
+      "If you're on a non-TS test framework or your tests live alongside production code, scoping shoehorn correctly takes more care — keep the dependency in devDependencies."
+    ],
+    "category": "library",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

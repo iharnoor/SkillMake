@@ -1,0 +1,66 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/misc/git-guardrails-claude-code/SKILL.md",
+  "skill": {
+    "name": "mp-git-guardrails",
+    "description": "Use when you want Claude Code's Bash tool to refuse dangerous git commands (push, reset --hard, clean -f, branch -D, checkout .) via a PreToolUse hook installed in .claude/settings.json or ~/.claude/settings.json.",
+    "whenToUse": [
+      "Adding a safety net so a runaway agent can't `git push --force` or `git reset --hard` on your behalf",
+      "Sharing the same guardrails across all projects via the global ~/.claude/settings.json scope",
+      "Customising the blocked-command list (add/remove patterns) per project",
+      "Smoke-testing the hook with a single echo'd JSON payload before relying on it"
+    ],
+    "keyConcepts": [
+      {
+        "term": "PreToolUse Bash matcher",
+        "explanation": "A Claude Code hook type that runs BEFORE the Bash tool executes a command. Returning exit code 2 + a stderr message blocks the call and shows Claude the rejection message. Matcher `\"Bash\"` scopes the hook to the Bash tool only."
+      },
+      {
+        "term": "blocked command set",
+        "explanation": "By default: `git push` (all variants including --force), `git reset --hard`, `git clean -f` / `git clean -fd`, `git branch -D`, `git checkout .`, `git restore .`. Section 4 of the skill prompts the user to edit this list if they want different patterns."
+      },
+      {
+        "term": "project vs global scope",
+        "explanation": "Step 1 asks the user: install for this project only (`.claude/settings.json` + `.claude/hooks/`) or for all projects (`~/.claude/settings.json` + `~/.claude/hooks/`). Global scope means new repos get the same guardrails by default."
+      },
+      {
+        "term": "merge, don't overwrite",
+        "explanation": "If the target settings file already has hooks, the new PreToolUse entry must be MERGED into the existing array. Overwriting wipes other settings (permissions, model overrides, etc.)."
+      },
+      {
+        "term": "verify with echo'd JSON",
+        "explanation": "Smoke test: `echo '{\"tool_input\":{\"command\":\"git push origin main\"}}' | <path-to-script>` should exit 2 and print a BLOCKED message to stderr. If it doesn't, the hook won't actually fire when Claude tries to push."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Project-scope settings.json",
+        "purpose": "Drop into `.claude/settings.json`. `$CLAUDE_PROJECT_DIR` resolves to the repo root so the hook path is portable across machines.",
+        "example": "{\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Bash\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"\\\"$CLAUDE_PROJECT_DIR\\\"/.claude/hooks/block-dangerous-git.sh\"\n          }\n        ]\n      }\n    ]\n  }\n}"
+      },
+      {
+        "signature": "Global-scope settings.json",
+        "purpose": "Drop into `~/.claude/settings.json` so every project on the machine inherits the guardrail.",
+        "example": "{\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Bash\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"~/.claude/hooks/block-dangerous-git.sh\"\n          }\n        ]\n      }\n    ]\n  }\n}"
+      },
+      {
+        "signature": "Smoke-test the hook",
+        "purpose": "Confirm the script actually blocks before relying on it.",
+        "example": "echo '{\"tool_input\":{\"command\":\"git push origin main\"}}' | <path-to-script>\n# expect: exit code 2 + BLOCKED message on stderr"
+      }
+    ],
+    "gotchas": [
+      "Don't overwrite an existing settings.json — MERGE the new hook into hooks.PreToolUse so other settings survive.",
+      "Make the copied script executable with `chmod +x` after copying — Claude Code won't run a non-executable hook.",
+      "Project scope uses `\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/…`; global scope uses `~/.claude/hooks/…`. Mixing the paths breaks the hook silently.",
+      "Customisation step 4 is optional but important — if you actually need `git push` for something legit (e.g. CI bootstrap), edit the script before installing.",
+      "The smoke test must show exit code 2 AND a BLOCKED message. Exit 0 means the hook ran but didn't refuse — Claude will proceed anyway.",
+      "Default block list covers the common destructive cases but not every edge — e.g. `git remote remove origin` isn't blocked. Add patterns as you discover gaps.",
+      "Hooks only intercept Bash. A skill that uses a non-Bash tool to invoke git (via MCP, etc.) bypasses this entirely.",
+      "Removing the hook later: delete the PreToolUse entry from settings.json AND the script file — leaving an orphan script causes confusion the next time you debug hooks."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/productivity/caveman/SKILL.md",
+  "skill": {
+    "name": "mp-caveman",
+    "description": "Use when you want the agent to respond in ultra-compressed caveman-speak — a single SKILL.md that drops filler/articles/pleasantries and saves ~75% of output tokens, no plugin or CLI required.",
+    "whenToUse": [
+      "User says 'caveman mode', 'talk like caveman', 'use caveman', 'less tokens', 'be brief', or invokes /caveman",
+      "Cutting output-token spend in a Claude Code session without installing a separate plugin",
+      "Persisting the style across many turns without 'normal mode' drift",
+      "Auto-clarity exception cases: security warnings, irreversible-action confirmations, multi-step sequences"
+    ],
+    "keyConcepts": [
+      {
+        "term": "single-SKILL.md install",
+        "explanation": "Matt's caveman is one file you drop into ~/.claude/skills/caveman/SKILL.md. No CLI, no statusline, no MCP middleware — just the prompt. Distinct from the JuliusBrussee/caveman plugin which wraps the same idea in a full ecosystem."
+      },
+      {
+        "term": "persistence rule",
+        "explanation": "ACTIVE EVERY RESPONSE once triggered. No revert after many turns, no filler drift. Stays on through unsure / clarifying turns. Turned off only when user explicitly says 'stop caveman' or 'normal mode'."
+      },
+      {
+        "term": "drop list",
+        "explanation": "Articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries (sure/certainly/of course/happy to), and hedging. Fragments are OK. Use short synonyms (big not extensive, fix not 'implement a solution for'). Abbreviate common terms (DB/auth/config/req/res/fn/impl). Strip conjunctions. Use arrows for causality (X -> Y)."
+      },
+      {
+        "term": "keep-exact list",
+        "explanation": "Technical terms stay exact (don't rename functions or libraries to be brief). Code blocks unchanged (caveman doesn't compress code). Errors quoted exact (paraphrasing an error message hides the bug)."
+      },
+      {
+        "term": "pattern",
+        "explanation": "`[thing] [action] [reason]. [next step].` Example: 'New object ref each render. Inline object prop = new ref = re-render. Wrap in useMemo.' Replaces verbose explanations that say the same thing in 3x the words."
+      },
+      {
+        "term": "Auto-Clarity Exception",
+        "explanation": "Drop caveman TEMPORARILY for: security warnings, irreversible-action confirmations (drops, deletes, force-pushes), multi-step sequences where fragment order risks misread, user asks to clarify or repeats the question. Resume caveman immediately after the clear part is done."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Pattern (the core rule)",
+        "purpose": "Caveman responses follow this template. The four bracketed slots replace whatever the verbose version would have said.",
+        "example": "[thing] [action] [reason]. [next step]."
+      },
+      {
+        "signature": "Before / after — React re-render",
+        "purpose": "The canonical example from the source. Same technical content, ~1/4 the tokens.",
+        "example": "Verbose: \"The reason your React component is re-rendering is likely because you're creating a new object reference on each render cycle. When you pass an inline object as a prop, React's shallow comparison sees it as a different object every time, which triggers a re-render. I'd recommend using useMemo to memoize the object.\"\n\nCaveman: \"Inline obj prop -> new ref -> re-render. useMemo.\""
+      },
+      {
+        "signature": "Auto-Clarity Exception example — destructive op",
+        "purpose": "When the user is about to do something irreversible, the agent breaks character to issue a clear warning, then resumes caveman.",
+        "example": "> **Warning:** This will permanently delete all rows in the `users` table and cannot be undone.\n>\n> ```sql\n> DROP TABLE users;\n> ```\n>\n> Caveman resume. Verify backup exist first."
+      }
+    ],
+    "gotchas": [
+      "Persists ACROSS turns once triggered. To stop, say 'stop caveman' or 'normal mode' — not 'be more verbose'.",
+      "Don't compress code blocks. Caveman compresses prose; code stays exact.",
+      "Don't paraphrase error messages. Quote them verbatim — paraphrasing hides the actual bug.",
+      "Auto-Clarity exception triggers for security warnings, destructive ops, multi-step sequences, and clarification requests — caveman resumes immediately after.",
+      "Technical terms stay exact. Abbreviate 'configuration' to 'config', but never rename a function or library to be shorter.",
+      "Different from JuliusBrussee/caveman — that's a full plugin (CLI, statusline, sub-skills, MCP middleware, benchmarks). This is the minimal SKILL.md. Pick one; running both is redundant.",
+      "Fragments are encouraged but not required. If a fragment would create real ambiguity, write a short full sentence instead.",
+      "When the user repeats a question (a sign they didn't understand the caveman reply), drop the exception and answer in normal English, then resume."
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}
