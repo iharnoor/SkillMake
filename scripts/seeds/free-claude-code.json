@@ -1,0 +1,85 @@
+{
+  "sourceUrl": "https://github.com/Alishahryar1/free-claude-code/blob/main/README.md",
+  "skill": {
+    "name": "free-claude-code",
+    "description": "Use when you want Claude Code to route its Anthropic Messages API traffic through a local proxy to free or cheap providers — NVIDIA NIM, Kimi, Wafer, OpenRouter, DeepSeek, LM Studio, llama.cpp, or Ollama.",
+    "whenToUse": [
+      "Running Claude Code against a free NVIDIA NIM key or local Ollama / LM Studio model instead of paying Anthropic per token",
+      "Per-tier routing — send Opus to DeepSeek, Sonnet to Kimi, Haiku to a local model, fallback to OpenRouter free tier",
+      "Wrapping Claude Code in a Discord or Telegram bot for remote coding sessions (voice transcription via Whisper or NVIDIA NIM)",
+      "Keeping the Claude Code client and protocol stable while swapping the model backend underneath"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Anthropic-Messages-compatible proxy",
+        "explanation": "Free Claude Code runs a local server (default :8082) that speaks the Anthropic Messages API to Claude Code, then translates each request to whichever provider you configured. Claude Code's client-side protocol stays unchanged — streaming, tool use, reasoning blocks all work."
+      },
+      {
+        "term": "eight provider backends",
+        "explanation": "NVIDIA NIM, Kimi (Moonshot), Wafer Pass, OpenRouter, DeepSeek, LM Studio, llama.cpp, and Ollama. Pick one in the Admin UI, paste its API key (or local URL), set `MODEL` to a provider-prefixed slug like `nvidia_nim/z-ai/glm4.7`."
+      },
+      {
+        "term": "per-model routing",
+        "explanation": "`MODEL` is the fallback. `MODEL_OPUS`, `MODEL_SONNET`, `MODEL_HAIKU` override routing for Claude Code's tier picker — so each tier can point at a different provider, giving you cheap defaults plus a premium fallback when the task warrants it."
+      },
+      {
+        "term": "Admin UI at /admin",
+        "explanation": "Local-only web UI (loopback access only) for editing supported proxy settings, validating API keys against each provider, and switching `MODEL` without restarting. Click Validate → Apply; no env-var dance."
+      },
+      {
+        "term": "fcc-server / fcc-claude",
+        "explanation": "Two binaries installed by `uv tool install`. `fcc-server` starts the proxy and prints the URLs. `fcc-claude` reads the current port and auth token, sets the Claude Code env vars, and launches the real `claude` command — so you can keep using Claude Code unchanged."
+      },
+      {
+        "term": "messaging + voice wrappers",
+        "explanation": "Optional Discord / Telegram bot wrappers let you drive coding sessions from chat. Voice-note transcription pipes through local Whisper or NVIDIA NIM — speak the prompt, ship the diff."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "1. Install Claude Code itself",
+        "purpose": "Free Claude Code is a proxy in front of the real Claude Code CLI — install the upstream client first.",
+        "example": "npm install -g @anthropic-ai/claude-code"
+      },
+      {
+        "signature": "2. Install uv + Python 3.14",
+        "purpose": "Proxy is Python 3.14, packaged for uv. macOS / Linux:",
+        "example": "curl -LsSf https://astral.sh/uv/install.sh | sh\nuv self update\nuv python install 3.14"
+      },
+      {
+        "signature": "3. Install the proxy",
+        "purpose": "Single command — also the same command to update.",
+        "example": "uv tool install --force git+https://github.com/Alishahryar1/free-claude-code.git"
+      },
+      {
+        "signature": "4. Start proxy + Admin UI",
+        "purpose": "Starts the local server. Terminal prints the proxy URL and the Admin UI URL — open the latter to paste your provider key.",
+        "example": "fcc-server\n# Server URL: http://127.0.0.1:8082\n# Admin UI:   http://127.0.0.1:8082/admin"
+      },
+      {
+        "signature": "5. Run Claude Code through the proxy",
+        "purpose": "Wrapper that reads the current proxy port + auth token, exports the Claude Code env vars, and launches `claude`.",
+        "example": "fcc-claude"
+      },
+      {
+        "signature": "Provider-prefixed model slugs",
+        "purpose": "`MODEL` (and optional MODEL_OPUS / MODEL_SONNET / MODEL_HAIKU) takes a provider-prefixed slug. A few popular ones:",
+        "example": "nvidia_nim/z-ai/glm4.7\nnvidia_nim/moonshotai/kimi-k2.5\nkimi/kimi-k2.5\nwafer/DeepSeek-V4-Pro\nopen_router/stepfun/step-3.5-flash:free\ndeepseek/deepseek-chat\nlmstudio/<model-id-from-lm-studio>\nollama/<model-name>"
+      }
+    ],
+    "gotchas": [
+      "Admin UI is loopback-only by design — exposing it to the internet would leak your API keys. Don't tunnel it without auth in front.",
+      "For local backends (LM Studio / llama.cpp / Ollama) prefer models with tool-use support; Claude Code workflows lean on tools heavily.",
+      "llama.cpp may return HTTP 400 if --ctx-size is too small for normal Claude Code requests; increase it and rebuild if needed.",
+      "Wafer uses its Anthropic-compatible endpoint at https://pass.wafer.ai/v1/messages, not the OpenAI chat-completions endpoint — slug must be `wafer/...`.",
+      "DeepSeek likewise hits its Anthropic-compatible endpoint, not the chat-completions one.",
+      "Claude Code's `/model` picker only sees the proxy's `/v1/models` list when Claude Code opts in to Gateway model discovery — see the Model Picker section in the README.",
+      "Free OpenRouter tiers have rate limits — use them as a fallback, not a primary, for long coding sessions.",
+      "Updating the proxy uses the same `uv tool install --force git+…` command. Restart `fcc-server` after updating so the new code is loaded."
+    ],
+    "category": "tool",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/Alishahryar1/free-claude-code"
+  }
+}
