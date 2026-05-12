@@ -15,10 +15,11 @@ export default async function PowerhousePage() {
   const h = await headers();
   after(() => track("powerhouse_view", { headers: h }));
 
-  const [last72Href, last30Href, ppHref] = await Promise.all([
+  const [last72Href, last30Href, ppHref, htmleHref] = await Promise.all([
     marketplaceHref("last72hours"),
     marketplaceHref("last30days"),
     marketplaceHref("printingpress"),
+    marketplaceHref("html-everything"),
   ]);
 
   return (
@@ -144,6 +145,42 @@ export default async function PowerhousePage() {
         }
       />
 
+      <Skill
+        index={4}
+        slug="html-everything"
+        marketplaceHref={htmleHref}
+        video="/v/html-everything.mp4"
+        title="html-everything — any blob → one editorial HTML page"
+        tagline="markdown, json, plain text, or a url → one .html file"
+        repo="https://github.com/iharnoor/html-everything"
+        body={
+          <>
+            <p>
+              Pass in Markdown, JSON, plain text, or a URL to a doc — get back a single
+              self-contained HTML file with an editorial layout, content-aware theming, and every
+              URL auto-linkified. No project scaffold, no build step, no API keys. The skill is a
+              recipe Claude executes in-context — install is a symlink, uninstall is{" "}
+              <span className="mono">rm</span>.
+            </p>
+            <p>
+              Output uses Archivo Black for display, Inter Tight for body, JetBrains Mono for code.
+              Styling subtly shifts based on detected content type — a market-cap rundown doesn&apos;t
+              come out looking like a sports recap. Files land in{" "}
+              <span className="mono">~/Documents/html-everything/</span> by default — override with{" "}
+              <span className="mono">HTMLE_OUTPUT_DIR</span>.
+            </p>
+            <CodeBlock>
+              {`# Install\ngit clone https://github.com/iharnoor/html-everything ~/Developer/html-everything\nln -s ~/Developer/html-everything/skills/html-everything ~/.claude/skills/html-everything`}
+            </CodeBlock>
+            <p className="mono text-[12px] text-[color:var(--fg-dim)] leading-relaxed">
+              Trigger:{" "}
+              <span className="text-[color:var(--accent)]">/html-everything &lt;path | json | url&gt;</span>
+              . Omit the argument to paste content inline.
+            </p>
+          </>
+        }
+      />
+
       <section className="mt-16">
         <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
           <span className="dot" />
@@ -157,7 +194,10 @@ export default async function PowerhousePage() {
           inline citations.{" "}
           <Link href={ppHref} className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">printingpress</Link>{" "}
           is orthogonal: once you&apos;ve identified the system worth integrating with, it prints
-          you the CLI to talk to it without re-discovering its surface for every agent.
+          you the CLI to talk to it without re-discovering its surface for every agent.{" "}
+          <Link href={htmleHref} className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">html-everything</Link>{" "}
+          is the artifact step — whatever the other three produced, it wraps into one shareable
+          HTML file you can send.
         </p>
       </section>
 

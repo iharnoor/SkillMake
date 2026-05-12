@@ -1,0 +1,62 @@
+{
+  "sourceUrl": "https://github.com/iharnoor/html-everything",
+  "skill": {
+    "name": "html-everything",
+    "description": "Use when you want to turn any blob — Markdown, JSON, plain text, or a doc URL — into a single self-contained editorial HTML page with clickable links, content-aware styling, and no external deps beyond Google Fonts.",
+    "whenToUse": [
+      "Wrapping a scrape, transcript, or report dump into a shareable HTML page without spinning up a static-site generator",
+      "Turning agent-produced Markdown or JSON output into a stylized, sendable artifact in one slash command",
+      "Linkifying every URL in a blob automatically — no manual `[text](url)` rewriting",
+      "Generating a quick editorial-scorecard layout for content drops where Notion or Docs would be overkill"
+    ],
+    "keyConcepts": [
+      {
+        "term": "One blob in, one HTML file out",
+        "explanation": "Pass in Markdown, JSON, plain text, or a URL to a doc. The skill emits a single `.html` file to `$HTMLE_OUTPUT_DIR` (defaults to `~/Documents/html-everything/`) — no project scaffold, no build step, no API keys."
+      },
+      {
+        "term": "Editorial scorecard layout",
+        "explanation": "Default output uses an editorial typographic system — Archivo Black for display, Inter Tight for body, JetBrains Mono for code. Layout is responsive and self-contained; only external assets are the Google Font requests."
+      },
+      {
+        "term": "Auto-detect input format",
+        "explanation": "The skill identifies whether the blob is Markdown, JSON, plain text, or a URL on its own — and routes through the matching renderer. You don't pass a format flag; you pass the blob."
+      },
+      {
+        "term": "Content-aware theming",
+        "explanation": "Styling subtly shifts based on detected content type — tech reports, finance briefs, sports recaps, etc. — so a market-cap rundown doesn't look identical to a game wrap, even though both came through the same skill."
+      },
+      {
+        "term": "Auto-linkified URLs",
+        "explanation": "Every URL in the input — even bare `https://...` strings — is wrapped as a clickable anchor in the output. No need to pre-format links."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Install",
+        "purpose": "Clone the repo and symlink the skill folder into Claude Code's user skills directory.",
+        "example": "git clone https://github.com/iharnoor/html-everything ~/Developer/html-everything\nln -s ~/Developer/html-everything/skills/html-everything ~/.claude/skills/html-everything"
+      },
+      {
+        "signature": "/html-everything <path | json | url>",
+        "purpose": "User-invocable slash command. Pass a Markdown / JSON / text file path, a raw JSON blob, or a URL. Omit the argument to paste content inline.",
+        "example": "/html-everything ~/Documents/scrape.md\n/html-everything '{\"title\": \"Q1 picks\", \"items\": [...]}'\n/html-everything https://some-doc-url.com/report\n/html-everything          # then paste content inline"
+      },
+      {
+        "signature": "HTMLE_OUTPUT_DIR (env)",
+        "purpose": "Override the output directory. Defaults to `~/Documents/html-everything/`.",
+        "example": "export HTMLE_OUTPUT_DIR=~/Sites/briefs/\n/html-everything ~/Documents/scrape.md\n# → writes to ~/Sites/briefs/<slug>.html"
+      }
+    ],
+    "gotchas": [
+      "Output is self-contained but does pull Google Fonts at view time — totally air-gapped clients will see the system font fallback instead.",
+      "Auto-detection runs on the raw blob — extremely mixed inputs (Markdown with embedded JSON) may route through whichever pattern matched first; pre-clean the blob if you want a specific renderer.",
+      "Slash-command-only — there's no CLI binary, so it lives inside Claude Code's session. Move the symlink if you want it scoped per-project instead of user-wide.",
+      "The skill is a recipe executed in-context — no API keys, no scaffold, no dependencies. That also means you can't `npm i` it, only symlink-install."
+    ],
+    "category": "tool",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/iharnoor/html-everything"
+  }
+}
