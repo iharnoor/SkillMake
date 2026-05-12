@@ -2,7 +2,7 @@
   "sourceUrl": "https://github.com/iharnoor/last72hours-skill",
   "skill": {
     "name": "last72hours",
-    "description": "Use when you want a 72-hour viral radar on a topic across Reddit, X, TikTok, Instagram, Hacker News, YouTube, and GitHub — synthesized to a clickable HTML mirror plus an optional editorial leaderboard rendered in Paper.design.",
+    "description": "Use when you want a 72-hour viral radar across Reddit, X, TikTok, Instagram, HN, YouTube, and GitHub — clickable HTML mirror plus an optional editorial leaderboard rendered in Paper.design.",
     "whenToUse": [
       "Spotting what's spiking right now (last 72 hours) on a launch, news beat, or competitor across 7 platforms in one pass",
       "Producing a clickable HTML brief with source links and engagement counts, instead of manually sweeping Reddit/X/TikTok/HN",

@@ -2,7 +2,7 @@
   "sourceUrl": "https://github.com/mvanhorn/last30days-skill",
   "skill": {
     "name": "last30days",
-    "description": "Use when researching what people actually say about any topic in the last 30 days — pulls posts and engagement from Reddit, X, YouTube, TikTok, Hacker News, Polymarket, GitHub, and the web, then synthesizes a grounded summary with citations.",
+    "description": "Use when researching what people actually said in the last 30 days — pulls posts and engagement from Reddit, X, YouTube, TikTok, HN, Polymarket, GitHub, and the web, then cites every quote inline.",
     "whenToUse": [
       "Researching audience sentiment or trends on a named entity (product, person, project) over a recent window",
       "Grounding a content brief, pitch, or strategy doc in what real users posted — not the model's training data",
@@ -47,7 +47,7 @@
       },
       {
         "signature": "Pass-through footer markers",
-        "purpose": "Engine wraps its emoji-tree stats footer in `<!-- PASS-THROUGH FOOTER -->` / `<!-- END PASS-THROUGH FOOTER -->`. Synthesis MUST include this block verbatim, after KEY PATTERNS and before the invitation. Evidence clusters are wrapped in `<!-- EVIDENCE FOR SYNTHESIS -->` / `<!-- END EVIDENCE FOR SYNTHESIS -->` and must NOT be emitted verbatim — they're raw input to the synthesis pass."
+        "purpose": "Engine wraps its emoji-tree footer in PASS-THROUGH FOOTER comments — synthesis includes that block verbatim. Evidence clusters are wrapped in EVIDENCE FOR SYNTHESIS comments and must NOT be emitted verbatim — they're raw input."
       }
     ],
     "gotchas": [
