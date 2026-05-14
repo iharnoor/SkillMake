@@ -3,7 +3,8 @@ import Link from "next/link";
 export default function SecurityPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 pt-16 pb-24">
-      <div className="mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] mb-2">
+      <div className="inline-flex items-center gap-2 mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] mb-3">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[color:var(--accent)]"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         Security
       </div>
       <h1 className="text-3xl sm:text-4xl tracking-[-0.02em] font-semibold">
@@ -13,6 +14,7 @@ export default function SecurityPage() {
         SkillMake fetches arbitrary third-party HTML and feeds it to an LLM. That makes prompt
         injection the central concern. Here is exactly what we do — and don&apos;t do — about it.
       </p>
+      <div className="section-divider mt-8" />
 
       <Section title="The risk">
         <p>
@@ -109,11 +111,11 @@ export default function SecurityPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mt-12">
-      <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
+      <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2.5">
         <span className="dot" />
         {title}
       </h2>
-      <div className="text-[15px] text-[color:var(--fg-muted)] leading-relaxed space-y-3">
+      <div className="text-[15px] text-[color:var(--fg-muted)] leading-relaxed space-y-3 pl-[18px] border-l border-[color:var(--border)]">
         {children}
       </div>
     </section>

@@ -152,6 +152,7 @@ export function Converter() {
     <div className="space-y-8">
       <form onSubmit={onSubmit} className="input-shell rounded-2xl p-2 flex flex-col sm:flex-row gap-2">
         <div className="flex items-center pl-4 pr-2 py-2 sm:py-0 mono text-[color:var(--fg-dim)] text-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 opacity-60"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
           https://
         </div>
         <input
@@ -167,9 +168,14 @@ export function Converter() {
         <button
           type="submit"
           disabled={loading || !url}
-          className="btn-accent rounded-xl px-6 py-3 text-sm tracking-tight whitespace-nowrap"
+          className="btn-accent rounded-xl px-6 py-3 text-sm tracking-tight whitespace-nowrap flex items-center gap-2"
         >
-          {loading ? "Converting…" : "Skill it →"}
+          {loading ? (
+            <>
+              <span className="inline-block w-3 h-3 border-2 border-[#0b0d10]/30 border-t-[#0b0d10] rounded-full animate-spin" />
+              Converting…
+            </>
+          ) : "Skill it →"}
         </button>
       </form>
 

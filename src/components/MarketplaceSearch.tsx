@@ -57,17 +57,24 @@ export function MarketplaceSearch() {
   return (
     <div>
       <div className="input-shell rounded-xl flex items-center gap-2 p-1 mb-4">
-        <span className="mono text-[color:var(--fg-dim)] text-xs pl-3">⌕</span>
+        <span className="mono text-[color:var(--fg-dim)] text-xs pl-3">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </span>
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder='Try: "stream video frames", "rate-limited fetch", "react server components"'
           className="flex-1 bg-transparent outline-none text-[14px] mono py-2.5 pr-2 placeholder:text-[color:var(--fg-dim)]"
         />
+        {!q && (
+          <span className="hidden sm:flex items-center gap-1 mono text-[10px] text-[color:var(--fg-dim)] border border-[color:var(--border)] rounded px-1.5 py-0.5 mr-2 opacity-60">
+            semantic
+          </span>
+        )}
         {q && (
           <button
             onClick={() => setQ("")}
-            className="text-xs text-[color:var(--fg-dim)] hover:text-[color:var(--fg)] px-3"
+            className="text-xs text-[color:var(--fg-dim)] hover:text-[color:var(--fg)] px-3 transition"
           >
             clear
           </button>
@@ -111,7 +118,7 @@ export function MarketplaceSearch() {
               <Link
                 key={r.id}
                 href={`/marketplace/${r.id}`}
-                className="card p-4 flex items-start gap-4 hover:border-[color:var(--accent)] transition group"
+                className="card card-interactive p-4 flex items-start gap-4 group"
               >
                 <div
                   className="mono text-[10px] tracking-wider px-2 py-1 rounded-md self-start mt-0.5"

@@ -134,7 +134,7 @@ function Stat({
   accent?: boolean;
 }) {
   return (
-    <div className="card p-4">
+    <div className={`card p-4 ${accent ? "border-[color:var(--accent)]/20" : ""}`}>
       <div className="mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--fg-dim)]">
         {label}
       </div>

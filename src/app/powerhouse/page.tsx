@@ -25,9 +25,10 @@ export default async function PowerhousePage() {
     <div className="max-w-4xl mx-auto px-6 pt-12 pb-24">
       <Link
         href="/"
-        className="mono text-[12px] text-[color:var(--fg-muted)] hover:text-[color:var(--accent)]"
+        className="mono text-[12px] text-[color:var(--fg-muted)] hover:text-[color:var(--accent)] transition inline-flex items-center gap-1"
       >
-        ← all skills
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        all skills
       </Link>
 
       <div className="mt-6 mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)]">
@@ -41,6 +42,7 @@ export default async function PowerhousePage() {
         research from real posts, a generator that prints token-efficient CLIs from any API spec,
         a one-shot blob-to-HTML packager, and a bridge that brings Codex into Claude Code.
       </p>
+      <div className="section-divider mt-8" />
 
       <SkillEntry
         entry={htmle}

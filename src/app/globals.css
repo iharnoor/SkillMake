@@ -11,6 +11,7 @@
   --fg-dim: #5a6271;
   --accent: #a8ff60;
   --accent-soft: #a8ff6022;
+  --accent-glow: #a8ff6015;
   --warn: #ffb547;
   --danger: #ff6e6e;
 }
@@ -32,6 +33,10 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   background: var(--bg);
@@ -41,11 +46,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Intentionally no background gradients — skills.sh-style minimalism. */
-
 ::selection {
   background: var(--accent);
   color: #0b0d10;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .grid-bg {
@@ -54,6 +63,11 @@ body {
     linear-gradient(to bottom, color-mix(in oklab, var(--border) 60%, transparent) 1px, transparent 1px);
   background-size: 32px 32px;
   mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 40%, transparent 80%);
+}
+
+.hero-glow {
+  background: radial-gradient(ellipse 50% 40% at 50% 0%, var(--accent-glow) 0%, transparent 100%);
+  pointer-events: none;
 }
 
 .mono {
@@ -66,34 +80,49 @@ body {
   color: #0b0d10;
   font-weight: 600;
   letter-spacing: -0.01em;
-  transition: transform 80ms ease, filter 120ms ease;
+  transition: transform 80ms ease, filter 120ms ease, box-shadow 160ms ease;
 }
-.btn-accent:hover { filter: brightness(1.08); }
+.btn-accent:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 0 20px var(--accent-soft), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
 .btn-accent:active { transform: translateY(1px); }
-.btn-accent:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-accent:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
 
 .btn-ghost {
   background: transparent;
   color: var(--fg);
   border: 1px solid var(--border-strong);
-  transition: background 120ms ease, border-color 120ms ease;
+  transition: background 120ms ease, border-color 120ms ease, box-shadow 160ms ease;
 }
-.btn-ghost:hover { background: var(--surface); border-color: var(--accent); }
+.btn-ghost:hover {
+  background: var(--surface);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
 
 .input-shell {
   background: var(--bg-elevated);
   border: 1px solid var(--border-strong);
-  transition: border-color 120ms ease, box-shadow 120ms ease;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 .input-shell:focus-within {
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px var(--accent-soft);
+  box-shadow: 0 0 0 4px var(--accent-soft), 0 0 20px var(--accent-glow);
 }
 
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.card:hover {
+  border-color: var(--border-strong);
+}
+.card-interactive:hover {
+  border-color: color-mix(in oklab, var(--accent) 50%, var(--border-strong));
+  box-shadow: 0 0 24px var(--accent-glow), 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .tag {
@@ -108,6 +137,7 @@ body {
   padding: 3px 10px;
   border-radius: 999px;
   background: var(--bg-elevated);
+  transition: border-color 120ms ease, color 120ms ease;
 }
 
 .tag-accent {
@@ -138,6 +168,20 @@ body {
   max-height: 560px;
   overflow: auto;
 }
+.skill-pre::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.skill-pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+.skill-pre::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+.skill-pre::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-dim);
+}
 
 .skill-pre .yaml-key { color: #ffb547; }
 .skill-pre .yaml-val { color: #a8ff60; }
@@ -165,3 +209,44 @@ body {
   50% { opacity: 1; }
 }
 .pulse-dot { animation: pulse-dot 1.4s ease-in-out infinite; }
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  animation: fade-in 0.4s ease-out both;
+}
+
+.nav-link {
+  position: relative;
+  transition: color 120ms ease;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+  transition: width 200ms ease, left 200ms ease;
+}
+.nav-link:hover::after,
+.nav-link-active::after {
+  width: 100%;
+  left: 0;
+}
+
+.row-hover {
+  transition: background 120ms ease;
+}
+.row-hover:hover {
+  background: color-mix(in oklab, var(--surface) 60%, transparent);
+}
+
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--border) 20%, var(--border) 80%, transparent 100%);
+}

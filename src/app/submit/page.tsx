@@ -22,7 +22,7 @@ export default async function SubmitPage() {
       <div className="absolute inset-x-0 top-0 h-[420px] grid-bg pointer-events-none opacity-40" />
 
       <section className="relative max-w-4xl mx-auto px-6 pt-20 pb-10 text-center">
-        <div className="inline-flex items-center gap-2 mono text-[11px] tracking-[0.2em] uppercase text-[color:var(--fg-muted)] border border-[color:var(--border)] rounded-full px-3 py-1 mb-7">
+        <div className="inline-flex items-center gap-2 mono text-[11px] tracking-[0.2em] uppercase text-[color:var(--fg-muted)] border border-[color:var(--border)] rounded-full px-4 py-1.5 mb-7 fade-in">
           <span className="dot" /> docs → skill, in one line
         </div>
         <h1 className="text-[clamp(2.4rem,5vw,4rem)] font-semibold tracking-[-0.02em] leading-[1.05]">
@@ -32,7 +32,7 @@ export default async function SubmitPage() {
         </h1>
         <p className="text-[color:var(--fg-muted)] text-[17px] mt-5 max-w-2xl mx-auto leading-relaxed">
           Paste a docs URL — we extract, sanitize, and curate it into a constrained
-          <span className="mono text-[color:var(--fg)]"> SKILL.md</span>. Add up to six YouTube
+          <span className="mono text-[color:var(--fg)] font-medium"> SKILL.md</span>. Add up to six YouTube
           tutorials as evidence. Every submission is personally vetted before it joins the
           marketplace at{" "}
           <Link href="/" className="mono text-[color:var(--accent)] hover:underline">/</Link>.
@@ -92,7 +92,10 @@ export default async function SubmitPage() {
           </p>
           <div className="grid sm:grid-cols-2 gap-8 mt-2">
             <div>
-              <div className="text-[color:var(--fg-muted)] text-sm mb-2">Without SkillMake</div>
+              <div className="flex items-center gap-2 text-sm mb-2">
+                <span className="inline-block w-2 h-2 rounded-full bg-[color:var(--danger)] opacity-70" />
+                <span className="text-[color:var(--fg-muted)]">Without SkillMake</span>
+              </div>
               <pre className="skill-pre" style={{ maxHeight: 240 }}>
 {`agent fetches docs page
   →  244,956 tokens of HTML
@@ -103,7 +106,10 @@ export default async function SubmitPage() {
               </pre>
             </div>
             <div>
-              <div className="text-[color:var(--accent)] text-sm mb-2">With SkillMake</div>
+              <div className="flex items-center gap-2 text-sm mb-2">
+                <span className="inline-block w-2 h-2 rounded-full bg-[color:var(--accent)]" />
+                <span className="text-[color:var(--accent)]">With SkillMake</span>
+              </div>
               <pre className="skill-pre" style={{ maxHeight: 240 }}>
 {`agent loads SKILL.md
   →  1,425 tokens (172× smaller)

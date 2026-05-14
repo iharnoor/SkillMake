@@ -28,8 +28,9 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ id
 
   return (
     <div className="max-w-4xl mx-auto px-6 pt-12 pb-20">
-      <Link href="/marketplace" className="mono text-[12px] text-[color:var(--fg-muted)] hover:text-[color:var(--accent)]">
-        ← marketplace
+      <Link href="/marketplace" className="mono text-[12px] text-[color:var(--fg-muted)] hover:text-[color:var(--accent)] transition inline-flex items-center gap-1">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        marketplace
       </Link>
 
       <div className="mt-6 flex items-center gap-2 flex-wrap">
@@ -42,18 +43,19 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ id
       <h1 className="text-3xl sm:text-4xl font-semibold tracking-[-0.02em] mt-4 mono">
         {entry.skill.name}
       </h1>
-      <p className="text-[color:var(--fg-muted)] text-[16px] mt-3 leading-relaxed">
+      <p className="text-[color:var(--fg-muted)] text-[16px] mt-3 leading-relaxed max-w-2xl">
         {entry.skill.description}
       </p>
 
-      <div className="mt-3 flex items-center gap-3 flex-wrap">
+      <div className="mt-4 flex items-center gap-3 flex-wrap">
         <a
           href={entry.sourceUrl}
           target="_blank"
           rel="noreferrer"
-          className="mono text-[12px] text-[color:var(--fg-dim)] hover:text-[color:var(--accent)] transition break-all"
+          className="inline-flex items-center gap-1.5 mono text-[12px] text-[color:var(--fg-dim)] hover:text-[color:var(--accent)] transition break-all"
         >
-          source: {entry.sourceUrl} ↗
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          {entry.sourceUrl}
         </a>
         {entry.skill.repoUrl && (
           <a
@@ -71,6 +73,8 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ id
           </a>
         )}
       </div>
+
+      <div className="section-divider mt-8" />
 
       {videos.length > 0 && (
         <div className="card p-6 mt-8">
