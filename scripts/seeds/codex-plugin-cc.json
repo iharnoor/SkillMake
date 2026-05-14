@@ -1,0 +1,78 @@
+{
+  "sourceUrl": "https://github.com/openai/codex-plugin-cc",
+  "skill": {
+    "name": "codex-plugin-cc",
+    "description": "Use when you want Claude Code to hand code review, adversarial review, or delegated implementation work to Codex without leaving your Claude workflow.",
+    "whenToUse": [
+      "Running a Codex code review on current uncommitted changes or a branch compared with a base ref",
+      "Pressure-testing an implementation with an adversarial review focused on tradeoffs, assumptions, race conditions, reliability, or security",
+      "Delegating a bug investigation, small fix, or long-running background task from Claude Code to Codex",
+      "Checking, retrieving, canceling, or resuming Codex background jobs from inside Claude Code"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Claude Code plugin",
+        "explanation": "The plugin installs into Claude Code through the plugin marketplace and adds `/codex:*` slash commands plus a `codex:codex-rescue` subagent."
+      },
+      {
+        "term": "Review commands",
+        "explanation": "`/codex:review` runs a normal read-only Codex review, while `/codex:adversarial-review` challenges implementation direction, assumptions, and risk areas."
+      },
+      {
+        "term": "Rescue delegation",
+        "explanation": "`/codex:rescue` hands a task to Codex, with support for background runs, waiting, resuming a prior thread, starting fresh, and selecting model or reasoning effort."
+      },
+      {
+        "term": "Job control",
+        "explanation": "`/codex:status`, `/codex:result`, and `/codex:cancel` let Claude Code manage running and recent Codex jobs for the current repository."
+      },
+      {
+        "term": "Local Codex runtime",
+        "explanation": "The plugin wraps the local Codex CLI and app server, so it uses the same Codex install, authentication, repository checkout, and config you use directly."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Install marketplace and plugin",
+        "purpose": "Add OpenAI's Codex plugin marketplace to Claude Code, install the `codex` plugin, and reload plugins.",
+        "example": "/plugin marketplace add openai/codex-plugin-cc\n/plugin install codex@openai-codex\n/reload-plugins"
+      },
+      {
+        "signature": "/codex:setup",
+        "purpose": "Check whether Codex is installed and authenticated. If Codex is missing and npm is available, setup can offer to install it.",
+        "example": "/codex:setup\nnpm install -g @openai/codex\n!codex login"
+      },
+      {
+        "signature": "/codex:review [--base <ref>] [--background | --wait]",
+        "purpose": "Run a read-only Codex review of current changes or a branch comparison.",
+        "example": "/codex:review\n/codex:review --base main\n/codex:review --background"
+      },
+      {
+        "signature": "/codex:adversarial-review [--base <ref>] [--background | --wait] [focus]",
+        "purpose": "Run a steerable review that challenges the design, assumptions, and risk profile of the work.",
+        "example": "/codex:adversarial-review --base main challenge whether this caching and retry design is safe\n/codex:adversarial-review --background look for race conditions"
+      },
+      {
+        "signature": "/codex:rescue [--background | --wait] [--resume | --fresh] [--model <model>] [--effort <effort>] <task>",
+        "purpose": "Delegate an investigation, fix, or continuation task to Codex.",
+        "example": "/codex:rescue investigate why the build is failing in CI\n/codex:rescue --model gpt-5.4-mini --effort medium investigate the flaky integration test\n/codex:rescue --resume apply the top fix from the last run"
+      },
+      {
+        "signature": "/codex:status | /codex:result | /codex:cancel",
+        "purpose": "Inspect running jobs, retrieve completed Codex output, or cancel an active background job.",
+        "example": "/codex:status\n/codex:result\n/codex:cancel task-abc123"
+      }
+    ],
+    "gotchas": [
+      "You need a ChatGPT subscription, including Free, or an OpenAI API key; usage contributes to your Codex usage limits.",
+      "Node.js 18.18 or later is required for the plugin.",
+      "The plugin uses your local Codex CLI authentication and configuration, so run `codex login` if Codex is not already ready on the machine.",
+      "Review and rescue jobs can take a while, especially for multi-file changes, so background mode is usually the better workflow.",
+      "The optional review gate can create long-running Claude/Codex loops and drain usage limits; enable it only when actively monitoring."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/openai/codex-plugin-cc"
+  }
+}

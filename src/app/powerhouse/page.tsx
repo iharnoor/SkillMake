@@ -13,11 +13,12 @@ export default async function PowerhousePage() {
   const h = await headers();
   after(() => track("powerhouse_view", { headers: h }));
 
-  const [last72, last30, pp, htmle] = await Promise.all([
+  const [last72, last30, pp, htmle, codexPlugin] = await Promise.all([
     findApprovedByName("last72hours"),
     findApprovedByName("last30days"),
     findApprovedByName("printingpress"),
     findApprovedByName("html-everything"),
+    findApprovedByName("codex-plugin-cc"),
   ]);
 
   return (
@@ -33,12 +34,12 @@ export default async function PowerhousePage() {
         Powerhouse
       </div>
       <h1 className="text-3xl sm:text-4xl tracking-[-0.02em] font-semibold mt-2">
-        Four skills that turn the agent into a research desk.
+        Five skills that turn the agent into a research desk.
       </h1>
       <p className="text-[color:var(--fg-muted)] mt-3 leading-relaxed max-w-2xl">
         These don&apos;t shrink tokens — they expand what the agent can answer. Recency-grounded
         research from real posts, a generator that prints token-efficient CLIs from any API spec,
-        and a one-shot blob-to-HTML packager. Install one curl, undo one rm.
+        a one-shot blob-to-HTML packager, and a bridge that brings Codex into Claude Code.
       </p>
 
       <SkillEntry
@@ -178,6 +179,43 @@ export default async function PowerhousePage() {
         }
       />
 
+      <SkillEntry
+        entry={codexPlugin}
+        fallbackSlug="codex-plugin-cc"
+        title="codex-plugin-cc"
+        tagline="bring Codex into Claude Code"
+        description="OpenAI's Claude Code plugin for Codex: run normal or adversarial code reviews, delegate rescue tasks, and manage background Codex jobs without leaving Claude."
+        fallbackVideo={false}
+        body={
+          <>
+            <p>
+              Installs a <span className="mono">codex</span> plugin into Claude Code so you can
+              call Codex as a second reviewer or delegated worker from the workflow you already
+              use. Normal review is read-only. Adversarial review is steerable, so you can ask it
+              to challenge the design, question assumptions, or focus on reliability, auth, data
+              loss, rollback, or race conditions.
+            </p>
+            <p>
+              The rescue flow hands a concrete task to Codex and lets it run in the background.
+              Status, result, and cancel commands keep the job visible, and completed output
+              includes the Codex session ID when available so you can resume the work directly in
+              Codex later. It uses your local Codex CLI install, auth, repository checkout, and
+              config.
+            </p>
+            <CodeBlock>
+              {`# 1. Add the OpenAI Codex plugin marketplace in Claude Code\n/plugin marketplace add openai/codex-plugin-cc\n\n# 2. Install the plugin\n/plugin install codex@openai-codex\n\n# 3. Reload and verify\n/reload-plugins\n/codex:setup\n\n# Optional: install or log in to Codex if setup says it is missing\nnpm install -g @openai/codex\n!codex login`}
+            </CodeBlock>
+            <CodeBlock>
+              {`# Review before shipping\n/codex:review --base main --background\n/codex:status\n/codex:result\n\n# Challenge a risky direction\n/codex:adversarial-review --background look for race conditions and question the caching design\n\n# Delegate a focused task\n/codex:rescue --background investigate why the build is failing in CI`}
+            </CodeBlock>
+            <p className="mono text-[12px] text-[color:var(--fg-dim)] leading-relaxed">
+              Requires Node.js 18.18+ and Codex auth through a ChatGPT subscription or OpenAI API
+              key. Background mode is usually the right default for multi-file reviews.
+            </p>
+          </>
+        }
+      />
+
       <section className="mt-16">
         <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
           <span className="dot" />
@@ -194,7 +232,10 @@ export default async function PowerhousePage() {
           inline citations.{" "}
           <a href="#html-everything" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">html-everything</a>{" "}
           is the artifact step — whatever the others produced, it wraps into one shareable HTML
-          file you can send.
+          file you can send.{" "}
+          <a href="#codex-plugin-cc" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">codex-plugin-cc</a>{" "}
+          adds a second engineering brain for review, adversarial pressure-testing, and delegated
+          fixes while you stay inside Claude Code.
         </p>
       </section>
 
@@ -224,6 +265,7 @@ function SkillEntry({
   title,
   tagline,
   description,
+  fallbackVideo = true,
   body,
 }: {
   entry: MarketplaceEntry | null;
@@ -231,6 +273,7 @@ function SkillEntry({
   title: string;
   tagline: string;
   description: string;
+  fallbackVideo?: boolean;
   body: React.ReactNode;
 }) {
   const marketplaceHref = entry ? `/marketplace/${entry.id}` : `/i/${fallbackSlug}`;
@@ -297,7 +340,7 @@ function SkillEntry({
             />
           </div>
         </div>
-      ) : (
+      ) : fallbackVideo ? (
         <div className="card p-4 mt-6">
           <div className="aspect-video rounded-md overflow-hidden border border-[color:var(--border)] bg-black">
             <video
@@ -312,7 +355,7 @@ function SkillEntry({
             />
           </div>
         </div>
-      )}
+      ) : null}
 
       <div className="card p-6 mt-5">
         <div className="mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] mb-3">
