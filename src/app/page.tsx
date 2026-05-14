@@ -11,6 +11,9 @@ import { track } from "@/lib/metrics";
 export const dynamic = "force-dynamic";
 
 const LIVE_AUDIENCES: Audience[] = ["creators", "engineers"];
+const LIVE_CATEGORIES = [
+  { slug: "job-search", label: "job search" },
+] as const;
 
 const ASCII = String.raw` ____  _    _ _ _                 _
 / ___|| | _(_) | |_ __ ___   __ _| | _____
@@ -21,7 +24,7 @@ const ASCII = String.raw` ____  _    _ _ _                 _
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ audience?: string }>;
+  searchParams: Promise<{ audience?: string; category?: string }>;
 }) {
   // Read headers BEFORE `after()` — request-time APIs can't be called inside
   // an after() callback from a Server Component.
@@ -34,6 +37,8 @@ export default async function Home({
   const requested = params.audience as Audience | undefined;
   const activeAudience: Audience | null =
     requested && LIVE_AUDIENCES.includes(requested) ? requested : null;
+  const activeCategory =
+    LIVE_CATEGORIES.find((c) => c.slug === params.category) ?? null;
 
   const all = await listSkills();
   // Sort by ★ stars desc, ties and starless skills fall back to createdAt desc.
@@ -41,6 +46,7 @@ export default async function Home({
   // of the list. Same primary signal as deepwiki/skills.sh.
   const entries = [...all]
     .filter((e) => (activeAudience ? e.skill.audience === activeAudience : true))
+    .filter((e) => (activeCategory ? e.skill.category === activeCategory.slug : true))
     .sort((a, b) => {
       const sa = a.stars ?? -1;
       const sb = b.stars ?? -1;
@@ -104,6 +110,22 @@ export default async function Home({
               </Link>
             );
           })}
+          {LIVE_CATEGORIES.map((category) => {
+            const selected = activeCategory?.slug === category.slug;
+            return (
+              <Link
+                key={category.slug}
+                href={`/?category=${category.slug}`}
+                className={
+                  selected
+                    ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+                    : "text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
+                }
+              >
+                {category.label}
+              </Link>
+            );
+          })}
           <Link
             href="/tricks"
             className="text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
@@ -129,7 +151,11 @@ export default async function Home({
         </div>
         <span className="mono text-[11px] text-[color:var(--fg-dim)] tabular-nums">
           {entries.length}
-          {activeAudience ? ` ${activeAudience}` : " approved"}
+          {activeAudience
+            ? ` ${activeAudience}`
+            : activeCategory
+              ? ` ${activeCategory.label}`
+              : " approved"}
         </span>
       </div>
 
@@ -139,9 +165,9 @@ export default async function Home({
 
       {entries.length === 0 ? (
         <div className="mono text-[12px] text-[color:var(--fg-dim)] mt-12">
-          {activeAudience ? (
+          {activeAudience || activeCategory ? (
             <>
-              // no {activeAudience} skills yet.{" "}
+              // no {activeAudience ?? activeCategory?.label} skills yet.{" "}
               <Link href="/" className="text-[color:var(--accent)]">
                 show all
               </Link>{" "}
@@ -184,6 +210,9 @@ export default async function Home({
                   </span>
                   <span className="mono text-[10px] text-[color:var(--fg-dim)] uppercase tracking-wider">
                     {e.skill.audience}
+                  </span>
+                  <span className="mono text-[10px] text-[color:var(--fg-dim)] uppercase tracking-wider">
+                    {e.skill.category}
                   </span>
                 </div>
                 <div className="text-[12px] text-[color:var(--fg-muted)] line-clamp-1 mt-0.5">
