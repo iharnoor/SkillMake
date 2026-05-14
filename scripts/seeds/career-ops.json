@@ -1,0 +1,78 @@
+{
+  "sourceUrl": "https://github.com/santifer/career-ops",
+  "skill": {
+    "name": "career-ops",
+    "description": "Use when turning an AI coding CLI into a job search command center that evaluates roles, tailors CVs, scans job portals, tracks applications, and prepares interviews.",
+    "whenToUse": [
+      "Evaluating a pasted job description or job URL against your CV, goals, compensation expectations, and role preferences",
+      "Generating ATS-optimized, job-specific CVs and PDFs from a structured profile plus the target job description",
+      "Scanning job portals such as Greenhouse, Ashby, Lever, Wellfound, Workable, or company career pages for relevant openings",
+      "Maintaining a job-search pipeline with deduplication, status normalization, follow-up cadence checks, and application reports"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Command center router",
+        "explanation": "The top-level `/career-ops` skill routes direct job descriptions, URLs, or subcommands into specialized modes such as auto-pipeline, scan, pdf, tracker, followup, deep research, and interview prep."
+      },
+      {
+        "term": "Auto-pipeline",
+        "explanation": "Pasting a job description or URL can trigger the full pipeline: evaluate the role, produce a report, generate a tailored PDF CV, and update the tracker."
+      },
+      {
+        "term": "Structured fit evaluation",
+        "explanation": "Career-Ops evaluates opportunities with an A-F scoring workflow across fit, gaps, level strategy, compensation research, personalization, and interview preparation."
+      },
+      {
+        "term": "Single source of truth",
+        "explanation": "Applications, pending URLs, generated reports, CV outputs, portal definitions, and status data live in repository files so the agent can inspect, update, deduplicate, and verify the pipeline."
+      },
+      {
+        "term": "Human-in-the-loop applications",
+        "explanation": "The system helps discover, evaluate, tailor, and draft application materials, but the user remains responsible for reviewing decisions and submitting applications."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Install",
+        "purpose": "Clone the repository, install dependencies, install the Chromium browser used by Playwright, and validate the local setup.",
+        "example": "git clone https://github.com/santifer/career-ops.git\ncd career-ops && npm install\nnpx playwright install chromium\nnpm run doctor"
+      },
+      {
+        "signature": "Configure profile and portals",
+        "purpose": "Create local configuration files for your career profile and target job portals before running evaluations or scans.",
+        "example": "cp config/profile.example.yml config/profile.yml\ncp templates/portals.example.yml portals.yml\n# Create cv.md in the project root with your CV in markdown"
+      },
+      {
+        "signature": "/career-ops {JD or URL}",
+        "purpose": "Run the full auto-pipeline for a job description or listing URL: evaluation, report, tailored PDF, and tracker update.",
+        "example": "/career-ops \"Senior AI Engineer at Anthropic...\"\n/career-ops https://boards.greenhouse.io/example/jobs/123"
+      },
+      {
+        "signature": "/career-ops scan",
+        "purpose": "Scan configured portals and discover new offers across supported job-board sources and custom company pages.",
+        "example": "/career-ops scan"
+      },
+      {
+        "signature": "/career-ops tracker",
+        "purpose": "Review application pipeline status, normalize statuses, and inspect progress across tracked roles.",
+        "example": "/career-ops tracker"
+      },
+      {
+        "signature": "/career-ops followup",
+        "purpose": "Check follow-up cadence, flag overdue contacts, and generate draft outreach for applications that need attention.",
+        "example": "/career-ops followup"
+      }
+    ],
+    "gotchas": [
+      "Career-Ops is intentionally a filter, not an automated spray-and-pray application bot; review role scores and materials before acting.",
+      "First evaluations depend heavily on the context you provide, so fill out `config/profile.yml`, `cv.md`, preferences, proof points, and target-role details early.",
+      "PDF generation requires Chromium through Playwright; run `npx playwright install chromium` before using PDF workflows.",
+      "Portal scans and live application assistance may involve browsing job sites, so expect source availability, rate limits, and page structure changes to affect results.",
+      "The repository contains local state such as reports, tracker data, CV outputs, and portal config; treat it as your private job-search workspace."
+    ],
+    "category": "tool",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/santifer/career-ops"
+  }
+}
