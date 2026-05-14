@@ -56,12 +56,12 @@ export function MarketplaceSearch() {
 
   return (
     <div>
-      <div className="input-shell rounded-xl flex items-center gap-2 p-1 mb-4">
+      <div className="input-shell rounded-lg flex items-center gap-2 p-1 mb-3">
         <span className="mono text-[color:var(--fg-dim)] text-xs pl-3">⌕</span>
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder='Try: "stream video frames", "rate-limited fetch", "react server components"'
+          placeholder='Search by job: "turn transcript into article"'
           className="flex-1 bg-transparent outline-none text-[14px] mono py-2.5 pr-2 placeholder:text-[color:var(--fg-dim)]"
         />
         {q && (
@@ -73,6 +73,26 @@ export function MarketplaceSearch() {
           </button>
         )}
       </div>
+
+      {!q && (
+        <div className="mb-4 flex flex-wrap gap-2">
+          {[
+            "turn transcript into article",
+            "review PR",
+            "generate HTML",
+            "research last 72 hours",
+          ].map((chip) => (
+            <button
+              key={chip}
+              type="button"
+              onClick={() => setQ(chip)}
+              className="mono text-[11px] rounded-full border border-[color:var(--border)] px-3 py-1.5 text-[color:var(--fg-muted)] hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] transition"
+            >
+              {chip}
+            </button>
+          ))}
+        </div>
+      )}
 
       {q && (
         <div className="mb-6">
