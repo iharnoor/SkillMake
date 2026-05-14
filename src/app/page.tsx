@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { after } from "next/server";
 import { headers } from "next/headers";
-import { listSkills } from "@/lib/storage";
+import { listSkills, type MarketplaceEntry } from "@/lib/storage";
 import { MarketplaceSearch } from "@/components/MarketplaceSearch";
 import { AUDIENCES, type Audience } from "@/lib/skill-schema";
 import { formatStars } from "@/lib/github";
@@ -14,6 +14,25 @@ const LIVE_AUDIENCES: Audience[] = ["creators", "engineers"];
 const LIVE_CATEGORIES = [
   { slug: "job-search", label: "job search" },
 ] as const;
+const COLLECTIONS = [
+  { slug: "tricks", label: "tricks" },
+  { slug: "powerhouse", label: "powerhouse" },
+] as const;
+
+type CollectionSlug = (typeof COLLECTIONS)[number]["slug"];
+
+interface DisplayEntry {
+  id: string;
+  name: string;
+  description: string;
+  audience: string;
+  category: string;
+  source: string;
+  href: string;
+  repoUrl?: string;
+  stars?: number | null;
+  videoCount: number;
+}
 
 const ASCII = String.raw` ____  _    _ _ _                 _
 / ___|| | _(_) | |_ __ ___   __ _| | _____
@@ -24,7 +43,7 @@ const ASCII = String.raw` ____  _    _ _ _                 _
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ audience?: string; category?: string }>;
+  searchParams: Promise<{ audience?: string; category?: string; collection?: string }>;
 }) {
   // Read headers BEFORE `after()` — request-time APIs can't be called inside
   // an after() callback from a Server Component.
@@ -39,20 +58,26 @@ export default async function Home({
     requested && LIVE_AUDIENCES.includes(requested) ? requested : null;
   const activeCategory =
     LIVE_CATEGORIES.find((c) => c.slug === params.category) ?? null;
+  const activeCollection =
+    COLLECTIONS.find((c) => c.slug === params.collection) ?? null;
 
   const all = await listSkills();
   // Sort by ★ stars desc, ties and starless skills fall back to createdAt desc.
   // Starless entries (workflow skills, no canonical repo) end up at the bottom
   // of the list. Same primary signal as deepwiki/skills.sh.
-  const entries = [...all]
-    .filter((e) => (activeAudience ? e.skill.audience === activeAudience : true))
-    .filter((e) => (activeCategory ? e.skill.category === activeCategory.slug : true))
-    .sort((a, b) => {
-      const sa = a.stars ?? -1;
-      const sb = b.stars ?? -1;
-      if (sb !== sa) return sb - sa;
-      return b.createdAt.localeCompare(a.createdAt);
-    });
+  const entries = buildDisplayEntries(
+    activeCollection
+      ? collectionEntries(activeCollection.slug, all)
+      : [...all]
+          .filter((e) => (activeAudience ? e.skill.audience === activeAudience : true))
+          .filter((e) => (activeCategory ? e.skill.category === activeCategory.slug : true))
+          .sort((a, b) => {
+            const sa = a.stars ?? -1;
+            const sb = b.stars ?? -1;
+            if (sb !== sa) return sb - sa;
+            return b.createdAt.localeCompare(a.createdAt);
+          })
+  );
 
   return (
     <div className="max-w-5xl mx-auto px-6 pt-12 pb-24">
@@ -88,6 +113,8 @@ export default async function Home({
             href="/"
             className={
               activeAudience === null
+                && activeCategory === null
+                && activeCollection === null
                 ? "text-[color:var(--fg)] underline underline-offset-4 decoration-1"
                 : "text-[color:var(--fg-muted)] hover:text-[color:var(--fg)] transition"
             }
@@ -126,18 +153,22 @@ export default async function Home({
               </Link>
             );
           })}
-          <Link
-            href="/tricks"
-            className="text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
-          >
-            tricks
-          </Link>
-          <Link
-            href="/powerhouse"
-            className="text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
-          >
-            powerhouse
-          </Link>
+          {COLLECTIONS.map((collection) => {
+            const selected = activeCollection?.slug === collection.slug;
+            return (
+              <Link
+                key={collection.slug}
+                href={`/?collection=${collection.slug}`}
+                className={
+                  selected
+                    ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+                    : "text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
+                }
+              >
+                {collection.label}
+              </Link>
+            );
+          })}
           {AUDIENCES.filter((a) => a !== "general" && !LIVE_AUDIENCES.includes(a)).map((a) => (
             <span
               key={a}
@@ -155,6 +186,8 @@ export default async function Home({
             ? ` ${activeAudience}`
             : activeCategory
               ? ` ${activeCategory.label}`
+              : activeCollection
+                ? ` ${activeCollection.label}`
               : " approved"}
         </span>
       </div>
@@ -165,9 +198,9 @@ export default async function Home({
 
       {entries.length === 0 ? (
         <div className="mono text-[12px] text-[color:var(--fg-dim)] mt-12">
-          {activeAudience || activeCategory ? (
+          {activeAudience || activeCategory || activeCollection ? (
             <>
-              // no {activeAudience ?? activeCategory?.label} skills yet.{" "}
+              // no {activeAudience ?? activeCategory?.label ?? activeCollection?.label} skills yet.{" "}
               <Link href="/" className="text-[color:var(--accent)]">
                 show all
               </Link>{" "}
@@ -198,42 +231,43 @@ export default async function Home({
           {entries.map((e, i) => (
             <div
               key={e.id}
+              id={e.id}
               className="grid grid-cols-[2.5ch_1fr_1fr_8ch] gap-x-6 py-3 border-b border-[color:var(--border)] hover:bg-[color:var(--bg-elevated)]/50 transition group"
             >
               <span className="mono text-[12px] text-[color:var(--fg-dim)] tabular-nums text-right self-start mt-1">
                 {i + 1}
               </span>
-              <Link href={`/marketplace/${e.id}`} className="min-w-0">
+              <Link href={e.href} className="min-w-0">
                 <div className="flex items-baseline gap-2 flex-wrap">
                   <span className="mono text-[14px] text-[color:var(--fg)] group-hover:text-[color:var(--accent)] transition truncate">
-                    {e.skill.name}
+                    {e.name}
                   </span>
                   <span className="mono text-[10px] text-[color:var(--fg-dim)] uppercase tracking-wider">
-                    {e.skill.audience}
+                    {e.audience}
                   </span>
                   <span className="mono text-[10px] text-[color:var(--fg-dim)] uppercase tracking-wider">
-                    {e.skill.category}
+                    {e.category}
                   </span>
                 </div>
                 <div className="text-[12px] text-[color:var(--fg-muted)] line-clamp-1 mt-0.5">
-                  {e.skill.description}
+                  {e.description}
                 </div>
               </Link>
               <span className="mono text-[11px] text-[color:var(--fg-dim)] truncate self-start mt-1">
-                {hostFromUrl(e.sourceUrl)}
-                {e.skill.videoUrls.length > 0 && (
+                {e.source}
+                {e.videoCount > 0 && (
                   <span className="ml-2 text-[color:var(--fg-muted)]">
-                    ▶ {e.skill.videoUrls.length}
+                    ▶ {e.videoCount}
                   </span>
                 )}
               </span>
-              {e.skill.repoUrl ? (
+              {e.repoUrl ? (
                 <a
-                  href={e.skill.repoUrl}
+                  href={e.repoUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="mono text-[12px] tabular-nums self-start mt-1 inline-flex items-center justify-end gap-1.5 text-[color:var(--fg)] hover:text-[color:var(--accent)] transition"
-                  title={`★ ${e.stars ?? 0} on ${new URL(e.skill.repoUrl).pathname.replace(/^\//, "")}`}
+                  title={`★ ${e.stars ?? 0} on ${new URL(e.repoUrl).pathname.replace(/^\//, "")}`}
                 >
                   <GithubIcon className="text-[14px] opacity-70 group-hover:opacity-100" />
                   {e.stars != null ? formatStars(e.stars) : "—"}
@@ -263,4 +297,67 @@ function hostFromUrl(u: string): string {
   } catch {
     return u;
   }
+}
+
+function collectionEntries(slug: CollectionSlug, entries: MarketplaceEntry[]): (MarketplaceEntry | DisplayEntry)[] {
+  const byName = new Map(entries.map((entry) => [entry.skill.name, entry]));
+  if (slug === "powerhouse") {
+    return [
+      syntheticFromSkill(byName, "html-everything", "Turn Markdown, JSON, text, or a doc URL into one self-contained editorial HTML page.", "tool"),
+      syntheticFromSkill(byName, "last72hours", "Scan the last three days of social and web signals, then produce a sourced brief.", "tool"),
+      syntheticFromSkill(byName, "last30days", "Research what people actually said in the last month, then synthesize it with citations.", "tool"),
+      syntheticFromSkill(byName, "printingpress", "Generate an agent-native CLI and MCP server from an API spec, HAR file, or website.", "tool"),
+      syntheticFromSkill(byName, "codex-plugin-cc", "Bring Codex into Claude Code for reviews, adversarial checks, and delegated fixes.", "tool"),
+    ];
+  }
+
+  return [
+    syntheticFromSkill(byName, "caveman", "Use fewer output tokens without losing technical content.", "tool"),
+    syntheticFromSkill(byName, "free-claude-code", "Route Claude Code through free or cheaper model providers.", "tool"),
+    syntheticEntry("fan out subagents", "Run independent investigations in parallel subagents so the parent context stays clean.", "technique"),
+    syntheticEntry("/goal", "Write explicit success criteria, non-goals, and the riskiest unknown before a session drifts.", "technique"),
+  ];
+}
+
+function syntheticFromSkill(
+  byName: Map<string, MarketplaceEntry>,
+  name: string,
+  description: string,
+  category: string
+): MarketplaceEntry | DisplayEntry {
+  return byName.get(name) ?? syntheticEntry(name, description, category);
+}
+
+function buildDisplayEntries(entries: (MarketplaceEntry | DisplayEntry)[]): DisplayEntry[] {
+  return entries.map((entry) => {
+    if ("skill" in entry) {
+      return {
+        id: entry.id,
+        name: entry.skill.name,
+        description: entry.skill.description,
+        audience: entry.skill.audience,
+        category: entry.skill.category,
+        source: hostFromUrl(entry.sourceUrl),
+        href: `/marketplace/${entry.id}`,
+        repoUrl: entry.skill.repoUrl,
+        stars: entry.stars,
+        videoCount: entry.skill.videoUrls.length,
+      };
+    }
+    return entry;
+  });
+}
+
+function syntheticEntry(name: string, description: string, category: string): DisplayEntry {
+  const id = name.replace(/^\//, "").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+  return {
+    id,
+    name,
+    description,
+    audience: "general",
+    category,
+    source: "workflow",
+    href: `#${id}`,
+    videoCount: 0,
+  };
 }
