@@ -43,37 +43,34 @@ export default async function PowerhousePage() {
       </p>
 
       <SkillEntry
-        entry={pp}
-        fallbackSlug="printingpress"
-        title="printingpress"
-        tagline="every API has a secret identity, this finds it"
-        description="Generates a Go CLI + MCP server from an OpenAPI spec, HAR file, or live website — with local SQLite mirror, FTS5 search, and compound commands the underlying API can't answer natively."
+        entry={htmle}
+        fallbackSlug="html-everything"
+        title="html-everything"
+        tagline="markdown, json, plain text, or a url → one .html file"
+        description="Any blob → one self-contained editorial HTML page with auto-linkified URLs, content-aware theming, and no external deps beyond Google Fonts."
         body={
           <>
             <p>
-              Generates a Go CLI + MCP server from an OpenAPI spec, HAR file, or live website. The
-              output isn&apos;t a passthrough wrapper — it&apos;s a domain-shaped CLI with a local
-              SQLite mirror, FTS5 search, and compound commands like{" "}
-              <span className="mono">stale</span>, <span className="mono">orphans</span>,{" "}
-              <span className="mono">health</span>, <span className="mono">similar</span>, and{" "}
-              <span className="mono">bottleneck</span> that the underlying API can&apos;t answer
-              natively.
+              Pass in Markdown, JSON, plain text, or a URL to a doc — get back a single
+              self-contained HTML file with an editorial layout, content-aware theming, and every
+              URL auto-linkified. No project scaffold, no build step, no API keys. The skill is a
+              recipe Claude executes in-context — install is a symlink, uninstall is{" "}
+              <span className="mono">rm</span>.
             </p>
             <p>
-              Every generated CLI auto-emits JSON when piped, ships a{" "}
-              <span className="mono">--compact</span> mode (60–80% fewer tokens), exposes typed
-              exit codes, and supports <span className="mono">--dry-run</span>. Four verification
-              gates — scorecard, dogfood, proof-of-behavior, live smoke — gate ship-readiness. No
-              spec? Drive the site in a browser and the press infers the API from captured HAR.
+              Output uses Archivo Black for display, Inter Tight for body, JetBrains Mono for
+              code. Styling subtly shifts based on detected content type — a market-cap rundown
+              doesn&apos;t come out looking like a sports recap. Files land in{" "}
+              <span className="mono">~/Documents/html-everything/</span> by default — override
+              with <span className="mono">HTMLE_OUTPUT_DIR</span>.
             </p>
             <CodeBlock>
-              {`# 1. Install the binary (Go 1.26.3+)\ngo install github.com/mvanhorn/cli-printing-press/v4/cmd/printing-press@latest\n\n# 2. Install the skills (recommended)\ngit clone https://github.com/mvanhorn/cli-printing-press.git\nclaude --plugin-dir .\n\n# Or starter pack via npx\nnpx -y @mvanhorn/printing-press install starter-pack`}
+              {`# Install\ngit clone https://github.com/iharnoor/html-everything ~/Developer/html-everything\nln -s ~/Developer/html-everything/skills/html-everything ~/.claude/skills/html-everything`}
             </CodeBlock>
             <p className="mono text-[12px] text-[color:var(--fg-dim)] leading-relaxed">
               Trigger:{" "}
-              <span className="text-[color:var(--accent)]">/printing-press &lt;app-name | url&gt;</span>
-              . Reprint / polish / publish slash commands handle regen, fixes, and library
-              publishing.
+              <span className="text-[color:var(--accent)]">/html-everything &lt;path | json | url&gt;</span>
+              . Omit the argument to paste content inline.
             </p>
           </>
         }
@@ -146,34 +143,37 @@ export default async function PowerhousePage() {
       />
 
       <SkillEntry
-        entry={htmle}
-        fallbackSlug="html-everything"
-        title="html-everything"
-        tagline="markdown, json, plain text, or a url → one .html file"
-        description="Any blob → one self-contained editorial HTML page with auto-linkified URLs, content-aware theming, and no external deps beyond Google Fonts."
+        entry={pp}
+        fallbackSlug="printingpress"
+        title="printingpress"
+        tagline="every API has a secret identity, this finds it"
+        description="Generates a Go CLI + MCP server from an OpenAPI spec, HAR file, or live website — with local SQLite mirror, FTS5 search, and compound commands the underlying API can't answer natively."
         body={
           <>
             <p>
-              Pass in Markdown, JSON, plain text, or a URL to a doc — get back a single
-              self-contained HTML file with an editorial layout, content-aware theming, and every
-              URL auto-linkified. No project scaffold, no build step, no API keys. The skill is a
-              recipe Claude executes in-context — install is a symlink, uninstall is{" "}
-              <span className="mono">rm</span>.
+              Generates a Go CLI + MCP server from an OpenAPI spec, HAR file, or live website. The
+              output isn&apos;t a passthrough wrapper — it&apos;s a domain-shaped CLI with a local
+              SQLite mirror, FTS5 search, and compound commands like{" "}
+              <span className="mono">stale</span>, <span className="mono">orphans</span>,{" "}
+              <span className="mono">health</span>, <span className="mono">similar</span>, and{" "}
+              <span className="mono">bottleneck</span> that the underlying API can&apos;t answer
+              natively.
             </p>
             <p>
-              Output uses Archivo Black for display, Inter Tight for body, JetBrains Mono for
-              code. Styling subtly shifts based on detected content type — a market-cap rundown
-              doesn&apos;t come out looking like a sports recap. Files land in{" "}
-              <span className="mono">~/Documents/html-everything/</span> by default — override
-              with <span className="mono">HTMLE_OUTPUT_DIR</span>.
+              Every generated CLI auto-emits JSON when piped, ships a{" "}
+              <span className="mono">--compact</span> mode (60–80% fewer tokens), exposes typed
+              exit codes, and supports <span className="mono">--dry-run</span>. Four verification
+              gates — scorecard, dogfood, proof-of-behavior, live smoke — gate ship-readiness. No
+              spec? Drive the site in a browser and the press infers the API from captured HAR.
             </p>
             <CodeBlock>
-              {`# Install\ngit clone https://github.com/iharnoor/html-everything ~/Developer/html-everything\nln -s ~/Developer/html-everything/skills/html-everything ~/.claude/skills/html-everything`}
+              {`# 1. Install the binary (Go 1.26.3+)\ngo install github.com/mvanhorn/cli-printing-press/v4/cmd/printing-press@latest\n\n# 2. Install the skills (recommended)\ngit clone https://github.com/mvanhorn/cli-printing-press.git\nclaude --plugin-dir .\n\n# Or starter pack via npx\nnpx -y @mvanhorn/printing-press install starter-pack`}
             </CodeBlock>
             <p className="mono text-[12px] text-[color:var(--fg-dim)] leading-relaxed">
               Trigger:{" "}
-              <span className="text-[color:var(--accent)]">/html-everything &lt;path | json | url&gt;</span>
-              . Omit the argument to paste content inline.
+              <span className="text-[color:var(--accent)]">/printing-press &lt;app-name | url&gt;</span>
+              . Reprint / polish / publish slash commands handle regen, fixes, and library
+              publishing.
             </p>
           </>
         }
