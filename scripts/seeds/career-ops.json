@@ -70,7 +70,7 @@
       "Portal scans and live application assistance may involve browsing job sites, so expect source availability, rate limits, and page structure changes to affect results.",
       "The repository contains local state such as reports, tracker data, CV outputs, and portal config; treat it as your private job-search workspace."
     ],
-    "category": "tool",
+    "category": "job-search",
     "audience": "general",
     "videoUrls": [],
     "repoUrl": "https://github.com/santifer/career-ops"

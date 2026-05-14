@@ -19,6 +19,7 @@ type SearchCategory =
   | "tool"
   | "language"
   | "concept"
+  | "job-search"
   | "other";
 
 interface BaseResult {
