@@ -3,11 +3,22 @@ import { after } from "next/server";
 import { headers } from "next/headers";
 import { track } from "@/lib/metrics";
 import { findApprovedByName, type MarketplaceEntry } from "@/lib/storage";
-import { InstallCommand } from "@/components/InstallCommand";
 import { GithubIcon } from "@/components/GithubIcon";
 import { formatStars } from "@/lib/github";
 
 export const dynamic = "force-dynamic";
+
+interface CollectionEntry {
+  name: string;
+  description: string;
+  audience: string;
+  category: string;
+  source: string;
+  href: string;
+  repoUrl?: string;
+  stars?: number | null;
+  videoCount?: number;
+}
 
 export default async function TricksPage() {
   const h = await headers();
@@ -18,8 +29,120 @@ export default async function TricksPage() {
     findApprovedByName("free-claude-code"),
   ]);
 
+  const entries: CollectionEntry[] = [
+    skillRow(
+      caveman,
+      "caveman",
+      "Talk-like-caveman skill that drops filler and replies in technical fragments. Cuts output tokens while keeping the technical content intact."
+    ),
+    skillRow(
+      fcc,
+      "free-claude-code",
+      "Local proxy that speaks the Anthropic Messages API to Claude Code and routes requests to free or cheaper model providers."
+    ),
+    {
+      name: "fan out subagents",
+      description:
+        "Run independent investigations in parallel subagents so the parent context stays clean and the work finishes at the same wall-clock minute.",
+      audience: "general",
+      category: "technique",
+      source: "workflow",
+      href: "#fan-out-subagents",
+    },
+    {
+      name: "/goal",
+      description:
+        "Start a session by writing explicit success criteria, non-goals, and the riskiest unknown so the agent has something concrete to steer against.",
+      audience: "general",
+      category: "technique",
+      source: "workflow",
+      href: "#goal",
+    },
+  ];
+
   return (
-    <div className="max-w-4xl mx-auto px-6 pt-12 pb-24">
+    <div className="max-w-5xl mx-auto px-6 pt-12 pb-24">
+      <CollectionHeader
+        active="tricks"
+        eyebrow="Tricks"
+        title="Save tokens. Same agent."
+        description="Four practical ways to drop agent cost or context waste. Two are installable skills; two are pure technique."
+        countLabel={`${entries.length} tricks`}
+      />
+      <CollectionTable entries={entries} />
+
+      <section className="mt-16 border-t border-[color:var(--border)] pt-6">
+        <h2 className="mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)]">
+          How they compose
+        </h2>
+        <p className="text-[15px] text-[color:var(--fg-muted)] leading-relaxed mt-3 max-w-3xl">
+          <a
+            href="#caveman"
+            className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+          >
+            caveman
+          </a>{" "}
+          cuts output tokens,{" "}
+          <a
+            href="#free-claude-code"
+            className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+          >
+            free-claude-code
+          </a>{" "}
+          changes the model bill,{" "}
+          <a
+            href="#fan-out-subagents"
+            className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+          >
+            fan out subagents
+          </a>{" "}
+          keeps parent context smaller, and{" "}
+          <a
+            href="#goal"
+            className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+          >
+            /goal
+          </a>{" "}
+          keeps the work from drifting.
+        </p>
+      </section>
+    </div>
+  );
+}
+
+function skillRow(
+  entry: MarketplaceEntry | null,
+  fallbackName: string,
+  description: string
+): CollectionEntry {
+  return {
+    name: entry?.skill.name ?? fallbackName,
+    description: entry?.skill.description ?? description,
+    audience: entry?.skill.audience ?? "general",
+    category: entry?.skill.category ?? "tool",
+    source: entry ? hostFromUrl(entry.sourceUrl) : "marketplace",
+    href: entry ? `/marketplace/${entry.id}` : `/i/${fallbackName}`,
+    repoUrl: entry?.skill.repoUrl,
+    stars: entry?.stars,
+    videoCount: entry?.skill.videoUrls.length ?? 0,
+  };
+}
+
+function CollectionHeader({
+  active,
+  eyebrow,
+  title,
+  description,
+  countLabel,
+}: {
+  active: "tricks" | "powerhouse";
+  eyebrow: string;
+  title: string;
+  description: string;
+  countLabel: string;
+}) {
+  return (
+    <>
       <Link
         href="/"
         className="mono text-[12px] text-[color:var(--fg-muted)] hover:text-[color:var(--accent)]"
@@ -28,332 +151,146 @@ export default async function TricksPage() {
       </Link>
 
       <div className="mt-6 mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)]">
-        Tricks
+        {eyebrow}
       </div>
-      <h1 className="text-3xl sm:text-4xl tracking-[-0.02em] font-semibold mt-2">
-        Save tokens. Same agent.
-      </h1>
-      <p className="text-[color:var(--fg-muted)] mt-3 leading-relaxed max-w-2xl">
-        Four ways to drop your Claude Code spend without trading away accuracy. Two ship as
-        installable skills; two are pure technique — no install, no diff, you just use them.
-      </p>
+      <div className="mt-2 flex items-end justify-between gap-6 flex-wrap">
+        <div>
+          <h1 className="text-3xl sm:text-4xl tracking-[-0.02em] font-semibold">{title}</h1>
+          <p className="text-[color:var(--fg-muted)] mt-3 leading-relaxed max-w-2xl">
+            {description}
+          </p>
+        </div>
+        <Link href="/submit" className="btn-accent rounded-md px-5 py-2.5 text-sm whitespace-nowrap">
+          + Submit a skill
+        </Link>
+      </div>
 
-      <SkillEntry
-        entry={caveman}
-        fallbackSlug="caveman"
-        title="caveman"
-        tagline="why use many token when few do trick"
-        description="Talk-like-caveman skill that drops filler and replies in technical fragments. ~65% output-token reduction across coding tasks, technical content intact."
-        body={
-          <>
-            <p>
-              Claude Code (and Codex / Gemini / Cursor / Windsurf / Cline / Copilot — 30+ agents)
-              skill that drops filler and replies in technical fragments. Average{" "}
-              <strong>65% output-token reduction</strong> across coding tasks, with the technical
-              content intact. <em>Brain still big. Mouth small.</em>
-            </p>
-            <p>
-              Levels: <span className="mono">lite</span> · <span className="mono">full</span>{" "}
-              (default) · <span className="mono">ultra</span> ·{" "}
-              <span className="mono">wenyan</span>. Plus sub-skills for commit messages, PR
-              reviews, session stats, and a <span className="mono">/caveman-compress</span> that
-              rewrites CLAUDE.md / memory files for ~46% input-token savings every session —
-              savings stack forever, not just per reply.
-            </p>
-            <CodeBlock>
-              {`# Mac / Linux / WSL / Git Bash\ncurl -fsSL https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.sh | bash`}
-            </CodeBlock>
-            <CodeBlock>{`# Windows (PowerShell 5.1+)\nirm https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.ps1 | iex`}</CodeBlock>
-            <p className="mono text-[12px] text-[color:var(--fg-dim)] leading-relaxed">
-              Trigger: type <span className="text-[color:var(--accent)]">/caveman</span> or say
-              &ldquo;talk like caveman&rdquo;. Stop with{" "}
-              <span className="text-[color:var(--accent)]">normal mode</span>. Statusline shows{" "}
-              <span className="text-[color:var(--accent)]">[CAVEMAN] ⛏ 12.4k</span> lifetime
-              tokens saved.
-            </p>
-          </>
-        }
-      />
+      <div className="mt-10 flex items-baseline justify-between gap-4 flex-wrap border-b border-[color:var(--border)] pb-3">
+        <div className="flex items-center gap-5 mono text-[12px]">
+          <Link href="/" className="text-[color:var(--fg-muted)] hover:text-[color:var(--fg)] transition">
+            all
+          </Link>
+          <Link
+            href="/tricks"
+            className={
+              active === "tricks"
+                ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+                : "text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
+            }
+          >
+            tricks
+          </Link>
+          <Link
+            href="/powerhouse"
+            className={
+              active === "powerhouse"
+                ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+                : "text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
+            }
+          >
+            powerhouse
+          </Link>
+        </div>
+        <span className="mono text-[11px] text-[color:var(--fg-dim)] tabular-nums">
+          {countLabel}
+        </span>
+      </div>
+    </>
+  );
+}
 
-      <SkillEntry
-        entry={fcc}
-        fallbackSlug="free-claude-code"
-        title="free-claude-code"
-        tagline="same client, different model bill"
-        description="Local proxy that speaks the Anthropic Messages API to Claude Code and routes each request to a free or cheap provider — NVIDIA NIM, Kimi, Wafer, OpenRouter, DeepSeek, LM Studio, llama.cpp, or Ollama."
-        body={
-          <>
-            <p>
-              Local proxy that speaks the Anthropic Messages API to Claude Code and translates each
-              request to whichever provider you configure — NVIDIA NIM (free key), Kimi, Wafer,
-              OpenRouter, DeepSeek, LM Studio, llama.cpp, or Ollama. Claude Code itself doesn&apos;t
-              change. Streaming, tool use, reasoning blocks all work.
-            </p>
-            <p>
-              Per-tier routing means <span className="mono">MODEL_OPUS</span>,{" "}
-              <span className="mono">MODEL_SONNET</span>, and{" "}
-              <span className="mono">MODEL_HAIKU</span> can each point at a different backend —
-              cheap defaults, premium fallback. Local Admin UI at{" "}
-              <span className="mono">/admin</span> handles keys without an env-var dance.
-            </p>
-            <CodeBlock>
-              {`# 1. install Claude Code (the real one)\nnpm install -g @anthropic-ai/claude-code\n\n# 2. install uv + Python 3.14 (macOS / Linux)\ncurl -LsSf https://astral.sh/uv/install.sh | sh\nuv python install 3.14\n\n# 3. install the proxy\nuv tool install --force git+https://github.com/Alishahryar1/free-claude-code.git\n\n# 4. start it\nfcc-server\n#    → http://127.0.0.1:8082/admin (paste your NVIDIA NIM key)\n\n# 5. launch Claude Code through the proxy\nfcc-claude`}
-            </CodeBlock>
-            <p className="mono text-[12px] text-[color:var(--fg-dim)] leading-relaxed">
-              Admin UI is loopback-only by design — don&apos;t tunnel it without auth in front.
-              Discord / Telegram bot wrappers and Whisper voice transcription are optional extras.
-            </p>
-          </>
-        }
-      />
-
-      <ConceptEntry
-        title="fan out subagents"
-        tagline="parallel context-isolated work"
-        description="Spawn multiple Task subagents in a single message. Each runs in its own context window, so the parent doesn't pay for every grep — and independent work actually runs concurrently."
-        body={
-          <>
-            <p>
-              The single biggest accuracy + cost win in long sessions: when work is independent,
-              send one message with <em>multiple</em> <span className="mono">Task</span> tool
-              blocks. Each subagent gets a fresh context, returns just a summary, and the parent
-              context stays clean.
-            </p>
-            <p>
-              Anti-patterns this kills:
-            </p>
-            <ul className="list-disc pl-5 space-y-1.5 marker:text-[color:var(--fg-dim)]">
-              <li>
-                <strong>Sequential greps</strong> — three back-to-back <span className="mono">grep</span>{" "}
-                calls in the parent burn three round-trips of full context. One fan-out = one
-                round-trip plus three short summaries.
-              </li>
-              <li>
-                <strong>Long investigations in the parent</strong> — a 30-file walk inflates the
-                parent transcript forever. The subagent reads 30 files, returns one paragraph; the
-                parent never saw the noise.
-              </li>
-              <li>
-                <strong>One-after-another research</strong> — independent queries done serially
-                wait on each other. Fan-out runs them at the same wall-clock minute.
-              </li>
-            </ul>
-            <CodeBlock>
-              {`# Mental model — single message, N tool calls, all run in parallel\n\nAgent: [Task: search for hooks usage] [Task: search for context usage] [Task: search for ref usage]\n\n# vs. the slow / context-hungry version:\n\nAgent: [Task: search for hooks usage]\n  → result\nAgent: [Task: search for context usage]\n  → result\nAgent: [Task: search for ref usage]\n  → result`}
-            </CodeBlock>
-            <p className="mono text-[12px] text-[color:var(--fg-dim)] leading-relaxed">
-              Heuristic: if you&apos;d open three terminal tabs to do it, fan it out. If the next
-              step depends on the previous result, don&apos;t — that&apos;s sequential by nature.
-            </p>
-          </>
-        }
-      />
-
-      <ConceptEntry
-        title="/goal"
-        tagline="write the goal, refer back, stop drifting"
-        description="Start the session by asking the agent to write down the explicit goal + success criteria + non-goals. Pin it. Refer back when scope creeps."
-        body={
-          <>
-            <p>
-              The agent will happily follow you into yak-shaving for an hour. The trick is to make
-              it write the goal <em>before</em> doing any work — and then make it check itself
-              against that goal at every meaningful branch point.
-            </p>
-            <p>
-              Concretely: at the top of a non-trivial session, ask for a 3-line statement of (a)
-              what done looks like, (b) what we&apos;re intentionally <em>not</em> doing, and (c)
-              the riskiest unknown. Save that to a scratch file or pin it in the prompt. When the
-              agent proposes a fourth tangent, paste the goal back as a one-liner — drift
-              disappears.
-            </p>
-            <CodeBlock>
-              {`# Use at the top of a session\n\nYou: /goal — write our explicit goal, success criteria, and non-goals\n     for this session before we start.\n\nAgent: GOAL\n         Ship the /powerhouse page with 4 skill blocks + videos.\n       SUCCESS\n         - /powerhouse renders, MP4s autoplay, marketplace links resolve\n         - typecheck clean\n         - deployed to skillmake.xyz\n       NON-GOALS\n         - reworking the global header (separate task)\n         - publishing to hyperframes.dev cloud\n       RISKIEST UNKNOWN\n         - whether the existing build-and-publish-demos.mjs handles\n           non-mp- seeds without code changes`}
-            </CodeBlock>
-            <p className="mono text-[12px] text-[color:var(--fg-dim)] leading-relaxed">
-              Pair with <Link href="#fan-out-subagents" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">fan out subagents</Link>{" "}
-              — once the goal is locked, you can confidently send independent pieces of it to
-              parallel subagents without losing the thread.
-            </p>
-          </>
-        }
-      />
-
-      <section className="mt-16">
-        <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
-          <span className="dot" />
-          Stack the wins
-        </h2>
-        <p className="text-[15px] text-[color:var(--fg-muted)] leading-relaxed">
-          The four compose cleanly.{" "}
-          <a href="#caveman" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">caveman</a>{" "}
-          cuts ~65% of <em>output</em> tokens at the model;{" "}
-          <a href="#free-claude-code" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">free-claude-code</a>{" "}
-          changes who you&apos;re paying for those tokens at all;{" "}
-          <a href="#fan-out-subagents" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">fan out subagents</a>{" "}
-          stops the parent context from inflating in the first place; and{" "}
-          <a href="#goal" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">/goal</a>{" "}
-          keeps the whole stack pointed at the right target.
-        </p>
-      </section>
-
-      <section className="mt-12">
-        <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
-          <span className="dot" />
-          Got another trick?
-        </h2>
-        <p className="text-[15px] text-[color:var(--fg-muted)] leading-relaxed">
-          If you&apos;ve found a token-saver worth shipping —{" "}
-          <Link href="/submit" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">submit it</Link>
-          . Same curation pipeline as the rest of the marketplace.
-        </p>
-      </section>
+function CollectionTable({ entries }: { entries: CollectionEntry[] }) {
+  return (
+    <div className="mt-6">
+      <div className="hidden sm:grid grid-cols-[2.5ch_minmax(0,1.3fr)_minmax(0,0.82fr)_minmax(180px,0.7fr)] gap-x-6 mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] pb-2 border-b border-[color:var(--border)]">
+        <span className="text-right">#</span>
+        <span>name</span>
+        <span>source</span>
+        <span className="text-right">proof</span>
+      </div>
+      {entries.map((entry, i) => (
+        <div
+          key={entry.name}
+          id={entry.name.replace(/^\//, "").replace(/[^a-z0-9]+/gi, "-").toLowerCase()}
+          className="grid sm:grid-cols-[2.5ch_minmax(0,1.3fr)_minmax(0,0.82fr)_minmax(180px,0.7fr)] gap-x-6 gap-y-2 py-3 border-b border-[color:var(--border)] hover:bg-[color:var(--bg-elevated)]/50 transition group scroll-mt-20"
+        >
+          <span className="mono text-[12px] text-[color:var(--fg-dim)] tabular-nums text-right self-start mt-1">
+            {i + 1}
+          </span>
+          <Link href={entry.href} className="min-w-0">
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <span className="mono text-[14px] text-[color:var(--fg)] group-hover:text-[color:var(--accent)] transition truncate">
+                {entry.name}
+              </span>
+              <span className="mono text-[10px] text-[color:var(--fg-dim)] uppercase tracking-wider">
+                {entry.audience}
+              </span>
+              <span className="mono text-[10px] text-[color:var(--fg-dim)] uppercase tracking-wider">
+                {entry.category}
+              </span>
+            </div>
+            <div className="text-[12px] text-[color:var(--fg-muted)] line-clamp-1 mt-0.5">
+              {entry.description}
+            </div>
+          </Link>
+          <div className="mono text-[11px] text-[color:var(--fg-dim)] truncate self-start mt-1">
+            <div className="truncate">{entry.source}</div>
+            {entry.repoUrl && (
+              <a
+                href={entry.repoUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex max-w-full items-center gap-1.5 text-[color:var(--fg-muted)] hover:text-[color:var(--accent)] transition"
+                title={`★ ${entry.stars ?? 0} on ${new URL(entry.repoUrl).pathname.replace(/^\//, "")}`}
+              >
+                <GithubIcon className="text-[13px] shrink-0" />
+                <span className="truncate">
+                  {new URL(entry.repoUrl).pathname.replace(/^\//, "").replace(/\/$/, "")}
+                </span>
+              </a>
+            )}
+          </div>
+          <div className="flex flex-wrap justify-start sm:justify-end gap-1.5 self-start">
+            <ProofSignal hot href={entry.href}>
+              {entry.href.startsWith("/marketplace/") ? "inspect" : "open"}
+            </ProofSignal>
+            <ProofSignal>reviewed</ProofSignal>
+            {entry.videoCount ? <ProofSignal>{entry.videoCount} video</ProofSignal> : null}
+            {entry.repoUrl && <ProofSignal>source</ProofSignal>}
+            {entry.stars != null && <ProofSignal>★ {formatStars(entry.stars)}</ProofSignal>}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
 
-/* ────────────────────────────────────────────────────────────────────────── */
-/*  Entry components — mirror the marketplace skill page layout              */
-/* ────────────────────────────────────────────────────────────────────────── */
-
-function SkillEntry({
-  entry,
-  fallbackSlug,
-  title,
-  tagline,
-  description,
-  body,
+function ProofSignal({
+  children,
+  href,
+  hot = false,
 }: {
-  entry: MarketplaceEntry | null;
-  fallbackSlug: string;
-  title: string;
-  tagline: string;
-  description: string;
-  body: React.ReactNode;
+  children: React.ReactNode;
+  href?: string;
+  hot?: boolean;
 }) {
-  const marketplaceHref = entry ? `/marketplace/${entry.id}` : `/i/${fallbackSlug}`;
-  const audience = entry?.skill.audience;
-  const category = entry?.skill.category;
-  const repoUrl = entry?.skill.repoUrl;
-  const stars = entry?.stars;
-  const videoUrl = entry?.skill.videoUrls.find((u) => /\/v\/[\w.-]+\.mp4$/i.test(u));
-  const anchorId = fallbackSlug;
-
-  return (
-    <section id={anchorId} className="mt-14 scroll-mt-20">
-      <div className="mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)]">
-        {tagline}
-      </div>
-
-      <div className="mt-3 flex items-center gap-2 flex-wrap">
-        {audience && <span className="tag tag-accent">{audience}</span>}
-        {category && <span className="tag">{category}</span>}
-      </div>
-
-      <h2 className="text-2xl sm:text-[28px] tracking-tight font-semibold mt-3 mono">
-        {title}
-      </h2>
-      <p className="text-[color:var(--fg-muted)] text-[15px] mt-2 leading-relaxed">
-        {description}
-      </p>
-
-      <div className="mt-3 flex items-center gap-3 flex-wrap text-[12px] mono">
-        <Link
-          href={marketplaceHref}
-          className="text-[color:var(--accent)] hover:underline underline-offset-4 decoration-1"
-        >
-          marketplace/{fallbackSlug} →
-        </Link>
-        {repoUrl && (
-          <a
-            href={repoUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 btn-ghost rounded-md px-3 py-1.5 text-[12px] mono text-[color:var(--fg)] hover:text-[color:var(--accent)] transition"
-            title="Open the upstream repository on GitHub"
-          >
-            <GithubIcon className="text-[14px]" />
-            <span>{new URL(repoUrl).pathname.replace(/^\//, "").replace(/\/$/, "")}</span>
-            {stars != null && (
-              <span className="text-[color:var(--fg-muted)]">· ★ {formatStars(stars)}</span>
-            )}
-          </a>
-        )}
-      </div>
-
-      {videoUrl && (
-        <div className="card p-4 mt-6">
-          <div className="aspect-video rounded-md overflow-hidden border border-[color:var(--border)] bg-black">
-            <video
-              src={videoUrl}
-              title={`${fallbackSlug} demo`}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-      )}
-
-      <div className="card p-6 mt-5">
-        <div className="mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] mb-3">
-          One-line install
-        </div>
-        <InstallCommand skillName={fallbackSlug} />
-      </div>
-
-      <div className="text-[15px] text-[color:var(--fg-muted)] leading-relaxed space-y-3 mt-6">
-        {body}
-      </div>
-    </section>
-  );
+  const className = hot
+    ? "mono text-[10px] rounded-full border border-[color:var(--accent)] bg-[color:var(--accent)] text-[color:var(--bg)] px-2 py-1 font-semibold"
+    : "mono text-[10px] rounded-full border border-[color:var(--border)] text-[color:var(--fg-muted)] px-2 py-1";
+  if (href) {
+    return (
+      <Link href={href} className={className}>
+        {children}
+      </Link>
+    );
+  }
+  return <span className={className}>{children}</span>;
 }
 
-function ConceptEntry({
-  title,
-  tagline,
-  description,
-  body,
-}: {
-  title: string;
-  tagline: string;
-  description: string;
-  body: React.ReactNode;
-}) {
-  const anchorId = title.replace(/^\//, "").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
-
-  return (
-    <section id={anchorId} className="mt-14 scroll-mt-20">
-      <div className="mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)]">
-        {tagline}
-      </div>
-
-      <div className="mt-3 flex items-center gap-2 flex-wrap">
-        <span className="tag tag-accent">concept</span>
-        <span className="tag">technique</span>
-      </div>
-
-      <h2 className="text-2xl sm:text-[28px] tracking-tight font-semibold mt-3 mono">
-        {title}
-      </h2>
-      <p className="text-[color:var(--fg-muted)] text-[15px] mt-2 leading-relaxed">
-        {description}
-      </p>
-
-      <div className="text-[15px] text-[color:var(--fg-muted)] leading-relaxed space-y-3 mt-6">
-        {body}
-      </div>
-    </section>
-  );
-}
-
-function CodeBlock({ children }: { children: React.ReactNode }) {
-  return (
-    <pre className="mono text-[12px] leading-relaxed whitespace-pre-wrap break-all bg-[color:var(--bg-elevated)] border border-[color:var(--border)] rounded-md px-4 py-3 my-3 text-[color:var(--fg)]">
-      {children}
-    </pre>
-  );
+function hostFromUrl(u: string): string {
+  try {
+    return new URL(u).host.replace(/^www\./, "");
+  } catch {
+    return u;
+  }
 }

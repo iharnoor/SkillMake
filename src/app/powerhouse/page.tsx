@@ -3,26 +3,153 @@ import { after } from "next/server";
 import { headers } from "next/headers";
 import { track } from "@/lib/metrics";
 import { findApprovedByName, type MarketplaceEntry } from "@/lib/storage";
-import { InstallCommand } from "@/components/InstallCommand";
 import { GithubIcon } from "@/components/GithubIcon";
 import { formatStars } from "@/lib/github";
 
 export const dynamic = "force-dynamic";
 
+interface CollectionEntry {
+  name: string;
+  description: string;
+  audience: string;
+  category: string;
+  source: string;
+  href: string;
+  repoUrl?: string;
+  stars?: number | null;
+  videoCount?: number;
+}
+
 export default async function PowerhousePage() {
   const h = await headers();
   after(() => track("powerhouse_view", { headers: h }));
 
-  const [last72, last30, pp, htmle, codexPlugin] = await Promise.all([
+  const [htmlEverything, last72, last30, printingPress, codexPlugin] = await Promise.all([
+    findApprovedByName("html-everything"),
     findApprovedByName("last72hours"),
     findApprovedByName("last30days"),
     findApprovedByName("printingpress"),
-    findApprovedByName("html-everything"),
     findApprovedByName("codex-plugin-cc"),
   ]);
 
+  const entries: CollectionEntry[] = [
+    skillRow(
+      htmlEverything,
+      "html-everything",
+      "Any blob becomes one self-contained editorial HTML page with auto-linkified URLs, content-aware styling, and no build step."
+    ),
+    skillRow(
+      last72,
+      "last72hours",
+      "A 72-hour viral radar across social platforms, newsy communities, and code sources with clickable evidence."
+    ),
+    skillRow(
+      last30,
+      "last30days",
+      "Research what people actually said in the last month, then synthesize it with inline citations."
+    ),
+    skillRow(
+      printingPress,
+      "printingpress",
+      "Generate an agent-native Go CLI and MCP server from an API spec, HAR file, or live website."
+    ),
+    skillRow(
+      codexPlugin,
+      "codex-plugin-cc",
+      "Bring Codex into Claude Code for reviews, adversarial pressure-testing, and delegated rescue tasks."
+    ),
+  ];
+
   return (
-    <div className="max-w-4xl mx-auto px-6 pt-12 pb-24">
+    <div className="max-w-5xl mx-auto px-6 pt-12 pb-24">
+      <CollectionHeader
+        active="powerhouse"
+        eyebrow="Powerhouse"
+        title="Five skills that turn the agent into a research desk."
+        description="Recency-grounded research, API-to-tool generation, one-shot HTML packaging, and a Codex bridge. Big leverage, same browsing surface."
+        countLabel={`${entries.length} powerhouse`}
+      />
+      <CollectionTable entries={entries} />
+
+      <section className="mt-16 border-t border-[color:var(--border)] pt-6">
+        <h2 className="mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)]">
+          How they compose
+        </h2>
+        <p className="text-[15px] text-[color:var(--fg-muted)] leading-relaxed mt-3 max-w-3xl">
+          <a
+            href="#printingpress"
+            className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+          >
+            printingpress
+          </a>{" "}
+          gives the agent a real tool for an API,{" "}
+          <a
+            href="#last72hours"
+            className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+          >
+            last72hours
+          </a>{" "}
+          and{" "}
+          <a
+            href="#last30days"
+            className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+          >
+            last30days
+          </a>{" "}
+          supply fresh evidence,{" "}
+          <a
+            href="#html-everything"
+            className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+          >
+            html-everything
+          </a>{" "}
+          turns the output into something shareable, and{" "}
+          <a
+            href="#codex-plugin-cc"
+            className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+          >
+            codex-plugin-cc
+          </a>{" "}
+          adds a second engineering reviewer when the work gets risky.
+        </p>
+      </section>
+    </div>
+  );
+}
+
+function skillRow(
+  entry: MarketplaceEntry | null,
+  fallbackName: string,
+  description: string
+): CollectionEntry {
+  return {
+    name: entry?.skill.name ?? fallbackName,
+    description: entry?.skill.description ?? description,
+    audience: entry?.skill.audience ?? "general",
+    category: entry?.skill.category ?? "tool",
+    source: entry ? hostFromUrl(entry.sourceUrl) : "marketplace",
+    href: entry ? `/marketplace/${entry.id}` : `/i/${fallbackName}`,
+    repoUrl: entry?.skill.repoUrl,
+    stars: entry?.stars,
+    videoCount: entry?.skill.videoUrls.length ?? 0,
+  };
+}
+
+function CollectionHeader({
+  active,
+  eyebrow,
+  title,
+  description,
+  countLabel,
+}: {
+  active: "tricks" | "powerhouse";
+  eyebrow: string;
+  title: string;
+  description: string;
+  countLabel: string;
+}) {
+  return (
+    <>
       <Link
         href="/"
         className="mono text-[12px] text-[color:var(--fg-muted)] hover:text-[color:var(--accent)]"
@@ -31,350 +158,146 @@ export default async function PowerhousePage() {
       </Link>
 
       <div className="mt-6 mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)]">
-        Powerhouse
+        {eyebrow}
       </div>
-      <h1 className="text-3xl sm:text-4xl tracking-[-0.02em] font-semibold mt-2">
-        Five skills that turn the agent into a research desk.
-      </h1>
-      <p className="text-[color:var(--fg-muted)] mt-3 leading-relaxed max-w-2xl">
-        These don&apos;t shrink tokens — they expand what the agent can answer. Recency-grounded
-        research from real posts, a generator that prints token-efficient CLIs from any API spec,
-        a one-shot blob-to-HTML packager, and a bridge that brings Codex into Claude Code.
-      </p>
+      <div className="mt-2 flex items-end justify-between gap-6 flex-wrap">
+        <div>
+          <h1 className="text-3xl sm:text-4xl tracking-[-0.02em] font-semibold">{title}</h1>
+          <p className="text-[color:var(--fg-muted)] mt-3 leading-relaxed max-w-2xl">
+            {description}
+          </p>
+        </div>
+        <Link href="/submit" className="btn-accent rounded-md px-5 py-2.5 text-sm whitespace-nowrap">
+          + Submit a skill
+        </Link>
+      </div>
 
-      <SkillEntry
-        entry={htmle}
-        fallbackSlug="html-everything"
-        title="html-everything"
-        tagline="markdown, json, plain text, or a url → one .html file"
-        description="Any blob → one self-contained editorial HTML page with auto-linkified URLs, content-aware theming, and no external deps beyond Google Fonts."
-        body={
-          <>
-            <p>
-              Pass in Markdown, JSON, plain text, or a URL to a doc — get back a single
-              self-contained HTML file with an editorial layout, content-aware theming, and every
-              URL auto-linkified. No project scaffold, no build step, no API keys. The skill is a
-              recipe Claude executes in-context — install is a symlink, uninstall is{" "}
-              <span className="mono">rm</span>.
-            </p>
-            <p>
-              Output uses Archivo Black for display, Inter Tight for body, JetBrains Mono for
-              code. Styling subtly shifts based on detected content type — a market-cap rundown
-              doesn&apos;t come out looking like a sports recap. Files land in{" "}
-              <span className="mono">~/Documents/html-everything/</span> by default — override
-              with <span className="mono">HTMLE_OUTPUT_DIR</span>.
-            </p>
-            <CodeBlock>
-              {`# Install\ngit clone https://github.com/iharnoor/html-everything ~/Developer/html-everything\nln -s ~/Developer/html-everything/skills/html-everything ~/.claude/skills/html-everything`}
-            </CodeBlock>
-            <p className="mono text-[12px] text-[color:var(--fg-dim)] leading-relaxed">
-              Trigger:{" "}
-              <span className="text-[color:var(--accent)]">/html-everything &lt;path | json | url&gt;</span>
-              . Omit the argument to paste content inline.
-            </p>
-          </>
-        }
-      />
+      <div className="mt-10 flex items-baseline justify-between gap-4 flex-wrap border-b border-[color:var(--border)] pb-3">
+        <div className="flex items-center gap-5 mono text-[12px]">
+          <Link href="/" className="text-[color:var(--fg-muted)] hover:text-[color:var(--fg)] transition">
+            all
+          </Link>
+          <Link
+            href="/tricks"
+            className={
+              active === "tricks"
+                ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+                : "text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
+            }
+          >
+            tricks
+          </Link>
+          <Link
+            href="/powerhouse"
+            className={
+              active === "powerhouse"
+                ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+                : "text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
+            }
+          >
+            powerhouse
+          </Link>
+        </div>
+        <span className="mono text-[11px] text-[color:var(--fg-dim)] tabular-nums">
+          {countLabel}
+        </span>
+      </div>
+    </>
+  );
+}
 
-      <SkillEntry
-        entry={last72}
-        fallbackSlug="last72hours"
-        title="last72hours"
-        tagline="what spiked in the last three days, with sources"
-        description="72-hour viral radar across Reddit, X, TikTok, Instagram, Hacker News, YouTube, and GitHub — emits a clickable HTML brief plus an optional Paper.design leaderboard via MCP."
-        body={
-          <>
-            <p>
-              Scrapes Reddit, X, TikTok, Instagram, Hacker News, YouTube, and GitHub for the last
-              72 hours on any topic, then emits a self-contained HTML brief with clickable source
-              links and engagement counts. Optional: builds an editorial-scorecard leaderboard
-              artboard in Paper.design via MCP.
-            </p>
-            <p>
-              Reddit / HN / YouTube / GitHub are free. X works with browser cookies (no API key).
-              Instagram + TikTok use ScrapeCreators credits — or skip them entirely with the
-              bundled <span className="mono">last72-reddit-x</span> subagent for a free Reddit + X
-              pulse.
-            </p>
-            <CodeBlock>
-              {`# 1. Install the upstream last30days engine first\ngit clone https://github.com/mvanhorn/last30days-skill ~/.last30days-skill\nln -s ~/.last30days-skill/skills/last30days ~/.claude/skills/last30days\n\n# 2. Install last72hours\ngit clone https://github.com/iharnoor/last72hours-skill ~/.last72hours-skill\nln -s ~/.last72hours-skill/skills/last72hours ~/.claude/skills/last72hours`}
-            </CodeBlock>
-            <p className="mono text-[12px] text-[color:var(--fg-dim)] leading-relaxed">
-              Trigger: <span className="text-[color:var(--accent)]">/last72hours &lt;topic&gt;</span>.
-              Output lands in <span className="text-[color:var(--accent)]">~/Documents/Last72Hours</span>{" "}
-              (override with <span className="mono">LAST72_OUTPUT_DIR</span>).
-            </p>
-          </>
-        }
-      />
-
-      <SkillEntry
-        entry={last30}
-        fallbackSlug="last30days"
-        title="last30days"
-        tagline="evidence-grounded synthesis, no model hallucination"
-        description="Research what people actually said in the last ~30 days — pulls posts and engagement from Reddit, X, YouTube, TikTok, HN, Polymarket, GitHub, and the web, then synthesizes a brief with inline citations."
-        body={
-          <>
-            <p>
-              A wider time window built around the same evidence-grounded pattern. The reasoning
-              model plans the JSON query upstream; the engine sweeps Reddit, X, YouTube, TikTok,
-              Instagram, Hacker News, Polymarket, Bluesky, GitHub, and the web for the last ~30
-              days; synthesis cites every quote with inline markdown links.
-            </p>
-            <p>
-              Eight output LAWs govern the synthesis — no trailing{" "}
-              <span className="mono">Sources:</span> block, no invented title, no em-dashes, no
-              raw evidence dumps. The badge IS the title:{" "}
-              <span className="mono">🌐 last30days v&lt;v&gt; · synced &lt;YYYY-MM-DD&gt;</span>.
-              Supports a <span className="mono">COMPARISON</span> template for{" "}
-              <span className="mono">X vs Y</span> queries.
-            </p>
-            <CodeBlock>
-              {`# Install\ngit clone https://github.com/mvanhorn/last30days-skill ~/.last30days-skill\nln -s ~/.last30days-skill/skills/last30days ~/.claude/skills/last30days`}
-            </CodeBlock>
-            <p className="mono text-[12px] text-[color:var(--fg-dim)] leading-relaxed">
-              Trigger: <span className="text-[color:var(--accent)]">/last30days &lt;topic&gt;</span>.
-              Named entities require <span className="mono">--plan</span> — the host model
-              generates the JSON plan, the engine executes it.
-            </p>
-          </>
-        }
-      />
-
-      <SkillEntry
-        entry={pp}
-        fallbackSlug="printingpress"
-        title="printingpress"
-        tagline="every API has a secret identity, this finds it"
-        description="Generates a Go CLI + MCP server from an OpenAPI spec, HAR file, or live website — with local SQLite mirror, FTS5 search, and compound commands the underlying API can't answer natively."
-        body={
-          <>
-            <p>
-              Generates a Go CLI + MCP server from an OpenAPI spec, HAR file, or live website. The
-              output isn&apos;t a passthrough wrapper — it&apos;s a domain-shaped CLI with a local
-              SQLite mirror, FTS5 search, and compound commands like{" "}
-              <span className="mono">stale</span>, <span className="mono">orphans</span>,{" "}
-              <span className="mono">health</span>, <span className="mono">similar</span>, and{" "}
-              <span className="mono">bottleneck</span> that the underlying API can&apos;t answer
-              natively.
-            </p>
-            <p>
-              Every generated CLI auto-emits JSON when piped, ships a{" "}
-              <span className="mono">--compact</span> mode (60–80% fewer tokens), exposes typed
-              exit codes, and supports <span className="mono">--dry-run</span>. Four verification
-              gates — scorecard, dogfood, proof-of-behavior, live smoke — gate ship-readiness. No
-              spec? Drive the site in a browser and the press infers the API from captured HAR.
-            </p>
-            <CodeBlock>
-              {`# 1. Install the binary (Go 1.26.3+)\ngo install github.com/mvanhorn/cli-printing-press/v4/cmd/printing-press@latest\n\n# 2. Install the skills (recommended)\ngit clone https://github.com/mvanhorn/cli-printing-press.git\nclaude --plugin-dir .\n\n# Or starter pack via npx\nnpx -y @mvanhorn/printing-press install starter-pack`}
-            </CodeBlock>
-            <p className="mono text-[12px] text-[color:var(--fg-dim)] leading-relaxed">
-              Trigger:{" "}
-              <span className="text-[color:var(--accent)]">/printing-press &lt;app-name | url&gt;</span>
-              . Reprint / polish / publish slash commands handle regen, fixes, and library
-              publishing.
-            </p>
-          </>
-        }
-      />
-
-      <SkillEntry
-        entry={codexPlugin}
-        fallbackSlug="codex-plugin-cc"
-        title="codex-plugin-cc"
-        tagline="bring Codex into Claude Code"
-        description="OpenAI's Claude Code plugin for Codex: run normal or adversarial code reviews, delegate rescue tasks, and manage background Codex jobs without leaving Claude."
-        fallbackVideo={false}
-        body={
-          <>
-            <p>
-              Installs a <span className="mono">codex</span> plugin into Claude Code so you can
-              call Codex as a second reviewer or delegated worker from the workflow you already
-              use. Normal review is read-only. Adversarial review is steerable, so you can ask it
-              to challenge the design, question assumptions, or focus on reliability, auth, data
-              loss, rollback, or race conditions.
-            </p>
-            <p>
-              The rescue flow hands a concrete task to Codex and lets it run in the background.
-              Status, result, and cancel commands keep the job visible, and completed output
-              includes the Codex session ID when available so you can resume the work directly in
-              Codex later. It uses your local Codex CLI install, auth, repository checkout, and
-              config.
-            </p>
-            <CodeBlock>
-              {`# 1. Add the OpenAI Codex plugin marketplace in Claude Code\n/plugin marketplace add openai/codex-plugin-cc\n\n# 2. Install the plugin\n/plugin install codex@openai-codex\n\n# 3. Reload and verify\n/reload-plugins\n/codex:setup\n\n# Optional: install or log in to Codex if setup says it is missing\nnpm install -g @openai/codex\n!codex login`}
-            </CodeBlock>
-            <CodeBlock>
-              {`# Review before shipping\n/codex:review --base main --background\n/codex:status\n/codex:result\n\n# Challenge a risky direction\n/codex:adversarial-review --background look for race conditions and question the caching design\n\n# Delegate a focused task\n/codex:rescue --background investigate why the build is failing in CI`}
-            </CodeBlock>
-            <p className="mono text-[12px] text-[color:var(--fg-dim)] leading-relaxed">
-              Requires Node.js 18.18+ and Codex auth through a ChatGPT subscription or OpenAI API
-              key. Background mode is usually the right default for multi-file reviews.
-            </p>
-          </>
-        }
-      />
-
-      <section className="mt-16">
-        <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
-          <span className="dot" />
-          How they compose
-        </h2>
-        <p className="text-[15px] text-[color:var(--fg-muted)] leading-relaxed">
-          <a href="#printingpress" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">printingpress</a>{" "}
-          is the heavyweight: point it at an API and it prints you the CLI to talk to it without
-          re-discovering its surface for every agent.{" "}
-          <a href="#last72hours" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">last72hours</a>{" "}
-          is for the immediate pulse — what spiked today.{" "}
-          <a href="#last30days" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">last30days</a>{" "}
-          is the wider lens — what the month has built. Both stay grounded in real posts with
-          inline citations.{" "}
-          <a href="#html-everything" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">html-everything</a>{" "}
-          is the artifact step — whatever the others produced, it wraps into one shareable HTML
-          file you can send.{" "}
-          <a href="#codex-plugin-cc" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">codex-plugin-cc</a>{" "}
-          adds a second engineering brain for review, adversarial pressure-testing, and delegated
-          fixes while you stay inside Claude Code.
-        </p>
-      </section>
-
-      <section className="mt-12">
-        <h2 className="text-xl font-semibold tracking-tight mb-4 flex items-center gap-2">
-          <span className="dot" />
-          Got a research-grade skill?
-        </h2>
-        <p className="text-[15px] text-[color:var(--fg-muted)] leading-relaxed">
-          If you&apos;ve built a skill that expands what the agent can answer rather than how
-          cheaply it can answer it —{" "}
-          <Link href="/submit" className="text-[color:var(--accent)] underline underline-offset-4 decoration-1">submit it</Link>
-          . Same curation pipeline as the rest of the marketplace.
-        </p>
-      </section>
+function CollectionTable({ entries }: { entries: CollectionEntry[] }) {
+  return (
+    <div className="mt-6">
+      <div className="hidden sm:grid grid-cols-[2.5ch_minmax(0,1.3fr)_minmax(0,0.82fr)_minmax(180px,0.7fr)] gap-x-6 mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] pb-2 border-b border-[color:var(--border)]">
+        <span className="text-right">#</span>
+        <span>name</span>
+        <span>source</span>
+        <span className="text-right">proof</span>
+      </div>
+      {entries.map((entry, i) => (
+        <div
+          key={entry.name}
+          id={entry.name.replace(/^\//, "").replace(/[^a-z0-9]+/gi, "-").toLowerCase()}
+          className="grid sm:grid-cols-[2.5ch_minmax(0,1.3fr)_minmax(0,0.82fr)_minmax(180px,0.7fr)] gap-x-6 gap-y-2 py-3 border-b border-[color:var(--border)] hover:bg-[color:var(--bg-elevated)]/50 transition group scroll-mt-20"
+        >
+          <span className="mono text-[12px] text-[color:var(--fg-dim)] tabular-nums text-right self-start mt-1">
+            {i + 1}
+          </span>
+          <Link href={entry.href} className="min-w-0">
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <span className="mono text-[14px] text-[color:var(--fg)] group-hover:text-[color:var(--accent)] transition truncate">
+                {entry.name}
+              </span>
+              <span className="mono text-[10px] text-[color:var(--fg-dim)] uppercase tracking-wider">
+                {entry.audience}
+              </span>
+              <span className="mono text-[10px] text-[color:var(--fg-dim)] uppercase tracking-wider">
+                {entry.category}
+              </span>
+            </div>
+            <div className="text-[12px] text-[color:var(--fg-muted)] line-clamp-1 mt-0.5">
+              {entry.description}
+            </div>
+          </Link>
+          <div className="mono text-[11px] text-[color:var(--fg-dim)] truncate self-start mt-1">
+            <div className="truncate">{entry.source}</div>
+            {entry.repoUrl && (
+              <a
+                href={entry.repoUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex max-w-full items-center gap-1.5 text-[color:var(--fg-muted)] hover:text-[color:var(--accent)] transition"
+                title={`★ ${entry.stars ?? 0} on ${new URL(entry.repoUrl).pathname.replace(/^\//, "")}`}
+              >
+                <GithubIcon className="text-[13px] shrink-0" />
+                <span className="truncate">
+                  {new URL(entry.repoUrl).pathname.replace(/^\//, "").replace(/\/$/, "")}
+                </span>
+              </a>
+            )}
+          </div>
+          <div className="flex flex-wrap justify-start sm:justify-end gap-1.5 self-start">
+            <ProofSignal hot href={entry.href}>
+              {entry.href.startsWith("/marketplace/") ? "inspect" : "open"}
+            </ProofSignal>
+            <ProofSignal>reviewed</ProofSignal>
+            {entry.videoCount ? <ProofSignal>{entry.videoCount} video</ProofSignal> : null}
+            {entry.repoUrl && <ProofSignal>source</ProofSignal>}
+            {entry.stars != null && <ProofSignal>★ {formatStars(entry.stars)}</ProofSignal>}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
 
-/* ────────────────────────────────────────────────────────────────────────── */
-/*  Entry component — mirror the marketplace skill page layout              */
-/* ────────────────────────────────────────────────────────────────────────── */
-
-function SkillEntry({
-  entry,
-  fallbackSlug,
-  title,
-  tagline,
-  description,
-  fallbackVideo = true,
-  body,
+function ProofSignal({
+  children,
+  href,
+  hot = false,
 }: {
-  entry: MarketplaceEntry | null;
-  fallbackSlug: string;
-  title: string;
-  tagline: string;
-  description: string;
-  fallbackVideo?: boolean;
-  body: React.ReactNode;
+  children: React.ReactNode;
+  href?: string;
+  hot?: boolean;
 }) {
-  const marketplaceHref = entry ? `/marketplace/${entry.id}` : `/i/${fallbackSlug}`;
-  const audience = entry?.skill.audience;
-  const category = entry?.skill.category;
-  const repoUrl = entry?.skill.repoUrl;
-  const stars = entry?.stars;
-  const videoUrl = entry?.skill.videoUrls.find((u) => /\/v\/[\w.-]+\.mp4$/i.test(u));
-
-  return (
-    <section id={fallbackSlug} className="mt-14 scroll-mt-20">
-      <div className="mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)]">
-        {tagline}
-      </div>
-
-      <div className="mt-3 flex items-center gap-2 flex-wrap">
-        {audience && <span className="tag tag-accent">{audience}</span>}
-        {category && <span className="tag">{category}</span>}
-      </div>
-
-      <h2 className="text-2xl sm:text-[28px] tracking-tight font-semibold mt-3 mono">
-        {title}
-      </h2>
-      <p className="text-[color:var(--fg-muted)] text-[15px] mt-2 leading-relaxed">
-        {description}
-      </p>
-
-      <div className="mt-3 flex items-center gap-3 flex-wrap text-[12px] mono">
-        <Link
-          href={marketplaceHref}
-          className="text-[color:var(--accent)] hover:underline underline-offset-4 decoration-1"
-        >
-          marketplace/{fallbackSlug} →
-        </Link>
-        {repoUrl && (
-          <a
-            href={repoUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 btn-ghost rounded-md px-3 py-1.5 text-[12px] mono text-[color:var(--fg)] hover:text-[color:var(--accent)] transition"
-            title="Open the upstream repository on GitHub"
-          >
-            <GithubIcon className="text-[14px]" />
-            <span>{new URL(repoUrl).pathname.replace(/^\//, "").replace(/\/$/, "")}</span>
-            {stars != null && (
-              <span className="text-[color:var(--fg-muted)]">· ★ {formatStars(stars)}</span>
-            )}
-          </a>
-        )}
-      </div>
-
-      {videoUrl ? (
-        <div className="card p-4 mt-6">
-          <div className="aspect-video rounded-md overflow-hidden border border-[color:var(--border)] bg-black">
-            <video
-              src={videoUrl}
-              title={`${fallbackSlug} demo`}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-      ) : fallbackVideo ? (
-        <div className="card p-4 mt-6">
-          <div className="aspect-video rounded-md overflow-hidden border border-[color:var(--border)] bg-black">
-            <video
-              src={`/v/${fallbackSlug}.mp4`}
-              title={`${fallbackSlug} demo`}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-      ) : null}
-
-      <div className="card p-6 mt-5">
-        <div className="mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] mb-3">
-          One-line install
-        </div>
-        <InstallCommand skillName={fallbackSlug} />
-      </div>
-
-      <div className="text-[15px] text-[color:var(--fg-muted)] leading-relaxed space-y-3 mt-6">
-        {body}
-      </div>
-    </section>
-  );
+  const className = hot
+    ? "mono text-[10px] rounded-full border border-[color:var(--accent)] bg-[color:var(--accent)] text-[color:var(--bg)] px-2 py-1 font-semibold"
+    : "mono text-[10px] rounded-full border border-[color:var(--border)] text-[color:var(--fg-muted)] px-2 py-1";
+  if (href) {
+    return (
+      <Link href={href} className={className}>
+        {children}
+      </Link>
+    );
+  }
+  return <span className={className}>{children}</span>;
 }
 
-function CodeBlock({ children }: { children: React.ReactNode }) {
-  return (
-    <pre className="mono text-[12px] leading-relaxed whitespace-pre-wrap break-all bg-[color:var(--bg-elevated)] border border-[color:var(--border)] rounded-md px-4 py-3 my-3 text-[color:var(--fg)]">
-      {children}
-    </pre>
-  );
+function hostFromUrl(u: string): string {
+  try {
+    return new URL(u).host.replace(/^www\./, "");
+  } catch {
+    return u;
+  }
 }
