@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>skillmake — design shotgun · comparison board</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; background: #111; color: #ddd; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; }
+  header {
+    padding: 14px 22px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+    background: #1a1a1a;
+  }
+  header .title { font-weight: 600; }
+  header .meta { color: #888; font-size: 12px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    height: calc(100vh - 53px);
+    gap: 0;
+  }
+  .pane { display: flex; flex-direction: column; border-right: 1px solid #2a2a2a; min-width: 0; }
+  .pane:last-child { border-right: none; }
+  .pane-head {
+    padding: 10px 14px;
+    background: #181818;
+    border-bottom: 1px solid #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .pane-head .letter {
+    display: inline-block;
+    width: 22px; height: 22px;
+    border-radius: 3px;
+    background: #2a2a2a;
+    color: #fff;
+    text-align: center;
+    line-height: 22px;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+  .pane-head .name { font-weight: 500; }
+  .pane-head .sub { color: #777; font-size: 11px; margin-left: 6px; }
+  .pane-head a { color: #6ad; text-decoration: none; font-size: 11px; }
+  .pane-head a:hover { text-decoration: underline; }
+  iframe { flex: 1; border: 0; width: 100%; background: #000; }
+  .legend {
+    padding: 10px 22px;
+    border-top: 1px solid #333;
+    background: #1a1a1a;
+    font-size: 11.5px;
+    color: #999;
+    display: flex;
+    gap: 28px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .legend kbd {
+    background: #2a2a2a;
+    border: 1px solid #444;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 10.5px;
+    color: #ccc;
+  }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <span class="title">skillmake · design shotgun</span>
+    <span class="meta"> — 3 directions for the homepage / marketplace</span>
+  </div>
+  <div class="meta">2026-05-14 · branch: iharnoor/design-shotgun-ideas</div>
+</header>
+
+<div class="grid">
+  <div class="pane">
+    <div class="pane-head">
+      <div><span class="letter">A</span><span class="name">Phosphor Terminal</span><span class="sub">CRT · phosphor green · dense</span></div>
+      <a href="variant-A.html" target="_blank">open ↗</a>
+    </div>
+    <iframe src="variant-A.html" title="Variant A"></iframe>
+  </div>
+  <div class="pane">
+    <div class="pane-head">
+      <div><span class="letter">B</span><span class="name">Curator's Catalog</span><span class="sub">parchment · serif · oxblood</span></div>
+      <a href="variant-B.html" target="_blank">open ↗</a>
+    </div>
+    <iframe src="variant-B.html" title="Variant B"></iframe>
+  </div>
+  <div class="pane">
+    <div class="pane-head">
+      <div><span class="letter">C</span><span class="name">Build Log</span><span class="sub">slate · neon · timestamped feed</span></div>
+      <a href="variant-C.html" target="_blank">open ↗</a>
+    </div>
+    <iframe src="variant-C.html" title="Variant C"></iframe>
+  </div>
+</div>
+</body>
+</html>

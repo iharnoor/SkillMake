@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>skillmake — Variant C · Build Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e1117;
+    --bg-elev: #161b22;
+    --bg-soft: #1a2030;
+    --fg: #e6edf3;
+    --fg-mute: #b1b9c2;
+    --fg-dim: #7d8590;
+    --cyan: #5ad5e8;
+    --cyan-dim: rgba(90,213,232,0.12);
+    --magenta: #e85ad5;
+    --magenta-dim: rgba(232,90,213,0.12);
+    --amber: #f7c948;
+    --amber-dim: rgba(247,201,72,0.14);
+    --rule: rgba(125,133,144,0.18);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); }
+  body {
+    font-family: "JetBrains Mono", "Geist Mono", ui-monospace, Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 36px 28px 96px; }
+
+  .banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .prompt { color: var(--cyan); font-weight: 700; font-size: 16px; letter-spacing: -0.01em; }
+  .prompt .dollar { color: var(--fg-dim); margin-right: 6px; }
+  .submit {
+    color: var(--magenta);
+    border: 1px dashed var(--magenta);
+    padding: 6px 14px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 120ms;
+  }
+  .submit:hover { background: var(--magenta-dim); }
+
+  .pitch {
+    margin-top: 18px;
+    color: var(--fg-mute);
+    font-size: 13.5px;
+    max-width: 80ch;
+  }
+  .pitch .accent { color: var(--cyan); }
+
+  .ticker {
+    margin-top: 22px;
+    padding: 8px 14px;
+    background: var(--bg-elev);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 11.5px;
+    color: var(--cyan);
+    position: relative;
+  }
+  .ticker .label {
+    color: var(--fg-dim);
+    margin-right: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-size: 10px;
+  }
+  .ticker-track {
+    display: inline-block;
+    animation: marquee 32s linear infinite;
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .ticker .ev { margin: 0 8px; }
+  .ticker .user { color: var(--magenta); }
+
+  .install {
+    margin-top: 22px;
+    background: var(--bg-elev);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+    font-size: 12px;
+  }
+  .install .head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 14px;
+    background: var(--bg-soft);
+    border-bottom: 1px solid var(--rule);
+    font-size: 10.5px;
+    color: var(--fg-dim);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .install .head .dots { display: flex; gap: 6px; }
+  .install .head .dots span { width: 9px; height: 9px; border-radius: 50%; background: var(--rule); }
+  .install pre { margin: 0; padding: 14px 0; color: var(--fg); }
+  .install .line {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 16px;
+    padding: 0 14px;
+  }
+  .install .ln { color: var(--fg-dim); text-align: right; user-select: none; }
+  .install .tok-cmd { color: var(--cyan); }
+  .install .tok-str { color: var(--amber); }
+  .install .tok-flag { color: var(--magenta); }
+
+  .filter {
+    margin-top: 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .badges { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge {
+    font-size: 11.5px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    text-decoration: none;
+    transition: all 120ms;
+    border: 1px solid var(--rule);
+    color: var(--fg-mute);
+  }
+  .badge:hover { border-color: var(--cyan); color: var(--cyan); }
+  .badge.active {
+    background: var(--cyan-dim);
+    color: var(--cyan);
+    border-color: var(--cyan);
+  }
+  .badge.soon {
+    color: var(--magenta);
+    border-color: rgba(232,90,213,0.4);
+    border-style: dashed;
+    opacity: 0.85;
+  }
+  .stat {
+    font-size: 12px;
+    color: var(--fg-mute);
+  }
+  .stat .dot {
+    display: inline-block;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 8px var(--cyan);
+    margin-right: 8px;
+    vertical-align: 0;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .table {
+    margin-top: 18px;
+    border: 1px solid var(--rule);
+    background: var(--bg-elev);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .thead, .row {
+    display: grid;
+    grid-template-columns: 130px 90px 1.4fr 1fr 130px;
+    gap: 16px;
+    padding: 11px 14px;
+    align-items: center;
+  }
+  .thead {
+    background: var(--bg-soft);
+    border-bottom: 1px solid var(--rule);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--fg-dim);
+    text-transform: uppercase;
+  }
+  .row {
+    border-bottom: 1px solid var(--rule);
+    font-size: 12.5px;
+  }
+  .row:last-child { border-bottom: none; }
+  .row:hover { background: var(--bg-soft); }
+  .ts { color: var(--fg-dim); font-size: 11.5px; }
+  .st {
+    font-size: 10.5px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    text-align: center;
+    font-weight: 500;
+  }
+  .st.live { background: var(--cyan-dim); color: var(--cyan); }
+  .st.rev { background: var(--amber-dim); color: var(--amber); }
+  .st.soon { background: var(--magenta-dim); color: var(--magenta); }
+  .nm { color: var(--fg); font-weight: 500; }
+  .nm .aud {
+    color: var(--fg-dim);
+    margin-left: 8px;
+    font-size: 10.5px;
+    background: var(--bg-soft);
+    padding: 2px 6px;
+    border-radius: 2px;
+    border: 1px solid var(--rule);
+    text-transform: lowercase;
+    letter-spacing: 0.05em;
+  }
+  .nm .aud.creators { color: var(--magenta); border-color: rgba(232,90,213,0.3); }
+  .nm .aud.engineers { color: var(--cyan); border-color: rgba(90,213,232,0.3); }
+  .nm .aud.devops { color: var(--magenta); border-color: rgba(232,90,213,0.3); }
+  .desc { color: var(--fg-dim); font-size: 11.5px; margin-top: 2px; }
+  .src { color: var(--fg-mute); font-size: 11.5px; }
+  .stars {
+    color: var(--cyan);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .stars .spark { font-size: 14px; letter-spacing: -1px; color: var(--cyan); opacity: 0.8; }
+  .stars .none { color: var(--fg-dim); }
+
+  .closing {
+    margin-top: 56px;
+    font-size: 11.5px;
+    color: var(--fg-dim);
+    text-align: center;
+  }
+  .closing .comment { color: var(--magenta); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <div class="prompt"><span class="dollar">$</span>skillmake --list</div>
+  <a class="submit" href="#">+ submit ▸</a>
+</div>
+
+<p class="pitch">a curated marketplace of agent-installable <span class="accent">SKILL.md</span> files. every one personally reviewed before it goes live.</p>
+
+<div class="ticker">
+  <span class="label">▸ now installing</span>
+  <span class="ticker-track">
+    <span class="ev"><span class="user">user-7f2</span> pulled design-shotgun</span> ·
+    <span class="ev"><span class="user">user-3a1</span> pulled investigate</span> ·
+    <span class="ev"><span class="user">user-9c4</span> pulled gstack</span> ·
+    <span class="ev"><span class="user">user-2e8</span> pulled ship</span> ·
+    <span class="ev"><span class="user">user-5b1</span> pulled qa</span> ·
+    <span class="ev"><span class="user">user-6d2</span> pulled browse</span> ·
+    <span class="ev"><span class="user">user-7f2</span> pulled design-shotgun</span> ·
+    <span class="ev"><span class="user">user-3a1</span> pulled investigate</span> ·
+    <span class="ev"><span class="user">user-9c4</span> pulled gstack</span> ·
+    <span class="ev"><span class="user">user-2e8</span> pulled ship</span> ·
+    <span class="ev"><span class="user">user-5b1</span> pulled qa</span> ·
+    <span class="ev"><span class="user">user-6d2</span> pulled browse</span> ·
+  </span>
+</div>
+
+<div class="install">
+  <div class="head">
+    <div>install.sh</div>
+    <div class="dots"><span></span><span></span><span></span></div>
+  </div>
+  <pre><div class="line"><span class="ln">1</span><span><span class="tok-cmd">curl</span> <span class="tok-flag">--create-dirs</span> <span class="tok-flag">-fsSL</span> \</span></div><div class="line"><span class="ln">2</span><span>  <span class="tok-str">skillmake.xyz/i/&lt;name&gt;</span> \</span></div><div class="line"><span class="ln">3</span><span>  <span class="tok-flag">-o</span> <span class="tok-str">~/.claude/skills/&lt;name&gt;/SKILL.md</span></span></div></pre>
+</div>
+
+<div class="filter">
+  <div class="badges">
+    <a class="badge active" href="#">[all]</a>
+    <a class="badge" href="#">[creators]</a>
+    <a class="badge" href="#">[engineers]</a>
+    <a class="badge" href="#">[tricks]</a>
+    <a class="badge" href="#">[powerhouse]</a>
+    <span class="badge soon">[devops·soon]</span>
+  </div>
+  <div class="stat"><span class="dot"></span>12 approved</div>
+</div>
+
+<div class="table">
+  <div class="thead">
+    <div>timestamp</div>
+    <div>status</div>
+    <div>name · audience</div>
+    <div>source</div>
+    <div style="text-align:right">github</div>
+  </div>
+
+  <div class="row">
+    <div class="ts">2026-05-14 09:32</div>
+    <div><span class="st live">★ LIVE</span></div>
+    <div>
+      <div class="nm">design-shotgun<span class="aud creators">creators</span></div>
+      <div class="desc">Generate multiple AI design variants, iterate side-by-side.</div>
+    </div>
+    <div class="src">github.com/iharnoor</div>
+    <div class="stars"><span class="spark">▁▂▄▆█</span>★1.2k</div>
+  </div>
+
+  <div class="row">
+    <div class="ts">2026-05-13 18:11</div>
+    <div><span class="st live">★ LIVE</span></div>
+    <div>
+      <div class="nm">investigate<span class="aud engineers">engineers</span></div>
+      <div class="desc">Systematic debugging with root cause investigation.</div>
+    </div>
+    <div class="src">github.com/anthropic</div>
+    <div class="stars"><span class="spark">▁▃▅▇▇</span>★847</div>
+  </div>
+
+  <div class="row">
+    <div class="ts">2026-05-13 14:02</div>
+    <div><span class="st live">★ LIVE</span></div>
+    <div>
+      <div class="nm">gstack<span class="aud engineers">engineers</span></div>
+      <div class="desc">Fast headless browser primitives for QA and dogfooding.</div>
+    </div>
+    <div class="src">github.com/garryslist</div>
+    <div class="stars"><span class="spark">▂▄▆▇█</span>★612</div>
+  </div>
+
+  <div class="row">
+    <div class="ts">2026-05-12 22:47</div>
+    <div><span class="st rev">⏳ REVIEW</span></div>
+    <div>
+      <div class="nm">ship<span class="aud engineers">engineers</span></div>
+      <div class="desc">Ship workflow — bump VERSION, commit, push, PR.</div>
+    </div>
+    <div class="src">github.com/garryslist</div>
+    <div class="stars"><span class="spark">▁▂▃▅▆</span>★448</div>
+  </div>
+
+  <div class="row">
+    <div class="ts">2026-05-12 09:11</div>
+    <div><span class="st live">★ LIVE</span></div>
+    <div>
+      <div class="nm">qa<span class="aud engineers">engineers</span></div>
+      <div class="desc">QA testing with iterative bug-fix loop and atomic commits.</div>
+    </div>
+    <div class="src">github.com/anthropic</div>
+    <div class="stars"><span class="spark">▁▁▂▃▄</span>★331</div>
+  </div>
+
+  <div class="row">
+    <div class="ts">2026-05-11 16:33</div>
+    <div><span class="st live">★ LIVE</span></div>
+    <div>
+      <div class="nm">browse<span class="aud engineers">engineers</span></div>
+      <div class="desc">Headless browser commands for any URL — screenshot, click, diff.</div>
+    </div>
+    <div class="src">github.com/garryslist</div>
+    <div class="stars"><span class="spark">▁▂▄▅▆</span>★289</div>
+  </div>
+
+  <div class="row">
+    <div class="ts">2026-05-10 11:28</div>
+    <div><span class="st soon">· SOON</span></div>
+    <div>
+      <div class="nm">devops-toolkit<span class="aud devops">devops</span></div>
+      <div class="desc">Coming soon — infra primitives, runbooks, incident skills.</div>
+    </div>
+    <div class="src">github.com/anthropic</div>
+    <div class="stars"><span class="none">— —</span></div>
+  </div>
+
+  <div class="row">
+    <div class="ts">2026-05-09 08:14</div>
+    <div><span class="st live">★ LIVE</span></div>
+    <div>
+      <div class="nm">review<span class="aud creators">creators</span></div>
+      <div class="desc">Pre-landing PR review for SQL safety and trust boundaries.</div>
+    </div>
+    <div class="src">github.com/iharnoor</div>
+    <div class="stars"><span class="spark">▁▂▃▄▅</span>★214</div>
+  </div>
+</div>
+
+<div class="closing"><span class="comment">//</span> think SKILL.md for the rest of the agent stack — by hand, not by scrape.</div>
+
+</div>
+</body>
+</html>

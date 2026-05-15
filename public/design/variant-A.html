@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>skillmake — Variant A · Phosphor Terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050605;
+    --fg: #7fff7f;
+    --fg-bright: #a8ffa8;
+    --fg-muted: #4fb24f;
+    --fg-dim: #2e6a2e;
+    --amber: #ffb700;
+    --amber-dim: #8a6300;
+    --rule: rgba(127,255,127,0.12);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); }
+  body {
+    font-family: "IBM Plex Mono", "SF Mono", "Berkeley Mono", ui-monospace, Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.55;
+    min-height: 100vh;
+    /* CRT scanlines */
+    background-image:
+      repeating-linear-gradient(0deg, rgba(127,255,127,0.025) 0 1px, transparent 1px 3px),
+      radial-gradient(ellipse at 50% 30%, rgba(127,255,127,0.04) 0%, transparent 60%);
+    text-shadow: 0 0 1px rgba(127,255,127,0.5);
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 56px 32px 96px; }
+
+  pre.ascii {
+    font-size: 10px;
+    line-height: 1.15;
+    color: var(--fg);
+    text-shadow: 0 0 6px rgba(127,255,127,0.6), 0 0 14px rgba(127,255,127,0.25);
+    margin: 0 0 28px;
+    user-select: none;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .hero-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 28px; flex-wrap: wrap; margin-top: 18px; }
+  .pitch { color: var(--fg-muted); max-width: 56ch; font-size: 14.5px; line-height: 1.6; }
+  .pitch .accent { color: var(--fg-bright); }
+
+  .btn {
+    border: 1px solid var(--fg);
+    color: var(--fg);
+    padding: 9px 18px;
+    text-decoration: none;
+    font: inherit;
+    font-size: 13px;
+    background: transparent;
+    transition: background 120ms, color 120ms;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--fg); color: var(--bg); text-shadow: none; }
+
+  .install {
+    margin-top: 22px;
+    font-size: 12px;
+    color: var(--fg-dim);
+    word-break: break-all;
+  }
+  .install .label { color: var(--fg-muted); }
+  .install .cmd { color: var(--fg); }
+  .blink {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: var(--fg);
+    vertical-align: -2px;
+    margin-left: 2px;
+    animation: blink 1s steps(2, end) infinite;
+    box-shadow: 0 0 6px rgba(127,255,127,0.7);
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .filter {
+    margin-top: 56px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+    flex-wrap: wrap;
+  }
+  .filter-pills { display: flex; gap: 22px; font-size: 12.5px; }
+  .filter-pills a {
+    color: var(--fg-muted);
+    text-decoration: none;
+  }
+  .filter-pills a.active { color: var(--fg); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .filter-pills .soon { color: var(--amber-dim); }
+  .filter-pills .soon .tag { font-size: 10px; margin-left: 4px; opacity: 0.7; }
+  .count { font-size: 11px; color: var(--fg-dim); font-variant-numeric: tabular-nums; }
+
+  .thead {
+    display: grid;
+    grid-template-columns: 3ch 1.5fr 1fr 10ch;
+    gap: 24px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--fg-dim);
+    padding: 16px 0 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .thead .r { text-align: right; }
+
+  .row {
+    display: grid;
+    grid-template-columns: 3ch 1.5fr 1fr 10ch;
+    gap: 24px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: flex-start;
+    position: relative;
+  }
+  .row:hover { background: rgba(127,255,127,0.03); }
+  .rank {
+    text-align: right;
+    color: var(--fg-dim);
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+    position: relative;
+    padding-right: 8px;
+  }
+  .rank::after {
+    content: "";
+    position: absolute;
+    right: 0; top: 2px; bottom: 2px;
+    width: 1px;
+    background: var(--fg-dim);
+    opacity: 0.4;
+  }
+  .name { font-size: 14px; color: var(--fg); }
+  .name .aud { font-size: 10px; color: var(--fg-dim); text-transform: uppercase; letter-spacing: 0.14em; margin-left: 8px; vertical-align: 1px; }
+  .desc { font-size: 12.5px; color: var(--fg-muted); margin-top: 2px; line-height: 1.45; }
+  .src { font-size: 11.5px; color: var(--fg-dim); padding-top: 2px; }
+  .stars { font-size: 12.5px; color: var(--fg); font-variant-numeric: tabular-nums; padding-top: 2px; text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+  .stars svg { opacity: 0.7; }
+  .stars .star { color: var(--fg); }
+
+  .closing { margin-top: 80px; text-align: center; font-size: 11px; color: var(--fg-dim); }
+  .closing .em { color: var(--fg-muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<pre class="ascii"> ____  _    _ _ _                 _
+/ ___|| | _(_) | |_ __ ___   __ _| | _____
+\___ \| |/ / | | | '_ \` _ \ / _\` | |/ / _ \
+ ___) |   <| | | | | | | | | (_| |   <  __/
+|____/|_|\_\_|_|_|_| |_| |_|\__,_|_|\_\___|</pre>
+
+<div class="hero-row">
+  <p class="pitch">A curated marketplace of agent-installable <span class="accent">SKILL.md</span> files. Every one personally reviewed before it goes live.</p>
+  <a class="btn" href="#">+ Submit a skill</a>
+</div>
+
+<div class="install">
+  <span class="label">install · </span><span class="cmd">curl --create-dirs -fsSL skillmake.xyz/i/&lt;name&gt; -o ~/.claude/skills/&lt;name&gt;/SKILL.md</span><span class="blink"></span>
+</div>
+
+<div class="filter">
+  <div class="filter-pills">
+    <a href="#" class="active">all</a>
+    <a href="#">creators</a>
+    <a href="#">engineers</a>
+    <a href="#">tricks</a>
+    <a href="#">powerhouse</a>
+    <span class="soon">devops<span class="tag">·soon</span></span>
+  </div>
+  <div class="count">12 approved</div>
+</div>
+
+<div class="thead">
+  <div class="r">#</div>
+  <div>name</div>
+  <div>source</div>
+  <div class="r">github</div>
+</div>
+
+<!-- 8 rows -->
+<div class="row">
+  <div class="rank">01</div>
+  <div>
+    <div class="name">design-shotgun <span class="aud">creators</span></div>
+    <div class="desc">Generate multiple AI design variants, open them side-by-side, iterate.</div>
+  </div>
+  <div class="src">github.com/iharnoor</div>
+  <div class="stars">
+    <svg width="42" height="12" viewBox="0 0 42 12"><polyline fill="none" stroke="currentColor" stroke-width="1" points="0,10 6,9 12,7 18,5 24,3 30,4 36,2 42,1"/></svg>
+    <span class="star">★ 1.2k</span>
+  </div>
+</div>
+<div class="row">
+  <div class="rank">02</div>
+  <div>
+    <div class="name">investigate <span class="aud">engineers</span></div>
+    <div class="desc">Systematic debugging with root cause investigation. No fixes without root cause.</div>
+  </div>
+  <div class="src">github.com/anthropic</div>
+  <div class="stars">
+    <svg width="42" height="12" viewBox="0 0 42 12"><polyline fill="none" stroke="currentColor" stroke-width="1" points="0,9 6,8 12,6 18,7 24,4 30,3 36,3 42,2"/></svg>
+    <span class="star">★ 847</span>
+  </div>
+</div>
+<div class="row">
+  <div class="rank">03</div>
+  <div>
+    <div class="name">gstack <span class="aud">engineers</span></div>
+    <div class="desc">Fast headless browser primitives for QA testing and site dogfooding.</div>
+  </div>
+  <div class="src">github.com/garryslist</div>
+  <div class="stars">
+    <svg width="42" height="12" viewBox="0 0 42 12"><polyline fill="none" stroke="currentColor" stroke-width="1" points="0,11 6,9 12,8 18,6 24,5 30,4 36,3 42,2"/></svg>
+    <span class="star">★ 612</span>
+  </div>
+</div>
+<div class="row">
+  <div class="rank">04</div>
+  <div>
+    <div class="name">ship <span class="aud">engineers</span></div>
+    <div class="desc">Ship workflow — bump VERSION, commit, push, PR. Squashes WIP commits.</div>
+  </div>
+  <div class="src">github.com/garryslist</div>
+  <div class="stars">
+    <svg width="42" height="12" viewBox="0 0 42 12"><polyline fill="none" stroke="currentColor" stroke-width="1" points="0,10 6,9 12,9 18,7 24,6 30,5 36,4 42,4"/></svg>
+    <span class="star">★ 448</span>
+  </div>
+</div>
+<div class="row">
+  <div class="rank">05</div>
+  <div>
+    <div class="name">qa <span class="aud">engineers</span></div>
+    <div class="desc">Systematic QA testing with iterative bug-fix loop and atomic commits.</div>
+  </div>
+  <div class="src">github.com/anthropic</div>
+  <div class="stars">
+    <svg width="42" height="12" viewBox="0 0 42 12"><polyline fill="none" stroke="currentColor" stroke-width="1" points="0,11 6,10 12,9 18,8 24,7 30,6 36,5 42,5"/></svg>
+    <span class="star">★ 331</span>
+  </div>
+</div>
+<div class="row">
+  <div class="rank">06</div>
+  <div>
+    <div class="name">browse <span class="aud">engineers</span></div>
+    <div class="desc">Headless browser commands for any URL — screenshot, click, diff, verify.</div>
+  </div>
+  <div class="src">github.com/garryslist</div>
+  <div class="stars">
+    <svg width="42" height="12" viewBox="0 0 42 12"><polyline fill="none" stroke="currentColor" stroke-width="1" points="0,11 6,10 12,9 18,7 24,7 30,6 36,5 42,6"/></svg>
+    <span class="star">★ 289</span>
+  </div>
+</div>
+<div class="row">
+  <div class="rank">07</div>
+  <div>
+    <div class="name">review <span class="aud">creators</span></div>
+    <div class="desc">Pre-landing PR review for SQL safety and LLM trust boundary violations.</div>
+  </div>
+  <div class="src">github.com/iharnoor</div>
+  <div class="stars">
+    <svg width="42" height="12" viewBox="0 0 42 12"><polyline fill="none" stroke="currentColor" stroke-width="1" points="0,11 6,10 12,10 18,9 24,8 30,7 36,7 42,6"/></svg>
+    <span class="star">★ 214</span>
+  </div>
+</div>
+<div class="row">
+  <div class="rank">08</div>
+  <div>
+    <div class="name">sync-gbrain <span class="aud">engineers</span></div>
+    <div class="desc">Refresh gbrain index with current repo and agent search guidance.</div>
+  </div>
+  <div class="src">github.com/anthropic</div>
+  <div class="stars">
+    <svg width="42" height="12" viewBox="0 0 42 12"><polyline fill="none" stroke="currentColor" stroke-width="1" points="0,11 6,11 12,10 18,9 24,9 30,8 36,7 42,7"/></svg>
+    <span class="star">★ 198</span>
+  </div>
+</div>
+
+<div class="closing">Think <span class="em">SKILL.md</span> for the rest of the agent stack — by hand, not by scrape.</div>
+</div>
+</body>
+</html>
