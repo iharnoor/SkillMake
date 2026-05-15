@@ -19,25 +19,26 @@ export default async function SubmitPage() {
   const converterEnabled = Boolean(env.ANTHROPIC_API_KEY);
   return (
     <div className="relative">
-      <div className="absolute inset-x-0 top-0 h-[420px] grid-bg pointer-events-none opacity-40" />
-
-      <section className="relative max-w-4xl mx-auto px-6 pt-20 pb-10 text-center">
-        <div className="inline-flex items-center gap-2 mono text-[11px] tracking-[0.2em] uppercase text-[color:var(--fg-muted)] border border-[color:var(--border)] rounded-full px-3 py-1 mb-7">
-          <span className="dot" /> docs → skill, in one line
+      <section className="max-w-5xl mx-auto px-6 pt-12 pb-10">
+        <Link
+          href="/"
+          className="mono text-[12px] text-[color:var(--fg-muted)] hover:text-[color:var(--accent)] transition"
+        >
+          ← all skills
+        </Link>
+        <div className="mt-6 mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)]">
+          Submit
         </div>
-        <h1 className="text-[clamp(2.4rem,5vw,4rem)] font-semibold tracking-[-0.02em] leading-[1.05]">
-          Submit a docs page.
-          <br />
-          <span className="text-[color:var(--accent)]">Attach your tutorial. We review.</span>
+        <h1 className="text-3xl sm:text-4xl tracking-[-0.02em] font-semibold mt-2">
+          Docs page in. <span className="text-[color:var(--accent)]">SKILL.md out.</span>
         </h1>
-        <p className="text-[color:var(--fg-muted)] text-[17px] mt-5 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-[color:var(--fg-muted)] text-[15px] mt-3 leading-relaxed max-w-2xl">
           Paste a docs URL — we extract, sanitize, and curate it into a constrained
           <span className="mono text-[color:var(--fg)]"> SKILL.md</span>. Add up to six YouTube
-          tutorials as evidence. Every submission is personally vetted before it joins the
-          marketplace at{" "}
+          tutorials as evidence. Every submission is personally vetted before it joins the list at{" "}
           <Link href="/" className="mono text-[color:var(--accent)] hover:underline">/</Link>.
         </p>
-        <div className="flex items-center justify-center gap-2 mt-6 flex-wrap">
+        <div className="mt-5 flex items-center gap-2 flex-wrap">
           <span className="tag">prompt-injection-hardened</span>
           <span className="tag">verbatim API extraction</span>
           <span className="tag">content-hashed</span>

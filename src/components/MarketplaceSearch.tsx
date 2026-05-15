@@ -21,17 +21,21 @@ export function MarketplaceSearch() {
   const [q, setQ] = useState("");
   const [data, setData] = useState<Response | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [retryNonce, setRetryNonce] = useState(0);
   const inflight = useRef<AbortController | null>(null);
 
   useEffect(() => {
     if (!q.trim()) {
       setData(null);
+      setError(null);
       return;
     }
     inflight.current?.abort();
     const ctrl = new AbortController();
     inflight.current = ctrl;
     setLoading(true);
+    setError(null);
     const t = setTimeout(async () => {
       try {
         const res = await fetch("/api/search", {
@@ -40,10 +44,17 @@ export function MarketplaceSearch() {
           body: JSON.stringify({ query: q }),
           signal: ctrl.signal,
         });
+        if (!res.ok) {
+          setData(null);
+          setError(`search returned ${res.status}`);
+          return;
+        }
         const d = (await res.json()) as Response;
         setData(d);
       } catch (e) {
-        if ((e as Error).name !== "AbortError") setData({ mode: "fallback", results: [] });
+        if ((e as Error).name === "AbortError") return;
+        setData(null);
+        setError("couldn't reach search");
       } finally {
         setLoading(false);
       }
@@ -52,7 +63,7 @@ export function MarketplaceSearch() {
       clearTimeout(t);
       ctrl.abort();
     };
-  }, [q]);
+  }, [q, retryNonce]);
 
   return (
     <div>
@@ -100,7 +111,28 @@ export function MarketplaceSearch() {
             ) : null}
           </div>
 
-          {data && data.results.length === 0 && !loading && (
+          {error && !loading && (
+            <div className="card p-6 text-sm text-[color:var(--fg-muted)] flex items-start gap-4 flex-wrap">
+              <div className="flex-1 min-w-0">
+                <div className="mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--danger)] mb-1">
+                  search down
+                </div>
+                <div className="text-[color:var(--fg)]">{error}.</div>
+                <p className="mt-1">
+                  Could be a flaky network or HydraDB taking a breath. The list above is the source
+                  of truth — scroll, or retry.
+                </p>
+              </div>
+              <button
+                onClick={() => setRetryNonce((n) => n + 1)}
+                className="btn-ghost rounded-md px-3 py-1.5 text-xs mono whitespace-nowrap"
+              >
+                retry ↻
+              </button>
+            </div>
+          )}
+
+          {data && data.results.length === 0 && !loading && !error && (
             <div className="card p-6 text-center text-sm text-[color:var(--fg-muted)]">
               No matches. Try different words — semantic search understands synonyms.
             </div>
