@@ -94,6 +94,7 @@ export default async function Home({
               <Link
                 key={a}
                 href={`/?audience=${a}`}
+                aria-current={selected ? "page" : undefined}
                 className={
                   selected
                     ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
@@ -104,18 +105,6 @@ export default async function Home({
               </Link>
             );
           })}
-          <Link
-            href="/tricks"
-            className="text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
-          >
-            tricks
-          </Link>
-          <Link
-            href="/powerhouse"
-            className="text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
-          >
-            powerhouse
-          </Link>
           {AUDIENCES.filter((a) => a !== "general" && !LIVE_AUDIENCES.includes(a)).map((a) => (
             <span
               key={a}
