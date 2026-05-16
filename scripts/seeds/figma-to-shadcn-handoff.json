@@ -1,0 +1,83 @@
+{
+  "sourceUrl": "https://www.figma.com/developers/api",
+  "skill": {
+    "name": "figma-to-shadcn-handoff",
+    "description": "Use when turning a Figma frame into a shadcn-based React page — pull node JSON via Figma REST API, extract color/type/spacing tokens, then install shadcn primitives mapped to Tailwind theme.",
+    "whenToUse": [
+      "Translating an approved Figma frame into production React/Tailwind without pixel-pushing by hand",
+      "Extracting design tokens (colors, type ramps, spacing scale, radii) from a Figma file into a tailwind.config + CSS variables",
+      "Generating per-component stubs from named Figma frames that map 1:1 to shadcn primitives (Button, Card, Dialog)",
+      "Keeping a living handoff: re-running the extractor when the Figma file updates and diffing the regenerated tokens",
+      "Bootstrapping a design system page (typography spec, color spec, spacing spec) from a Figma library file"
+    ],
+    "keyConcepts": [
+      {
+        "term": "personal access token + X-Figma-Token",
+        "explanation": "Figma REST API authenticates via personal access token sent in the X-Figma-Token header (OAuth2 is also supported for multi-user apps). Tokens are scoped per-user, not per-file; treat them like passwords and rotate. Server-side only — never ship the token to the browser."
+      },
+      {
+        "term": "file_key and node ids",
+        "explanation": "Every Figma file has a `file_key` (the segment in the file URL: figma.com/file/<file_key>/...). Inside that file, every layer is a node with an id like `123:456`. The handoff workflow is: read the whole file once to discover node ids, then re-fetch just the frames you care about via /v1/files/:file_key/nodes?ids=. Targeted node fetches are dramatically cheaper than re-pulling the whole file."
+      },
+      {
+        "term": "node types that matter",
+        "explanation": "FRAME = a layout container (becomes a React component or page section). COMPONENT / COMPONENT_SET = reusable primitives (map to shadcn components). TEXT = typography (extract fontFamily, fontWeight, fontSize, lineHeightPx). RECTANGLE / VECTOR = backgrounds and shapes (extract `fills` for colors, `cornerRadius` for radii). Everything you need for tokens lives in these node types."
+      },
+      {
+        "term": "tokens via Variables API",
+        "explanation": "The /v1/files/:file_key/variables/local endpoint returns design tokens explicitly modeled as variables (color, number, string, boolean) with modes (light/dark). When a file uses Variables, prefer this endpoint over scraping fills/styles — the values are already structured for export. Older files without Variables fall back to /v1/files/:file_key/styles."
+      },
+      {
+        "term": "shadcn as a code-copy registry",
+        "explanation": "shadcn/ui is a distribution system for code, not a dependency. `npx shadcn@latest add button` copies the component source into your repo where you can edit it. That makes it the natural target for Figma handoff: you generate tailwind.config + CSS variables from Figma tokens, then `add` the shadcn primitives that consume them — no library upgrades, no diff churn."
+      },
+      {
+        "term": "tokens -> tailwind theme + CSS vars",
+        "explanation": "shadcn's convention: semantic tokens (background, foreground, primary, muted, border, ring) live as HSL CSS variables in globals.css, and tailwind.config maps Tailwind color names to those variables. Figma color tokens slot directly into the CSS variables; Figma spacing/typography tokens slot into tailwind.config.theme.extend. Map once, both Tailwind classes and shadcn components inherit the new system."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "GET https://api.figma.com/v1/files/:file_key",
+        "purpose": "Fetch the full file document tree as JSON. Use once to discover node ids and structure; for incremental syncs, prefer /nodes with explicit ids.",
+        "example": "curl -H \"X-Figma-Token: $FIGMA_TOKEN\" \\\n  https://api.figma.com/v1/files/$FILE_KEY \\\n  | jq '.document.children[].children[] | {id, name, type}'"
+      },
+      {
+        "signature": "GET https://api.figma.com/v1/files/:file_key/nodes?ids=<id1>,<id2>",
+        "purpose": "Fetch only the listed nodes (and their subtrees). Much cheaper than re-pulling the whole file when you already know which frames matter.",
+        "example": "curl -H \"X-Figma-Token: $FIGMA_TOKEN\" \\\n  \"https://api.figma.com/v1/files/$FILE_KEY/nodes?ids=123:456,123:789\""
+      },
+      {
+        "signature": "GET https://api.figma.com/v1/files/:file_key/styles",
+        "purpose": "List published styles in the file (fill, text, effect, grid). Use for older files that predate Variables, or to discover which styles your frames consume.",
+        "example": "curl -H \"X-Figma-Token: $FIGMA_TOKEN\" \\\n  https://api.figma.com/v1/files/$FILE_KEY/styles"
+      },
+      {
+        "signature": "GET https://api.figma.com/v1/files/:file_key/variables/local",
+        "purpose": "Return all local Variables (color, number, string, boolean) with their modes. The preferred source of truth for token export when the file uses Variables.",
+        "example": "curl -H \"X-Figma-Token: $FIGMA_TOKEN\" \\\n  https://api.figma.com/v1/files/$FILE_KEY/variables/local \\\n  | jq '.meta.variables'"
+      },
+      {
+        "signature": "npx shadcn@latest init && npx shadcn@latest add <component>",
+        "purpose": "Initialize shadcn in the target Next.js/Vite repo (creates components.json, tailwind.config, globals.css with token CSS variables), then copy specific primitives into ./components/ui/. Re-run `add` per component as the Figma handoff progresses.",
+        "example": "npx shadcn@latest init\nnpx shadcn@latest add button card dialog input"
+      },
+      {
+        "signature": "Figma -> tokens -> globals.css mapping",
+        "purpose": "Turn a Figma color Variable (e.g. `color/primary` = #4F46E5) into the HSL CSS variable shadcn expects, so every shadcn primitive picks up the brand automatically.",
+        "example": "/* globals.css */\n:root {\n  --background: 0 0% 100%;\n  --foreground: 240 10% 4%;\n  --primary: 239 84% 60%;        /* from Figma color/primary */\n  --primary-foreground: 0 0% 100%;\n  --muted: 240 5% 96%;\n  --border: 240 6% 90%;\n  --radius: 0.5rem;              /* from Figma cornerRadius token */\n}"
+      }
+    ],
+    "gotchas": [
+      "Personal access tokens are user-scoped — never ship them to the browser; run the extractor server-side or in CI only",
+      "Fetching /v1/files/:file_key on a large file is slow and rate-limited — discover ids once, then fetch only the nodes you need",
+      "Files without Variables have tokens scattered across `fills`, `style`, and published styles; prefer /variables/local when available",
+      "Figma colors come as RGBA 0-1 floats — convert to HSL (the format shadcn CSS vars expect) instead of hex if you want light/dark mode to compose",
+      "shadcn components live in YOUR repo after `add` — re-running `add` overwrites local edits unless you accept the prompt carefully",
+      "Mapping Figma spacing 1:1 to Tailwind's 4px scale rarely lines up; round to the nearest Tailwind step or extend the spacing scale in tailwind.config"
+    ],
+    "category": "tool",
+    "audience": "design",
+    "videoUrls": []
+  }
+}

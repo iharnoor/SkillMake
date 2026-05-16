@@ -1,0 +1,71 @@
+{
+  "sourceUrl": "https://github.com/vercel-labs/agent-skills",
+  "skill": {
+    "name": "vercel-agent-skills",
+    "description": "Use when wiring AI coding agents into Vercel workflows — install Vercel's official skills for Next.js, React performance, view transitions, web design audits, and claimable deploys.",
+    "whenToUse": [
+      "Setting up a new agent with first-class Vercel + Next.js knowledge",
+      "Reviewing React components for performance regressions and waterfalls",
+      "Auditing a site for accessibility, focus states, dark mode, and i18n",
+      "Deploying a fresh app to Vercel with an auto-detected framework",
+      "Adding View Transitions API animations to a Next.js app",
+      "Refactoring React components to use composition over prop drilling",
+      "Standardizing React Native performance + layout patterns"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Agent Skills format",
+        "explanation": "Each skill is a folder with a SKILL.md manifest (agent instructions plus frontmatter), an optional scripts/ directory for executable helpers, and an optional references/ directory for deeper docs. Agents auto-discover and activate skills when relevant tasks are detected, so there is no per-task wiring."
+      },
+      {
+        "term": "react-best-practices",
+        "explanation": "40+ performance rules organized into 8 categories: data waterfalls, bundle size, server vs client data fetching, re-renders, rendering, micro-optimizations, plus React-specific anti-patterns. Designed to be applied as a checklist when reviewing or writing React/Next.js components."
+      },
+      {
+        "term": "web-design-guidelines",
+        "explanation": "100+ audit rules spanning accessibility, focus states, forms, animation (including prefers-reduced-motion), typography, images, performance, navigation, dark mode, touch interactions, and internationalization. Used as a design-review pass over any web UI."
+      },
+      {
+        "term": "react-view-transitions",
+        "explanation": "Patterns for using the View Transition API in React/Next.js — page transitions, component animations, shared element transitions, and the Next.js-specific wiring needed to coordinate transitions across route changes."
+      },
+      {
+        "term": "vercel-deploy-claimable",
+        "explanation": "Skill that deploys an app to Vercel with framework auto-detection across 40+ frameworks (read from package.json), excludes node_modules and .git, and returns both a Preview URL and a Claim URL so ownership of the deployment can be transferred to the user."
+      },
+      {
+        "term": "composition-patterns",
+        "explanation": "React composition techniques to avoid prop proliferation: compound components, state lifting, and slot-style children. Targeted at refactoring component APIs that have grown into dozens of boolean/config props."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add vercel-labs/agent-skills",
+        "purpose": "Install every skill in the Vercel agent-skills repo into the local agent so it can discover them automatically.",
+        "example": "npx skills add vercel-labs/agent-skills"
+      },
+      {
+        "signature": "SKILL.md frontmatter + body",
+        "purpose": "Required manifest at the root of each skill folder. Holds the skill name/description/triggers in frontmatter and the agent-facing instructions in the body.",
+        "example": "skills/\n  react-best-practices/\n    SKILL.md\n    references/\n    scripts/\n  vercel-deploy-claimable/\n    SKILL.md\n    scripts/"
+      },
+      {
+        "signature": "vercel-deploy-claimable output",
+        "purpose": "After a successful deploy, the skill prints a Preview URL plus a Claim URL the end user can open to transfer ownership of the deployment into their Vercel account.",
+        "example": "Preview: https://<project>-<hash>.vercel.app\nClaim:   https://vercel.com/claim-deployment/<token>"
+      }
+    ],
+    "gotchas": [
+      "Skills activate automatically based on task context — do not hand-wire them per-prompt or you will fight the auto-detection",
+      "vercel-deploy-claimable excludes node_modules and .git; do not rely on shipped build artifacts inside those paths",
+      "Framework detection reads package.json, so a missing or incorrect framework field will pick the wrong preset",
+      "react-best-practices is a rules list, not a linter — agents must apply it explicitly during review; CI will not catch violations",
+      "web-design-guidelines includes prefers-reduced-motion checks; animation-heavy skills must not override those rules",
+      "These are agent skills, not runtime SDKs — installing them does not change your production bundle"
+    ],
+    "category": "platform",
+    "audience": "devops",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/vercel-labs/agent-skills"
+  }
+}

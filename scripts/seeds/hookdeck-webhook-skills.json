@@ -1,0 +1,75 @@
+{
+  "sourceUrl": "https://github.com/hookdeck/webhook-skills",
+  "skill": {
+    "name": "hookdeck-webhook-skills",
+    "description": "Use when receiving and verifying webhooks from Stripe, Shopify, GitHub, and 30+ other providers with signature verification, idempotency, and retry-safe handler patterns.",
+    "whenToUse": [
+      "Receiving and verifying a Stripe, Shopify, or GitHub webhook in Express, Next.js, or FastAPI",
+      "Choosing the right signature algorithm per provider (HMAC-SHA256, Ed25519, ECDSA, RSA)",
+      "Adding idempotency so retried webhook deliveries do not double-process",
+      "Tunneling localhost for webhook testing with the Hookdeck CLI",
+      "Handling async work outside the webhook request so the provider does not retry on timeout",
+      "Onboarding a new webhook provider with copy-pasteable verification code"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Skill-per-provider layout",
+        "explanation": "Each of the 37+ providers ships as its own skill with a SKILL.md entry point, references/verification.md, and examples/ folder containing Express, Next.js, and FastAPI implementations."
+      },
+      {
+        "term": "Signature verification matrix",
+        "explanation": "Different providers sign with different algorithms: HMAC-SHA256 (Stripe, Shopify, Slack, GitHub, Linear, Mailgun), HMAC-SHA1 (Twilio, Vercel), Ed25519 (Discord), ECDSA (SendGrid), RSA-SHA256 (PayPal). The skill maps each provider to the correct primitive."
+      },
+      {
+        "term": "Timing-safe comparison",
+        "explanation": "All verification code uses constant-time comparison (e.g. crypto.timingSafeEqual) instead of === so attackers cannot infer signature bytes from response timing."
+      },
+      {
+        "term": "Idempotency pattern",
+        "explanation": "The webhook-handler-patterns skill captures event IDs in a deduplication store so retries from the provider (or from Hookdeck) produce the same end state even when delivered multiple times."
+      },
+      {
+        "term": "Async processing handoff",
+        "explanation": "Handlers verify, enqueue, and respond 2xx quickly; the real work runs on a queue so providers do not retry due to slow handlers."
+      },
+      {
+        "term": "Hookdeck CLI localhost tunnel",
+        "explanation": "npx hookdeck-cli listen forwards inbound webhooks from a Hookdeck source to a local port and path so developers can test signature verification end-to-end without deploying."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add hookdeck/webhook-skills --skill stripe-webhooks",
+        "purpose": "Installs a single provider skill into the project so the agent has Stripe-specific verification and handler guidance.",
+        "example": "npx skills add hookdeck/webhook-skills --skill stripe-webhooks"
+      },
+      {
+        "signature": "/plugin install stripe-webhooks@webhook-skills",
+        "purpose": "Installs the Stripe webhook skill through the Claude Code plugin marketplace.",
+        "example": "/plugin install stripe-webhooks@webhook-skills"
+      },
+      {
+        "signature": "npx hookdeck-cli listen <port> <source> --path <path>",
+        "purpose": "Starts a Hookdeck CLI tunnel that forwards webhooks from a source (e.g. stripe) to a local server path.",
+        "example": "npx hookdeck-cli listen 3000 stripe --path /webhooks/stripe"
+      },
+      {
+        "signature": "stripe.webhooks.constructEvent(body, sig, secret)",
+        "purpose": "Reference signature verification entry point used by the Stripe webhook skill examples; parses the body, verifies the Stripe-Signature header, and returns a typed Event.",
+        "example": "const event = stripe.webhooks.constructEvent(\n  req.rawBody,\n  req.headers['stripe-signature'],\n  process.env.STRIPE_WEBHOOK_SECRET\n);"
+      }
+    ],
+    "gotchas": [
+      "Verifying the parsed JSON instead of the raw request body fails signature checks; frameworks must expose req.rawBody for Stripe-style HMAC.",
+      "Using === to compare signature bytes leaks timing information; always use a timing-safe comparison.",
+      "Responding 5xx or timing out causes providers to retry, so any non-idempotent handler will double-charge or double-create.",
+      "Reusing one webhook signing secret across staging and production lets a staging compromise replay into prod; rotate per-environment.",
+      "Clock skew between server and provider can cause replay-protection windows to reject legitimate events; sync NTP and allow a small tolerance.",
+      "Discord and SendGrid require Ed25519/ECDSA, not HMAC; the wrong primitive will silently always reject (or, worse, always accept)."
+    ],
+    "category": "api",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/hookdeck/webhook-skills"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "sourceUrl": "https://github.com/lackeyjb/playwright-skill",
+  "skill": {
+    "name": "playwright-skill",
+    "description": "Use when a Claude Code agent needs to autonomously write and run custom Playwright code — visible browser by default, screenshots and console output returned.",
+    "whenToUse": [
+      "Asking Claude to test a homepage or specific user flow end-to-end",
+      "Checking that a contact form submits correctly",
+      "Taking screenshots of a dashboard at mobile and desktop sizes",
+      "Verifying that all images on a page load without errors",
+      "Driving a multi-step browser workflow that doesn't fit a pre-written test",
+      "Watching the browser in real time while the agent works"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Model-invoked skill",
+        "explanation": "Claude autonomously decides when to apply this skill based on the user's request. SKILL.md stays minimal so loading it costs few tokens, and an optional API_REFERENCE.md is pulled in only when deeper detail is needed (progressive disclosure)."
+      },
+      {
+        "term": "Custom code generation",
+        "explanation": "Unlike template-based testing skills, this one has Claude write tailored Playwright code per task. There are no pre-built test suites — the agent generates, executes, and reports results in one loop."
+      },
+      {
+        "term": "Visible browser default",
+        "explanation": "Default configuration launches with headless: false, 100ms slow motion, and a 30-second timeout so the user can watch automation happen. Screenshots are written to /tmp/ for inspection after each run."
+      },
+      {
+        "term": "Universal executor (run.js)",
+        "explanation": "All generated scripts are executed through run.js, which sets up proper module resolution. This avoids the 'cannot find module playwright' class of errors when the skill is installed outside the project's node_modules."
+      },
+      {
+        "term": "Plugin vs standalone install",
+        "explanation": "The skill can be installed as a Claude Code plugin (recommended) or extracted as a standalone skill into ~/.claude/skills/. The plugin path uses /plugin marketplace add lackeyjb/playwright-skill; the standalone path requires extracting the inner skills/playwright-skill/ folder."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add lackeyjb/playwright-skill",
+        "purpose": "Recommended install path — registers the skill as a Claude Code plugin so it loads in every session.",
+        "example": "/plugin marketplace add lackeyjb/playwright-skill"
+      },
+      {
+        "signature": "Standalone install into ~/.claude/skills/",
+        "purpose": "Manual install — extract the inner skills/playwright-skill/ directory to the user-level Claude skills folder.",
+        "example": "# from a clone of the repo\ncp -r skills/playwright-skill ~/.claude/skills/\ncd ~/.claude/skills/playwright-skill && npm run setup"
+      },
+      {
+        "signature": "npm run setup",
+        "purpose": "Install Node dependencies (Playwright + browser binaries) so the skill can launch Chromium.",
+        "example": "npm run setup"
+      },
+      {
+        "signature": "Default config (headless: false, slowMo: 100, timeout: 30000)",
+        "purpose": "Out-of-the-box settings tuned for interactive observation rather than CI throughput.",
+        "example": "// defaults applied by run.js\n{\n  headless: false,\n  slowMo: 100,\n  timeout: 30000,\n  screenshotDir: \"/tmp/\"\n}"
+      },
+      {
+        "signature": "Natural-language invocation",
+        "purpose": "Trigger the skill by describing the test in plain English — Claude decides whether the skill applies.",
+        "example": "Test the homepage\nCheck if the contact form works\nTake screenshots of the dashboard in mobile and desktop\nVerify all images load"
+      }
+    ],
+    "gotchas": [
+      "Requires Node.js and a one-time `npm run setup` to install Playwright browser binaries before first use",
+      "Default is headless: false — automation pops a visible browser window, which surprises users expecting CI-style runs",
+      "Generated scripts must be executed via run.js for module resolution to work; invoking node directly will fail",
+      "Standalone install requires extracting the inner skills/playwright-skill/ folder, not the repo root — the nested structure is intentional",
+      "Documentation says this works in Claude Code; compatibility with other clients (Cursor, Codex) is not claimed",
+      "Screenshots default to /tmp/ — on shared machines, clean them up to avoid leaking page content"
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/lackeyjb/playwright-skill"
+  }
+}

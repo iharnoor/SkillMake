@@ -1,0 +1,74 @@
+{
+  "sourceUrl": "https://resend.com/claude-code",
+  "skill": {
+    "name": "resend-email-skill",
+    "description": "Use when sending single, batch, or scheduled transactional emails via Resend with React Email templates, using Resend's official Claude Code skill and MCP server.",
+    "whenToUse": [
+      "Sending a single transactional email through resend.emails.send",
+      "Batching up to 100 emails in one request to Resend",
+      "Scheduling emails for future delivery via Resend",
+      "Authoring email templates as React Email components",
+      "Adding idempotency keys so retries do not duplicate sends",
+      "Wiring the Resend MCP server into Claude Code for email workflows"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Resend agent skill",
+        "explanation": "An installable skill bundle that teaches AI agents Resend's idioms: it activates automatically when an email task is detected and produces production-ready code that follows Resend best practices."
+      },
+      {
+        "term": "Resend MCP server",
+        "explanation": "A Model Context Protocol server exposing 56+ Resend tools to Claude Code via npx -y resend-mcp, authenticated with a RESEND_API_KEY environment variable."
+      },
+      {
+        "term": "Batch send",
+        "explanation": "A single API call that delivers up to 100 emails per request, useful for transactional fan-out like welcome flows or order confirmations without hitting per-request overhead."
+      },
+      {
+        "term": "Idempotency key",
+        "explanation": "A client-supplied string sent with the request so safe retries (network errors, timeouts) do not result in duplicate emails. Resend dedupes against the key for a bounded window."
+      },
+      {
+        "term": "Automatic retries with backoff",
+        "explanation": "The skill recommends exponential backoff for transient 5xx and network failures so transient infrastructure issues do not drop legitimate sends."
+      },
+      {
+        "term": "React Email templates",
+        "explanation": "Email bodies are authored as React components, letting agents share design tokens with the web app and render to HTML at send time instead of hand-writing table-based markup."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "claude mcp add resend -e RESEND_API_KEY=re_xxx -- npx -y resend-mcp",
+        "purpose": "Registers the Resend MCP server with Claude Code so the agent can call Resend tools directly.",
+        "example": "claude mcp add resend \\\n  -e RESEND_API_KEY=re_xxxxxxxxx \\\n  -- npx -y resend-mcp"
+      },
+      {
+        "signature": "npx skills add resend/resend-skills",
+        "purpose": "Installs the Resend agent skill bundle so compatible agents pick up Resend best practices automatically.",
+        "example": "npx skills add resend/resend-skills"
+      },
+      {
+        "signature": "resend.emails.send({from, to, subject, react})",
+        "purpose": "Sends a single transactional email using a React Email component as the body.",
+        "example": "await resend.emails.send({\n  from: 'you@yourdomain.com',\n  to: 'user@example.com',\n  subject: 'Welcome',\n  react: <WelcomeEmail name=\"Ada\" />\n});"
+      },
+      {
+        "signature": "resend.batch.send(emails[])",
+        "purpose": "Sends up to 100 emails in one API call for transactional fan-out workloads.",
+        "example": "await resend.batch.send([\n  { from, to: 'a@example.com', subject: 'Hi', react: <Tpl/> },\n  { from, to: 'b@example.com', subject: 'Hi', react: <Tpl/> }\n]);"
+      }
+    ],
+    "gotchas": [
+      "RESEND_API_KEY must be set in the MCP env block; missing it leaves the agent unable to send and surfaces a vague auth error.",
+      "Batch send is capped at 100 messages per request; larger lists must be chunked client-side.",
+      "Without an idempotency key, network retries can deliver the same email multiple times to the recipient.",
+      "The from address must use a verified domain in Resend; unverified domains fail with 403 from_address_not_verified.",
+      "React Email components must be serializable to HTML at send time; runtime hooks or browser-only APIs throw.",
+      "Scheduled sends use Resend's clock, not the caller's; off-by-timezone bugs are common when passing local datetimes."
+    ],
+    "category": "api",
+    "audience": "engineers",
+    "videoUrls": []
+  }
+}

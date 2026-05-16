@@ -1,0 +1,85 @@
+{
+  "sourceUrl": "https://ui.shadcn.com/docs/skills",
+  "skill": {
+    "name": "shadcn-ui-skill",
+    "description": "Use when wiring shadcn/ui into a project so an AI agent reads components.json, runs the shadcn CLI, and composes registry components correctly.",
+    "whenToUse": [
+      "Adding a shadcn/ui component to a Next.js or Vite project",
+      "Building a login, settings, or dashboard form with shadcn primitives",
+      "Switching color presets, OKLCH tokens, or dark mode on a shadcn theme",
+      "Publishing or consuming a custom shadcn registry (registry.json)",
+      "Wiring the shadcn MCP server for component search and install",
+      "Migrating between Tailwind v3 and v4 with shadcn variables"
+    ],
+    "keyConcepts": [
+      {
+        "term": "components.json detection",
+        "explanation": "The skill activates when a components.json file is present at the project root. It runs `shadcn info --json` to read framework, Tailwind version, path aliases, base library (radix or base), icon library, and the list of already-installed components, then injects that into the agent's context."
+      },
+      {
+        "term": "shadcn CLI",
+        "explanation": "Primary surface for installing and inspecting components. The skill documents the commands init, add, search, view, docs, diff, info, and build, including flags, dry-run mode, smart merge workflows, presets, and templates."
+      },
+      {
+        "term": "Registry authoring",
+        "explanation": "Publishers describe components in a registry.json file with item types, dependencies, CSS variables, and hosting rules. The skill knows how to author and consume custom registries so agents can pull blocks from third parties (e.g. @tailark)."
+      },
+      {
+        "term": "Composition rules",
+        "explanation": "shadcn enforces composition patterns the skill teaches the agent: FieldGroup for grouped form fields, ToggleGroup for option selectors, and semantic color tokens (background, foreground, primary, muted) instead of raw Tailwind hues."
+      },
+      {
+        "term": "MCP server integration",
+        "explanation": "Optional shadcn MCP server exposes tools for searching the registry, browsing components, and installing from inside the agent — used before code generation so the agent picks an existing block over hand-rolling markup."
+      },
+      {
+        "term": "Tailwind v3 vs v4 awareness",
+        "explanation": "The skill carries customization knowledge for both Tailwind versions: CSS variables, OKLCH color definitions, dark mode strategy, custom colors, border radius scales, and component variants — and adapts output to whichever version components.json reports."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "pnpm dlx skills add shadcn/ui",
+        "purpose": "Install the official shadcn/ui skill into the current project for any compatible coding agent.",
+        "example": "pnpm dlx skills add shadcn/ui"
+      },
+      {
+        "signature": "shadcn info --json",
+        "purpose": "Print the current project's shadcn config (framework, Tailwind version, aliases, base, icons, installed components) as JSON for context injection.",
+        "example": "shadcn info --json"
+      },
+      {
+        "signature": "shadcn add <component>",
+        "purpose": "Add a component or block from the default or a custom registry into the local codebase, respecting aliases in components.json.",
+        "example": "shadcn add button\nshadcn add login-01\nshadcn add @tailark/hero-section"
+      },
+      {
+        "signature": "shadcn search <query>",
+        "purpose": "Search registries for matching components or blocks before generating new code, so the agent reuses existing primitives.",
+        "example": "shadcn search login"
+      },
+      {
+        "signature": "shadcn docs <component>",
+        "purpose": "Pull official documentation for a component (props, slots, examples) into the agent's context window before writing usage code.",
+        "example": "shadcn docs dialog"
+      },
+      {
+        "signature": "shadcn build",
+        "purpose": "Build a custom registry from a registry.json file, producing the JSON payloads other projects can consume via `shadcn add`.",
+        "example": "shadcn build"
+      }
+    ],
+    "gotchas": [
+      "The skill only activates when components.json exists — running it in a project without shadcn initialized produces no context",
+      "Agents must call `shadcn docs`, `shadcn search`, or the MCP tools before generating component code, not hand-roll markup",
+      "Always use semantic color tokens (primary, muted, background) — raw Tailwind colors like bg-blue-500 violate shadcn composition rules",
+      "Form fields must be wrapped in FieldGroup and option selectors in ToggleGroup; flat divs break shadcn patterns",
+      "Tailwind v3 and v4 have different CSS variable formats — let `shadcn info --json` decide which version's customization rules apply",
+      "Installing from a third-party registry (e.g. @tailark) requires that registry to be configured in components.json first"
+    ],
+    "category": "library",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/shadcn-ui/ui"
+  }
+}

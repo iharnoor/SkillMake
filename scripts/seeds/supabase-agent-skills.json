@@ -1,0 +1,67 @@
+{
+  "sourceUrl": "https://github.com/supabase/agent-skills",
+  "skill": {
+    "name": "supabase-agent-skills",
+    "description": "Use when an AI agent needs grounded Supabase knowledge — Postgres, Auth, RLS, Storage, Edge Functions, Realtime, Vectors, Cron, and Queues — installed as official skills.",
+    "whenToUse": [
+      "Bootstrapping a new Supabase project with an AI coding agent",
+      "Debugging auth issues — sessions, JWTs, cookies, getUser, getClaims",
+      "Writing or auditing Row Level Security policies",
+      "Tuning Postgres query performance and connection pooling on Supabase",
+      "Deploying Edge Functions or wiring Realtime subscriptions",
+      "Choosing between client-side and SSR Supabase clients in Next.js",
+      "Reviewing schema design and concurrency patterns before scale"
+    ],
+    "keyConcepts": [
+      {
+        "term": "supabase skill",
+        "explanation": "The comprehensive skill covering all Supabase products: Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, and Queues. It also covers client libraries and SSR integrations so the agent knows when to reach for supabase-js vs @supabase/ssr."
+      },
+      {
+        "term": "supabase-postgres-best-practices",
+        "explanation": "Performance optimization guide organized into 8 categories: Query Performance, Connection Management, Schema Design, Concurrency & Locking, Security & RLS, Data Access Patterns, Monitoring & Diagnostics, and Advanced Features. Used as a checklist when reviewing schemas, indexes, and queries."
+      },
+      {
+        "term": "Agent Skills Open Standard",
+        "explanation": "Every skill in the repo follows the Agent Skills Open Standard: a SKILL.md manifest with frontmatter is required, and a references/ folder holds optional deep docs. This makes skills portable across Claude Code, Cursor, Cline, GitHub Copilot, and 18+ other agents."
+      },
+      {
+        "term": "Auth troubleshooting surface",
+        "explanation": "The supabase skill explicitly scopes auth troubleshooting to login, logout, sessions, JWT handling, cookies, getSession, getUser, getClaims, and RLS — so the agent stops at the right boundary instead of inventing fixes for unrelated symptoms."
+      },
+      {
+        "term": "Claude Code plugin marketplace",
+        "explanation": "In addition to the generic skills installer, Supabase ships the same content as a Claude Code plugin. The plugin marketplace command registers the source, and a second install command pins the specific plugin id so updates flow through Claude Code's plugin system."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add supabase/agent-skills",
+        "purpose": "Install every skill from supabase/agent-skills into the local agent.",
+        "example": "npx skills add supabase/agent-skills"
+      },
+      {
+        "signature": "npx skills add supabase/agent-skills --skill <name>",
+        "purpose": "Install only one skill — for example just supabase or just supabase-postgres-best-practices.",
+        "example": "npx skills add supabase/agent-skills --skill supabase"
+      },
+      {
+        "signature": "claude plugin marketplace add / plugin install",
+        "purpose": "Register supabase/agent-skills as a Claude Code plugin marketplace source, then install the supabase plugin from it so it tracks updates via Claude Code.",
+        "example": "claude plugin marketplace add supabase/agent-skills\nclaude plugin install supabase@supabase-agent-skills"
+      }
+    ],
+    "gotchas": [
+      "Skills are passive — they only fire when the agent detects a Supabase task; do not expect them to run on every prompt",
+      "Use Supabase's official MCP / skill rather than scraping the public docs; the skill is the canonical source",
+      "RLS policies are part of the auth troubleshooting surface — fixing 'permission denied' often means editing policy SQL, not changing client code",
+      "@supabase/ssr is a different package from @supabase/supabase-js; mixing them in a Next.js app breaks cookie-based sessions",
+      "Edge Functions, Realtime, and Storage each have their own quotas and gotchas — do not treat them as a single 'Supabase' surface",
+      "Performance issues usually trace back to one of the 8 Postgres categories (queries, connections, schema, concurrency, security, access, monitoring, advanced) — diagnose in that order"
+    ],
+    "category": "platform",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/supabase/agent-skills"
+  }
+}
