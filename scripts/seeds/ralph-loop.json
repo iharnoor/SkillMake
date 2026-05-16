@@ -1,0 +1,53 @@
+{
+  "sourceUrl": "https://ghuntley.com/loop/",
+  "skill": {
+    "name": "ralph-loop",
+    "description": "Use when you want Geoffrey Huntley's 'while true' autonomous agent loop — a monolithic single-process pattern that throws tokens at a goal until the codebase converges.",
+    "whenToUse": [
+      "You have a clear PRD-style goal and want the agent to iterate toward it unattended",
+      "You want one task per loop, one repo, one process — instead of microservice agent swarms",
+      "Building self-healing systems where the agent identifies, fixes, and verifies issues automatically",
+      "You're ready to 'watch the loop' manually before letting it run continuously",
+      "Treating software as clay on a pottery wheel rather than brick-by-brick Jenga",
+      "You want a pattern that scales by spending more LLM tokens, not more architecture"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Monolithic single-process design",
+        "explanation": "Huntley states: 'Ralph is monolithic. Ralph works autonomously in a single repository as a single process that performs one task per loop.' This deliberately avoids the non-deterministic complexity of microservice or multi-agent architectures."
+      },
+      {
+        "term": "One task per loop iteration",
+        "explanation": "Each iteration tackles exactly one task drawn from the backing specifications array. The loop body is small — Huntley describes it as '300 lines of code running in a loop with LLM tokens' — and the work compounds across iterations."
+      },
+      {
+        "term": "Pottery wheel vs Jenga",
+        "explanation": "The architectural metaphor: instead of building vertically brick-by-brick (Jenga, where one bad block topples everything), treat the codebase as clay on a pottery wheel that you continuously shape across loop iterations."
+      },
+      {
+        "term": "Backing specifications array",
+        "explanation": "You allocate an array of required specifications and define a single goal, then loop the goal. The array drives what 'done' looks like; the loop drives convergence toward it."
+      },
+      {
+        "term": "Manual observation before automation",
+        "explanation": "Engineers should run the loop manually first — pausing with CTRL+C between iterations — to understand failure domains before letting it run unattended. 'Watch the loop' is explicit guidance, not optional."
+      },
+      {
+        "term": "Token-throwing as a strategy",
+        "explanation": "'You just keep throwing tokens at the loop.' The pattern bets on LLM capability and continuous iteration over upfront cleverness — convergence comes from cycles, not from a perfect first pass."
+      }
+    ],
+    "apiReference": [],
+    "gotchas": [
+      "Huntley explicitly cautions: 'don't use it if your name is not Geoffrey Huntley' — the pattern demands maturity with autonomous agents",
+      "No formal convergence guarantees — the loop can churn forever on goals that aren't well-specified",
+      "Requires continuous supervision at first; the 'watch the loop' phase is mandatory before automation",
+      "The essay gives no explicit cost controls or safety guardrails — runaway token spend is on you",
+      "Monolithic single-process design is a feature, not a limitation; resist the urge to fan out into microservice agents",
+      "Without a tight backing specifications array, 'one task per loop' degenerates into aimless tinkering"
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "videoUrls": []
+  }
+}

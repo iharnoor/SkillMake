@@ -1,0 +1,65 @@
+{
+  "sourceUrl": "https://github.com/VoltAgent/awesome-agent-skills",
+  "skill": {
+    "name": "voltagent-awesome",
+    "description": "Use when discovering or installing real agent skills for Claude Code, Codex, Cursor, Gemini CLI, or Copilot — a curated index of 1,100+ skills from official dev teams and the community.",
+    "whenToUse": [
+      "Searching for an existing skill before building one from scratch",
+      "Finding officially published skills from Anthropic, Vercel, Cloudflare, Stripe, or Microsoft",
+      "Picking a skill compatible with Claude Code, Codex, Cursor, Gemini CLI, Copilot, OpenCode, or Windsurf",
+      "Browsing skills by publisher (Google, Hugging Face, Figma, WordPress, OpenAI)",
+      "Submitting a community skill via CONTRIBUTING.md",
+      "Validating that a candidate skill isn't AI-mass-generated"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Curated awesome list",
+        "explanation": "The repo is a hand-maintained awesome-list of 1,100+ agent skills. The maintainers explicitly filter for 'real-world Agent Skills created and used by actual engineering teams, not mass AI-generated stuff,' which is the main signal that distinguishes it from auto-generated indexes."
+      },
+      {
+        "term": "Agent skill",
+        "explanation": "A reusable capability bundle that extends an AI coding agent's functionality — a modular knowledge package (typically a SKILL.md plus optional scripts and references) that an agent invokes to accomplish a specific task like running tests, deploying to a platform, or following a framework's conventions."
+      },
+      {
+        "term": "Multi-client compatibility",
+        "explanation": "Skills in the index target Claude Code, Codex, Gemini CLI, Cursor, GitHub Copilot, OpenCode, and Windsurf. Some skills are portable across all of these; others are client-specific (e.g. a Claude Code plugin won't load in Cursor). Compatibility is listed per-skill."
+      },
+      {
+        "term": "Publisher organization",
+        "explanation": "Skills are grouped by publisher rather than by category. Official sections include Anthropic, Google (Gemini, Labs, Workspace), Microsoft (133 skills across 6 languages), Vercel, Cloudflare, Netlify, Stripe, Hugging Face, Figma, WordPress, OpenAI, and 40+ others, plus a community section."
+      },
+      {
+        "term": "officialskills.sh discovery",
+        "explanation": "The repo references officialskills.sh as a companion discovery platform with 300k+ monthly views, suggesting a hosted index where skills can be searched and previewed before installation into a project."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Browse the README index",
+        "purpose": "Scan the publisher-grouped table of contents in the repository README to find a skill matching your task before authoring a new one.",
+        "example": "# Open https://github.com/VoltAgent/awesome-agent-skills\n# Use Ctrl-F to search publisher names: 'Anthropic', 'Vercel', 'Stripe'"
+      },
+      {
+        "signature": "officialskills.sh",
+        "purpose": "Companion discovery platform for searching agent skills outside GitHub.",
+        "example": "https://officialskills.sh"
+      },
+      {
+        "signature": "CONTRIBUTING.md",
+        "purpose": "Open contribution model — submit a PR adding your skill to the appropriate publisher or community section, following the format used by existing entries.",
+        "example": "# See https://github.com/VoltAgent/awesome-agent-skills/blob/main/CONTRIBUTING.md\n# Add your entry under the right publisher section in README.md"
+      }
+    ],
+    "gotchas": [
+      "Compatibility varies per skill — a Claude Code plugin may not load in Cursor or Gemini CLI, always check the listed clients",
+      "Individual skills reference different SDKs and frameworks; matching client support isn't guaranteed by inclusion in the list",
+      "The index isn't a package manager — you still install each skill through its own client-specific mechanism",
+      "Maintainers filter against mass AI-generated submissions, so contributions should reflect actual production usage",
+      "Counts (1,100+ skills, 133 Microsoft skills) drift over time as PRs land — treat them as approximate"
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/VoltAgent/awesome-agent-skills"
+  }
+}

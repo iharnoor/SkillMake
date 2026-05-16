@@ -1,0 +1,71 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/webapp-testing",
+  "skill": {
+    "name": "anthropic-webapp-testing",
+    "description": "Use when testing a local web app with Anthropic's official Playwright skill — manages dev servers, drives the browser, captures screenshots, and inspects DOM/console.",
+    "whenToUse": [
+      "Verifying a feature on a local Next.js, Vite, or static dev server",
+      "Debugging UI state by inspecting the rendered DOM after JS runs",
+      "Capturing screenshots as evidence of frontend behavior",
+      "Watching browser console output during automation",
+      "Spinning up one or more dev servers for the duration of a test",
+      "Reading static HTML directly vs driving a dynamic SPA"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Python Playwright scripts",
+        "explanation": "The skill is built on native Python Playwright (sync_playwright), not the JS port. Agents author small Python scripts per task rather than pre-built test suites, then execute them against the local app."
+      },
+      {
+        "term": "Decision tree",
+        "explanation": "The recommended workflow: determine if the app is static HTML (read directly) or dynamic; if dynamic, check whether the server is running; if not, use with_server.py to manage lifecycle; do reconnaissance (screenshot/DOM) before actions; then identify selectors from rendered state."
+      },
+      {
+        "term": "with_server.py helper",
+        "explanation": "A bundled script under scripts/ that starts a dev server, waits for it to be ready, runs the automation script, and tears down the server. Supports single or multiple concurrent servers. Treat it as a black box — always invoke with --help first."
+      },
+      {
+        "term": "networkidle wait",
+        "explanation": "Before inspecting the DOM on a dynamic app, call page.wait_for_load_state('networkidle'). This ensures JavaScript has finished loading data and rendering before the agent picks selectors, preventing incomplete element discovery."
+      },
+      {
+        "term": "Reconnaissance-first pattern",
+        "explanation": "Take a screenshot or DOM snapshot before clicking anything. Selectors should come from what the page actually renders, not assumptions — this avoids brittle automation against stale templates."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "python scripts/with_server.py --server <cmd> --port <n> -- <automation>",
+        "purpose": "Start a local dev server, wait until it's ready on the given port, run the automation script, then shut the server down.",
+        "example": "python scripts/with_server.py --server \"npm run dev\" --port 5173 -- python your_automation.py"
+      },
+      {
+        "signature": "sync_playwright() context",
+        "purpose": "Open a synchronous Playwright session, launch a browser, drive the page, and close everything explicitly.",
+        "example": "from playwright.sync_api import sync_playwright\n\nwith sync_playwright() as p:\n    browser = p.chromium.launch()\n    page = browser.new_page()\n    page.goto(\"http://localhost:5173\")\n    page.wait_for_load_state(\"networkidle\")\n    page.screenshot(path=\"/tmp/home.png\")\n    browser.close()"
+      },
+      {
+        "signature": "page.wait_for_load_state('networkidle')",
+        "purpose": "Block until the page has no in-flight network requests for 500ms — required before DOM inspection on dynamic apps.",
+        "example": "page.goto(url)\npage.wait_for_load_state(\"networkidle\")\n# now safe to query selectors"
+      },
+      {
+        "signature": "Selector strategies: text=, role=, css, ids",
+        "purpose": "Prefer descriptive, semantic selectors over brittle xpath; the skill recommends text=, role=, plain CSS, and IDs.",
+        "example": "page.get_by_role(\"button\", name=\"Sign in\").click()\npage.locator(\"text=Welcome\").wait_for()\npage.locator(\"#email\").fill(\"a@b.com\")"
+      }
+    ],
+    "gotchas": [
+      "Do not inspect the DOM before page.wait_for_load_state('networkidle') on dynamic apps — element discovery will be incomplete",
+      "Treat bundled scripts as black boxes — read --help and invoke directly rather than editing or importing them",
+      "Always close browsers explicitly with browser.close() to avoid leaking processes on the dev machine",
+      "Static HTML pages should be read directly, not driven through Playwright — pick the right path in the decision tree",
+      "with_server.py is the only supported way to manage server lifecycle for the skill — don't hand-roll background processes",
+      "The skill is Python-based — JS Playwright bindings won't share its helpers or conventions"
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}

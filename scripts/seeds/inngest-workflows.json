@@ -1,0 +1,75 @@
+{
+  "sourceUrl": "https://github.com/inngest/inngest-js/blob/main/CLAUDE.md",
+  "skill": {
+    "name": "inngest-workflows",
+    "description": "Use when building durable, event-driven background jobs, crons, and saga/fan-out workflows with Inngest's step functions and automatic retries.",
+    "whenToUse": [
+      "Writing an Inngest function that survives crashes via step-based durable execution",
+      "Triggering a workflow from an event like app/user.signup",
+      "Scheduling a cron-based job that runs on a schedule",
+      "Fan-out: dispatching many child events or invocations from one parent function",
+      "Implementing a saga that waits for follow-up events with step.waitForEvent",
+      "Plugging Inngest into Next.js, Express, or SvelteKit via a framework adapter"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Durable execution",
+        "explanation": "Inngest persists the result of each completed step, so when a function is retried after a crash or timeout, prior steps replay from memoized state instead of running again. This turns ordinary async code into a fault-tolerant workflow."
+      },
+      {
+        "term": "Event-driven trigger",
+        "explanation": "Functions declare triggers (events or crons) instead of being called directly. Sending an event with inngest.send fans the event out to every function whose trigger matches, decoupling producers from consumers."
+      },
+      {
+        "term": "Step functions",
+        "explanation": "Inside a function handler, step.run wraps a unit of work so it is retried independently with its own backoff. step.sleep, step.sleepUntil, step.waitForEvent, and step.invoke compose long-running flows without holding a process open."
+      },
+      {
+        "term": "Automatic retries",
+        "explanation": "Any throw inside a step triggers Inngest's retry policy with exponential backoff. Because steps are memoized, only the failing step re-runs, not the whole function."
+      },
+      {
+        "term": "Framework adapters",
+        "explanation": "The SDK ships adapters for 15+ frameworks (Next.js, Express, SvelteKit, etc.) that expose a single /api/inngest endpoint Inngest calls to invoke registered functions."
+      },
+      {
+        "term": "Middleware plugin architecture",
+        "explanation": "An extensible middleware system lets teams inject logging, auth, tracing, or custom serialization around every function and step without forking the SDK."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "inngest.createFunction({id, triggers}, async ({event, step}) => {...})",
+        "purpose": "Defines a durable function bound to one or more event/cron triggers; the handler receives the triggering event and a step API.",
+        "example": "export default inngest.createFunction(\n  {\n    id: \"user-onboarding-communication\",\n    triggers: [{ event: \"app/user.signup\" }],\n  },\n  async ({ event, step }) => {\n    await step.run(\"Send welcome email\", async () => {\n      await sendEmail({\n        email: event.data.email,\n        template: \"welcome\",\n      });\n    });\n  }\n);"
+      },
+      {
+        "signature": "inngest.send(eventName, {data})",
+        "purpose": "Publishes an event into Inngest; every function whose trigger matches will be invoked durably.",
+        "example": "inngest.send(\"app/user.signup\", {\n  data: { email: \"text@example.com\", user_id: \"12345\" },\n});"
+      },
+      {
+        "signature": "step.run(name, async () => {...})",
+        "purpose": "Wraps a unit of work in a memoized, independently retried step; the return value is persisted and replayed on re-invocation.",
+        "example": "const user = await step.run(\"load-user\", async () => {\n  return await db.users.findById(event.data.user_id);\n});"
+      },
+      {
+        "signature": "triggers: [{ cron: \"0 * * * *\" }]",
+        "purpose": "Schedules a function to run on a cron expression instead of an event.",
+        "example": "inngest.createFunction(\n  { id: \"hourly-rollup\", triggers: [{ cron: \"0 * * * *\" }] },\n  async ({ step }) => { await step.run(\"rollup\", rollup); }\n);"
+      }
+    ],
+    "gotchas": [
+      "Do not call non-deterministic code (Date.now, Math.random, fetch) outside step.run; on retry the function replays and divergent values break memoization.",
+      "Each step.run name must be stable and unique within a function; reusing names or building names from random values corrupts replay.",
+      "step.sleep persists; if you sleep for 7 days the function stays addressable that long and event keys must keep working.",
+      "Throwing outside step.run aborts the whole function without retry granularity; wrap risky work in steps to get per-step retries.",
+      "The /api/inngest endpoint must be reachable from Inngest's control plane; local dev requires the Inngest dev server or a tunnel.",
+      "Large step return values are persisted on every run; avoid returning huge blobs from step.run, store a reference instead."
+    ],
+    "category": "library",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/inngest/inngest-js"
+  }
+}

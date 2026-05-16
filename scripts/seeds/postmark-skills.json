@@ -1,0 +1,74 @@
+{
+  "sourceUrl": "https://postmarkapp.com/blog/teach-your-ai-coding-agent-how-to-send-email-with-postmark-skills",
+  "skill": {
+    "name": "postmark-skills",
+    "description": "Use when teaching an AI coding agent to send transactional email through Postmark with templates, inbound parsing, webhooks, and deliverability monitoring.",
+    "whenToUse": [
+      "Sending a transactional email via Postmark from an AI-generated code path",
+      "Batching up to 500 messages in a single Postmark request",
+      "Processing inbound email and routing replies via MailboxHash",
+      "Authoring server-side Handlebars templates with layout inheritance",
+      "Wiring delivery, bounce, open, and click webhooks",
+      "Setting up SPF, DKIM, and DMARC for a sending domain"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Postmark agent skill bundle",
+        "explanation": "Five skill packs that act as instruction manuals an AI agent reads before writing Postmark code: send-email, inbound, templates, webhooks, and best practices."
+      },
+      {
+        "term": "Message Streams",
+        "explanation": "Postmark separates transactional and broadcast traffic into distinct streams so deliverability of one-to-one mail is not impacted by bulk sends; the skill enforces choosing the right stream per call."
+      },
+      {
+        "term": "Batch send",
+        "explanation": "A single API call delivers up to 500 messages, with each entry receiving its own MessageID and ErrorCode so partial failures are inspectable without retrying the whole batch."
+      },
+      {
+        "term": "Handlebars templates with layouts",
+        "explanation": "Server-side templates support layout inheritance and validation, so a base layout owns header/footer and per-message templates inject body content; templates can be deployed between staging and production."
+      },
+      {
+        "term": "Inbound MailboxHash",
+        "explanation": "An inbound address like reply+abc123@inbound.example.com routes the abc123 token to the webhook as MailboxHash, enabling reply-by-email threading and email-to-ticket flows."
+      },
+      {
+        "term": "Webhook events",
+        "explanation": "Postmark posts JSON to a configured URL for delivery, bounce, open, click, spam complaint, and subscription change events; the skill documents payload shapes and recommended handler patterns."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add ActiveCampaign/postmark-skills",
+        "purpose": "Installs the full Postmark agent skill bundle for any compatible coding agent.",
+        "example": "npx skills add ActiveCampaign/postmark-skills"
+      },
+      {
+        "signature": "npx skills add ActiveCampaign/postmark-skills --skill postmark-send-email",
+        "purpose": "Installs only the send-email skill when other Postmark capabilities are not needed.",
+        "example": "npx skills add ActiveCampaign/postmark-skills --skill postmark-send-email"
+      },
+      {
+        "signature": "POST /email with X-Postmark-Server-Token",
+        "purpose": "Single transactional send authenticated by a per-server token; required headers and JSON body shape are taught by the send-email skill.",
+        "example": "POST https://api.postmarkapp.com/email\nX-Postmark-Server-Token: <server-token>\n{\n  \"From\": \"you@example.com\",\n  \"To\": \"user@example.com\",\n  \"Subject\": \"Hello\",\n  \"HtmlBody\": \"<p>Hi</p>\",\n  \"MessageStream\": \"outbound\"\n}"
+      },
+      {
+        "signature": "POST /email/batch (up to 500 messages)",
+        "purpose": "Sends up to 500 emails in one request; each result row contains its own ErrorCode and MessageID.",
+        "example": "POST https://api.postmarkapp.com/email/batch\n[\n  { \"From\": \"you@example.com\", \"To\": \"a@example.com\", \"Subject\": \"Hi\", \"TextBody\": \"...\" },\n  { \"From\": \"you@example.com\", \"To\": \"b@example.com\", \"Subject\": \"Hi\", \"TextBody\": \"...\" }\n]"
+      }
+    ],
+    "gotchas": [
+      "Server tokens authenticate to a specific Postmark server; using a token from the wrong server returns 401 and the email is silently not sent.",
+      "Choosing the broadcast stream for a transactional send hurts deliverability and may violate Postmark's terms.",
+      "Batch responses are arrays even on partial failure; callers must iterate ErrorCode per row instead of trusting the HTTP status.",
+      "Inbound MailboxHash only populates when the address contains a + token; sending to the bare inbound address yields empty MailboxHash.",
+      "Webhooks must be HTTPS and respond 200 quickly; long handlers cause Postmark to retry and double-deliver events.",
+      "Sending from an unverified domain or without SPF/DKIM aligned will degrade reputation; the best-practices skill enforces DMARC alignment."
+    ],
+    "category": "api",
+    "audience": "engineers",
+    "videoUrls": []
+  }
+}

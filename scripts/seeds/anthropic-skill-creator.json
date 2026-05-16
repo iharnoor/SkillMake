@@ -1,0 +1,75 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/skill-creator",
+  "skill": {
+    "name": "anthropic-skill-creator",
+    "description": "Use when authoring, evaluating, or packaging a new Claude agent skill — the official Anthropic skill-creator walks you from intent capture to a graded eval and a shippable bundle.",
+    "whenToUse": [
+      "Drafting a new SKILL.md and unsure what frontmatter and structure Anthropic expects",
+      "Tightening a skill's description so it triggers reliably without overfiring",
+      "Running a side-by-side eval comparing with-skill vs baseline runs of Claude",
+      "Aggregating benchmark scores across an iteration directory of eval runs",
+      "Packaging a skill folder into a distributable artifact",
+      "Iterating on a skill by spawning new iteration-N directories and re-running evals"
+    ],
+    "keyConcepts": [
+      {
+        "term": "SKILL.md frontmatter",
+        "explanation": "Every skill starts with YAML frontmatter containing at minimum `name` and `description`. The reference skill uses: name: skill-creator, description: 'Create new skills, modify and improve existing skills, and measure skill performance.'"
+      },
+      {
+        "term": "Pushy descriptions",
+        "explanation": "The skill-creator advises writing the description 'a little bit pushy' to combat undertriggering. A passive description leaves the model uncertain about when to load the skill; an assertive one biases toward correct activation."
+      },
+      {
+        "term": "Five-stage workflow",
+        "explanation": "Authoring follows Capture Intent → Interview & Research → Write SKILL.md → Test & Evaluate → Iterate. Each stage gates the next: you do not write SKILL.md until edge cases, formats, and success criteria are explicit."
+      },
+      {
+        "term": "Parallel eval runs",
+        "explanation": "When evaluating, you 'Spawn all runs (with-skill AND baseline) in the same turn' so they execute in parallel subagents. Outputs are graded with assertions, aggregated into benchmarks, and viewed in an HTML viewer."
+      },
+      {
+        "term": "Iteration directories",
+        "explanation": "Each round of evals writes into a new iteration-N folder inside the workspace. This preserves history so you can compare iteration-1 vs iteration-2 scores instead of overwriting prior runs."
+      },
+      {
+        "term": "Lean prompts with explained why",
+        "explanation": "Rather than rigid MUSTs, the skill instructs authors to explain the reasoning behind each rule so the model can generalize. 'Keep the prompt lean' by deleting instructions that don't measurably improve outputs."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "python -m scripts.run_loop --eval-set <path> --skill-path <path>",
+        "purpose": "Run the eval loop against a skill, executing all configured test cases with and without the skill loaded.",
+        "example": "python -m scripts.run_loop --eval-set ./evals --skill-path ./skills/my-skill"
+      },
+      {
+        "signature": "python -m scripts.aggregate_benchmark <workspace>/iteration-N",
+        "purpose": "Aggregate grades from a single iteration directory into a benchmark summary.",
+        "example": "python -m scripts.aggregate_benchmark workspace/iteration-2"
+      },
+      {
+        "signature": "python <skill-creator-path>/eval-viewer/generate_review.py",
+        "purpose": "Generate the HTML eval-viewer page that lets you inspect with-skill vs baseline runs side by side.",
+        "example": "python skills/skill-creator/eval-viewer/generate_review.py"
+      },
+      {
+        "signature": "python -m scripts.package_skill <path/to/skill-folder>",
+        "purpose": "Package a finished skill folder into a distributable artifact ready to share or install.",
+        "example": "python -m scripts.package_skill ./skills/my-skill"
+      }
+    ],
+    "gotchas": [
+      "A weak, passive description is the #1 reason skills undertrigger — write it pushier than feels natural",
+      "Keep SKILL.md under ~500 lines; longer prompts hurt rather than help triggering and adherence",
+      "Baselines matter: without a no-skill control, you cannot tell whether the skill is actually moving the needle",
+      "On Claude.ai (no subagents) you must run test cases sequentially yourself, skip baselines, and skip the HTML viewer",
+      "Don't overwrite iteration folders — each eval run should land in a new iteration-N to preserve regression history",
+      "Explain the why behind rules instead of stacking MUSTs; rigid imperatives without rationale degrade model behavior"
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}

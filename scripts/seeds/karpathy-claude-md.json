@@ -1,0 +1,66 @@
+{
+  "sourceUrl": "https://github.com/forrestchang/andrej-karpathy-skills",
+  "skill": {
+    "name": "karpathy-claude-md",
+    "description": "Use when you want a drop-in CLAUDE.md that encodes Karpathy's coding guardrails — think before coding, simplicity first, surgical changes, and goal-driven execution.",
+    "whenToUse": [
+      "Bootstrapping a new repo and you want sane defaults for Claude Code on day one",
+      "Claude keeps overengineering — adding flexibility, abstractions, and error handling you didn't ask for",
+      "Edits keep sprawling into adjacent code that wasn't part of the request",
+      "You want Claude to state assumptions and ask before silently picking an interpretation",
+      "You want every task framed as a verifiable success criterion plus a loop until it's met",
+      "You're adding to an existing CLAUDE.md and want Karpathy's rules appended"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Think Before Coding",
+        "explanation": "State assumptions explicitly rather than guessing. Present multiple interpretations when the request is ambiguous, push back with simpler alternatives, and name confusion instead of plowing ahead with a silent choice."
+      },
+      {
+        "term": "Simplicity First",
+        "explanation": "Write the minimum code that solves the problem. Eliminate speculative features, single-use abstractions, unrequested flexibility, and impossible-scenario error handling. Litmus test: would a senior engineer call this overcomplicated?"
+      },
+      {
+        "term": "Surgical Changes",
+        "explanation": "When editing existing code, do not improve adjacent code or refactor unbroken sections. Match the existing style and comments. Remove only imports and variables that your changes orphaned — never pre-existing dead code unless asked."
+      },
+      {
+        "term": "Goal-Driven Execution",
+        "explanation": "Transform tasks into verifiable success criteria with explicit verification loops. Instead of 'add validation,' write 'create tests for invalid inputs, then make them pass.' Define success, then loop until verified."
+      },
+      {
+        "term": "Every line traces to the request",
+        "explanation": "A core rule across all four principles: every changed line must trace back to the user's request. Drive-by improvements, opportunistic refactors, and unrelated cleanups are explicitly discouraged."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add + install",
+        "purpose": "Install the Karpathy guardrails as a Claude Code plugin via the recommended marketplace flow.",
+        "example": "/plugin marketplace add forrestchang/andrej-karpathy-skills\n/plugin install andrej-karpathy-skills@karpathy-skills"
+      },
+      {
+        "signature": "curl -o CLAUDE.md ...",
+        "purpose": "Download CLAUDE.md into a fresh project so the rules apply from the very first turn.",
+        "example": "curl -o CLAUDE.md https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md"
+      },
+      {
+        "signature": "Append to existing CLAUDE.md",
+        "purpose": "Append the Karpathy rules onto an existing project CLAUDE.md without clobbering whatever is already there.",
+        "example": "echo \"\" >> CLAUDE.md\ncurl https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md"
+      }
+    ],
+    "gotchas": [
+      "Guidelines bias toward caution over speed — appropriate for non-trivial work, overkill for typo fixes",
+      "Use judgment on trivial tasks; applying the full rigor to a one-line change wastes turns",
+      "Drive-by improvements are explicitly disallowed — every changed line must trace to the user's request",
+      "Don't strip pre-existing dead code unless the user asked; only remove imports your own edits orphaned",
+      "If the request is ambiguous, decline-and-clarify beats silently choosing an interpretation",
+      "Appending the file blindly to an existing CLAUDE.md can duplicate rules — review the merged result"
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/forrestchang/andrej-karpathy-skills"
+  }
+}

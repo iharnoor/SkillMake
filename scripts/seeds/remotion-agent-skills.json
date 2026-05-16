@@ -1,0 +1,80 @@
+{
+  "sourceUrl": "https://www.remotion.dev/docs/ai/skills",
+  "skill": {
+    "name": "remotion-agent-skills",
+    "description": "Use when generating programmatic videos as React components with Remotion's official 28-file agent skill collection for Claude Code, Codex, and Cursor.",
+    "whenToUse": [
+      "Generating MP4 videos from React components programmatically",
+      "Setting up a new Remotion project with AI agent guidance",
+      "Building data-driven videos like ads, explainers, or YouTube intros",
+      "Animating with interpolate, spring, useCurrentFrame, and Sequence",
+      "Rendering Remotion compositions on Lambda or via CLI",
+      "Teaching Claude Code or Cursor Remotion's best practices and idioms"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Composition",
+        "explanation": "A registered top-level video definition in src/Root.tsx that declares id, durationInFrames, fps, width, height, and the component to render. Remotion Studio and the renderer enumerate compositions to know what to play and export."
+      },
+      {
+        "term": "useCurrentFrame",
+        "explanation": "Hook that returns the current frame number inside a Composition or Sequence. Drives all animation by mapping frame to visual state, replacing time-based loops with deterministic per-frame rendering."
+      },
+      {
+        "term": "interpolate and spring",
+        "explanation": "Helper functions for mapping a frame value to an animated value. interpolate(frame, [0, 30], [0, 1]) produces linear/eased transitions; spring({frame, fps, config}) produces physics-based motion suited for natural UI feel."
+      },
+      {
+        "term": "Sequence",
+        "explanation": "Wrapper component that offsets and clips a child's timeline. <Sequence from={30} durationInFrames={60}> renders its child as if frame 30 were frame 0, enabling composition of independent timed segments."
+      },
+      {
+        "term": "Agent Skills collection",
+        "explanation": "A curated set of skill files maintained by the Remotion team that teach AI coding agents Remotion conventions, project setup, animation patterns, and rendering. Indexed at agentskills.io and installable via the skills CLI."
+      },
+      {
+        "term": "Skills CLI install",
+        "explanation": "The npx skills add command fetches the Remotion skill bundle into the local project so any compatible agent (Claude Code, Codex, Cursor) picks them up automatically when working in the repo."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add remotion-dev/skills",
+        "purpose": "Installs the official Remotion agent skill collection into the current project so AI agents follow Remotion best practices.",
+        "example": "npx skills add remotion-dev/skills"
+      },
+      {
+        "signature": "bun create video",
+        "purpose": "Bootstraps a new Remotion project and offers to install agent skills during the interactive setup.",
+        "example": "bun create video"
+      },
+      {
+        "signature": "Composition({id, component, durationInFrames, fps, width, height})",
+        "purpose": "Registers a renderable video definition inside src/Root.tsx so the Studio and CLI can preview and render it.",
+        "example": "<Composition id=\"MyVideo\" component={MyVideo} durationInFrames={150} fps={30} width={1920} height={1080} />"
+      },
+      {
+        "signature": "useCurrentFrame(): number",
+        "purpose": "Returns the current frame index relative to the enclosing Composition or Sequence; used to drive frame-based animation.",
+        "example": "const frame = useCurrentFrame();\nconst opacity = interpolate(frame, [0, 30], [0, 1]);"
+      },
+      {
+        "signature": "interpolate(input, inputRange, outputRange, options?)",
+        "purpose": "Maps a numeric input (typically a frame) to an output value with optional easing and extrapolation clamping.",
+        "example": "interpolate(frame, [0, 30], [0, 1], { extrapolateRight: 'clamp' })"
+      }
+    ],
+    "gotchas": [
+      "Do not use setTimeout or Date.now for animation timing; everything must be derived from useCurrentFrame for deterministic rendering.",
+      "durationInFrames is in frames, not seconds; multiply seconds by fps when reasoning about length.",
+      "Async work and network calls inside components break rendering; fetch data in getInputProps or calculateMetadata instead.",
+      "interpolate without extrapolateLeft/Right: 'clamp' will extrapolate past the range and produce values outside [0, 1].",
+      "Compositions must be registered in Root.tsx; importing a component is not enough to make it renderable.",
+      "Skills are project-scoped; running npx skills add inside the wrong directory installs them in the wrong repo."
+    ],
+    "category": "framework",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/remotion-dev/remotion"
+  }
+}

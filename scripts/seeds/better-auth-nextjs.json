@@ -1,0 +1,85 @@
+{
+  "sourceUrl": "https://github.com/better-auth/better-auth",
+  "skill": {
+    "name": "better-auth-nextjs",
+    "description": "Use when wiring email/password, OAuth, 2FA, or passkeys into a Next.js App Router project with Better Auth — covers auth.ts, route handler, client, and session helpers.",
+    "whenToUse": [
+      "Adding email/password sign-up and sign-in to a Next.js App Router app",
+      "Wiring GitHub or Google OAuth via authClient.signIn.social",
+      "Enabling two-factor authentication with the twoFactor plugin",
+      "Adding passkeys or magic links to an existing Better Auth setup",
+      "Reading the current session on the server with auth.api.getSession",
+      "Migrating from NextAuth/Clerk to a TypeScript-native auth framework"
+    ],
+    "keyConcepts": [
+      {
+        "term": "betterAuth() server instance",
+        "explanation": "The auth server is created by calling betterAuth({...}) with a database adapter, emailAndPassword config, and socialProviders. It's typically exported from a single auth.ts module and consumed by the route handler, server components, and server actions."
+      },
+      {
+        "term": "Next.js route handler",
+        "explanation": "Better Auth mounts onto a catch-all route at /api/auth/[...all]/route.ts using toNextJsHandler(auth), which exports GET and POST. All client SDK calls hit this endpoint, so it must exist before sign-in/sign-up works."
+      },
+      {
+        "term": "createAuthClient",
+        "explanation": "The React client is created with createAuthClient from better-auth/react and exposes signIn, signUp, signOut, and the useSession hook. Plugins on the server must have matching client plugins (e.g. twoFactorClient, passkeyClient) registered here."
+      },
+      {
+        "term": "Session handling",
+        "explanation": "useSession() returns { data, isPending, error, refetch } on the client. On the server, auth.api.getSession({ headers: await headers() }) reads the cookie-backed session — both must validate against the server, never trust middleware cookie presence alone."
+      },
+      {
+        "term": "Plugin system",
+        "explanation": "Features like twoFactor(), passkey(), magicLink(), and organization() are plugins added to the plugins array on betterAuth(). Each plugin contributes endpoints, schema, and client methods, letting you opt into advanced auth (2FA, SSO, OIDC) without forking the framework."
+      },
+      {
+        "term": "nextCookies() plugin",
+        "explanation": "Required when calling auth functions from server actions — it ensures cookies set by Better Auth are propagated through Next.js's server action cookie handling so sessions persist after redirect."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "toNextJsHandler(auth) — app/api/auth/[...all]/route.ts",
+        "purpose": "Mount the Better Auth server onto a Next.js catch-all route so all client SDK requests resolve.",
+        "example": "import { auth } from \"@/lib/auth\";\nimport { toNextJsHandler } from \"better-auth/next-js\";\n\nexport const { GET, POST } = toNextJsHandler(auth);"
+      },
+      {
+        "signature": "createAuthClient(config) — lib/auth-client.ts",
+        "purpose": "Create the React client used by components to call sign-in, sign-up, and useSession.",
+        "example": "import { createAuthClient } from \"better-auth/react\"\n\nexport const authClient = createAuthClient({\n    //you can pass client configuration here\n})"
+      },
+      {
+        "signature": "authClient.signUp.email({ email, password, name, image, callbackURL })",
+        "purpose": "Register a new user with email/password and optionally redirect to a callback URL after success.",
+        "example": "const { data, error } = await authClient.signUp.email({\n    email,\n    password,\n    name,\n    image,\n    callbackURL: \"/dashboard\"\n}, {\n    onRequest: (ctx) => { /*show loading*/ },\n    onSuccess: (ctx) => { /*redirect*/ },\n    onError: (ctx) => { alert(ctx.error.message); }\n});"
+      },
+      {
+        "signature": "authClient.signIn.social({ provider, callbackURL })",
+        "purpose": "Start an OAuth flow with a configured provider such as github or google.",
+        "example": "await authClient.signIn.social({\n    provider: \"github\",\n    callbackURL: \"/dashboard\",\n    errorCallbackURL: \"/error\",\n    newUserCallbackURL: \"/welcome\",\n    disableRedirect: true\n});"
+      },
+      {
+        "signature": "auth.api.getSession({ headers })",
+        "purpose": "Server-side session retrieval inside server components, route handlers, and server actions.",
+        "example": "const session = await auth.api.getSession({\n    headers: await headers()\n})"
+      },
+      {
+        "signature": "twoFactor() / twoFactorClient() plugin",
+        "purpose": "Add TOTP-based two-factor authentication on server and client.",
+        "example": "// server\nimport { twoFactor } from \"better-auth/plugins\";\nexport const auth = betterAuth({\n    plugins: [ twoFactor() ]\n});\n\n// client\nimport { twoFactorClient } from \"better-auth/client/plugins\";\nconst authClient = createAuthClient({\n    plugins: [ twoFactorClient({ twoFactorPage: \"/two-factor\" }) ]\n});"
+      }
+    ],
+    "gotchas": [
+      "Server actions that set cookies require the nextCookies() plugin — without it the session won't persist through a redirect",
+      "Middleware cookie checks are an optimization only; you must still validate the session on the server for any protected action or page",
+      "Next.js 16 renames middleware to proxy — rename middleware.ts to proxy.ts and run `npx @next/codemod@canary middleware-to-proxy .`",
+      "Server and client plugin lists must match — adding twoFactor() on the server without twoFactorClient() on the client breaks the flow",
+      "auth.api.getSession requires `await headers()` because Next.js App Router headers() is async in current versions",
+      "The catch-all route must live at /api/auth/[...all]/route.ts exactly — any other path will silently 404 client SDK calls"
+    ],
+    "category": "library",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/better-auth/better-auth"
+  }
+}

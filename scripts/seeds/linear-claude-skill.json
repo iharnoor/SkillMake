@@ -1,0 +1,87 @@
+{
+  "sourceUrl": "https://github.com/wrsmith108/linear-claude-skill",
+  "skill": {
+    "name": "linear-claude-skill",
+    "description": "Use when driving Linear from Claude Code — MCP tools plus GraphQL automation, sub-issue hierarchies, subagent worktrees, and an esbuild-compiled CLI for 18x faster startup.",
+    "whenToUse": [
+      "Managing Linear issues, projects, and initiatives from Claude Code",
+      "Creating sub-issues, parents, and initiative trees programmatically",
+      "Bulk-syncing issue states across many tickets at once",
+      "Posting Linear project status reports with health (onTrack/atRisk/offTrack)",
+      "Attaching external resource links to projects or initiatives",
+      "Spawning subagents to update issues in parallel without blocking the main thread",
+      "Avoiding deprecated community Linear MCP servers"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Official MCP server (mcp.linear.app)",
+        "explanation": "The skill standardizes on Linear's official MCP server hosted at mcp.linear.app and explicitly warns against deprecated community servers: 'Always use Linear's official MCP server...Do NOT use deprecated community servers like linear-mcp-server (npm).' This avoids stale schemas and broken auth flows."
+      },
+      {
+        "term": "GraphQL automation layer",
+        "explanation": "On top of MCP, the skill exposes direct GraphQL access for operations MCP does not cover well: project status mutations using workspace-specific status UUIDs, external resource links attached to projects/initiatives, project milestones for Definition-of-Done tracking, and status report creation with health indicators."
+      },
+      {
+        "term": "Subagent worktree workflow",
+        "explanation": "Long-running sync jobs spawn subagents via Task tools so the primary agent stays responsive. Pattern: kick off 'Update ENG-432,433,434 to Done' as a subagent, keep coding in the main thread, and let the subagent reconcile state asynchronously."
+      },
+      {
+        "term": "esbuild pre-compilation",
+        "explanation": "Running npm run build pre-compiles the CLI with esbuild and yields '18x faster CLI startup (~50ms vs ~1s).' If the build artifact is missing, a shared runner script transparently falls back to tsx so functionality is preserved without manual intervention."
+      },
+      {
+        "term": "description vs content fields",
+        "explanation": "Linear projects carry two text fields the skill keeps distinct: description (max 255 chars, shown in list views) and content (unlimited, rendered in the main project panel). Conflating them is a common source of truncated or duplicated copy."
+      },
+      {
+        "term": "Workspace-specific status UUIDs",
+        "explanation": "Status IDs (e.g., 'Done', 'In Review') are not global — they vary per Linear workspace and must be queried per environment before mutations. The skill bakes this lookup into its ops commands so updates do not hardcode the wrong UUID."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Installation",
+        "purpose": "Clone the skill into ~/.claude/skills/linear, install dependencies, validate config, optionally build the fast CLI.",
+        "example": "git clone <repo> ~/.claude/skills/linear\ncd ~/.claude/skills/linear\nnpm install\nnpm run setup\nnpm run build   # optional, enables esbuild fast path"
+      },
+      {
+        "signature": "npm run ops -- create-initiative <name>",
+        "purpose": "Create a Linear initiative from the CLI.",
+        "example": "npm run ops -- create-initiative \"My Project\""
+      },
+      {
+        "signature": "npm run ops -- create-sub-issue <parent> <title>",
+        "purpose": "Create a sub-issue under an existing Linear issue.",
+        "example": "npm run ops -- create-sub-issue ENG-100 \"Add tests\""
+      },
+      {
+        "signature": "npm run ops -- set-parent <child> <parent>",
+        "purpose": "Re-parent an existing issue under another issue.",
+        "example": "npm run ops -- set-parent ENG-100 ENG-101"
+      },
+      {
+        "signature": "npm run ops -- status <state> <id...>",
+        "purpose": "Move one or more issues to a named workflow state. State name is resolved to the workspace-specific UUID at call time.",
+        "example": "npm run ops -- status Done ENG-123"
+      },
+      {
+        "signature": "npm run sync -- --issues <ids> --state <name>",
+        "purpose": "Bulk-sync issue states. Designed to be invoked as a subagent so the main agent does not block.",
+        "example": "npm run sync -- --issues ENG-432,ENG-433 --state Done"
+      }
+    ],
+    "gotchas": [
+      "ALWAYS check Linear before creating projects or issues — the skill explicitly warns about duplicate creation when agents skip discovery",
+      "Issue descriptions may be outdated or speculative — verify against the codebase before acting, since APIs or features may already be implemented",
+      "description (255 chars, list view) and content (unlimited, main panel) are different fields; mixing them is a common bug",
+      "Status UUIDs are workspace-specific — never hardcode them, always resolve by name per workspace",
+      "Do not use deprecated community servers like linear-mcp-server (npm); the official MCP at mcp.linear.app is the only supported path",
+      "Without npm run build, the CLI runs through tsx (~1s startup); run the build step before driving many operations in a row",
+      "Image uploads go to Linear's S3 storage — large attachments and rate limits apply, batch them when bulk-syncing"
+    ],
+    "category": "platform",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/wrsmith108/linear-claude-skill"
+  }
+}

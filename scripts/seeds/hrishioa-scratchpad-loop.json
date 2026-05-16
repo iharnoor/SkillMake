@@ -1,0 +1,69 @@
+{
+  "sourceUrl": "https://x.com/hrishioa/status/1936472182001221981",
+  "skill": {
+    "name": "hrishioa-scratchpad-loop",
+    "description": "Use when running a multi-day coding task across two models — Hrishi's pattern: plan with Gemini (long context), branch the repo, run Claude in a loop with an append-only log so context survives across sessions.",
+    "whenToUse": [
+      "Starting a multi-day feature where context will not survive a single session window",
+      "Coordinating two different models (planner + executor) on the same codebase without them stomping each other",
+      "Resuming a coding task after a compaction or fresh session and needing the agent to know exactly what it already tried",
+      "Recovering from a bad agent run without losing the planning rationale that produced it",
+      "Running parallel experiments on the same plan by branching once and letting each branch keep its own log"
+    ],
+    "keyConcepts": [
+      {
+        "term": "planner / executor split",
+        "explanation": "Use the long-context model (Gemini, 1M+) to read the whole repo and produce a detailed plan.md — file list, ordering, acceptance criteria. Use Claude as the executor: short, focused turns inside a branch, never re-reading the whole codebase. Splitting the two roles stops the executor from drifting because the plan is frozen in a file, not in volatile context."
+      },
+      {
+        "term": "branch per attempt",
+        "explanation": "Cut a git branch named after the plan (e.g. `feat/plan-2026-05-15-rag-refactor`) before the executor touches anything. If the run goes sideways you abandon the branch instead of debugging entangled changes. Branches are cheap; agent attempts are not — make them disposable."
+      },
+      {
+        "term": "append-only log",
+        "explanation": "A single LOG.md (or SCRATCHPAD.md) at the repo root that the executor only appends to — never edits, never deletes. Each turn writes: timestamp, what was attempted, what file changed, what failed, what to try next. New sessions read the log first and resume from the last entry. The append-only constraint is load-bearing: if the agent can rewrite history it will revise away the lessons."
+      },
+      {
+        "term": "plan.md as the source of truth",
+        "explanation": "plan.md is written once by the planner and treated as immutable for the duration of the run. The executor cites plan.md section IDs in its log entries. If the plan needs to change, you go back to the planner and produce plan-v2.md — you do not let the executor mutate the plan, because that collapses the planner/executor separation."
+      },
+      {
+        "term": "context recovery loop",
+        "explanation": "Every new session: 1) read plan.md, 2) tail the last ~50 lines of LOG.md, 3) git diff against the branch base, 4) decide the next single step, 5) append to LOG.md before acting. This four-read prelude takes one turn and replaces an hour of trying to reconstruct state from memory."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Step 1 — plan with Gemini",
+        "purpose": "Feed the entire repo (or relevant directory tree) plus the goal into a long-context Gemini session. Output a plan.md with numbered steps, files touched per step, and acceptance criteria. Commit plan.md to the branch base before any executor runs.",
+        "example": "# plan.md\n## Goal\nMigrate the eval pipeline from CSV to SQLite.\n\n## Steps\n1. Add sqlite schema in evals/schema.sql (acceptance: schema applies cleanly to empty db)\n2. Write evals/store.py with insert/query helpers (acceptance: pytest evals/test_store.py green)\n3. Migrate existing CSVs via one-shot script scripts/migrate_csv_to_sqlite.py\n4. Swap callsites in evals/runner.py\n5. Delete CSV writer + tests\n\n## Out of scope\n- UI changes\n- Multi-tenant support"
+      },
+      {
+        "signature": "Step 2 — branch + seed LOG.md",
+        "purpose": "Create the working branch and an empty append-only log so the executor has a place to write before it does anything else.",
+        "example": "git checkout -b feat/plan-2026-05-15-rag-refactor\nprintf '# LOG\\n\\nAppend-only. Newest at bottom.\\n\\n' > LOG.md\ngit add plan.md LOG.md && git commit -m 'seed: plan + log'"
+      },
+      {
+        "signature": "Step 3 — Claude executor turn",
+        "purpose": "Every executor turn opens with the same prelude (read plan.md, tail LOG.md, git diff), then takes one numbered step from the plan, then appends an entry. Never skip the append.",
+        "example": "## 2026-05-15T14:02Z — step 2 (store.py)\n- read plan.md §2, last LOG entry, git diff main\n- wrote evals/store.py with insert_run / query_runs\n- pytest evals/test_store.py: 4 passed\n- next: step 3 (migration script)"
+      },
+      {
+        "signature": "Step 4 — recovery on fresh session",
+        "purpose": "A new session (or new agent) bootstraps in one turn: cat plan.md, tail LOG.md, git status, git diff main. From there the next step is obvious without reasoning over history.",
+        "example": "cat plan.md\ntail -n 50 LOG.md\ngit status\ngit diff main --stat"
+      }
+    ],
+    "gotchas": [
+      "If the executor edits LOG.md instead of appending, it will quietly delete the lesson from the last failed attempt — enforce append-only in the prompt",
+      "Letting the executor rewrite plan.md collapses the planner/executor split and the run drifts within two sessions",
+      "Skipping the branch makes failed attempts entangle with good ones; you cannot bisect or abandon cleanly",
+      "Very long LOG.md files re-introduce context bloat — tail the last ~50 lines, do not paste the whole log every turn",
+      "Two parallel executor sessions on the same branch will race on LOG.md — branch per attempt or serialize sessions",
+      "Using the same model as both planner and executor defeats the purpose; the value comes from long-context planning + short-context execution"
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "videoUrls": []
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "sourceUrl": "https://github.com/get-convex/agent-skills",
+  "skill": {
+    "name": "convex-quickstart",
+    "description": "Use when scaffolding a real-time React/Next backend on Convex from zero — wires the project, auth, schema, and reactive queries via Convex's official agent skills.",
+    "whenToUse": [
+      "Starting a new project that needs a reactive backend with queries, mutations, and actions",
+      "Adding Convex to an existing React or Next.js app",
+      "Wiring authentication into a Convex app",
+      "Planning a safe schema migration on Convex data",
+      "Auditing a Convex deployment for performance issues",
+      "Building a reusable Convex component to share across projects"
+    ],
+    "keyConcepts": [
+      {
+        "term": "convex (router skill)",
+        "explanation": "Main entry point that routes the agent to the right specialized skill based on the task. Invoking convex first lets the router pick between quickstart, auth setup, component creation, migration, or performance auditing instead of guessing."
+      },
+      {
+        "term": "convex-quickstart",
+        "explanation": "Skill focused on starting new projects or integrating Convex into an existing codebase. It handles the initial project layout, Convex client wiring, and the first query/mutation pair so the app is reactive end-to-end on first run."
+      },
+      {
+        "term": "convex-setup-auth",
+        "explanation": "Dedicated skill for authentication configuration on Convex. Separated from quickstart so auth can be added later without re-scaffolding, and so the agent does not blur the boundary between backend functions and auth providers."
+      },
+      {
+        "term": "convex-migration-helper",
+        "explanation": "Plans and executes data migrations safely — the skill is explicit about migrations being a hazardous workflow, so it walks through a plan before touching production data instead of running ad-hoc scripts."
+      },
+      {
+        "term": "convex-performance-audit",
+        "explanation": "Diagnoses performance issues in a Convex deployment: hot queries, oversized documents, chatty subscriptions, and pagination smells. Run this skill instead of asking generic 'why is my app slow' questions."
+      },
+      {
+        "term": "Laser-focused skill design",
+        "explanation": "The repo's own guidance: 'Skills in this repo should be laser-focused on a specific task or workflow.' Each skill optimizes for actionable outcomes over generic reference material, which is why setup, components, migrations, and performance are deliberately separate skills."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add get-convex/agent-skills",
+        "purpose": "Install every Convex skill into the local agent so it can auto-discover them.",
+        "example": "npx skills add get-convex/agent-skills"
+      },
+      {
+        "signature": "/<skill-name> (manual invocation)",
+        "purpose": "Manually trigger a skill in Cursor, Claude Code, or VS Code by typing a slash command with the skill name.",
+        "example": "/convex-setup-auth"
+      },
+      {
+        "signature": "@<skill-name> / $<skill-name>",
+        "purpose": "Alternate invocation prefixes for tools that do not use slash commands — Windsurf uses @, Codex uses $.",
+        "example": "@convex-quickstart\n$convex-performance-audit"
+      }
+    ],
+    "gotchas": [
+      "Invocation syntax differs per tool: /skill in Cursor/Claude Code/VS Code, @skill in Windsurf, $skill in Codex — pick the right one or the skill will not fire",
+      "convex-quickstart is for new integrations; for an existing Convex app, prefer the specialized skill (auth, component, migration, audit) instead",
+      "Migrations go through convex-migration-helper for a reason — running ad-hoc mutation scripts on prod data is the canonical foot-gun",
+      "Performance audits assume Convex's reactive query model — applying generic SQL/REST advice will mislead the agent",
+      "Skills are 'laser-focused' on purpose; do not ask one skill to also handle adjacent concerns, route through the convex router skill instead"
+    ],
+    "category": "platform",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/get-convex/agent-skills"
+  }
+}

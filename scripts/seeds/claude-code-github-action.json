@@ -1,0 +1,76 @@
+{
+  "sourceUrl": "https://github.com/anthropics/claude-code-action",
+  "skill": {
+    "name": "claude-code-github-action",
+    "description": "Use when running Claude inside GitHub Actions — wires @claude PR review, issue-to-PR loops, scheduled audits, and auto-fixes with the official anthropics/claude-code-action.",
+    "whenToUse": [
+      "Adding automated PR review on opened/synchronize events",
+      "Letting collaborators trigger Claude with @claude mentions in issues or PRs",
+      "Running a scheduled repo health check on a cron",
+      "Wiring Claude with AWS Bedrock, Google Vertex AI, or Microsoft Foundry instead of the Anthropic API",
+      "Limiting per-run cost via budget_tokens and timeout",
+      "Upgrading an existing v0.x workflow to v1"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Intelligent mode detection",
+        "explanation": "The action picks its execution mode automatically based on workflow context — @claude mention vs PR opened vs issue assigned vs scheduled run — so a single uses: anthropics/claude-code-action@v1 step covers review, Q&A, and implementation without per-mode wiring."
+      },
+      {
+        "term": "Runs on your runner",
+        "explanation": "Execution happens entirely on your GitHub Actions runner. The action checks out the repo, talks to Claude, edits files, and posts comments using your GITHUB_TOKEN — no hosted Anthropic worker touches your code."
+      },
+      {
+        "term": "Multi-provider auth",
+        "explanation": "Supports four auth paths: direct Anthropic API (ANTHROPIC_API_KEY), AWS Bedrock (AWS_ROLE_ARN + AWS_REGION via OIDC), Google Vertex AI (GOOGLE_CLOUD_PROJECT), and Microsoft Foundry (AZURE_TENANT_ID). Cloud-provider auth uses GitHub OIDC, which is why id-token: write is required."
+      },
+      {
+        "term": "claude_args JSON",
+        "explanation": "Optional JSON blob passed as a workflow input to tune the Claude call: budget_tokens caps spend per run, timeout caps wall time in seconds, temperature controls determinism. Used to keep CI runs predictable and cheap."
+      },
+      {
+        "term": "Structured outputs",
+        "explanation": "The action emits validated JSON results as GitHub Action outputs, so downstream steps can branch on Claude's findings (e.g., post a check, open a PR, fail the build) instead of scraping comment text."
+      },
+      {
+        "term": "Progress checkboxes",
+        "explanation": "Long-running tasks render a live progress comment with dynamic checkboxes, so PR reviewers can watch Claude work through the plan rather than waiting for a single final blob."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "uses: anthropics/claude-code-action@v1",
+        "purpose": "Run Claude inside a workflow job. Requires a prompt input plus ANTHROPIC_API_KEY (or a cloud-provider auth set), and the right permissions block.",
+        "example": "name: Auto PR Review\non:\n  pull_request:\n    types: [opened, synchronize]\n\njobs:\n  review:\n    runs-on: ubuntu-latest\n    permissions:\n      contents: read\n      pull-requests: write\n      id-token: write\n    steps:\n      - uses: actions/checkout@v4\n      - uses: anthropics/claude-code-action@v1\n        with:\n          prompt: \"Review this PR for code quality and security\"\n        env:\n          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}"
+      },
+      {
+        "signature": "on: issue_comment + if: contains(... '@claude')",
+        "purpose": "Fire Claude only when a comment mentions @claude. Standard pattern for interactive issue/PR assistants.",
+        "example": "on:\n  issue_comment:\n    types: [created]\n\njobs:\n  claude:\n    if: contains(github.event.comment.body, '@claude')\n    runs-on: ubuntu-latest\n    permissions:\n      issues: write\n      contents: read\n      id-token: write\n    steps:\n      - uses: actions/checkout@v4\n      - uses: anthropics/claude-code-action@v1\n        with:\n          prompt: ${{ github.event.comment.body }}\n        env:\n          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}"
+      },
+      {
+        "signature": "claude_args: '{ \"budget_tokens\": ..., \"timeout\": ..., \"temperature\": ... }'",
+        "purpose": "Cap cost and runtime per invocation. budget_tokens is the hard token ceiling, timeout is wall-clock seconds, temperature tunes determinism.",
+        "example": "- uses: anthropics/claude-code-action@v1\n  with:\n    prompt: \"Refactor this code for better performance\"\n    claude_args: |\n      {\n        \"budget_tokens\": 50000,\n        \"timeout\": 600,\n        \"temperature\": 0.7\n      }"
+      },
+      {
+        "signature": "claude /install-github-app",
+        "purpose": "One-shot setup from the Claude Code terminal — installs the GitHub App and wires the workflow. Requires repo admin access.",
+        "example": "claude /install-github-app"
+      }
+    ],
+    "gotchas": [
+      "id-token: write is required for any OIDC-based auth (Bedrock, Vertex AI, Foundry) — omitting it silently fails auth",
+      "pull-requests: write and issues: write are required for Claude to post comments; without them you get a 'Permission denied' on the first comment attempt",
+      "Avoid contents: write at the repo level — scope it to the job that actually needs to push, the rest should stay contents: read",
+      "Large repos are slow to checkout with fetch-depth: 0 — only use full history when Claude truly needs it",
+      "API rate limits bite on busy repos — use budget_tokens and exponential backoff to avoid noisy failures",
+      "Commits authored by the action are not GPG-signed by default; set up SIGNING_KEY if your branch protection requires signed commits",
+      "v0.x to v1 is a breaking upgrade — follow docs/migration-guide.md instead of bumping the tag blindly"
+    ],
+    "category": "tool",
+    "audience": "devops",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/claude-code-action"
+  }
+}

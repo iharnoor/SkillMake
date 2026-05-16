@@ -1,0 +1,78 @@
+{
+  "sourceUrl": "https://docs.bsky.app/docs/get-started",
+  "skill": {
+    "name": "threads-bluesky-crosspost",
+    "description": "Use when fanning one piece of writing out to Threads + Bluesky (+ X) with consistent voice — AT Protocol createSession/createRecord on Bluesky and the Threads Graph API two-step container/publish flow.",
+    "whenToUse": [
+      "Publishing the same long-form take across Bluesky, Threads, and X without retyping or losing voice",
+      "Automating a daily/weekly cross-post from a single source file (Markdown, RSS, or notes app)",
+      "Splitting one essay into a thread that respects each network's character limit (300 on Bluesky, 500 on Threads, 280 on X)",
+      "Handling image embeds — uploading a blob to Bluesky vs supplying a public image URL to Threads",
+      "Building a small CLI or Cloudflare Worker that posts on a schedule"
+    ],
+    "keyConcepts": [
+      {
+        "term": "AT Protocol session tokens",
+        "explanation": "Bluesky uses two JWTs from com.atproto.server.createSession: accessJwt (short-lived, used as Bearer on every request) and refreshJwt (longer-lived, used only to mint new access tokens). A long-running poster must catch 401s and refresh — access tokens expire 'after a few minutes.'"
+      },
+      {
+        "term": "Bluesky record model",
+        "explanation": "A Bluesky post is a record in the app.bsky.feed.post collection, written via com.atproto.repo.createRecord. The record must include `text` and `createdAt` (ISO 8601). The response returns `uri` (at://... identifier) and `cid` (content hash) — keep both if you need to reply or delete later."
+      },
+      {
+        "term": "Threads two-step publish",
+        "explanation": "Threads splits posting in two: first POST /{user-id}/threads creates a media container (with media_type=TEXT|IMAGE|VIDEO|CAROUSEL and optional text/image_url/video_url), returning a creation_id. Then POST /{user-id}/threads_publish with that creation_id actually publishes. Wait ~30 seconds between the two for image/video processing."
+      },
+      {
+        "term": "voice preservation per channel",
+        "explanation": "Bluesky's 300-char limit, Threads' 500-char limit, and X's 280-char limit mean the same source rarely fits all three. A repeatable recipe: write the canonical post for the tightest channel (X), then expand for Threads (add context) and let Bluesky take the X version unchanged. Hashtags and @mentions do not portably translate — strip them and rewrite per network."
+      },
+      {
+        "term": "image embeds differ",
+        "explanation": "Bluesky requires uploading the image as a blob via com.atproto.repo.uploadBlob first, then referencing the returned blob ref inside the post record's `embed.images`. Threads instead expects a `image_url` pointing to a publicly reachable URL — you do not upload bytes to Threads, you host the image yourself."
+      },
+      {
+        "term": "rate limits",
+        "explanation": "Threads caps profiles at 250 published posts per 24h. Bluesky's PDS enforces per-account write limits (documented separately); back off on 429. For a crossposter, the practical ceiling is whichever network's limit is tightest — design the queue around that."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "POST $PDSHOST/xrpc/com.atproto.server.createSession",
+        "purpose": "Authenticate to Bluesky with handle + app password. Returns accessJwt and refreshJwt. Cache accessJwt and refresh on 401.",
+        "example": "curl -X POST $PDSHOST/xrpc/com.atproto.server.createSession \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"identifier\": \"'\"$BLUESKY_HANDLE\"'\", \"password\": \"'\"$BLUESKY_PASSWORD\"'\"}'"
+      },
+      {
+        "signature": "POST $PDSHOST/xrpc/com.atproto.repo.createRecord",
+        "purpose": "Create a Bluesky post by writing a record in the app.bsky.feed.post collection. Required fields: text, createdAt.",
+        "example": "curl -X POST $PDSHOST/xrpc/com.atproto.repo.createRecord \\\n  -H \"Authorization: Bearer $ACCESS_JWT\" \\\n  -H \"Content-Type: application/json\" \\\n  -d \"{\\\"repo\\\": \\\"$BLUESKY_HANDLE\\\", \\\"collection\\\": \\\"app.bsky.feed.post\\\", \\\"record\\\": {\\\"text\\\": \\\"Hello world! I posted this via the API.\\\", \\\"createdAt\\\": \\\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\\\"}}\""
+      },
+      {
+        "signature": "POST https://graph.threads.net/v1.0/{threads-user-id}/threads",
+        "purpose": "Create a Threads media container. Required: media_type (TEXT | IMAGE | VIDEO). Optional: text (max 500 chars), image_url, video_url, is_carousel_item. Returns the creation_id used in step 2.",
+        "example": "curl -i -X POST \\\n  -d \"media_type=IMAGE\" \\\n  -d \"image_url=<IMAGE_URL>\" \\\n  -d \"text=<TEXT>\" \\\n  -d \"access_token=<ACCESS_TOKEN>\" \\\n\"https://graph.threads.net/v1.0/<THREADS_USER_ID>/threads\""
+      },
+      {
+        "signature": "POST https://graph.threads.net/v1.0/{threads-user-id}/threads_publish",
+        "purpose": "Publish a previously-created Threads media container. Wait ~30 seconds after creation before calling publish to let server-side processing finish.",
+        "example": "curl -i -X POST \\\n  -d \"creation_id=<MEDIA_CONTAINER_ID>\" \\\n  -d \"access_token=<ACCESS_TOKEN>\" \\\n\"https://graph.threads.net/v1.0/<THREADS_USER_ID>/threads_publish\""
+      },
+      {
+        "signature": "Crosspost workflow recipe",
+        "purpose": "End-to-end loop: load canonical post from source -> trim/expand per channel -> call Bluesky createRecord and Threads container+publish -> persist returned IDs (uri/cid for Bluesky, media id for Threads) for later edits/deletes.",
+        "example": "// pseudocode\nconst { accessJwt } = await createSession(handle, appPassword);\nconst bsky = await createRecord(accessJwt, { text: trimTo(post, 300), createdAt: new Date().toISOString() });\nconst container = await fetch(`https://graph.threads.net/v1.0/${userId}/threads`, { method: 'POST', body: form({ media_type: 'TEXT', text: expandFor(post, 500), access_token }) });\nawait sleep(30_000);\nconst threads = await fetch(`https://graph.threads.net/v1.0/${userId}/threads_publish`, { method: 'POST', body: form({ creation_id: container.id, access_token }) });\nlog({ bsky_uri: bsky.uri, threads_id: threads.id });"
+      }
+    ],
+    "gotchas": [
+      "Bluesky accessJwt expires within minutes — long-running posters MUST refresh via refreshJwt or every fresh start hits 401",
+      "Threads expects publicly reachable image_url, not an upload — hosting your own image (R2, S3, CDN) is part of the crosspost stack",
+      "Skipping the ~30s wait between Threads container creation and publish causes intermittent failures for image/video posts",
+      "Threads caps you at 250 published posts per 24h per profile — back off on rate-limit responses or your queue jams",
+      "@mentions and hashtags do not portably translate across networks; strip them and rewrite per channel or links will be dead",
+      "Writing the post for the largest channel first guarantees it will not fit Bluesky/X — draft for the tightest limit, expand outward"
+    ],
+    "category": "other",
+    "audience": "marketing",
+    "videoUrls": []
+  }
+}

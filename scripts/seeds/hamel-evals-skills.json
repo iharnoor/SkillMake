@@ -1,0 +1,81 @@
+{
+  "sourceUrl": "https://github.com/hamelsmu/evals-skills",
+  "skill": {
+    "name": "hamel-evals-skills",
+    "description": "Use when auditing or building an LLM-product eval pipeline — Hamel Husain's evals skills cover error analysis, judge validation, synthetic data, and review interfaces, distilled from advising 50+ AI teams.",
+    "whenToUse": [
+      "Auditing an existing eval setup that 'feels off' — no error taxonomy, no judge calibration, no labeled data",
+      "Bootstrapping evals from scratch on a new LLM product (chatbot, RAG, agent) with zero traces",
+      "Designing an LLM-as-Judge for a subjective criterion (tone, helpfulness, faithfulness) and proving it tracks human labels",
+      "Validating that a judge isn't biased before you trust it to gate releases or rank prompts",
+      "Building a lightweight annotation interface so a domain expert can label traces quickly",
+      "Evaluating a RAG pipeline end-to-end — retrieval quality separately from generation quality"
+    ],
+    "keyConcepts": [
+      {
+        "term": "error analysis (open coding)",
+        "explanation": "Read raw traces, write a free-text note describing each failure, then cluster notes into a taxonomy. The error-analysis skill walks an agent through this loop so failures get named before metrics get invented. Without a taxonomy you cannot tell whether a prompt change actually helped or just shifted failure modes."
+      },
+      {
+        "term": "LLM-as-Judge validation",
+        "explanation": "A judge prompt is itself a model that needs evaluation. The validate-evaluator skill calibrates a judge against a held-out labeled set, reporting true-positive rate and true-negative rate, and corrects for class imbalance. A judge with 90% accuracy on a 95%-pass dataset is worthless — the skill forces you to measure TPR/TNR, not raw agreement."
+      },
+      {
+        "term": "data splits for judges",
+        "explanation": "Labeled traces get split into train (used to write the judge prompt), dev (used to iterate the judge), and test (held out, touched once). Touching test more than once leaks signal and inflates judge confidence. validate-evaluator enforces this split discipline."
+      },
+      {
+        "term": "synthetic data via dimensions",
+        "explanation": "generate-synthetic-data builds diverse inputs by enumerating tuples across dimensions (user persona x intent x edge case x channel) instead of asking an LLM for '100 examples,' which collapses to a narrow mode. Tuple-based generation surfaces failure modes you would never script by hand."
+      },
+      {
+        "term": "eval-audit (severity-ranked findings)",
+        "explanation": "eval-audit walks an existing pipeline in parallel diagnostic passes (taxonomy? labels? judge calibrated? data splits? regression suite?) and returns prioritized findings. It is the recommended entry point for teams who already have 'some evals' and want to know which gap matters most."
+      },
+      {
+        "term": "review interface as a first-class artifact",
+        "explanation": "build-review-interface generates a custom annotation UI tailored to the product's trace shape. A spreadsheet is not enough: labelers need to see tool calls, retrieved chunks, and full conversations inline. A purpose-built interface speeds labeling 5-10x and is the difference between 50 and 500 labels per session."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add hamelsmu/evals-skills",
+        "purpose": "Install the evals-skills plugin into Claude Code so all seven skills (eval-audit, error-analysis, generate-synthetic-data, write-judge-prompt, validate-evaluator, evaluate-rag, build-review-interface) become slash-commands.",
+        "example": "/plugin marketplace add hamelsmu/evals-skills\n/plugin install evals-skills@hamelsmu-evals-skills"
+      },
+      {
+        "signature": "npx skills add https://github.com/hamelsmu/evals-skills",
+        "purpose": "Install the same skills via the framework-agnostic skills CLI for agents outside Claude Code. Run `npx skills update` to pull new versions.",
+        "example": "npx skills add https://github.com/hamelsmu/evals-skills\nnpx skills update"
+      },
+      {
+        "signature": "/eval-audit",
+        "purpose": "Run a severity-ranked diagnostic over an existing eval pipeline. Surfaces missing taxonomies, uncalibrated judges, leaked test sets, and metric/UX mismatches with prioritized fixes."
+      },
+      {
+        "signature": "/error-analysis",
+        "purpose": "Drive an agent through open-coding traces, clustering failures into a taxonomy, and producing a labeled dataset suitable for judge calibration."
+      },
+      {
+        "signature": "/write-judge-prompt then /validate-evaluator",
+        "purpose": "Author an LLM-as-Judge for a subjective criterion, then validate it against held-out human labels with TPR/TNR and bias correction before trusting it."
+      },
+      {
+        "signature": "/evaluate-rag",
+        "purpose": "Score retrieval and generation separately — retrieval gets ranking metrics on a labeled query set, generation gets a calibrated judge on the answers conditional on correct context."
+      }
+    ],
+    "gotchas": [
+      "Raw judge accuracy lies when classes are imbalanced — always report TPR and TNR separately, not a single number",
+      "If you touch the test set more than once while tuning the judge, you have leaked it; cut a new test slice",
+      "'Generate 100 diverse examples' from an LLM collapses to a narrow distribution — enumerate dimensions and sample tuples instead",
+      "Spreadsheets are not annotation tools — labelers need to see tool calls and retrieved chunks inline or they will skim",
+      "Skipping error analysis and jumping straight to metrics produces eval scores that move without telling you why",
+      "A judge that agrees with humans on training traces may still be biased on the production distribution — validate on held-out data drawn from real traffic"
+    ],
+    "category": "concept",
+    "audience": "ai",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/hamelsmu/evals-skills"
+  }
+}

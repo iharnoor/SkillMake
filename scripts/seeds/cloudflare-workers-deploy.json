@@ -1,0 +1,82 @@
+{
+  "sourceUrl": "https://developers.cloudflare.com/workers/",
+  "skill": {
+    "name": "cloudflare-workers-deploy",
+    "description": "Use when shipping a Cloudflare Worker from an agent session — scaffold with `npm create cloudflare`, wire KV/D1/R2 bindings in wrangler.jsonc, set secrets, and `wrangler deploy` to the edge.",
+    "whenToUse": [
+      "Spinning up a new HTTP endpoint that needs global, low-latency execution without managing servers",
+      "Adding a KV namespace, D1 database, or R2 bucket binding to an existing Worker",
+      "Promoting a Worker from local dev (`wrangler dev`) to production (`wrangler deploy`)",
+      "Storing API keys and tokens as encrypted secrets via `wrangler secret put` instead of plaintext vars",
+      "Debugging why a Worker that imports a Node-only package fails at runtime"
+    ],
+    "keyConcepts": [
+      {
+        "term": "fetch handler entrypoint",
+        "explanation": "A Worker exports a default object with an async `fetch(request, env, ctx)` method. `request` is a standard Fetch API Request, `env` holds every binding declared in wrangler.jsonc (KV namespaces, D1, R2, secrets, vars), and `ctx` exposes `waitUntil` for background work after the response returns. Anything you can't reach through `env` is not available — there is no global config object."
+      },
+      {
+        "term": "wrangler.jsonc as the deploy contract",
+        "explanation": "wrangler.jsonc (or wrangler.toml) declares the Worker's name, entry file, compatibility_date, and every binding. The same file is the source of truth for local dev and production deploys; bindings missing from wrangler.jsonc do not exist at runtime even if they exist in the dashboard."
+      },
+      {
+        "term": "bindings vs imports",
+        "explanation": "You access KV / D1 / R2 / secrets through `env.MY_BINDING`, never by importing a client SDK. Each binding is configured in wrangler.jsonc with a `binding` name (the JS identifier on env) and a resource id (namespace_id, database_id, bucket_name). Renaming the binding renames the JS field — not the underlying resource."
+      },
+      {
+        "term": "secrets vs vars",
+        "explanation": "Plain configuration goes in `vars` (visible in the dashboard, committed in wrangler.jsonc). Anything sensitive goes through `wrangler secret put NAME`, which encrypts at rest and exposes the value via `env.NAME` exactly like a var. Never put API keys in `vars` or commit them to wrangler.jsonc."
+      },
+      {
+        "term": "Workers runtime != Node.js",
+        "explanation": "The Workers runtime implements Web APIs (fetch, Request, Response, crypto.subtle, Streams) — not the Node stdlib. `fs`, `net`, and most Node-only modules are unavailable unless you opt into the nodejs_compat flag in wrangler.jsonc. Picking a library that secretly requires `Buffer` or `process` is the most common deploy-time surprise."
+      },
+      {
+        "term": "compatibility_date",
+        "explanation": "Pins the runtime semantics to a specific date. Without it, behavior can drift as Cloudflare ships new defaults. Set it to today's date when scaffolding and bump intentionally; do not leave it unset."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npm create cloudflare@latest -- my-first-worker",
+        "purpose": "Scaffold a new Worker project with wrangler.jsonc, a sample fetch handler, and TypeScript types preconfigured. Walks an interactive prompt for framework choice.",
+        "example": "npm create cloudflare@latest -- my-first-worker\ncd my-first-worker\nnpx wrangler dev"
+      },
+      {
+        "signature": "export default { async fetch(request, env, ctx) { ... } }",
+        "purpose": "The Worker entrypoint. Return a Response (or a Promise of one). Use `ctx.waitUntil(promise)` to keep the isolate alive for background work after responding.",
+        "example": "export default {\n  async fetch(request, env, ctx) {\n    return new Response(\"Hello World!\");\n  },\n};"
+      },
+      {
+        "signature": "wrangler.jsonc bindings (KV / D1 / R2)",
+        "purpose": "Declare resource bindings so `env.NAMESPACE`, `env.DB`, and `env.MY_BUCKET` are reachable inside the fetch handler. Each binding pairs a JS identifier with a Cloudflare resource id.",
+        "example": "{\n  \"name\": \"my-worker\",\n  \"main\": \"./src/index.js\",\n  \"compatibility_date\": \"2026-05-16\",\n  \"kv_namespaces\": [\n    { \"binding\": \"CACHE\", \"id\": \"<kv_namespace_id>\" }\n  ],\n  \"d1_databases\": [\n    { \"binding\": \"DB\", \"database_name\": \"app\", \"database_id\": \"<d1_id>\" }\n  ],\n  \"r2_buckets\": [\n    { \"binding\": \"MY_BUCKET\", \"bucket_name\": \"<MY_BUCKET_NAME>\" }\n  ],\n  \"vars\": { \"ENVIRONMENT\": \"production\" }\n}"
+      },
+      {
+        "signature": "npx wrangler dev",
+        "purpose": "Run the Worker locally against the same runtime used in production, with bindings proxied to live or local resources. Reloads on file change."
+      },
+      {
+        "signature": "npx wrangler deploy",
+        "purpose": "Publish the Worker to Cloudflare's edge using the current wrangler.jsonc. Returns the workers.dev URL (or custom route) the Worker now serves.",
+        "example": "npx wrangler deploy\n# Uploaded my-worker (1.23 sec)\n# Published my-worker (4.56 sec)\n#   https://my-worker.<account>.workers.dev"
+      },
+      {
+        "signature": "npx wrangler secret put STRIPE_KEY",
+        "purpose": "Store an encrypted secret accessible at `env.STRIPE_KEY`. Prompts for the value on stdin so it never lands in shell history or git.",
+        "example": "npx wrangler secret put STRIPE_KEY\n# Enter a secret value: ***\n# Success! Uploaded secret STRIPE_KEY"
+      }
+    ],
+    "gotchas": [
+      "Importing a Node-only package (anything using `fs`, `net`, `Buffer` without polyfill) compiles fine but throws at deploy or first request",
+      "A binding in the dashboard that is NOT in wrangler.jsonc is invisible to the Worker — wrangler.jsonc is the source of truth",
+      "Forgetting `compatibility_date` makes the Worker's behavior drift silently as Cloudflare ships new defaults",
+      "CPU time per request is bounded (10ms free / 30s paid) — long synchronous loops get killed even if memory is fine",
+      "Putting API keys in `vars` instead of `wrangler secret put` exposes them in the dashboard and in committed config",
+      "`ctx.waitUntil` is the only safe way to run work after the Response is returned; bare promises get cancelled when the isolate exits"
+    ],
+    "category": "platform",
+    "audience": "devops",
+    "videoUrls": []
+  }
+}

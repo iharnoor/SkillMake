@@ -1,0 +1,64 @@
+{
+  "sourceUrl": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+  "skill": {
+    "name": "simonw-agentic-patterns",
+    "description": "Use when you want Simon Willison's framing of Claude Skills — the SKILL.md pattern, sandboxed filesystem execution, validation helpers, and the prompt-injection caveats that come with dangerous-skip-permissions.",
+    "whenToUse": [
+      "Deciding whether to ship a feature as an MCP server or as a Claude Skill",
+      "Designing a SKILL.md so harnesses can scan it cheaply and trigger it precisely",
+      "Adding validation helper functions so Claude can iterate against hard constraints",
+      "Thinking through what 'safe coding environment' actually means before enabling skip-permissions",
+      "Loading skill-specific Python modules from a known mount path inside the sandbox",
+      "Comparing Claude Skills against the broader MCP protocol surface"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Skill = Markdown + optional assets",
+        "explanation": "Willison defines a skill as 'a Markdown file telling the model how to do something, optionally accompanied by extra documents and pre-written scripts.' The simplicity is the point — the harness handles the rest."
+      },
+      {
+        "term": "Token-efficient discovery",
+        "explanation": "Skills use YAML frontmatter metadata that the harness scans at session start, consuming only dozens of tokens per skill until one is actually needed. This makes large skill libraries cheap to keep loaded."
+      },
+      {
+        "term": "Sandbox dependency",
+        "explanation": "Skills fundamentally require 'access to a filesystem, tools to navigate it and the ability to execute commands.' This is what differentiates skills from MCP, which has no execution-environment requirement."
+      },
+      {
+        "term": "Validation helper functions",
+        "explanation": "Skills can ship helper functions for constraint checking. The slack-gif-creator example includes check_slack_size() to enforce the 2MB limit, letting Claude iterate on outputs until the constraint passes."
+      },
+      {
+        "term": "Python path integration",
+        "explanation": "Skills load their own modules via standard imports against a known mount point, e.g. sys.path.insert(0, '/mnt/skills/examples/slack-gif-creator'), so generated code can call into pre-written scripts."
+      },
+      {
+        "term": "Skills vs MCP trade-off",
+        "explanation": "Unlike MCP's complex protocol (hosts, clients, servers, resources, prompts, tools, sampling, roots, elicitation, three transports), skills deliberately outsource complexity to the harness — betting on model capability over protocol specification."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "sys.path.insert(0, '/mnt/skills/examples/<skill-name>')",
+        "purpose": "Add a skill's directory to the Python path inside the sandbox so its helper scripts are importable.",
+        "example": "import sys\nsys.path.insert(0, '/mnt/skills/examples/slack-gif-creator')\nfrom helpers import check_slack_size"
+      },
+      {
+        "signature": "check_slack_size(path) -> bool",
+        "purpose": "Example validation helper from the slack-gif-creator skill that enforces Slack's 2MB upload limit so Claude can iterate when an output exceeds it.",
+        "example": "if not check_slack_size('out.gif'):\n    # re-render with lower fps / fewer colors\n    ..."
+      }
+    ],
+    "gotchas": [
+      "The word 'safe' in 'safe coding environments' is doing significant work — prompt injection risk is real",
+      "Skills require filesystem and command execution; without a sandbox they are unsafe to run",
+      "Frontmatter metadata governs triggering — a weak description means Claude never loads the skill",
+      "dangerous-skip-permissions removes guardrails; combine it with a sandbox or you're handing the model your machine",
+      "Skills and MCP solve overlapping problems differently — picking one over the other is a real architectural choice",
+      "Validation helpers only help if Claude actually calls them; document them in SKILL.md so the model knows they exist"
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "videoUrls": []
+  }
+}
