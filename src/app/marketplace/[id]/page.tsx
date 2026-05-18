@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { getApprovedSkill } from "@/lib/storage";
 import { SkillPreview } from "@/components/SkillPreview";
 import { InstallCommand } from "@/components/InstallCommand";
+import { AutoplayVideo } from "@/components/AutoplayVideo";
 import { resolveVideoEmbed } from "@/lib/skill-schema";
 import { GithubIcon } from "@/components/GithubIcon";
 import { formatStars } from "@/lib/github";
@@ -108,14 +109,9 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ id
                 className="aspect-video rounded-md overflow-hidden border border-[color:var(--border)] bg-black"
               >
                 {v.kind === "self-hosted" ? (
-                  <video
+                  <AutoplayVideo
                     src={v.src}
                     title={v.title}
-                    muted
-                    loop
-                    playsInline
-                    preload="none"
-                    controls
                     className="w-full h-full object-cover"
                   />
                 ) : (

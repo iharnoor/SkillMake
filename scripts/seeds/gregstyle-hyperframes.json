@@ -1,0 +1,77 @@
+{
+  "sourceUrl": "https://github.com/iharnoor/skillit/blob/main/scripts/seeds/gregstyle-hyperframes.json",
+  "skill": {
+    "name": "gregstyle-hyperframes",
+    "description": "Use when creating Greg-style vertical HyperFrames videos: researched, visual-first 9:16 explainers with sourced public images, sparse copy, portrait cards, diagrams, GSAP motion, and MP4 output.",
+    "whenToUse": [
+      "Creating or recreating a short Greg-style HyperFrames visual video from a topic or reference screenshots",
+      "Making a researched, public-asset-based 9:16 explainer about real people, products, companies, or places",
+      "Iterating a vertical HyperFrames composition with sparse copy, centered portrait cards, and simple diagrams",
+      "Validating and rendering a local HyperFrames project into a polished MP4 with inspected preview frames"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Greg-style vertical explainer",
+        "explanation": "The target format is a 1080x1920, 30fps, 12-18 second social video with off-white paper texture, sparse labels, centered portrait or product cards, geometric blocks, dashed connector lines, and clear scene beats."
+      },
+      {
+        "term": "Sourced local assets",
+        "explanation": "When the video depends on real people, products, companies, places, or current facts, research reliable sources and save usable images into assets/<topic>/ instead of using remote image URLs in the composition."
+      },
+      {
+        "term": "Four-scene structure",
+        "explanation": "Most videos use a network opener, a contrast scene, a roster/list scene, and a pattern-map scene with a concise takeaway band. Copy stays minimal: short titles, labels, company names, and one- or two-word chips."
+      },
+      {
+        "term": "HyperFrames composition contract",
+        "explanation": "The active index.html should define one root composition with data-composition-id=\"main\", data-start=\"0\", data-width=\"1080\", data-height=\"1920\", and data-fps=\"30\"."
+      },
+      {
+        "term": "Frame-verified iteration",
+        "explanation": "After building the composition, run validation, render the MP4, extract representative frames with ffmpeg, inspect for blank, clipped, off-center, or too-wordy scenes, then patch and rerender."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Preserve current index.html before replacing it",
+        "purpose": "Before editing, inspect the workspace and copy the current active composition into variants/ so the prior version can be recovered."
+      },
+      {
+        "signature": "Root HyperFrames composition",
+        "purpose": "Use a single main composition root with fixed vertical dimensions and 30fps timing.",
+        "example": "<div data-composition-id=\"main\" data-start=\"0\" data-width=\"1080\" data-height=\"1920\" data-fps=\"30\">\n  <!-- scene content -->\n</div>"
+      },
+      {
+        "signature": "window.__timelines[\"main\"]",
+        "purpose": "Register GSAP motion on the main HyperFrames timeline so cards, lines, diagrams, and scene fades advance deterministically during render.",
+        "example": "window.__timelines = window.__timelines || {};\nwindow.__timelines[\"main\"] = gsap.timeline({ paused: true });"
+      },
+      {
+        "signature": "npm run check",
+        "purpose": "Run HyperFrames lint, validation, and inspection checks before rendering; fix structural and layout issues before producing the final MP4."
+      },
+      {
+        "signature": "npm run render",
+        "purpose": "Render the validated HyperFrames composition to MP4, then copy the latest render to a descriptive top-level filename."
+      },
+      {
+        "signature": "ffmpeg preview frame extraction",
+        "purpose": "Extract representative frames after rendering so layout, centering, copy density, and blank scenes can be inspected.",
+        "example": "ffmpeg -y -i output.mp4 -vf \"select='eq(n,75)+eq(n,195)+eq(n,315)+eq(n,426)',scale=360:640\" -vsync 0 preview/frame-%02d.png"
+      }
+    ],
+    "gotchas": [
+      "Preserve the current active index.html in variants/ before replacing it.",
+      "Use local images under assets/<topic>/ in the composition; avoid remote image URLs.",
+      "Keep primary content centered with generous margins and avoid edge-heavy layouts unless the reference requires it.",
+      "Keep copy sparse: titles, short labels, company names, and one- or two-word takeaway chips.",
+      "Add position: absolute to every map or card element that uses left, right, top, or bottom.",
+      "Avoid duplicate image source/start/duration warnings by copying reused images to alternate local filenames when needed.",
+      "Treat contrast warnings as judgment calls only when readability is still clearly acceptable.",
+      "Patch and rerender if any extracted preview frame is blank, off-center, clipped, too wordy, or visually unclear."
+    ],
+    "category": "tool",
+    "audience": "creators",
+    "videoUrls": []
+  }
+}

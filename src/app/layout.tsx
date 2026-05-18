@@ -31,19 +31,19 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <nav className="flex items-center gap-1">
               <Link
                 href="/"
-                className="px-3 py-1.5 rounded-md text-sm text-[color:var(--fg-muted)] hover:text-[color:var(--fg)] transition"
+                className="px-3 py-3 sm:py-1.5 rounded-md text-sm text-[color:var(--fg-muted)] hover:text-[color:var(--fg)] transition inline-flex items-center min-h-[44px] sm:min-h-0"
               >
                 Browse
               </Link>
               <Link
                 href="/submit"
-                className="px-3 py-1.5 rounded-md text-sm text-[color:var(--fg-muted)] hover:text-[color:var(--fg)] transition"
+                className="px-3 py-3 sm:py-1.5 rounded-md text-sm text-[color:var(--fg-muted)] hover:text-[color:var(--fg)] transition inline-flex items-center min-h-[44px] sm:min-h-0"
               >
                 Submit
               </Link>
               <Link
                 href="/security"
-                className="px-3 py-1.5 rounded-md text-sm text-[color:var(--fg-muted)] hover:text-[color:var(--fg)] transition"
+                className="px-3 py-3 sm:py-1.5 rounded-md text-sm text-[color:var(--fg-muted)] hover:text-[color:var(--fg)] transition inline-flex items-center min-h-[44px] sm:min-h-0"
               >
                 Security
               </Link>
