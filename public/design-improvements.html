@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SkillMake Design Improvements</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;520;650;760&family=Geist+Mono:wght@400;520;650;760&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #0b0d10;
+        --bg-raised: #111418;
+        --surface: #15191e;
+        --surface-2: #1a1f26;
+        --line: #252b34;
+        --line-strong: #37404c;
+        --fg: #edf1f6;
+        --muted: #9aa4b3;
+        --dim: #657080;
+        --green: #a8ff60;
+        --green-soft: rgba(168, 255, 96, 0.13);
+        --blue: #77c8ff;
+        --yellow: #ffd166;
+        --red: #ff7a7a;
+        --radius: 8px;
+        --max: 1180px;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+        }
+      }
+
+      * { box-sizing: border-box; }
+      html { background: var(--bg); color: var(--fg); font-family: Geist, ui-sans-serif, system-ui, sans-serif; }
+      body { margin: 0; min-height: 100vh; background: var(--bg); }
+      a { color: inherit; }
+      .mono { font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .wrap { width: min(var(--max), calc(100vw - 40px)); margin: 0 auto; }
+      [contenteditable="true"]:focus { outline: 2px solid var(--green); outline-offset: 4px; border-radius: 4px; }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 1px solid color-mix(in oklab, var(--line) 82%, transparent);
+        background: color-mix(in oklab, var(--bg) 88%, transparent);
+        backdrop-filter: blur(18px);
+      }
+
+      .nav {
+        height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 760;
+        letter-spacing: 0;
+      }
+
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: var(--green);
+        box-shadow: 0 0 14px var(--green);
+      }
+
+      .nav-meta {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: var(--dim);
+        font-size: 12px;
+      }
+
+      .hero {
+        padding: 70px 0 46px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(330px, 0.92fr);
+        gap: 42px;
+        align-items: end;
+      }
+
+      .eyebrow {
+        color: var(--green);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        margin: 0 0 18px;
+      }
+
+      h1, h2, h3, p { margin-top: 0; }
+      h1 {
+        margin-bottom: 0;
+        font-size: clamp(42px, 6vw, 76px);
+        line-height: 0.98;
+        letter-spacing: 0;
+        max-width: 900px;
+      }
+
+      .hero-copy {
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.62;
+        margin: 22px 0 0;
+        max-width: 760px;
+      }
+
+      .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        min-height: 40px;
+        padding: 0 14px;
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius);
+        background: var(--surface);
+        color: var(--fg);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 650;
+      }
+      .button.primary { border-color: var(--green); background: var(--green); color: #0b0d10; }
+
+      .scoreboard {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--bg-raised);
+        overflow: hidden;
+      }
+
+      .score-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 16px;
+        padding: 16px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .score-row:last-child { border-bottom: 0; }
+      .score-row strong { display: block; font-size: 14px; margin-bottom: 4px; }
+      .score-row span { color: var(--muted); font-size: 13px; line-height: 1.5; }
+      .grade {
+        align-self: start;
+        min-width: 42px;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 8px;
+        background: var(--green);
+        color: #0b0d10;
+        font-weight: 760;
+      }
+
+      section { padding: 58px 0; border-top: 1px solid var(--line); }
+      h2 { margin-bottom: 12px; font-size: clamp(30px, 4vw, 50px); line-height: 1.05; letter-spacing: 0; }
+      .lead { color: var(--muted); font-size: 17px; line-height: 1.65; max-width: 820px; margin-bottom: 28px; }
+
+      .matrix {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        overflow: hidden;
+        background: var(--bg-raised);
+      }
+
+      .recommendation {
+        min-height: 248px;
+        padding: 20px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+      .recommendation:nth-child(3n) { border-right: 0; }
+      .recommendation:nth-last-child(-n + 3) { border-bottom: 0; }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        padding: 0 9px;
+        border: 1px solid color-mix(in oklab, var(--green) 38%, var(--line));
+        border-radius: 999px;
+        background: var(--green-soft);
+        color: var(--green);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 14px;
+      }
+      .recommendation h3 { font-size: 19px; line-height: 1.2; margin-bottom: 10px; }
+      .recommendation p { color: var(--muted); font-size: 14px; line-height: 1.58; margin-bottom: 0; }
+
+      .split {
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+        gap: 22px;
+        align-items: stretch;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--bg-raised);
+        overflow: hidden;
+      }
+
+      .panel-head {
+        min-height: 42px;
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        border-bottom: 1px solid var(--line);
+        color: var(--dim);
+        font-size: 12px;
+      }
+
+      .panel-body { padding: 20px; }
+      .ascii {
+        color: var(--fg);
+        font-size: 13px;
+        line-height: 1.12;
+        overflow: auto;
+        margin-bottom: 18px;
+      }
+
+      .mock-title { font-size: clamp(34px, 5vw, 58px); line-height: 1; margin-bottom: 15px; }
+      .mock-copy { color: var(--muted); font-size: 15px; line-height: 1.58; max-width: 630px; }
+
+      .path-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin: 22px 0;
+      }
+
+      .path {
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius);
+        padding: 13px;
+        background: var(--surface);
+      }
+      .path strong { display: block; font-size: 13px; margin-bottom: 5px; }
+      .path span { color: var(--muted); font-size: 12px; line-height: 1.45; }
+
+      .search {
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius);
+        padding: 13px 14px;
+        background: #0a0c10;
+        color: var(--dim);
+        margin: 18px 0;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 3ch minmax(0, 1.2fr) minmax(0, 0.82fr) auto;
+        gap: 16px;
+        align-items: start;
+        padding: 13px 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .row-name { min-width: 0; }
+      .row-name strong { display: block; color: var(--fg); font-size: 14px; overflow-wrap: anywhere; }
+      .row-name span, .row-source { color: var(--muted); font-size: 12px; line-height: 1.45; }
+      .signals { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+      .signal {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        padding: 3px 7px;
+        font-size: 11px;
+      }
+      .signal.hot { color: #0b0d10; background: var(--green); border-color: var(--green); }
+
+      .build {
+        display: grid;
+        gap: 10px;
+      }
+      .build-step {
+        display: grid;
+        grid-template-columns: 38px minmax(0, 1fr) 118px;
+        gap: 16px;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 16px;
+        background: var(--bg-raised);
+      }
+      .build-step b { color: var(--green); }
+      .build-step p { color: var(--muted); font-size: 14px; line-height: 1.5; margin: 3px 0 0; }
+      .effort { color: var(--dim); font-size: 12px; text-align: right; }
+
+      .palette {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+      .swatch {
+        min-height: 112px;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        color: #0b0d10;
+        font-size: 12px;
+        font-weight: 760;
+      }
+      .swatch.dark { color: var(--fg); }
+
+      .foot { padding: 44px 0 76px; color: var(--dim); font-size: 13px; line-height: 1.6; }
+
+      @media (max-width: 1024px) {
+        .hero, .split { grid-template-columns: 1fr; }
+        .scoreboard { max-width: 720px; }
+        .matrix { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .recommendation:nth-child(3n) { border-right: 1px solid var(--line); }
+        .recommendation:nth-child(2n) { border-right: 0; }
+        .recommendation:nth-last-child(-n + 3) { border-bottom: 1px solid var(--line); }
+        .recommendation:nth-last-child(-n + 2) { border-bottom: 0; }
+      }
+
+      @media (max-width: 768px) {
+        .wrap { width: min(var(--max), calc(100vw - 28px)); }
+        .hero { padding-top: 46px; gap: 26px; }
+        .matrix, .path-grid { grid-template-columns: 1fr; }
+        .recommendation, .recommendation:nth-child(2n), .recommendation:nth-child(3n) { border-right: 0; }
+        .recommendation:nth-last-child(-n + 2) { border-bottom: 1px solid var(--line); }
+        .recommendation:last-child { border-bottom: 0; }
+        .row { grid-template-columns: 3ch minmax(0, 1fr); }
+        .row-source, .signals { grid-column: 2; justify-content: flex-start; }
+        .build-step { grid-template-columns: 32px minmax(0, 1fr); }
+        .effort { grid-column: 2; text-align: left; }
+        .palette { grid-template-columns: repeat(2, 1fr); }
+        .nav-meta { display: none; }
+      }
+
+      @media (max-width: 375px) {
+        .wrap { width: calc(100vw - 24px); }
+        h1 { font-size: 38px; }
+        .hero-copy, .lead { font-size: 16px; }
+        .panel-body, .recommendation { padding: 16px; }
+      }
+
+      @media (min-width: 1440px) {
+        :root { --max: 1220px; }
+        .hero { padding-top: 82px; }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .button, .row, .path { transition: border-color 140ms ease, background 140ms ease, transform 120ms ease; }
+        .button:hover, .path:hover { transform: translateY(-1px); }
+        .row:hover { background: color-mix(in oklab, var(--surface) 56%, transparent); }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap nav">
+        <div class="brand mono"><span class="dot"></span> skill<span style="color: var(--green)">make</span> design improvements</div>
+        <div class="nav-meta mono">
+          <span>mode: freeform</span>
+          <span>source: localhost:3000</span>
+          <span>May 14, 2026</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap hero">
+        <div>
+          <p class="eyebrow mono" data-pretext contenteditable="true">Design recommendation</p>
+          <h1 data-pretext contenteditable="true">Make the marketplace explain the job before it shows the database.</h1>
+          <p class="hero-copy" data-pretext contenteditable="true">
+            SkillMake has a real point of view: audited, agent-installable skills for builders. The current site has taste, but the first screen spends too much attention on the ASCII logo and too little on why a user should trust, inspect, and install a skill today.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="#recommendations">Read priorities</a>
+            <a class="button" href="#direction">See proposed first screen</a>
+          </div>
+        </div>
+
+        <aside class="scoreboard" aria-label="Current design scorecard">
+          <div class="score-row">
+            <div><strong>Visual taste</strong><span>Distinctive, restrained, terminal-native. Keep it.</span></div>
+            <div class="grade mono">A-</div>
+          </div>
+          <div class="score-row">
+            <div><strong>First-screen clarity</strong><span>The product job is real, but it arrives after the brand artifact.</span></div>
+            <div class="grade mono" style="background: var(--yellow)">B-</div>
+          </div>
+          <div class="score-row">
+            <div><strong>Marketplace confidence</strong><span>Rows are scannable. They need more proof before the install moment.</span></div>
+            <div class="grade mono" style="background: var(--yellow)">B</div>
+          </div>
+          <div class="score-row">
+            <div><strong>Mobile density</strong><span>The list survives mobile, but the hierarchy compresses into a wall of mono text.</span></div>
+            <div class="grade mono" style="background: var(--yellow)">B</div>
+          </div>
+        </aside>
+      </div>
+
+      <section id="recommendations">
+        <div class="wrap">
+          <h2 data-pretext contenteditable="true">The improvements that matter</h2>
+          <p class="lead" data-pretext contenteditable="true">
+            These are ordered by leverage. The first three change what users understand. The next two change what users do. The last two keep the system from drifting as the marketplace grows.
+          </p>
+
+          <div class="matrix">
+            <article class="recommendation">
+              <span class="tag mono">1. Hero</span>
+              <h3 data-pretext contenteditable="true">Lead with the workflow install job</h3>
+              <p data-pretext contenteditable="true">Replace the ASCII-first hero with a direct promise: vetted skills that install repeatable workflows into Claude, Codex, and other agents. Keep ASCII as texture below the pitch, not the headline.</p>
+            </article>
+            <article class="recommendation">
+              <span class="tag mono">2. Paths</span>
+              <h3 data-pretext contenteditable="true">Separate filters from curated collections</h3>
+              <p data-pretext contenteditable="true">Creators and engineers are filters. Tricks and Powerhouse are editorial paths. Put them in compact collection modules with one-line reasons to click.</p>
+            </article>
+            <article class="recommendation">
+              <span class="tag mono">3. Trust</span>
+              <h3 data-pretext contenteditable="true">Add evidence to every row</h3>
+              <p data-pretext contenteditable="true">Rows should show video count, repo presence, reviewed status, install affordance, and curator pick. A row is not just a link, it is the decision surface.</p>
+            </article>
+            <article class="recommendation">
+              <span class="tag mono">4. Search</span>
+              <h3 data-pretext contenteditable="true">Make search teach the inventory</h3>
+              <p data-pretext contenteditable="true">Add starter chips like "turn transcript into article", "review PR", "generate HTML", and "research last 72 hours". Users should learn the available jobs before typing.</p>
+            </article>
+            <article class="recommendation">
+              <span class="tag mono">5. Detail pages</span>
+              <h3 data-pretext contenteditable="true">Move install confidence above long prose</h3>
+              <p data-pretext contenteditable="true">On skill pages, put install command, source, review status, video, and expected output near the top. Long explanation is useful, but it should not block trust formation.</p>
+            </article>
+            <article class="recommendation">
+              <span class="tag mono">6. Collections</span>
+              <h3 data-pretext contenteditable="true">Show the index before the documentary</h3>
+              <p data-pretext contenteditable="true">Powerhouse currently starts deep. Add a compact five-skill index first, then expand into narrative sections and videos. Let users scan before asking them to scroll.</p>
+            </article>
+            <article class="recommendation">
+              <span class="tag mono">7. System</span>
+              <h3 data-pretext contenteditable="true">Tighten the UI rules</h3>
+              <p data-pretext contenteditable="true">Keep green-on-dark, but define roles for blue, yellow, and red. Reduce radius drift to 8px. Use monospace for commands and identifiers, not every explanatory sentence.</p>
+            </article>
+            <article class="recommendation">
+              <span class="tag mono">8. Performance</span>
+              <h3 data-pretext contenteditable="true">Defer heavy media until intent</h3>
+              <p data-pretext contenteditable="true">Collection pages should lazy-load videos and avoid speculative work until hover, scroll, or click intent. The product is a utility. It should feel instant.</p>
+            </article>
+            <article class="recommendation">
+              <span class="tag mono">Do not change</span>
+              <h3 data-pretext contenteditable="true">Do not turn this into SaaS wallpaper</h3>
+              <p data-pretext contenteditable="true">No giant gradient hero, no stock illustrations, no generic feature blocks. The product wins because it feels like a useful registry built by someone who actually installs skills.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="direction">
+        <div class="wrap">
+          <h2 data-pretext contenteditable="true">Recommended homepage direction</h2>
+          <p class="lead" data-pretext contenteditable="true">
+            This keeps the current personality, but changes the first five seconds. The user sees what the product does, where to go, and why an install is safe enough to consider.
+          </p>
+
+          <div class="split">
+            <div class="panel">
+              <div class="panel-head mono"><span>current</span><span>brand artifact first</span></div>
+              <div class="panel-body">
+                <pre class="ascii mono"> ____  _    _ _ _
+/ ___|| | _(_) | |
+\___ \| |/ / | | |
+ ___) |   &lt;| | | |
+|____/|_|\_\_|_|_|</pre>
+                <p class="mock-copy" data-pretext contenteditable="true">A curated marketplace of agent-installable SKILL.md files. Every one personally reviewed before it goes live.</p>
+                <div class="search mono">Try: "stream video frames", "rate-limited fetch", "react server components"</div>
+                <div class="row mono"><span>#</span><div class="row-name"><strong>video-transcript-to-blog</strong><span>creator workflow</span></div><span class="row-source">github.com</span><span class="signals"><span class="signal">99k</span></span></div>
+                <div class="row mono"><span>2</span><div class="row-name"><strong>html-everything</strong><span>artifact generation</span></div><span class="row-source">github.com</span><span class="signals"><span class="signal">video</span></span></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head mono"><span>recommended</span><span>job first, proof next</span></div>
+              <div class="panel-body">
+                <p class="eyebrow mono">Personally reviewed agent skills</p>
+                <h3 class="mock-title" data-pretext contenteditable="true">Install better workflows into Claude, Codex, and every agent.</h3>
+                <p class="mock-copy" data-pretext contenteditable="true">Find a vetted SKILL.md, inspect the source, watch the demo when one exists, then install the exact workflow your next session needs.</p>
+                <div class="path-grid">
+                  <div class="path"><strong>Powerhouse</strong><span>Research, HTML artifacts, Codex delegation.</span></div>
+                  <div class="path"><strong>Tricks</strong><span>Spend less, keep context cleaner, move faster.</span></div>
+                  <div class="path"><strong>Submit</strong><span>Get a skill through review before it goes live.</span></div>
+                </div>
+                <div class="search mono">Search by job: "turn transcript into article"</div>
+                <div class="row mono"><span>#</span><div class="row-name"><strong>html-everything</strong><span>one-file editorial HTML from any blob</span></div><span class="row-source">github.com/iharnoor</span><span class="signals"><span class="signal hot">install</span><span class="signal">video</span><span class="signal">reviewed</span></span></div>
+                <div class="row mono"><span>2</span><div class="row-name"><strong>codex-plugin-cc</strong><span>bring Codex review into Claude Code</span></div><span class="row-source">openai</span><span class="signals"><span class="signal hot">install</span><span class="signal">source</span></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <h2 data-pretext contenteditable="true">Design system rules</h2>
+          <p class="lead" data-pretext contenteditable="true">The aesthetic is already close. The win is discipline: fewer one-off radii, clearer color roles, and more intentional use of mono type.</p>
+          <div class="split">
+            <div class="panel">
+              <div class="panel-head mono"><span>type</span><span>rule</span></div>
+              <div class="panel-body">
+                <p class="mock-copy" data-pretext contenteditable="true">Use Geist Sans for promises, descriptions, and explanatory copy. Use Geist Mono for skill names, commands, counts, source hosts, and short labels. This preserves the builder feel without making every paragraph harder to scan.</p>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-head mono"><span>surface</span><span>rule</span></div>
+              <div class="panel-body">
+                <p class="mock-copy" data-pretext contenteditable="true">Use 8px radius for interface containers. Reserve pills for metadata. Keep rows flatter than cards. The site is a marketplace and registry, so density is a feature, not a compromise.</p>
+              </div>
+            </div>
+          </div>
+          <div style="height: 18px"></div>
+          <div class="palette" aria-label="Recommended color palette">
+            <div class="swatch dark" style="background: #0b0d10">background<br />#0b0d10</div>
+            <div class="swatch dark" style="background: #15191e">surface<br />#15191e</div>
+            <div class="swatch" style="background: #a8ff60">install<br />#a8ff60</div>
+            <div class="swatch" style="background: #77c8ff">research<br />#77c8ff</div>
+            <div class="swatch" style="background: #ffd166">caution<br />#ffd166</div>
+            <div class="swatch" style="background: #ff7a7a">danger<br />#ff7a7a</div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <h2 data-pretext contenteditable="true">Build order</h2>
+          <p class="lead" data-pretext contenteditable="true">This is the practical sequence. Each step is small enough to ship independently, and each one makes the next user decision easier.</p>
+          <div class="build">
+            <div class="build-step"><b class="mono">1</b><div><strong>Rewrite the homepage hero around the install job.</strong><p>Make the first screen answer who this is for, what they can install, and why review matters.</p></div><div class="effort mono">CC: 30 min</div></div>
+            <div class="build-step"><b class="mono">2</b><div><strong>Add collection path modules for Powerhouse and Tricks.</strong><p>Separate editorial collections from audience filters so users understand the difference.</p></div><div class="effort mono">CC: 30 min</div></div>
+            <div class="build-step"><b class="mono">3</b><div><strong>Upgrade marketplace rows with proof and install affordances.</strong><p>Expose reviewed status, video count, source, and one-click install copy near each skill.</p></div><div class="effort mono">CC: 45 min</div></div>
+            <div class="build-step"><b class="mono">4</b><div><strong>Add compact indexes to collection pages before long sections.</strong><p>Powerhouse should show all five skills up front, then explain how they compose.</p></div><div class="effort mono">CC: 30 min</div></div>
+            <div class="build-step"><b class="mono">5</b><div><strong>Extract DESIGN.md from the rules above.</strong><p>Lock the palette, type roles, row anatomy, and collection pattern before the next page ships.</p></div><div class="effort mono">CC: 20 min</div></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="wrap foot">
+      <strong>Status:</strong> this HTML is the design recommendation artifact. It uses Pretext-powered text height recalculation, editable copy, responsive breakpoints at 375px, 768px, 1024px, and 1440px, and no project build dependency. The next useful move is to implement step 1 on the actual homepage.
+    </footer>
+
+    <!-- FALLBACK: vendor/pretext.js missing, using CDN -->
+    <script type="module">
+      import { prepare, layout } from "https://esm.sh/@chenglou/pretext";
+
+      const prepared = new Map();
+      const elements = () => Array.from(document.querySelectorAll("[data-pretext]"));
+
+      function lineHeightFor(el) {
+        const styles = getComputedStyle(el);
+        const parsed = parseFloat(styles.lineHeight);
+        return Number.isFinite(parsed) ? parsed : parseFloat(styles.fontSize) * 1.2;
+      }
+
+      function fontForPretext(el) {
+        const styles = getComputedStyle(el);
+        const parts = [];
+        if (styles.fontStyle && styles.fontStyle !== "normal") parts.push(styles.fontStyle);
+        if (styles.fontVariant && styles.fontVariant !== "normal") parts.push(styles.fontVariant);
+        if (styles.fontWeight && styles.fontWeight !== "400") parts.push(styles.fontWeight);
+        parts.push(styles.fontSize);
+        parts.push(styles.fontFamily);
+        return parts.join(" ");
+      }
+
+      function prepareElement(el) {
+        prepared.set(el, prepare(el.textContent || "", fontForPretext(el)));
+      }
+
+      function relayout() {
+        for (const [el, handle] of prepared) {
+          el.style.minHeight = "";
+          const naturalHeight = el.scrollHeight;
+          const width = Math.max(1, el.clientWidth);
+          const result = layout(handle, width, lineHeightFor(el));
+          const measuredHeight = Math.ceil(result.height);
+          const cappedHeight = Math.min(measuredHeight, Math.ceil(naturalHeight * 1.18));
+          el.style.minHeight = `${Math.max(naturalHeight, cappedHeight)}px`;
+        }
+      }
+
+      async function boot() {
+        await document.fonts.ready;
+        for (const el of elements()) {
+          prepareElement(el);
+          if (el.contentEditable === "true") {
+            new MutationObserver(() => {
+              prepareElement(el);
+              relayout();
+            }).observe(el, { characterData: true, subtree: true, childList: true });
+          }
+        }
+        new ResizeObserver(relayout).observe(document.body);
+        relayout();
+      }
+
+      boot();
+    </script>
+  </body>
+</html>
