@@ -23,6 +23,20 @@ interface IndexShape {
   ids: string[];
 }
 
+// Single-key snapshot of the entire approved+pending+rejected catalog.
+// Reading the snapshot costs 1 KV get instead of 1+N (one per entry), and
+// CF caches it at the edge for SNAPSHOT_CACHE_TTL seconds, so a hot region
+// usually serves list() with zero KV operations. Writes invalidate by
+// deleting the key; the next list() lazily rebuilds it.
+const SNAPSHOT_KEY = "index:snapshot:v1";
+const SNAPSHOT_CACHE_TTL = 3600; // edge-cache for 1h
+
+interface SnapshotShape {
+  v: 1;
+  entries: MarketplaceEntry[];
+  builtAt: string;
+}
+
 function normalize(entry: MarketplaceEntry): MarketplaceEntry {
   // Read-time defaults for entries written before these fields existed.
   // Treat pre-schema entries as already-approved so they don't disappear from
@@ -50,19 +64,65 @@ class KvStore {
   constructor(private kv: KVNamespace) {}
 
   async list(): Promise<MarketplaceEntry[]> {
-    const idx = (await this.kv.get<IndexShape>("index:all", "json")) ?? { ids: [] };
-    const entries = await Promise.all(
-      idx.ids.map((id) => this.kv.get<MarketplaceEntry>(`skill:${id}`, "json"))
-    );
-    return entries
-      .filter((e): e is MarketplaceEntry => Boolean(e))
+    // Fast path: single edge-cached KV get for the snapshot.
+    try {
+      const snap = await this.kv.get<SnapshotShape>(SNAPSHOT_KEY, {
+        type: "json",
+        cacheTtl: SNAPSHOT_CACHE_TTL,
+      });
+      if (snap && snap.v === 1 && Array.isArray(snap.entries)) {
+        return snap.entries
+          .map(normalize)
+          .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+      }
+    } catch {
+      // KV read failed (rate limit, transient error). Fall through to rebuild,
+      // which will likely also fail — caller gets an empty list rather than a 500.
+    }
+    return this.rebuildSnapshot();
+  }
+
+  // Rebuilds the snapshot from per-id keys. Costs 1+N KV gets — rare path,
+  // hit only on first read after a write or after edge-cache expiry.
+  private async rebuildSnapshot(): Promise<MarketplaceEntry[]> {
+    let idx: IndexShape;
+    try {
+      idx = (await this.kv.get<IndexShape>("index:all", "json")) ?? { ids: [] };
+    } catch {
+      return [];
+    }
+    let entries: (MarketplaceEntry | null)[];
+    try {
+      entries = await Promise.all(
+        idx.ids.map((id) => this.kv.get<MarketplaceEntry>(`skill:${id}`, "json"))
+      );
+    } catch {
+      return [];
+    }
+    const valid = entries.filter((e): e is MarketplaceEntry => Boolean(e));
+    try {
+      await this.kv.put(
+        SNAPSHOT_KEY,
+        JSON.stringify({ v: 1, entries: valid, builtAt: new Date().toISOString() } satisfies SnapshotShape)
+      );
+    } catch {
+      // Best-effort cache write; serving the response matters more.
+    }
+    return valid
       .map(normalize)
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
 
   async get(id: string): Promise<MarketplaceEntry | null> {
-    const raw = (await this.kv.get<MarketplaceEntry>(`skill:${id}`, "json")) ?? null;
-    return raw ? normalize(raw) : null;
+    try {
+      const raw = await this.kv.get<MarketplaceEntry>(`skill:${id}`, {
+        type: "json",
+        cacheTtl: SNAPSHOT_CACHE_TTL,
+      });
+      return raw ? normalize(raw) : null;
+    } catch {
+      return null;
+    }
   }
 
   async put(entry: MarketplaceEntry): Promise<void> {
@@ -70,6 +130,12 @@ class KvStore {
     const idx = (await this.kv.get<IndexShape>("index:all", "json")) ?? { ids: [] };
     if (!idx.ids.includes(entry.id)) idx.ids.push(entry.id);
     await this.kv.put("index:all", JSON.stringify(idx));
+    // Invalidate the snapshot so the next list() picks up the change.
+    try {
+      await this.kv.delete(SNAPSHOT_KEY);
+    } catch {
+      // If invalidation fails, the edge cache TTL will eventually rebuild.
+    }
   }
 }
 
