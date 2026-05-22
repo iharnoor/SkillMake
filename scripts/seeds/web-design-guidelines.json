@@ -1,0 +1,67 @@
+{
+  "sourceUrl": "https://github.com/vercel-labs/agent-skills/tree/main/skills/web-design-guidelines",
+  "skill": {
+    "name": "web-design-guidelines",
+    "description": "Use when reviewing UI code against Vercel's Web Interface Guidelines for accessibility, forms, focus, motion, layout, content handling, performance, and interaction details.",
+    "whenToUse": [
+      "Running a focused UI review over files or patterns before a frontend change lands",
+      "Checking accessibility basics such as labels, semantic actions, image alt text, focus states, and live updates",
+      "Auditing form, navigation, touch, dark mode, localization, and hydration details that often get missed in visual polish",
+      "Finding design-code anti-patterns like transition-all, click handlers on divs, hardcoded locale formatting, or unlabeled icon buttons"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Fresh guidelines fetch",
+        "explanation": "The skill itself is intentionally small. Before each review it fetches the current Web Interface Guidelines document, then checks the requested files against that source."
+      },
+      {
+        "term": "Semantic accessibility baseline",
+        "explanation": "The guidelines prefer native semantics before ARIA: buttons for actions, links for navigation, labels for controls, heading hierarchy, alternate text, keyboard handling, and visible focus treatment."
+      },
+      {
+        "term": "Interaction details",
+        "explanation": "Focus-visible states, paste behavior, submit timing, drag behavior, touch action, safe areas, hover feedback, and destructive action confirmation are treated as interface requirements rather than optional polish."
+      },
+      {
+        "term": "Content and localization resilience",
+        "explanation": "Long text, empty states, truncation, numeric columns, copy clarity, date and number formatting, translation boundaries, and unsaved changes all appear in the checklist."
+      },
+      {
+        "term": "Performance-aware UI review",
+        "explanation": "The guidelines catch UI-level performance issues such as layout reads in render, large unvirtualized lists, uncontrolled animation properties, missing image dimensions, and critical asset loading mistakes."
+      },
+      {
+        "term": "Terse findings format",
+        "explanation": "Review output is grouped by file with file:line findings and passes. That keeps the skill useful during code review instead of returning a generic style essay."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add https://github.com/vercel-labs/agent-skills --skill web-design-guidelines",
+        "purpose": "Install the Vercel Web Interface Guidelines review skill.",
+        "example": "npx skills add https://github.com/vercel-labs/agent-skills --skill web-design-guidelines"
+      },
+      {
+        "signature": "https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md",
+        "purpose": "Fetch the fresh review rules before checking UI files.",
+        "example": "Fetch fresh guidelines before each review, then apply them to the requested files."
+      },
+      {
+        "signature": "file:line finding output",
+        "purpose": "Report code review issues by file with terse, actionable locations.",
+        "example": "src/Button.tsx:42 - icon button missing aria-label\nsrc/Modal.tsx:12 - missing overscroll-behavior: contain"
+      }
+    ],
+    "gotchas": [
+      "The installed skill is a review driver; the live rules come from the fetched guidelines document",
+      "Use it on concrete files or patterns so findings point to code locations",
+      "It flags many correctness details that visual screenshots cannot prove, including labels, locale formatting, and hydration safety",
+      "A pass from this checklist does not replace product QA or browser verification for the actual flow",
+      "Some findings need product context, especially autofocus, destructive action handling, and URL-state depth"
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/vercel-labs/agent-skills"
+  }
+}
