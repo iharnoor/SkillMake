@@ -1,0 +1,73 @@
+{
+  "sourceUrl": "https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices",
+  "skill": {
+    "name": "vercel-react-best-practices",
+    "description": "Use when writing, reviewing, or refactoring React or Next.js code with Vercel's official performance rules for async work, bundles, server paths, renders, and JavaScript hot spots.",
+    "whenToUse": [
+      "Reviewing React or Next.js code for performance regressions before landing it",
+      "Refactoring async data flows that may serialize independent work into waterfalls",
+      "Reducing client bundle cost from broad imports, heavy components, or eager third-party code",
+      "Checking server component, server action, cache, serialization, and after() patterns in a Next.js app",
+      "Optimizing frequent re-renders, long list rendering, hydration behavior, or expensive JavaScript loops"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Prioritized rule set",
+        "explanation": "The skill organizes Vercel performance guidance by impact. Critical waterfall and bundle rules come before server-side, client-fetching, rerender, rendering, JavaScript, and advanced patterns."
+      },
+      {
+        "term": "Rule prefixes",
+        "explanation": "Each rule has a stable prefix such as async-, bundle-, server-, rerender-, or rendering-. Those identifiers let an agent load the narrow reference file that matches the problem instead of applying vague performance advice."
+      },
+      {
+        "term": "Eliminating waterfalls",
+        "explanation": "Independent operations should start together where possible. The rule set covers Promise.all, deferred awaits, API-route promise scheduling, dependency-aware parallelism, and Suspense boundaries."
+      },
+      {
+        "term": "Bundle size optimization",
+        "explanation": "The bundle rules cover barrel imports, static analyzability, dynamic imports, deferred third-party code, conditional modules, and preloading. They target both dev latency and production load cost."
+      },
+      {
+        "term": "Server performance",
+        "explanation": "Server rules cover server action authentication, per-request deduplication with React.cache for non-fetch work, cross-request caching, RSC serialization, static I/O hoisting, parallel fetching, and non-blocking after() work."
+      },
+      {
+        "term": "Render and JavaScript hot paths",
+        "explanation": "The lower-priority sections still capture common regressions: unstable effect dependencies, unnecessary rerenders, long-list rendering, hydration handling, repeated lookups, DOM batching, and idle-time work."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add https://github.com/vercel-labs/agent-skills --skill vercel-react-best-practices",
+        "purpose": "Install the Vercel React performance skill by its public skills.sh slug.",
+        "example": "npx skills add https://github.com/vercel-labs/agent-skills --skill vercel-react-best-practices"
+      },
+      {
+        "signature": "rules/<rule-id>.md",
+        "purpose": "Read the detailed reference for a focused rule after the quick-reference table points to the relevant category.",
+        "example": "rules/async-parallel.md\nrules/bundle-barrel-imports.md\nrules/server-cache-react.md"
+      },
+      {
+        "signature": "Promise.all([...]) for independent async work",
+        "purpose": "Representative critical rule: collapse independent waits into one concurrent step.",
+        "example": "const [user, posts, comments] = await Promise.all([\n  fetchUser(),\n  fetchPosts(),\n  fetchComments()\n])"
+      },
+      {
+        "signature": "cache(async (...args) => value)",
+        "purpose": "Representative server rule: deduplicate non-fetch async work during a request, such as auth or database reads.",
+        "example": "import { cache } from \"react\"\n\nexport const getCurrentUser = cache(async () => {\n  const session = await auth()\n  if (!session?.user?.id) return null\n  return db.user.findUnique({ where: { id: session.user.id } })\n})"
+      }
+    ],
+    "gotchas": [
+      "This is an agent rule set, not a profiler; verify performance-sensitive claims with measurements when the change matters",
+      "Read the targeted rule file before applying a shorthand identifier because some rules are framework-specific",
+      "React.cache uses argument identity; inline object arguments can miss the deduplication the rule is trying to create",
+      "Bundle advice depends on whether the bundler can analyze imports; Next.js package import optimization and direct imports are not interchangeable everywhere",
+      "Lower-priority micro-optimizations should not distract from critical waterfalls and bundle regressions"
+    ],
+    "category": "framework",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/vercel-labs/agent-skills"
+  }
+}
