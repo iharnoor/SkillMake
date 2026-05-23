@@ -8,6 +8,7 @@ import { InstallCommand } from "@/components/InstallCommand";
 import { AutoplayVideo } from "@/components/AutoplayVideo";
 import { resolveVideoEmbed } from "@/lib/skill-schema";
 import { GithubIcon } from "@/components/GithubIcon";
+import { GithubLink } from "@/components/OutboundLink";
 import { formatStars } from "@/lib/github";
 import { track } from "@/lib/metrics";
 
@@ -57,10 +58,9 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ id
           source: {entry.sourceUrl} ↗
         </a>
         {entry.skill.repoUrl && (
-          <a
+          <GithubLink
             href={entry.skill.repoUrl}
-            target="_blank"
-            rel="noreferrer"
+            slug={entry.skill.name}
             className="inline-flex items-center gap-2 btn-ghost rounded-md px-3 py-1.5 text-[12px] mono text-[color:var(--fg)] hover:text-[color:var(--accent)] transition"
             title="Open the upstream repository on GitHub"
           >
@@ -69,7 +69,7 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ id
             {entry.stars != null && (
               <span className="text-[color:var(--fg-muted)]">· ★ {formatStars(entry.stars)}</span>
             )}
-          </a>
+          </GithubLink>
         )}
       </div>
 

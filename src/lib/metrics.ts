@@ -6,7 +6,11 @@ export type MetricEvent =
   | "home_view"
   | "submit_started"
   | "tricks_view"
-  | "powerhouse_view";
+  | "powerhouse_view"
+  | "search_submitted"
+  | "github_click"
+  | "page_dwell"
+  | "scroll_depth";
 
 export interface TrackOpts {
   /** Skill slug (skill.name). Empty for non-skill events like home_view. */

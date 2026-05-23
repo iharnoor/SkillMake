@@ -31,7 +31,7 @@ SQL
 
 | Column     | Meaning                                                  |
 |------------|----------------------------------------------------------|
-| `index1`   | event name (`install_hit`, `home_view`, `marketplace_view`, `tricks_view`, `powerhouse_view`, `submit_started`) |
+| `index1`   | event name (`install_hit`, `home_view`, `marketplace_view`, `tricks_view`, `powerhouse_view`, `submit_started`, `search_submitted`, `github_click`, `page_dwell`, `scroll_depth`) |
 | `blob1`    | event name (mirrors `index1`)                            |
 | `blob2`    | skill slug — empty for non-skill events                  |
 | `blob3`    | country (`cf-ipcountry`, `??` if unknown)                |
@@ -187,6 +187,144 @@ FROM home
 LEFT JOIN installs ON home.visitor = installs.visitor AND home.day = installs.day
 GROUP BY day
 ORDER BY day ASC
+```
+
+## Top search queries (last 30 days)
+
+`search_submitted` stores the lowercased first 64 chars of the query.
+
+```sql
+SELECT
+  blob2 AS query,
+  sum(_sample_interval) AS searches
+FROM skillmake_metrics
+WHERE index1 = 'search_submitted'
+  AND blob2 != ''
+  AND timestamp >= NOW() - INTERVAL '30' DAY
+GROUP BY query
+ORDER BY searches DESC
+LIMIT 50
+```
+
+## Search → install (did the query land?)
+
+Same-day visitors who searched and then installed something.
+
+```sql
+WITH
+  searched AS (
+    SELECT blob6 AS visitor, toStartOfDay(timestamp) AS day
+    FROM skillmake_metrics
+    WHERE index1 = 'search_submitted'
+      AND timestamp >= NOW() - INTERVAL '30' DAY
+    GROUP BY visitor, day
+  ),
+  installed AS (
+    SELECT blob6 AS visitor, toStartOfDay(timestamp) AS day
+    FROM skillmake_metrics
+    WHERE index1 = 'install_hit'
+      AND timestamp >= NOW() - INTERVAL '30' DAY
+    GROUP BY visitor, day
+  )
+SELECT
+  searched.day AS day,
+  count(DISTINCT searched.visitor) AS searchers,
+  count(DISTINCT installed.visitor) AS converted,
+  round(count(DISTINCT installed.visitor) / count(DISTINCT searched.visitor) * 100, 2) AS pct
+FROM searched
+LEFT JOIN installed ON searched.visitor = installed.visitor AND searched.day = installed.day
+GROUP BY day
+ORDER BY day ASC
+```
+
+## Audience-filter demand (homepage pill clicks)
+
+`home_view` writes the filter slug as `blob2`. Empty = unfiltered.
+
+```sql
+SELECT
+  blob2 AS filter,
+  sum(_sample_interval) AS views
+FROM skillmake_metrics
+WHERE index1 = 'home_view'
+  AND blob2 != ''
+  AND timestamp >= NOW() - INTERVAL '30' DAY
+GROUP BY filter
+ORDER BY views DESC
+```
+
+## Top GitHub outbound clicks
+
+Which repos people actually open from the marketplace.
+
+```sql
+SELECT
+  blob2 AS slug,
+  sum(_sample_interval) AS github_clicks
+FROM skillmake_metrics
+WHERE index1 = 'github_click'
+  AND blob2 != ''
+  AND timestamp >= NOW() - INTERVAL '30' DAY
+GROUP BY slug
+ORDER BY github_clicks DESC
+LIMIT 25
+```
+
+## Dwell-time distribution (engagement)
+
+`page_dwell` buckets: `0-5s` / `5-15s` / `15-30s` / `30-60s` / `60-300s` / `300s+`.
+
+```sql
+SELECT
+  blob2 AS bucket,
+  sum(_sample_interval) AS sessions
+FROM skillmake_metrics
+WHERE index1 = 'page_dwell'
+  AND timestamp >= NOW() - INTERVAL '30' DAY
+GROUP BY bucket
+ORDER BY bucket
+```
+
+## Scroll-depth distribution (did they read the page?)
+
+`scroll_depth` buckets: `0` / `25` / `50` / `75` / `100`.
+
+```sql
+SELECT
+  blob2 AS depth_pct,
+  sum(_sample_interval) AS sessions
+FROM skillmake_metrics
+WHERE index1 = 'scroll_depth'
+  AND timestamp >= NOW() - INTERVAL '30' DAY
+GROUP BY depth_pct
+ORDER BY depth_pct
+```
+
+## GitHub vs install (intent leak)
+
+Are people clicking out to GitHub *instead of* installing? Pairs per skill.
+
+```sql
+SELECT
+  coalesce(installs.slug, clicks.slug) AS slug,
+  coalesce(installs.installs, 0) AS installs,
+  coalesce(clicks.github_clicks, 0) AS github_clicks
+FROM (
+  SELECT blob2 AS slug, sum(_sample_interval) AS installs
+  FROM skillmake_metrics
+  WHERE index1 = 'install_hit' AND blob2 != ''
+    AND timestamp >= NOW() - INTERVAL '30' DAY
+  GROUP BY slug
+) AS installs
+FULL OUTER JOIN (
+  SELECT blob2 AS slug, sum(_sample_interval) AS github_clicks
+  FROM skillmake_metrics
+  WHERE index1 = 'github_click' AND blob2 != ''
+    AND timestamp >= NOW() - INTERVAL '30' DAY
+  GROUP BY slug
+) AS clicks ON installs.slug = clicks.slug
+ORDER BY github_clicks DESC
+LIMIT 50
 ```
 
 ## Where to look in the Cloudflare dashboard

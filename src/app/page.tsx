@@ -6,6 +6,7 @@ import { MarketplaceSearch } from "@/components/MarketplaceSearch";
 import { AUDIENCES, type Audience } from "@/lib/skill-schema";
 import { formatStars } from "@/lib/github";
 import { GithubIcon } from "@/components/GithubIcon";
+import { GithubLink } from "@/components/OutboundLink";
 import { track } from "@/lib/metrics";
 
 export const dynamic = "force-dynamic";
@@ -67,7 +68,6 @@ export default async function Home({
   // Read headers BEFORE `after()` — request-time APIs can't be called inside
   // an after() callback from a Server Component.
   const h = await headers();
-  after(() => track("home_view", { headers: h }));
 
   // Audience pill click → ?audience=<name>. Only LIVE audiences accept a click,
   // so unknown / not-yet-live values fall back to the unfiltered view.
@@ -79,6 +79,16 @@ export default async function Home({
     LIVE_CATEGORIES.find((c) => c.slug === params.category) ?? null;
   const activeCollection =
     COLLECTION_FILTERS.find((c) => c.slug === params.collection) ?? null;
+
+  // Filter the URL was on when home_view fired — empty slug = unfiltered.
+  const homeFilter = activeAudience
+    ? activeAudience
+    : activeCategory
+      ? activeCategory.slug
+      : activeCollection
+        ? activeCollection.slug
+        : "";
+  after(() => track("home_view", { slug: homeFilter, headers: h }));
 
   const all = await listSkills();
   const entries = buildDisplayEntries(
@@ -306,10 +316,9 @@ export default async function Home({
               <div className="mono text-[11px] text-[color:var(--fg-dim)] truncate self-start mt-1">
                 <div className="truncate">{e.source}</div>
                 {e.repoUrl && (
-                  <a
+                  <GithubLink
                     href={e.repoUrl}
-                    target="_blank"
-                    rel="noreferrer"
+                    slug={e.name}
                     className="inline-flex max-w-full items-center gap-1.5 text-[color:var(--fg-muted)] hover:text-[color:var(--accent)] transition"
                     title={`★ ${e.stars ?? 0} on ${new URL(e.repoUrl).pathname.replace(/^\//, "")}`}
                   >
@@ -317,7 +326,7 @@ export default async function Home({
                     <span className="truncate">
                       {new URL(e.repoUrl).pathname.replace(/^\//, "").replace(/\/$/, "")}
                     </span>
-                  </a>
+                  </GithubLink>
                 )}
               </div>
               <div className="flex flex-wrap justify-start sm:justify-end gap-1.5 self-start">
