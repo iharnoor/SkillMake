@@ -8,6 +8,7 @@ import { formatStars } from "@/lib/github";
 import { GithubIcon } from "@/components/GithubIcon";
 import { track } from "@/lib/metrics";
 import { getInstallAnalytics, type InstallAnalytics } from "@/lib/install-analytics";
+import { InstallCount, InstallTrend } from "@/components/InstallObservability";
 
 export const dynamic = "force-dynamic";
 
@@ -334,12 +335,7 @@ export default async function Home({
                 )}
               </div>
               <InstallTrend installs={e.installTrend} />
-              <div className="mono text-[12px] tabular-nums text-[color:var(--fg-muted)] lg:text-right self-start mt-1">
-                <span className="lg:hidden text-[10px] uppercase tracking-wider text-[color:var(--fg-dim)] mr-2">
-                  installs
-                </span>
-                {e.installs === undefined ? "—" : formatCount(e.installs)}
-              </div>
+              <InstallCount installs={e.installs} />
               <div className="flex flex-wrap justify-start sm:justify-end gap-1.5 self-start">
                 <Signal hot href={`/i/${e.name}`}>install</Signal>
                 <Signal>reviewed</Signal>
@@ -357,36 +353,6 @@ export default async function Home({
         Think <span className="text-[color:var(--fg-muted)]">SKILL.md</span> for the rest of the agent
         stack — by hand, not by scrape.
       </div>
-    </div>
-  );
-}
-
-function InstallTrend({ installs }: { installs?: number[] }) {
-  if (!installs) {
-    return (
-      <div className="mono text-[11px] text-[color:var(--fg-dim)] self-start mt-1" title="Install trend unavailable">
-        <span className="lg:hidden text-[10px] uppercase tracking-wider mr-2">8w trend</span>—
-      </div>
-    );
-  }
-
-  const max = Math.max(...installs, 1);
-  return (
-    <div
-      className="h-7 w-[6.75rem] grid grid-cols-8 items-end gap-1 self-start"
-      aria-label={`Eight-week install trend: ${installs.join(", ")}`}
-      title={`Last eight weeks: ${installs.join(" / ")} installs`}
-    >
-      {installs.map((count, index) => (
-        <span
-          key={index}
-          className="block min-h-px rounded-sm bg-[color:var(--border-strong)]"
-          style={{
-            height: `${Math.max(1, Math.round((count / max) * 28))}px`,
-            background: count > 0 ? "var(--accent)" : "var(--border-strong)",
-          }}
-        />
-      ))}
     </div>
   );
 }
@@ -501,8 +467,3 @@ function zeroTrend(): number[] {
   return Array.from({ length: 8 }, () => 0);
 }
 
-function formatCount(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1000) return `${(n / 1000).toFixed(n >= 10_000 ? 0 : 1)}k`;
-  return String(n);
-}

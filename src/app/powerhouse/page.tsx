@@ -5,6 +5,8 @@ import { track } from "@/lib/metrics";
 import { findApprovedByName, type MarketplaceEntry } from "@/lib/storage";
 import { GithubIcon } from "@/components/GithubIcon";
 import { formatStars } from "@/lib/github";
+import { getInstallAnalytics } from "@/lib/install-analytics";
+import { InstallCount, InstallTrend } from "@/components/InstallObservability";
 
 export const dynamic = "force-dynamic";
 
@@ -18,18 +20,21 @@ interface CollectionEntry {
   repoUrl?: string;
   stars?: number | null;
   videoCount?: number;
+  installs?: number;
+  installTrend?: number[];
 }
 
 export default async function PowerhousePage() {
   const h = await headers();
   after(() => track("powerhouse_view", { headers: h }));
 
-  const [htmlEverything, last72, last30, printingPress, codexPlugin] = await Promise.all([
+  const [htmlEverything, last72, last30, printingPress, codexPlugin, analytics] = await Promise.all([
     findApprovedByName("html-everything"),
     findApprovedByName("last72hours"),
     findApprovedByName("last30days"),
     findApprovedByName("printingpress"),
     findApprovedByName("codex-plugin-cc"),
+    getInstallAnalytics(),
   ]);
 
   const entries: CollectionEntry[] = [
@@ -58,7 +63,15 @@ export default async function PowerhousePage() {
       "codex-plugin-cc",
       "Bring Codex into Claude Code for reviews, adversarial pressure-testing, and delegated rescue tasks."
     ),
-  ];
+  ].map((entry) => {
+    if (!analytics.available) return entry;
+    const summary = analytics.summaries.get(entry.name);
+    return {
+      ...entry,
+      installs: summary?.installs ?? 0,
+      installTrend: summary?.trend ?? Array.from({ length: 8 }, () => 0),
+    };
+  });
 
   return (
     <div className="max-w-5xl mx-auto px-6 pt-12 pb-24">
@@ -209,17 +222,19 @@ function CollectionHeader({
 function CollectionTable({ entries }: { entries: CollectionEntry[] }) {
   return (
     <div className="mt-6">
-      <div className="hidden sm:grid grid-cols-[2.5ch_minmax(0,1.3fr)_minmax(0,0.82fr)_minmax(180px,0.7fr)] gap-x-6 mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] pb-2 border-b border-[color:var(--border)]">
+      <div className="hidden sm:grid grid-cols-[2.5ch_minmax(0,1.3fr)_minmax(0,0.82fr)_6.75rem_5.5rem_minmax(180px,0.7fr)] gap-x-5 mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] pb-2 border-b border-[color:var(--border)]">
         <span className="text-right">#</span>
         <span>name</span>
         <span>source</span>
+        <span>8w trend</span>
+        <span className="text-right">installs</span>
         <span className="text-right">proof</span>
       </div>
       {entries.map((entry, i) => (
         <div
           key={entry.name}
           id={entry.name.replace(/^\//, "").replace(/[^a-z0-9]+/gi, "-").toLowerCase()}
-          className="grid sm:grid-cols-[2.5ch_minmax(0,1.3fr)_minmax(0,0.82fr)_minmax(180px,0.7fr)] gap-x-6 gap-y-2 py-3 border-b border-[color:var(--border)] hover:bg-[color:var(--bg-elevated)]/50 transition group scroll-mt-20"
+          className="grid sm:grid-cols-[2.5ch_minmax(0,1.3fr)_minmax(0,0.82fr)_6.75rem_5.5rem_minmax(180px,0.7fr)] gap-x-5 gap-y-2 py-3 border-b border-[color:var(--border)] hover:bg-[color:var(--bg-elevated)]/50 transition group scroll-mt-20"
         >
           <span className="mono text-[12px] text-[color:var(--fg-dim)] tabular-nums text-right self-start mt-1">
             {i + 1}
@@ -257,6 +272,8 @@ function CollectionTable({ entries }: { entries: CollectionEntry[] }) {
               </a>
             )}
           </div>
+          <InstallTrend installs={entry.installTrend} />
+          <InstallCount installs={entry.installs} />
           <div className="flex flex-wrap justify-start sm:justify-end gap-1.5 self-start">
             <ProofSignal hot href={entry.href}>
               {entry.href.startsWith("/marketplace/") ? "inspect" : "open"}
