@@ -7,8 +7,6 @@ import { AUDIENCES, type Audience } from "@/lib/skill-schema";
 import { formatStars } from "@/lib/github";
 import { GithubIcon } from "@/components/GithubIcon";
 import { track } from "@/lib/metrics";
-import { getInstallAnalytics, type InstallAnalytics } from "@/lib/install-analytics";
-import { InstallCount, InstallTrend } from "@/components/InstallObservability";
 
 export const dynamic = "force-dynamic";
 
@@ -34,8 +32,6 @@ interface DisplayEntry {
   repoUrl?: string;
   stars?: number | null;
   createdAt?: string;
-  installs?: number;
-  installTrend?: number[];
   videoCount: number;
 }
 
@@ -84,24 +80,16 @@ export default async function Home({
   const activeCollection =
     COLLECTION_FILTERS.find((c) => c.slug === params.collection) ?? null;
 
-  const [all, installAnalytics] = await Promise.all([listSkills(), getInstallAnalytics()]);
-  const entries = addInstallAnalytics(
-    buildDisplayEntries(
-      activeCollection
-        ? collectionEntries(activeCollection.slug, all)
-        : [...all]
-            .filter((e) => (activeAudience ? e.skill.audience === activeAudience : true))
-            .filter((e) => (activeCategory ? e.skill.category === activeCategory.slug : true))
-    ),
-    installAnalytics
+  const all = await listSkills();
+  const entries = buildDisplayEntries(
+    activeCollection
+      ? collectionEntries(activeCollection.slug, all)
+      : [...all]
+          .filter((e) => (activeAudience ? e.skill.audience === activeAudience : true))
+          .filter((e) => (activeCategory ? e.skill.category === activeCategory.slug : true))
   );
   if (!activeCollection) {
-    // The install stream becomes the primary leaderboard signal once read
-    // credentials exist. ★ stars keep local dev and cold deploys useful.
     entries.sort((a, b) => {
-      if (installAnalytics.available && (b.installs ?? 0) !== (a.installs ?? 0)) {
-        return (b.installs ?? 0) - (a.installs ?? 0);
-      }
       const stars = (b.stars ?? -1) - (a.stars ?? -1);
       if (stars !== 0) return stars;
       const created = (b.createdAt ?? "").localeCompare(a.createdAt ?? "");
@@ -284,19 +272,17 @@ export default async function Home({
         </div>
       ) : (
         <div className="mt-6">
-          <div className="hidden lg:grid grid-cols-[2.5ch_minmax(0,1.25fr)_minmax(0,0.72fr)_6.75rem_5.5rem_minmax(180px,0.72fr)] gap-x-5 mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] pb-2 border-b border-[color:var(--border)]">
+          <div className="hidden lg:grid grid-cols-[2.5ch_minmax(0,1.4fr)_minmax(0,0.8fr)_minmax(180px,0.8fr)] gap-x-6 mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] pb-2 border-b border-[color:var(--border)]">
             <span className="text-right">#</span>
             <span>name</span>
             <span>source</span>
-            <span>8w trend</span>
-            <span className="text-right">installs</span>
             <span className="text-right">proof</span>
           </div>
           {entries.map((e, i) => (
             <div
               key={e.id}
               id={e.id}
-              className="grid lg:grid-cols-[2.5ch_minmax(0,1.25fr)_minmax(0,0.72fr)_6.75rem_5.5rem_minmax(180px,0.72fr)] gap-x-5 gap-y-2 py-3 border-b border-[color:var(--border)] hover:bg-[color:var(--bg-elevated)]/50 transition group"
+              className="grid lg:grid-cols-[2.5ch_minmax(0,1.4fr)_minmax(0,0.8fr)_minmax(180px,0.8fr)] gap-x-6 gap-y-2 py-3 border-b border-[color:var(--border)] hover:bg-[color:var(--bg-elevated)]/50 transition group"
             >
               <span className="mono text-[12px] text-[color:var(--fg-dim)] tabular-nums text-right self-start mt-1">
                 {i + 1}
@@ -334,8 +320,6 @@ export default async function Home({
                   </a>
                 )}
               </div>
-              <InstallTrend installs={e.installTrend} />
-              <InstallCount installs={e.installs} />
               <div className="flex flex-wrap justify-start sm:justify-end gap-1.5 self-start">
                 <Signal hot href={`/i/${e.name}`}>install</Signal>
                 <Signal>reviewed</Signal>
@@ -437,18 +421,6 @@ function buildDisplayEntries(entries: (MarketplaceEntry | DisplayEntry)[]): Disp
   });
 }
 
-function addInstallAnalytics(entries: DisplayEntry[], analytics: InstallAnalytics): DisplayEntry[] {
-  if (!analytics.available) return entries;
-  return entries.map((entry) => {
-    const summary = analytics.summaries.get(entry.name);
-    return {
-      ...entry,
-      installs: summary?.installs ?? 0,
-      installTrend: summary?.trend ?? zeroTrend(),
-    };
-  });
-}
-
 function syntheticEntry(name: string, description: string, category: string): DisplayEntry {
   const id = name.replace(/^\//, "").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
   return {
@@ -461,9 +433,5 @@ function syntheticEntry(name: string, description: string, category: string): Di
     href: `#${id}`,
     videoCount: 0,
   };
-}
-
-function zeroTrend(): number[] {
-  return Array.from({ length: 8 }, () => 0);
 }
 

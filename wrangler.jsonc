@@ -44,9 +44,9 @@
   //   wrangler secret put HYDRADB_TENANT_ID
   //   wrangler secret put ADMIN_TOKEN     # gates /admin/*; rotating it logs every curator out
   //   wrangler secret put GITHUB_TOKEN    # optional; raises ★ stars rate limit 60→5000/hr
-  //   wrangler secret put CLOUDFLARE_ANALYTICS_API_TOKEN # optional; reads install leaderboard data
-  // CLOUDFLARE_ANALYTICS_API_TOKEN completes the pair at deploy time.
-  // Optional non-secret overrides go here (e.g. SKILLMAKE_MODEL).
+  // Install volume is read out of Analytics Engine directly from the
+  // Cloudflare dashboard rather than rendered on the site (see
+  // docs/analytics-queries.md).
   "vars": {
     "CLOUDFLARE_ACCOUNT_ID": "f9d7efb12a2713ce5af52d882165c543"
   }

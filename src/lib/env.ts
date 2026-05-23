@@ -14,7 +14,6 @@ interface EnvShape {
   ADMIN_TOKEN?: string;
   GITHUB_TOKEN?: string;
   CLOUDFLARE_ACCOUNT_ID?: string;
-  CLOUDFLARE_ANALYTICS_API_TOKEN?: string;
   MARKETPLACE_KV?: KVNamespace;
   METRICS?: AnalyticsEngineDataset;
 }
@@ -43,8 +42,6 @@ export async function getEnv(): Promise<EnvShape> {
     ADMIN_TOKEN: cf.env?.ADMIN_TOKEN ?? proc.ADMIN_TOKEN,
     GITHUB_TOKEN: cf.env?.GITHUB_TOKEN ?? proc.GITHUB_TOKEN,
     CLOUDFLARE_ACCOUNT_ID: cf.env?.CLOUDFLARE_ACCOUNT_ID ?? proc.CLOUDFLARE_ACCOUNT_ID,
-    CLOUDFLARE_ANALYTICS_API_TOKEN:
-      cf.env?.CLOUDFLARE_ANALYTICS_API_TOKEN ?? proc.CLOUDFLARE_ANALYTICS_API_TOKEN,
     MARKETPLACE_KV: cf.env?.MARKETPLACE_KV,
     METRICS: cf.env?.METRICS,
   };
