@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { z } from "zod";
 import { listSkills, getApprovedSkill } from "@/lib/storage";
 import { searchSkills } from "@/lib/vector";
 import type { Audience } from "@/lib/skill-schema";
+import { track } from "@/lib/metrics";
 
 export const runtime = "nodejs";
 
@@ -43,6 +44,13 @@ export async function POST(req: Request) {
   const parsed = Body.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "Invalid query" }, { status: 400 });
   const { query, max = 10 } = parsed.data;
+
+  after(() =>
+    track("search_submitted", {
+      slug: query.toLowerCase().slice(0, 64),
+      headers: req.headers,
+    })
+  );
 
   const hits = await searchSkills(query, max);
   if (hits) {

@@ -6,8 +6,8 @@ import { MarketplaceSearch } from "@/components/MarketplaceSearch";
 import { AUDIENCES, type Audience } from "@/lib/skill-schema";
 import { formatStars } from "@/lib/github";
 import { GithubIcon } from "@/components/GithubIcon";
+import { GithubLink } from "@/components/OutboundLink";
 import { track } from "@/lib/metrics";
-import { getInstallAnalytics, type InstallAnalytics } from "@/lib/install-analytics";
 
 export const dynamic = "force-dynamic";
 
@@ -33,8 +33,6 @@ interface DisplayEntry {
   repoUrl?: string;
   stars?: number | null;
   createdAt?: string;
-  installs?: number;
-  installTrend?: number[];
   videoCount: number;
 }
 
@@ -70,7 +68,6 @@ export default async function Home({
   // Read headers BEFORE `after()` — request-time APIs can't be called inside
   // an after() callback from a Server Component.
   const h = await headers();
-  after(() => track("home_view", { headers: h }));
 
   // Audience pill click → ?audience=<name>. Only LIVE audiences accept a click,
   // so unknown / not-yet-live values fall back to the unfiltered view.
@@ -83,24 +80,26 @@ export default async function Home({
   const activeCollection =
     COLLECTION_FILTERS.find((c) => c.slug === params.collection) ?? null;
 
-  const [all, installAnalytics] = await Promise.all([listSkills(), getInstallAnalytics()]);
-  const entries = addInstallAnalytics(
-    buildDisplayEntries(
-      activeCollection
-        ? collectionEntries(activeCollection.slug, all)
-        : [...all]
-            .filter((e) => (activeAudience ? e.skill.audience === activeAudience : true))
-            .filter((e) => (activeCategory ? e.skill.category === activeCategory.slug : true))
-    ),
-    installAnalytics
+  // Filter the URL was on when home_view fired — empty slug = unfiltered.
+  const homeFilter = activeAudience
+    ? activeAudience
+    : activeCategory
+      ? activeCategory.slug
+      : activeCollection
+        ? activeCollection.slug
+        : "";
+  after(() => track("home_view", { slug: homeFilter, headers: h }));
+
+  const all = await listSkills();
+  const entries = buildDisplayEntries(
+    activeCollection
+      ? collectionEntries(activeCollection.slug, all)
+      : [...all]
+          .filter((e) => (activeAudience ? e.skill.audience === activeAudience : true))
+          .filter((e) => (activeCategory ? e.skill.category === activeCategory.slug : true))
   );
   if (!activeCollection) {
-    // The install stream becomes the primary leaderboard signal once read
-    // credentials exist. ★ stars keep local dev and cold deploys useful.
     entries.sort((a, b) => {
-      if (installAnalytics.available && (b.installs ?? 0) !== (a.installs ?? 0)) {
-        return (b.installs ?? 0) - (a.installs ?? 0);
-      }
       const stars = (b.stars ?? -1) - (a.stars ?? -1);
       if (stars !== 0) return stars;
       const created = (b.createdAt ?? "").localeCompare(a.createdAt ?? "");
@@ -283,19 +282,17 @@ export default async function Home({
         </div>
       ) : (
         <div className="mt-6">
-          <div className="hidden lg:grid grid-cols-[2.5ch_minmax(0,1.25fr)_minmax(0,0.72fr)_6.75rem_5.5rem_minmax(180px,0.72fr)] gap-x-5 mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] pb-2 border-b border-[color:var(--border)]">
+          <div className="hidden lg:grid grid-cols-[2.5ch_minmax(0,1.4fr)_minmax(0,0.8fr)_minmax(180px,0.8fr)] gap-x-6 mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--fg-dim)] pb-2 border-b border-[color:var(--border)]">
             <span className="text-right">#</span>
             <span>name</span>
             <span>source</span>
-            <span>8w trend</span>
-            <span className="text-right">installs</span>
             <span className="text-right">proof</span>
           </div>
           {entries.map((e, i) => (
             <div
               key={e.id}
               id={e.id}
-              className="grid lg:grid-cols-[2.5ch_minmax(0,1.25fr)_minmax(0,0.72fr)_6.75rem_5.5rem_minmax(180px,0.72fr)] gap-x-5 gap-y-2 py-3 border-b border-[color:var(--border)] hover:bg-[color:var(--bg-elevated)]/50 transition group"
+              className="grid lg:grid-cols-[2.5ch_minmax(0,1.4fr)_minmax(0,0.8fr)_minmax(180px,0.8fr)] gap-x-6 gap-y-2 py-3 border-b border-[color:var(--border)] hover:bg-[color:var(--bg-elevated)]/50 transition group"
             >
               <span className="mono text-[12px] text-[color:var(--fg-dim)] tabular-nums text-right self-start mt-1">
                 {i + 1}
@@ -319,10 +316,9 @@ export default async function Home({
               <div className="mono text-[11px] text-[color:var(--fg-dim)] truncate self-start mt-1">
                 <div className="truncate">{e.source}</div>
                 {e.repoUrl && (
-                  <a
+                  <GithubLink
                     href={e.repoUrl}
-                    target="_blank"
-                    rel="noreferrer"
+                    slug={e.name}
                     className="inline-flex max-w-full items-center gap-1.5 text-[color:var(--fg-muted)] hover:text-[color:var(--accent)] transition"
                     title={`★ ${e.stars ?? 0} on ${new URL(e.repoUrl).pathname.replace(/^\//, "")}`}
                   >
@@ -330,15 +326,8 @@ export default async function Home({
                     <span className="truncate">
                       {new URL(e.repoUrl).pathname.replace(/^\//, "").replace(/\/$/, "")}
                     </span>
-                  </a>
+                  </GithubLink>
                 )}
-              </div>
-              <InstallTrend installs={e.installTrend} />
-              <div className="mono text-[12px] tabular-nums text-[color:var(--fg-muted)] lg:text-right self-start mt-1">
-                <span className="lg:hidden text-[10px] uppercase tracking-wider text-[color:var(--fg-dim)] mr-2">
-                  installs
-                </span>
-                {e.installs === undefined ? "—" : formatCount(e.installs)}
               </div>
               <div className="flex flex-wrap justify-start sm:justify-end gap-1.5 self-start">
                 <Signal hot href={`/i/${e.name}`}>install</Signal>
@@ -357,36 +346,6 @@ export default async function Home({
         Think <span className="text-[color:var(--fg-muted)]">SKILL.md</span> for the rest of the agent
         stack — by hand, not by scrape.
       </div>
-    </div>
-  );
-}
-
-function InstallTrend({ installs }: { installs?: number[] }) {
-  if (!installs) {
-    return (
-      <div className="mono text-[11px] text-[color:var(--fg-dim)] self-start mt-1" title="Install trend unavailable">
-        <span className="lg:hidden text-[10px] uppercase tracking-wider mr-2">8w trend</span>—
-      </div>
-    );
-  }
-
-  const max = Math.max(...installs, 1);
-  return (
-    <div
-      className="h-7 w-[6.75rem] grid grid-cols-8 items-end gap-1 self-start"
-      aria-label={`Eight-week install trend: ${installs.join(", ")}`}
-      title={`Last eight weeks: ${installs.join(" / ")} installs`}
-    >
-      {installs.map((count, index) => (
-        <span
-          key={index}
-          className="block min-h-px rounded-sm bg-[color:var(--border-strong)]"
-          style={{
-            height: `${Math.max(1, Math.round((count / max) * 28))}px`,
-            background: count > 0 ? "var(--accent)" : "var(--border-strong)",
-          }}
-        />
-      ))}
     </div>
   );
 }
@@ -471,18 +430,6 @@ function buildDisplayEntries(entries: (MarketplaceEntry | DisplayEntry)[]): Disp
   });
 }
 
-function addInstallAnalytics(entries: DisplayEntry[], analytics: InstallAnalytics): DisplayEntry[] {
-  if (!analytics.available) return entries;
-  return entries.map((entry) => {
-    const summary = analytics.summaries.get(entry.name);
-    return {
-      ...entry,
-      installs: summary?.installs ?? 0,
-      installTrend: summary?.trend ?? zeroTrend(),
-    };
-  });
-}
-
 function syntheticEntry(name: string, description: string, category: string): DisplayEntry {
   const id = name.replace(/^\//, "").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
   return {
@@ -497,12 +444,3 @@ function syntheticEntry(name: string, description: string, category: string): Di
   };
 }
 
-function zeroTrend(): number[] {
-  return Array.from({ length: 8 }, () => 0);
-}
-
-function formatCount(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1000) return `${(n / 1000).toFixed(n >= 10_000 ? 0 : 1)}k`;
-  return String(n);
-}

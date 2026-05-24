@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { track } from "@/lib/metrics";
 import { findApprovedByName, type MarketplaceEntry } from "@/lib/storage";
 import { GithubIcon } from "@/components/GithubIcon";
+import { GithubLink } from "@/components/OutboundLink";
 import { formatStars } from "@/lib/github";
 
 export const dynamic = "force-dynamic";
@@ -236,10 +237,9 @@ function CollectionTable({ entries }: { entries: CollectionEntry[] }) {
           <div className="mono text-[11px] text-[color:var(--fg-dim)] truncate self-start mt-1">
             <div className="truncate">{entry.source}</div>
             {entry.repoUrl && (
-              <a
+              <GithubLink
                 href={entry.repoUrl}
-                target="_blank"
-                rel="noreferrer"
+                slug={entry.name}
                 className="inline-flex max-w-full items-center gap-1.5 text-[color:var(--fg-muted)] hover:text-[color:var(--accent)] transition"
                 title={`★ ${entry.stars ?? 0} on ${new URL(entry.repoUrl).pathname.replace(/^\//, "")}`}
               >
@@ -247,7 +247,7 @@ function CollectionTable({ entries }: { entries: CollectionEntry[] }) {
                 <span className="truncate">
                   {new URL(entry.repoUrl).pathname.replace(/^\//, "").replace(/\/$/, "")}
                 </span>
-              </a>
+              </GithubLink>
             )}
           </div>
           <div className="flex flex-wrap justify-start sm:justify-end gap-1.5 self-start">
