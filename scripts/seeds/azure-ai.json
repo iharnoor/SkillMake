@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/microsoft/azure-skills/tree/main/skills/azure-ai",
+  "skill": {
+    "name": "azure-ai",
+    "description": "Use when standing up or operating Azure AI services: choosing between Azure OpenAI, AI Foundry, AI Search, and Cognitive Services, then deploying, securing, and observing a chosen path.",
+    "whenToUse": [
+      "Picking between Azure OpenAI, AI Foundry, and AI Search for a new feature instead of reaching for the wrong one",
+      "Provisioning models, deployments, and capacity in Azure OpenAI without tripping over quota and region constraints",
+      "Wiring private networking, managed identity, and Key Vault into an AI service so it is not internet-public",
+      "Adding telemetry so token usage, latency, and content-filter triggers are visible in Application Insights"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Service selection",
+        "explanation": "Azure OpenAI exposes OpenAI models with Azure RBAC and networking. AI Foundry is the orchestration and evaluation surface. AI Search supplies retrieval. Cognitive Services covers vision, speech, and document intelligence."
+      },
+      {
+        "term": "Deployments and capacity",
+        "explanation": "Models are exposed as named deployments with provisioned (PTU) or pay-as-you-go capacity. Region and quota choices determine availability and cost more than model choice does."
+      },
+      {
+        "term": "Managed identity and RBAC",
+        "explanation": "Authenticate workloads to Azure OpenAI with managed identity plus role assignments instead of API keys; keys end up in source and break the rotation story."
+      },
+      {
+        "term": "Private endpoints",
+        "explanation": "Put the AI account on a private endpoint and disable public network access when the service handles regulated data; this changes how clients resolve the endpoint."
+      },
+      {
+        "term": "Content filters and abuse monitoring",
+        "explanation": "Default content filters run on inputs and outputs. Abuse monitoring stores prompts and completions for review unless modified data processing is configured."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add microsoft/azure-skills --skill azure-ai",
+        "purpose": "Install the Azure AI skill bundle.",
+        "example": "npx skills add microsoft/azure-skills --skill azure-ai"
+      },
+      {
+        "signature": "az cognitiveservices account create / az cognitiveservices account deployment create",
+        "purpose": "Provision an Azure OpenAI account and a model deployment from the CLI.",
+        "example": "az cognitiveservices account create -n my-aoai -g rg --kind OpenAI --sku S0 --location eastus2\naz cognitiveservices account deployment create -n my-aoai -g rg --deployment-name gpt-4o --model-name gpt-4o --model-version 2024-08-06 --model-format OpenAI --sku-capacity 10 --sku-name Standard"
+      }
+    ],
+    "gotchas": [
+      "Model versions are pinned to a deployment; upgrading a model means creating a new deployment, not editing the old one",
+      "Quota lives at the subscription and region level; the same deployment can succeed in one region and fail in another",
+      "Disabling public network access from the portal does not retroactively close existing TCP connections",
+      "Default abuse monitoring stores prompts for 30 days; if that is unacceptable, apply for modified abuse monitoring before going live",
+      "PTU capacity is reserved capacity, billed even when idle; treat it like compute, not API metering"
+    ],
+    "category": "platform",
+    "audience": "devops",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/microsoft/azure-skills"
+  }
+}

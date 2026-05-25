@@ -1,0 +1,57 @@
+{
+  "sourceUrl": "https://github.com/xixu-me/skills/tree/main/opensource-guide-coach",
+  "skill": {
+    "name": "opensource-guide-coach",
+    "description": "Use when guiding someone through their first open-source contribution: picking a good first issue, scoping a PR, writing the right commit message, and reading reviewer feedback charitably.",
+    "whenToUse": [
+      "A junior contributor asks where to start and you want a calibrated answer instead of generic advice",
+      "Helping someone scope down an over-ambitious first PR into something maintainers will actually merge",
+      "Writing a PR description that gives reviewers the context to say yes without a back-and-forth",
+      "Translating blunt reviewer feedback into actionable changes without taking it personally"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Good first issue heuristic",
+        "explanation": "A good first issue has clear acceptance criteria, a maintained reviewer, no recent abandoned attempts, and lives in a file the project genuinely wants help with."
+      },
+      {
+        "term": "Scope-down before code",
+        "explanation": "Cut the planned PR until the diff is small enough to review in one sitting; bundled changes get stalled in review queues."
+      },
+      {
+        "term": "Context-first PR description",
+        "explanation": "The first paragraph answers 'why this change?' before 'what I did.' Reviewers approve the change, not the diff."
+      },
+      {
+        "term": "Charitable reading of review",
+        "explanation": "Treat 'nit:' as nit and 'please change X' as required; ask a clarifying question when intent is unclear instead of arguing."
+      },
+      {
+        "term": "Maintainer time budget",
+        "explanation": "Open source maintainers usually have minutes per PR per week; respect that with small, focused, well-tested patches and you get merged."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add xixu-me/skills --skill opensource-guide-coach",
+        "purpose": "Install the open-source contribution coaching skill.",
+        "example": "npx skills add xixu-me/skills --skill opensource-guide-coach"
+      },
+      {
+        "signature": "PR template: why / what / how to verify / risks",
+        "purpose": "Four-section template the coach steers a contributor toward for first PR descriptions.",
+        "example": "## Why\nThe build fails on Node 22 because X.\n\n## What\nReplace deprecated foo() with bar().\n\n## How to verify\n`npm test` passes on Node 18, 20, 22.\n\n## Risks\nFoo is also used in legacy/ — left untouched for now."
+      }
+    ],
+    "gotchas": [
+      "Not every 'good first issue' label is real; check the issue thread for prior closed PRs that hit the same problem",
+      "Squash-merge is the norm in most repos; do not over-engineer the commit history of your branch",
+      "CLA bots will block your PR until signed; sign them upfront to avoid a multi-day stall",
+      "Maintainers usually want tests before features; if there are no tests for the area you are changing, propose adding the test first"
+    ],
+    "category": "concept",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/xixu-me/skills"
+  }
+}

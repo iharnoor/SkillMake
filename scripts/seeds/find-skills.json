@@ -1,0 +1,52 @@
+{
+  "sourceUrl": "https://github.com/vercel-labs/skills/tree/main/skills/find-skills",
+  "skill": {
+    "name": "find-skills",
+    "description": "Use when an agent needs to discover other skills relevant to a task before writing code, including searching the skills.sh ecosystem by topic, framework, or use-case.",
+    "whenToUse": [
+      "Starting a task in an unfamiliar framework and you suspect there is already a skill for it",
+      "Auditing what reusable skills are available across the open ecosystem",
+      "Picking the next skill to add to your agent's installed set, ranked by install volume",
+      "Showing the user a shortlist of skills that match a request before committing to one"
+    ],
+    "keyConcepts": [
+      {
+        "term": "skills.sh registry",
+        "explanation": "The open registry of agent skills, queryable by topic, agent, and owner. find-skills wraps the registry's search and ranking so an agent can look skills up without leaving its session."
+      },
+      {
+        "term": "Install command output",
+        "explanation": "Every match comes back with the exact 'npx skills add <owner/repo> --skill <name>' command, so the agent or the user can install it in one step."
+      },
+      {
+        "term": "Ranking by trend and install volume",
+        "explanation": "Results are sorted by recent install velocity by default, with 'all time' and 'hot' modes available, so the most-trusted skills surface first."
+      },
+      {
+        "term": "Topic-scoped browsing",
+        "explanation": "Topics like React, Next.js, databases, testing, and agent workflows scope a search so unrelated skills do not crowd the result list."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add vercel-labs/skills --skill find-skills",
+        "purpose": "Install the meta-skill that searches the skills.sh registry.",
+        "example": "npx skills add vercel-labs/skills --skill find-skills"
+      },
+      {
+        "signature": "find-skills <query> [--topic <topic>] [--agent <agent>]",
+        "purpose": "Search the registry for skills matching a query, optionally scoped to a topic or agent.",
+        "example": "find-skills \"oauth\" --topic auth --agent claude-code"
+      }
+    ],
+    "gotchas": [
+      "Results are only as current as the registry, so a fresh search beats a cached list when picking between two close skills",
+      "Install volume signals popularity but not correctness for your specific stack, so inspect the SKILL.md before installing",
+      "Multiple skills can claim the same surface area; prefer the one with a maintained source repo over a one-off"
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/vercel-labs/skills"
+  }
+}

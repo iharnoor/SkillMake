@@ -1,23 +1,21 @@
 import { getEnv } from "./env";
+import {
+  buildMetricDataPoint,
+  metricContextFromHeaders,
+  type MetricEvent,
+} from "./metrics-core";
 
-export type MetricEvent =
-  | "install_hit"
-  | "marketplace_view"
-  | "home_view"
-  | "submit_started"
-  | "tricks_view"
-  | "powerhouse_view"
-  | "search_submitted"
-  | "github_click"
-  | "page_dwell"
-  | "scroll_depth";
+export type { MetricEvent, MetricContext } from "./metrics-core";
+export { buildMetricDataPoint, metricContextFromHeaders, hashSearchQuery } from "./metrics-core";
 
 export interface TrackOpts {
-  /** Skill slug (skill.name). Empty for non-skill events like home_view. */
+  /** Skill slug, bucket, route fragment, or hashed query — depends on event. */
   slug?: string;
   /** Request headers — pass `request.headers` from a Route Handler, or
    *  `await headers()` from a Server Component (read BEFORE `after()`). */
   headers?: Headers;
+  /** HTTP status for ops events (`api_error`, `convert_error`). Stored in double2. */
+  status?: number;
 }
 
 /**
@@ -33,47 +31,15 @@ export interface TrackOpts {
  *   blob5  = UA category (curl | browser | bot | other)
  *   blob6  = daily visitor id — sha256(ip+ua+day) first 8 bytes hex; for uniques
  *   double1 = 1 (count)
+ *   double2 = HTTP status (ops events only, when set)
  */
 export async function track(event: MetricEvent, opts: TrackOpts = {}): Promise<void> {
   try {
     const env = await getEnv();
     if (!env.METRICS) return;
-    const h = opts.headers;
-    const country = h?.get("cf-ipcountry") ?? "??";
-    let refererHost = "";
-    const referer = h?.get("referer");
-    if (referer) {
-      try {
-        refererHost = new URL(referer).host;
-      } catch {
-        // ignore malformed referer
-      }
-    }
-    const ua = h?.get("user-agent") ?? "";
-    const uaCat = /curl|wget|httpie/i.test(ua)
-      ? "curl"
-      : /bot|crawl|spider|preview|fetch/i.test(ua)
-      ? "bot"
-      : /Mozilla/.test(ua)
-      ? "browser"
-      : "other";
-    const ip = h?.get("cf-connecting-ip") ?? "";
-    const day = new Date().toISOString().slice(0, 10);
-    const visitor = await sha8(`${ip}|${ua}|${day}`);
-    env.METRICS.writeDataPoint({
-      indexes: [event],
-      blobs: [event, opts.slug ?? "", country, refererHost, uaCat, visitor],
-      doubles: [1],
-    });
+    const ctx = await metricContextFromHeaders(opts.headers);
+    env.METRICS.writeDataPoint(buildMetricDataPoint(event, opts, ctx));
   } catch {
     // metric writes must never break the response
   }
-}
-
-async function sha8(s: string): Promise<string> {
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
-  const view = new Uint8Array(buf, 0, 8);
-  let out = "";
-  for (const b of view) out += b.toString(16).padStart(2, "0");
-  return out;
 }

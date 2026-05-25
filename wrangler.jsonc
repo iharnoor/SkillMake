@@ -9,7 +9,11 @@
     "binding": "ASSETS"
   },
   "observability": {
-    "enabled": true
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true
+    }
   },
 
   // Custom domain. Both apex and www point at the same Worker.

@@ -1,0 +1,53 @@
+{
+  "sourceUrl": "https://github.com/vercel-labs/agent-browser",
+  "skill": {
+    "name": "agent-browser",
+    "description": "Use when the agent needs to drive a real browser to QA a deploy, scrape a logged-in page, or verify a UI change end-to-end with screenshots and DOM access.",
+    "whenToUse": [
+      "Verifying a deploy by navigating the live site and asserting that key pages, forms, and dialogs work",
+      "Taking annotated or full-page screenshots as evidence in a bug report or pull request",
+      "Filling out forms and clicking through a flow where a headless HTTP request will not work",
+      "Reading the DOM, console errors, and network requests of a page the user is debugging"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Persistent browser session",
+        "explanation": "A long-lived Chromium instance keeps cookies, tabs, and login state between commands, so multi-step flows survive without re-authentication."
+      },
+      {
+        "term": "Snapshot-and-act loop",
+        "explanation": "The agent takes a labeled accessibility snapshot to find interactive elements, then acts on them by reference, instead of guessing selectors."
+      },
+      {
+        "term": "Annotated screenshots",
+        "explanation": "Screenshots can be overlayed with element labels so a bug report shows exactly which button or input is in the wrong state."
+      },
+      {
+        "term": "Headed handoff",
+        "explanation": "When a flow hits CAPTCHA or MFA, the skill can open a visible Chromium window for the user to complete the step, then resume control."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add vercel-labs/agent-browser",
+        "purpose": "Install the agent-browser skill.",
+        "example": "npx skills add vercel-labs/agent-browser"
+      },
+      {
+        "signature": "browser goto <url> / snapshot / click <ref> / fill <ref> <value>",
+        "purpose": "Drive the browser through a flow using references from the latest snapshot.",
+        "example": "browser goto https://app.example.com/login\nbrowser snapshot -i\nbrowser fill @e2 \"user@test.com\"\nbrowser click @e4"
+      }
+    ],
+    "gotchas": [
+      "References from a snapshot are invalidated after navigation, so re-snapshot before the next click",
+      "Some sites block headless browsers entirely; switch to headed mode when you see anti-bot 403s",
+      "Login cookies live for the session only by default; export browser state if you need to restore it later",
+      "Full-page screenshots can be huge on long pages, so prefer element-scoped screenshots for bug reports"
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/vercel-labs/agent-browser"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/microsoft/azure-skills/tree/main/skills/azure-storage",
+  "skill": {
+    "name": "azure-storage",
+    "description": "Use when designing or operating Azure Storage: picking between blobs, files, queues, and tables, then locking down access, tuning performance, and controlling cost.",
+    "whenToUse": [
+      "Choosing between Blob, Data Lake Gen2, Files, Queues, and Tables for a new workload instead of defaulting to blob for everything",
+      "Locking a storage account down with private endpoints, network rules, and identity-based access instead of shared keys",
+      "Tuning tiering, lifecycle, and redundancy to fit recovery objectives without overpaying for hot storage",
+      "Tracking down a billing surprise by inspecting bandwidth, transaction, and operation costs"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Account kinds and SKUs",
+        "explanation": "StorageV2, BlockBlobStorage, and FileStorage have different performance tiers (Standard, Premium) and feature support. Picking the wrong kind locks out features like hierarchical namespace."
+      },
+      {
+        "term": "Authentication ladder",
+        "explanation": "Prefer Entra ID with RBAC over shared keys and shared access signatures. When SAS is required, prefer user-delegation SAS over account SAS so credentials are tied to an identity."
+      },
+      {
+        "term": "Redundancy and recovery",
+        "explanation": "LRS, ZRS, GRS, and GZRS trade cost for failure-domain coverage. Geo-redundant storage is asynchronous; do not assume RPO is zero."
+      },
+      {
+        "term": "Lifecycle and access tiers",
+        "explanation": "Hot, Cool, Cold, and Archive tiers reduce storage cost but increase retrieval cost and latency. Lifecycle management rules move blobs between tiers based on age and access patterns."
+      },
+      {
+        "term": "Networking",
+        "explanation": "Public endpoints, service endpoints, private endpoints, and firewall rules layer differently. Private endpoint + 'public network access: disabled' is the strict default for regulated data."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add microsoft/azure-skills --skill azure-storage",
+        "purpose": "Install the Azure Storage skill bundle.",
+        "example": "npx skills add microsoft/azure-skills --skill azure-storage"
+      },
+      {
+        "signature": "az storage account create / az storage blob upload (with --auth-mode login)",
+        "purpose": "Create a storage account and upload using Entra ID auth instead of shared keys.",
+        "example": "az storage account create -n mystorage -g rg -l eastus2 --sku Standard_LRS --kind StorageV2\naz storage blob upload --account-name mystorage --container-name uploads --name doc.pdf --file ./doc.pdf --auth-mode login"
+      }
+    ],
+    "gotchas": [
+      "Disabling shared key access breaks tools and SDKs that quietly use account keys; migrate them to managed identity first",
+      "Archive tier has a rehydration delay measured in hours; do not put hot-path data there for cost savings",
+      "Lifecycle rules evaluate once per day, not in real time, so cost reductions show up the next billing cycle",
+      "Cross-region copy for hierarchical-namespace accounts has different semantics than flat-namespace; check feature parity before relying on it",
+      "Soft delete and versioning are separate features; enabling soft delete alone does not protect against overwrite of the same blob name"
+    ],
+    "category": "platform",
+    "audience": "devops",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/microsoft/azure-skills"
+  }
+}

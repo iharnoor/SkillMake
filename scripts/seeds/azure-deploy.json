@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/microsoft/azure-skills/tree/main/skills/azure-deploy",
+  "skill": {
+    "name": "azure-deploy",
+    "description": "Use when shipping infrastructure or app code to Azure: picking between Bicep, Terraform, ARM, and azd, then wiring a deployment pipeline that is repeatable, auditable, and reversible.",
+    "whenToUse": [
+      "Starting a new Azure project and choosing the deployment toolchain instead of cobbling one together over time",
+      "Migrating a click-ops resource group into version-controlled infrastructure-as-code without breaking the running app",
+      "Building a deployment pipeline in GitHub Actions or Azure DevOps that authenticates via OIDC instead of long-lived service principals",
+      "Rolling back a bad deployment and understanding which knob actually reverts what"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Toolchain selection",
+        "explanation": "azd is the per-app starter, Bicep is the Azure-native DSL, Terraform is multi-cloud with state to manage, ARM templates are the JSON underlying everything. Pick one main path and stick with it."
+      },
+      {
+        "term": "Deployment scope",
+        "explanation": "Azure deployments target subscription, resource group, management group, or tenant scopes. Wrong scope is the most common reason a template authoring perfectly fails to deploy."
+      },
+      {
+        "term": "OIDC federation",
+        "explanation": "GitHub Actions and Azure DevOps can federate to Azure with a workload identity, so pipelines authenticate without a stored secret."
+      },
+      {
+        "term": "What-if and preview",
+        "explanation": "az deployment ... what-if and terraform plan surface the diff before apply. Treat unexpected lines as bugs, not noise."
+      },
+      {
+        "term": "Rollback strategy",
+        "explanation": "Incremental deployments do not delete unmanaged resources, and ARM has no real rollback. Recovery comes from re-applying the previous template version, not pressing 'undo'."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add microsoft/azure-skills --skill azure-deploy",
+        "purpose": "Install the Azure deploy skill bundle.",
+        "example": "npx skills add microsoft/azure-skills --skill azure-deploy"
+      },
+      {
+        "signature": "az deployment group what-if / az deployment group create",
+        "purpose": "Preview and apply a resource-group-scoped deployment from a Bicep file.",
+        "example": "az deployment group what-if -g rg -f main.bicep -p env=prod\naz deployment group create -g rg -f main.bicep -p env=prod --confirm-with-what-if"
+      }
+    ],
+    "gotchas": [
+      "Resource provider registration is per-subscription; a fresh subscription will reject deployments until each provider is registered",
+      "Complete deployment mode deletes anything in the resource group not in the template; default to incremental unless you really want that",
+      "Bicep modules cache by version, so updating a registry module without bumping the version can silently keep old behavior",
+      "OIDC tokens require the federated credential subject to exactly match the workflow ref; mismatch fails with an unclear 'AADSTS70021' error",
+      "Pipeline 'success' does not mean the app is healthy; chain a smoke test job that hits the deployed endpoint before marking the rollout green"
+    ],
+    "category": "platform",
+    "audience": "devops",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/microsoft/azure-skills"
+  }
+}

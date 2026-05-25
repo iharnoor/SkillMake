@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/xixu-me/skills/tree/main/github-actions-docs",
+  "skill": {
+    "name": "github-actions-docs",
+    "description": "Use when writing, reviewing, or debugging a GitHub Actions workflow so an agent has the current docs for triggers, contexts, expressions, and reusable workflows close at hand.",
+    "whenToUse": [
+      "Adding a new workflow file and you need the exact YAML shape for triggers, jobs, and steps",
+      "Debugging an action that runs locally but fails in CI, often because of contexts or runner differences",
+      "Refactoring brittle workflow strings into reusable workflows, composite actions, or matrix builds",
+      "Reviewing a PR that changes CI to spot expression evaluation order or permissions footguns"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Triggers and events",
+        "explanation": "Workflows run on events like push, pull_request, workflow_dispatch, and schedule. Each event has its own payload, filters, and concurrency implications."
+      },
+      {
+        "term": "Contexts and expressions",
+        "explanation": "github, env, job, steps, secrets, vars, and inputs are evaluated with ${{ }} expressions. Subtle precedence and quoting rules make the same expression behave differently in if vs run steps."
+      },
+      {
+        "term": "Reusable workflows and composite actions",
+        "explanation": "Workflows can call other workflows with inputs, secrets, and outputs. Composite actions wrap a sequence of steps for reuse across workflows without a Docker container."
+      },
+      {
+        "term": "Permissions and OIDC",
+        "explanation": "The GITHUB_TOKEN's permissions are configurable at workflow or job level. OIDC tokens let workflows authenticate to cloud providers without long-lived secrets."
+      },
+      {
+        "term": "Matrix and concurrency",
+        "explanation": "Matrix builds fan out a job across configurations; concurrency groups cancel or queue in-flight runs to stop two pipelines stepping on each other."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add xixu-me/skills --skill github-actions-docs",
+        "purpose": "Install the GitHub Actions docs reference skill.",
+        "example": "npx skills add xixu-me/skills --skill github-actions-docs"
+      },
+      {
+        "signature": "name / on / jobs / steps / uses / run / with / env / permissions / concurrency",
+        "purpose": "Top-level YAML keys an agent should reach for when authoring a workflow.",
+        "example": "name: ci\non:\n  push:\n    branches: [main]\njobs:\n  build:\n    runs-on: ubuntu-latest\n    permissions: { contents: read }\n    steps:\n      - uses: actions/checkout@v4\n      - run: npm ci && npm test"
+      }
+    ],
+    "gotchas": [
+      "Expressions in if are evaluated against strings, so '== true' against a boolean output silently mismatches",
+      "GITHUB_TOKEN defaults to read-only on new repos; missing permissions block pushes and PR comments",
+      "Matrix entries with include but no base matrix can produce surprising row counts",
+      "Reusable workflows do not inherit secrets unless you pass them through with secrets: inherit",
+      "actions/checkout@v4 fetches a shallow history by default; some tooling needs fetch-depth: 0"
+    ],
+    "category": "platform",
+    "audience": "devops",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/xixu-me/skills"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "sourceUrl": "https://github.com/xixu-me/skills/tree/main/openclaw-secure-linux-cloud",
+  "skill": {
+    "name": "openclaw-secure-linux-cloud",
+    "description": "Use when an agent needs to run shell commands on a remote Linux host or ephemeral cloud sandbox with least-privilege defaults, audit logging, and an explicit destructive-action gate.",
+    "whenToUse": [
+      "Bootstrapping a fresh Linux VM and you want safe defaults: non-root user, SSH keys only, firewall, fail2ban, unattended upgrades",
+      "Letting an agent execute commands on a remote host without giving it long-lived root access",
+      "Running an untrusted code-execution step inside a disposable sandbox the agent can tear down on failure",
+      "Producing an audit log of every command the agent ran on a server so a human can review later"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Least-privilege session",
+        "explanation": "The agent connects as a non-root user with a scoped sudoers rule and an idle timeout, so a compromised session cannot escalate or linger."
+      },
+      {
+        "term": "Destructive-action gate",
+        "explanation": "rm -rf, dd, chmod -R, systemctl stop, and database drops require explicit confirmation in the prompt; the skill refuses to run them silently."
+      },
+      {
+        "term": "Append-only audit log",
+        "explanation": "Every command, exit code, and stdout/stderr is recorded to a tamper-evident log that survives session end so post-mortems are trivial."
+      },
+      {
+        "term": "Ephemeral cloud sandbox",
+        "explanation": "When isolation matters more than persistence, the skill provisions a short-lived VM, runs the work there, and destroys it afterward."
+      },
+      {
+        "term": "Secrets handling",
+        "explanation": "Tokens are read from a host secret store at run time and never echoed back to the agent's transcript, even on error."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add xixu-me/skills --skill openclaw-secure-linux-cloud",
+        "purpose": "Install the secure-Linux-cloud skill.",
+        "example": "npx skills add xixu-me/skills --skill openclaw-secure-linux-cloud"
+      },
+      {
+        "signature": "secure-shell <host> <command> / sandbox run <command>",
+        "purpose": "Run a single command on a remote host under the safety gate, or run inside a disposable sandbox.",
+        "example": "secure-shell prod-1 \"systemctl status nginx\"\nsandbox run \"./untrusted-script.sh\""
+      }
+    ],
+    "gotchas": [
+      "Destructive gates can break automation expecting a non-interactive shell, so pre-approve specific commands in policy rather than disabling the gate",
+      "The audit log is local; ship it to a SIEM or remote bucket if the host itself might be compromised",
+      "Ephemeral sandboxes lose state on destroy, so persist artifacts to object storage before exit",
+      "SSH agent forwarding is disabled by default; use deploy keys or signed certificates for git access"
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/xixu-me/skills"
+  }
+}

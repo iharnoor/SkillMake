@@ -31,14 +31,15 @@ SQL
 
 | Column     | Meaning                                                  |
 |------------|----------------------------------------------------------|
-| `index1`   | event name (`install_hit`, `home_view`, `marketplace_view`, `tricks_view`, `powerhouse_view`, `submit_started`, `search_submitted`, `github_click`, `page_dwell`, `scroll_depth`) |
+| `index1`   | event name (`install_hit`, `home_view`, `marketplace_view`, `tricks_view`, `powerhouse_view`, `submit_started`, `submit_completed`, `convert_success`, `convert_error`, `search_submitted`, `github_click`, `page_dwell`, `scroll_depth`, `api_error`) |
 | `blob1`    | event name (mirrors `index1`)                            |
-| `blob2`    | skill slug — empty for non-skill events                  |
+| `blob2`    | skill slug, bucket, route fragment, or hashed search query — depends on event |
 | `blob3`    | country (`cf-ipcountry`, `??` if unknown)                |
 | `blob4`    | referer host (empty for direct hits)                     |
 | `blob5`    | UA category (`curl` / `browser` / `bot` / `other`)       |
 | `blob6`    | daily visitor id (sha256(ip+ua+day) → 8 bytes)           |
 | `double1`  | always `1`                                               |
+| `double2`  | HTTP status (`api_error`, `convert_error` only)          |
 
 Analytics Engine samples on write, so always use `sum(_sample_interval)` — not
 `count()` — to get the true total.
@@ -191,17 +192,18 @@ ORDER BY day ASC
 
 ## Top search queries (last 30 days)
 
-`search_submitted` stores the lowercased first 64 chars of the query.
+`search_submitted` stores a **hashed** query in `blob2` (sha256 of normalized text).
+Use this for volume trends, not to read literal search strings.
 
 ```sql
 SELECT
-  blob2 AS query,
+  blob2 AS query_hash,
   sum(_sample_interval) AS searches
 FROM skillmake_metrics
 WHERE index1 = 'search_submitted'
   AND blob2 != ''
   AND timestamp >= NOW() - INTERVAL '30' DAY
-GROUP BY query
+GROUP BY query_hash
 ORDER BY searches DESC
 LIMIT 50
 ```
@@ -327,8 +329,54 @@ ORDER BY github_clicks DESC
 LIMIT 50
 ```
 
+## Submit funnel: page view → convert → publish
+
+```sql
+SELECT
+  index1 AS step,
+  sum(_sample_interval) AS hits
+FROM skillmake_metrics
+WHERE index1 IN ('submit_started', 'convert_success', 'convert_error', 'submit_completed')
+  AND timestamp >= NOW() - INTERVAL '30' DAY
+GROUP BY step
+ORDER BY hits DESC
+```
+
+## Convert errors by code (last 30 days)
+
+`blob2` holds the extract error code or `auth` / `internal`. `double2` is HTTP status.
+
+```sql
+SELECT
+  blob2 AS error_code,
+  double2 AS http_status,
+  sum(_sample_interval) AS errors
+FROM skillmake_metrics
+WHERE index1 = 'convert_error'
+  AND timestamp >= NOW() - INTERVAL '30' DAY
+GROUP BY error_code, http_status
+ORDER BY errors DESC
+```
+
+## API errors by route (last 7 days)
+
+`blob2` is the route without `/api/` prefix (e.g. `convert`, `search`).
+
+```sql
+SELECT
+  blob2 AS route,
+  double2 AS http_status,
+  sum(_sample_interval) AS errors
+FROM skillmake_metrics
+WHERE index1 = 'api_error'
+  AND timestamp >= NOW() - INTERVAL '7' DAY
+GROUP BY route, http_status
+ORDER BY errors DESC
+LIMIT 50
+```
+
 ## Where to look in the Cloudflare dashboard
 
 - **Workers Analytics** (free, built-in, no SQL): Workers & Pages → `skillmake` → Metrics → request volume, errors, CPU, latency. Good for ops, not for product.
 - **Analytics Engine SQL** (paid plan): Workers & Pages → Analytics Engine. This is where the queries above run, and where to build dashboards.
-- **Logs**: Workers & Pages → `skillmake` → Logs → live tail or Logpush to R2 if you need raw request history beyond the 24h tail.
+- **Logs**: Workers & Pages → `skillmake` → Logs → live tail. For retention beyond ~24h, enable **Logpush** to R2 from the dashboard (Account → Logs → Logpush).

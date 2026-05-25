@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/microsoft/azure-skills/tree/main/skills/azure-kubernetes",
+  "skill": {
+    "name": "azure-kubernetes",
+    "description": "Use when running workloads on Azure Kubernetes Service: cluster sizing, identity, networking, autoscaling, upgrade strategy, and observability for AKS specifically rather than vanilla Kubernetes.",
+    "whenToUse": [
+      "Provisioning a production-grade AKS cluster instead of using the portal defaults that won't survive a real workload",
+      "Wiring workload identity, Key Vault CSI, and Entra-integrated RBAC so pods authenticate without baked-in secrets",
+      "Choosing between Azure CNI, Azure CNI Overlay, and kubenet for a network topology that fits the org's VNet plan",
+      "Planning a minor-version upgrade and node-image rotation without a self-inflicted outage"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Cluster identity model",
+        "explanation": "Modern clusters use a managed identity for the control plane and workload identity for pods. Service principals are legacy and should be migrated."
+      },
+      {
+        "term": "Network plugin choice",
+        "explanation": "Azure CNI assigns VNet IPs to every pod (IP-hungry, low latency), Azure CNI Overlay uses an overlay network (IP-cheap), kubenet is legacy. Choose at cluster create; switching later is invasive."
+      },
+      {
+        "term": "Autoscaling layers",
+        "explanation": "Cluster Autoscaler scales nodes, Horizontal Pod Autoscaler scales replicas, KEDA scales on external metrics. They compose; understand the order of operations before tuning."
+      },
+      {
+        "term": "Upgrade and node images",
+        "explanation": "AKS minor-version upgrades and node-image upgrades are separate. Stale node images carry CVE risk even on a current control plane."
+      },
+      {
+        "term": "Add-ons vs bring-your-own",
+        "explanation": "Managed add-ons (CSI, monitoring, ingress) are easy to enable but constrain customization; many teams disable the managed ingress in favor of NGINX or Gateway API."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add microsoft/azure-skills --skill azure-kubernetes",
+        "purpose": "Install the AKS skill bundle.",
+        "example": "npx skills add microsoft/azure-skills --skill azure-kubernetes"
+      },
+      {
+        "signature": "az aks create / az aks get-credentials / az aks upgrade",
+        "purpose": "Create a cluster with sensible production defaults, fetch kubeconfig, then perform a controlled upgrade.",
+        "example": "az aks create -g rg -n aks-prod --node-count 3 --network-plugin azure --network-plugin-mode overlay --enable-managed-identity --enable-workload-identity --enable-oidc-issuer --tier standard\naz aks get-credentials -g rg -n aks-prod\naz aks upgrade -g rg -n aks-prod --kubernetes-version 1.30.0 --control-plane-only"
+      }
+    ],
+    "gotchas": [
+      "Free-tier control plane has no SLA; production should run on Standard or Premium tier",
+      "Pod IP exhaustion on Azure CNI is a silent killer; pick a subnet with room for max-pods * max-nodes",
+      "Stopping a cluster does not free node disks or load balancers; cost continues unless you fully delete",
+      "Node-image upgrades reboot nodes; if pods have no PDB, you can take an outage during routine maintenance",
+      "Managed Prometheus and Container Insights both bill on ingestion; enable selectively or you will see a surprise on the invoice"
+    ],
+    "category": "platform",
+    "audience": "devops",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/microsoft/azure-skills"
+  }
+}

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { track } from "@/lib/metrics";
+import { isTrustedTrackRequest } from "@/lib/observability";
 
 export const runtime = "nodejs";
 
@@ -15,6 +16,10 @@ const SLUG_RULES: Record<z.infer<typeof Body>["event"], RegExp> = {
 };
 
 export async function POST(req: Request) {
+  if (!isTrustedTrackRequest(req)) {
+    return new Response(null, { status: 403 });
+  }
+
   let body: unknown;
   try {
     body = await req.json();
