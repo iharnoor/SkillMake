@@ -11,7 +11,7 @@ import { track } from "@/lib/metrics";
 
 export const dynamic = "force-dynamic";
 
-const LIVE_AUDIENCES: Audience[] = ["creators", "engineers"];
+const LIVE_AUDIENCES: Audience[] = ["creators", "engineers", "devops", "marketing", "design", "ai"];
 const LIVE_CATEGORIES = [
   { slug: "job-search", label: "job search" },
 ] as const;
