@@ -1,0 +1,53 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/marketing-psychology",
+  "skill": {
+    "name": "marketing-psychology",
+    "description": "Use when applying behavioral-science principles to a marketing decision so the agent can pick the right mental model and turn it into a concrete, ethical implementation.",
+    "whenToUse": [
+      "Stuck on why a page or campaign isn't converting and you suspect a psychology issue, not a copy issue",
+      "Designing pricing, scarcity, social proof, or framing without leaning on anti-patterns that feel manipulative",
+      "Explaining customer behavior to a team that wants 'why people buy' grounded in a mental model, not a guess",
+      "Reviewing a marketing plan for cognitive-bias misuse before it ships"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Mental models as thinking tools",
+        "explanation": "Models like First Principles, Jobs To Be Done, Circle of Competence are decision aids, not labels. The skill helps pick which model fits, then translates it into a marketing move."
+      },
+      {
+        "term": "First Principles vs competitor copying",
+        "explanation": "Instead of 'do what competitors do,' ask why a tactic exists and what root problem it solves. Often the better marketing is a tactic competitors haven't even tried."
+      },
+      {
+        "term": "Jobs To Be Done",
+        "explanation": "Customers don't buy products; they hire them to do a job. Frame copy around the outcome ('a hole in the wall') rather than the feature ('this drill spec sheet')."
+      },
+      {
+        "term": "Anchoring, scarcity, social proof, loss aversion",
+        "explanation": "Classic levers, each with a precise application pattern and an ethical guardrail in the skill. Bad applications backfire and damage trust."
+      },
+      {
+        "term": "Ethical implementation",
+        "explanation": "Every model comes with an honesty test: does this help the buyer make a better decision, or trick them into a worse one? The skill refuses dark-pattern framings."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add https://github.com/coreyhaines31/marketingskills --skill marketing-psychology",
+        "purpose": "Install the marketing-psychology skill.",
+        "example": "npx skills add https://github.com/coreyhaines31/marketingskills --skill marketing-psychology"
+      }
+    ],
+    "gotchas": [
+      "Don't pick a mental model first and force a fit; start with the marketing problem and ask which model applies",
+      "Scarcity and urgency only work when they're true; fake countdown timers train customers to ignore them",
+      "Anchoring needs a reference price; on a page with no anchor, the same number reads as either cheap or expensive",
+      "Social proof from the wrong segment hurts; a $20/mo plan endorsed by enterprise customers makes prosumers feel out of place",
+      "Behavioral models live downstream of segmentation; if you don't know who you're persuading, no model will save the copy"
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

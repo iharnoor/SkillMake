@@ -1,0 +1,53 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/programmatic-seo",
+  "skill": {
+    "name": "programmatic-seo",
+    "description": "Use when creating SEO-driven pages at scale using templates and data so the agent designs pages that rank, provide unique value per page, and dodge thin-content penalties.",
+    "whenToUse": [
+      "Building directory, location, comparison, or integration pages that need to scale to dozens or thousands of variations",
+      "Targeting [keyword] + [city] or [tool] vs [tool] patterns where each combination has real search demand",
+      "Migrating a manual page set into a template-and-data pipeline without losing rank in the transition",
+      "Reviewing an existing pSEO site for thin-content risk before Google notices first"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Unique value per page",
+        "explanation": "Every generated page must offer something specific to its combination — real data, real reviews, real comparisons. A template with swapped variables but no new value is a thin-content trap."
+      },
+      {
+        "term": "Search-pattern opportunity sizing",
+        "explanation": "Before building, the skill walks how many variations have real search volume and what the volume distribution looks like, so you don't build 10,000 pages where 9,800 have zero demand."
+      },
+      {
+        "term": "Competitive realism check",
+        "explanation": "If incumbents already own the pattern with stronger signals, generating more pages doesn't move the needle. Pick patterns where you can realistically compete."
+      },
+      {
+        "term": "Data sourcing and freshness",
+        "explanation": "Templates only earn rank when the underlying data is good and stays current. Stale comparison data or broken integration screenshots erode trust faster than they earn links."
+      },
+      {
+        "term": "Indexation strategy",
+        "explanation": "Generate cautiously, monitor crawl budget, and noindex low-value variations until they've proven demand. Don't dump 10K pages in Search Console on launch day."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add https://github.com/coreyhaines31/marketingskills --skill programmatic-seo",
+        "purpose": "Install the programmatic-seo skill.",
+        "example": "npx skills add https://github.com/coreyhaines31/marketingskills --skill programmatic-seo"
+      }
+    ],
+    "gotchas": [
+      "Variable swaps in a template are not unique pages; Google treats them as duplicates and may deindex the set",
+      "Crawl budget is a real constraint — releasing 10K pages on a new site without prioritization will leave most uncrawled",
+      "Internal linking from pillar pages decides which programmatic variants actually earn rank",
+      "Stale data on comparison or directory pages erodes ranking faster than the algorithmic boost gives you",
+      "Programmatic pages that don't convert (just rank) are vanity SEO; build for the buyer's journey, not just the index"
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

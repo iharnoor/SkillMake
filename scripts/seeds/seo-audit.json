@@ -1,0 +1,53 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/seo-audit",
+  "skill": {
+    "name": "seo-audit",
+    "description": "Use when auditing or diagnosing SEO on a site so the agent runs a structured assessment across crawlability, on-page, content, and authority instead of guessing at random fixes.",
+    "whenToUse": [
+      "Traffic dropped or a Google update hit the site and you need to find what changed",
+      "Launching a new property and want a baseline of technical, on-page, and content issues",
+      "A specific page is not ranking and you want to isolate why before changing copy or links",
+      "Reviewing a competitor's site to spot gaps you can exploit on your own"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Five-area audit framework",
+        "explanation": "Every audit walks the same five priority areas: crawlability and indexation, technical foundations, on-page optimization, content quality, and authority signals. Reports are grouped this way so the action plan is obvious."
+      },
+      {
+        "term": "Schema detection limitation",
+        "explanation": "web_fetch and curl cannot reliably detect JavaScript-injected structured data. Always validate schema via the browser or Google's Rich Results Test, not raw HTML, to avoid false negatives."
+      },
+      {
+        "term": "Site-type guidance",
+        "explanation": "SaaS, e-commerce, content, and local-business sites have different SEO failure modes. The audit branches into site-type-specific checklists so a SaaS pricing audit isn't checking product schema."
+      },
+      {
+        "term": "Prioritized action plan output",
+        "explanation": "Findings are delivered with impact level, effort, and specific remediation steps. Don't return a generic list — return what to fix first and why."
+      },
+      {
+        "term": "Product marketing context handshake",
+        "explanation": "If .agents/product-marketing.md exists, read it before asking discovery questions so the audit doesn't waste a round repeating known business context."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add https://github.com/coreyhaines31/marketingskills --skill seo-audit",
+        "purpose": "Install the SEO audit skill from the coreyhaines31 marketing skills pack.",
+        "example": "npx skills add https://github.com/coreyhaines31/marketingskills --skill seo-audit"
+      }
+    ],
+    "gotchas": [
+      "Auditing schema with curl or web_fetch misses JS-injected structured data; check in a real browser instead",
+      "Trailing-slash and protocol mismatches in canonical tags silently halve your authority signals",
+      "Indexation issues are usually the highest-leverage fix, but they look boring next to keyword work; do them first",
+      "Core Web Vitals reports are 28-day rolling; a one-day field-data check is not a baseline",
+      "Don't run a full audit on a site without analytics or Search Console access; the recommendations will be theoretical"
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

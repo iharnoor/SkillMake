@@ -1,0 +1,53 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/copywriting",
+  "skill": {
+    "name": "copywriting",
+    "description": "Use when writing or rewriting marketing copy on a page — homepage, landing, pricing, features, about, or product — so the agent gathers audience and offer context before producing copy that converts.",
+    "whenToUse": [
+      "Drafting hero, value prop, and CTA copy for a new landing page from scratch",
+      "Rewriting a weak page where the user says copy is unclear, generic, or not converting",
+      "Sharpening pricing, feature, or about copy so it persuades the right buyer",
+      "Producing headline and subheadline variations to A/B test against a current page"
+    ],
+    "keyConcepts": [
+      {
+        "term": "One primary action per page",
+        "explanation": "Every page targets exactly one action — sign up, book a demo, buy. Copy that fights itself by promoting two primary actions doesn't convert either."
+      },
+      {
+        "term": "Audience language mining",
+        "explanation": "The skill insists on capturing how the customer describes their problem in their own words. Copy that mirrors the user's vocabulary outperforms clever copy almost every time."
+      },
+      {
+        "term": "Transformation over features",
+        "explanation": "Lead with the outcome the buyer gets, then back it up with the feature that delivers it. 'Hours of life back per week' beats 'Smart filter engine.'"
+      },
+      {
+        "term": "Proof points tied to claims",
+        "explanation": "Every persuasive claim should be paired with a number, testimonial, or case study within scroll distance. Unbacked claims read as marketing fluff."
+      },
+      {
+        "term": "Context handshake",
+        "explanation": "Like the rest of this pack, copywriting reads .agents/product-marketing.md (or the legacy paths) before asking discovery questions, so the agent doesn't re-collect known business context."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add https://github.com/coreyhaines31/marketingskills --skill copywriting",
+        "purpose": "Install the copywriting skill.",
+        "example": "npx skills add https://github.com/coreyhaines31/marketingskills --skill copywriting"
+      }
+    ],
+    "gotchas": [
+      "Don't write copy before you know the one primary action — the agent will produce hedging copy that converts neither path",
+      "If the user can't describe the customer's exact words, ask for support tickets or sales-call notes before drafting",
+      "Generic 'innovative, leading, scalable' adjectives are banned; replace them with a specific outcome or a number",
+      "Above-the-fold copy fights for attention with imagery; if a hero image is loud, the headline must be louder, not quieter",
+      "Email and popup copy use different patterns; route to the emails and popups skills for those surfaces"
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

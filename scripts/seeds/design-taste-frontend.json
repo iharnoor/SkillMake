@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/leonxlnx/taste-skill/tree/main/skills/taste-skill",
+  "skill": {
+    "name": "design-taste-frontend",
+    "description": "Use when overriding default LLM frontend biases with a metric-based ruleset that enforces real component architecture, hardware-accelerated CSS, and balanced design choices.",
+    "whenToUse": [
+      "Generating a frontend from a brief and you want it to land above 'looks AI-coded' on first try",
+      "Re-architecting a component tree where Server / Client boundaries leak across motion or stateful UI",
+      "Wiring Tailwind v3 vs v4 without colliding on PostCSS plugins or syntax",
+      "Calibrating the design dial — variance, motion intensity, visual density — before code is generated"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Three baseline dials",
+        "explanation": "DESIGN_VARIANCE, MOTION_INTENSITY, and VISUAL_DENSITY are global 1–10 dials (default 8/6/4) that drive every subsequent rule. The user can override per prompt; the skill respects the dials throughout."
+      },
+      {
+        "term": "RSC and interactivity isolation",
+        "explanation": "Server Components stay static; any interactive or motion-bearing block is extracted as a leaf 'use client' component so global state and motion don't poison the server tree."
+      },
+      {
+        "term": "Dependency verification before code",
+        "explanation": "The skill refuses to import a third-party library without first checking package.json. If a package is missing, it emits the install command before the code, so the snippet actually runs."
+      },
+      {
+        "term": "Tailwind version lock",
+        "explanation": "Tailwind v3 and v4 are syntactically and config-wise different. The skill detects the project's version and refuses to mix v4 syntax into a v3 project."
+      },
+      {
+        "term": "Hardware-accelerated CSS rules",
+        "explanation": "Motion is restricted to transform and opacity by default; layout-thrashing properties are flagged. The result is animation that doesn't drop frames on mid-range devices."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add leonxlnx/taste-skill --skill taste-skill",
+        "purpose": "Install the design-taste frontend skill.",
+        "example": "npx skills add leonxlnx/taste-skill --skill taste-skill"
+      },
+      {
+        "signature": "Dials: DESIGN_VARIANCE / MOTION_INTENSITY / VISUAL_DENSITY (defaults 8 / 6 / 4)",
+        "purpose": "Top-of-prompt configuration knobs the user can override to steer the look.",
+        "example": "DESIGN_VARIANCE: 3 (clean), MOTION_INTENSITY: 8 (cinematic), VISUAL_DENSITY: 7 (data-dense)"
+      }
+    ],
+    "gotchas": [
+      "Don't ship motion in Server Components; the skill enforces 'use client' extraction for a reason",
+      "Tailwind v4 with the old v3 PostCSS plugin is a silent breakage; the skill catches it but only if it sees package.json",
+      "Default dials (8/6/4) skew bold; for enterprise or dashboard work, lower them explicitly to avoid clown-page UI",
+      "Hardware acceleration breaks when transforms are nested inside elements with overflow:hidden ancestors; refactor the layout",
+      "If the user wants 'a SaaS landing page,' the dials matter more than the prompt; calibrate before generating"
+    ],
+    "category": "concept",
+    "audience": "design",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/leonxlnx/taste-skill"
+  }
+}

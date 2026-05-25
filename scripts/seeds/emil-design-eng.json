@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/emilkowalski/skill",
+  "skill": {
+    "name": "emil-design-eng",
+    "description": "Use when polishing a UI to feel intentional rather than generic — animations, component details, micro-interactions, and the invisible craft choices that separate a 'good enough' interface from one that feels right.",
+    "whenToUse": [
+      "Pushing a UI past the AI-default plateau into something that has a clear point of view",
+      "Designing animations and transitions where defaults look stiff and you need physics that feel natural",
+      "Tightening component details — focus rings, hover states, disabled treatments — so they read as deliberate",
+      "Reviewing an interface for craft issues that show up only after build and need a trained eye"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Taste is trained, not innate",
+        "explanation": "Good taste comes from studying great work, reverse-engineering interactions, and practicing relentlessly. The skill teaches how to develop the instinct, not just apply rules."
+      },
+      {
+        "term": "Every detail compounds",
+        "explanation": "Small choices — corner radius, easing curve, focus state, motion duration — compound. Sloppy in one place reads as sloppy overall."
+      },
+      {
+        "term": "Animation as communication",
+        "explanation": "Animation is not decoration; it carries information about state, hierarchy, and intent. Bad easing makes a fast UI feel slow; good easing makes a slow UI feel responsive."
+      },
+      {
+        "term": "Defaults are the enemy",
+        "explanation": "Browser, framework, and library defaults look the same everywhere. The skill systematically replaces them with choices that match the product's voice."
+      },
+      {
+        "term": "Reverse-engineer reference UIs",
+        "explanation": "Pick interfaces you admire, inspect them, and identify exactly which choices make them feel that way. Imitation without understanding produces shallow knockoffs."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add emilkowalski/skill",
+        "purpose": "Install Emil Kowalski's design-engineering skill.",
+        "example": "npx skills add emilkowalski/skill"
+      },
+      {
+        "signature": "animations.dev",
+        "purpose": "Deeper reference course by Emil on web animation craft.",
+        "example": "https://animations.dev/"
+      }
+    ],
+    "gotchas": [
+      "If you copy a feel without understanding the underlying choices, the result reads as cargo-cult design",
+      "Adding more motion is not more craft; the right answer is sometimes less motion with better easing",
+      "Library defaults (Radix, shadcn, MUI) are great structural starts but kill character if shipped untouched",
+      "Performance and craft are linked; a polished interface that drops frames feels worse than a plainer one that doesn't",
+      "Don't outsource taste to the design system; the system should encode taste, not replace the act of choosing"
+    ],
+    "category": "concept",
+    "audience": "design",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/emilkowalski/skill"
+  }
+}

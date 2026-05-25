@@ -1,0 +1,53 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/canvas-design",
+  "skill": {
+    "name": "canvas-design",
+    "description": "Use when the agent needs to produce an original visual artifact — poster, art piece, layout, static design — as a .png or .pdf, grounded in a generated design philosophy rather than mimicking an existing artist.",
+    "whenToUse": [
+      "Producing a one-off poster or social card where the user wants real visual design, not a stock template",
+      "Creating a brand-adjacent static piece where the philosophy should drive form, color, and composition",
+      "Generating a PDF page that needs to read as designed work, with imagery and minimal text functioning together",
+      "Turning a written brief into both a design philosophy doc and the visual expression of that philosophy"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Two-step design protocol",
+        "explanation": "First create a design philosophy as a .md (form, space, color, composition principles), then express it as a .pdf or .png. The two-step split prevents the agent from collapsing into stock layouts."
+      },
+      {
+        "term": "Philosophy, not template",
+        "explanation": "The philosophy is an aesthetic movement: how form, space, color, and pattern interact. Templates and layouts are explicitly out of scope."
+      },
+      {
+        "term": "90% visual, 10% text",
+        "explanation": "Output composition is dominated by visual elements; text appears only as visual accent. The skill refuses to lean on heavy text blocks to do the design's work."
+      },
+      {
+        "term": "Original work only",
+        "explanation": "The skill is explicit about not copying named artists' styles to avoid copyright violations. Compose a philosophy that draws on movements and forms, not signature styles."
+      },
+      {
+        "term": "Static formats only",
+        "explanation": "Output is constrained to .md (philosophy), .pdf, and .png. Anything dynamic — animation, code, interactive — is a different skill."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add anthropics/skills --skill canvas-design",
+        "purpose": "Install the canvas-design skill from Anthropic's official skills repo.",
+        "example": "npx skills add anthropics/skills --skill canvas-design"
+      }
+    ],
+    "gotchas": [
+      "Skipping the philosophy step produces generic posters; do not collapse the two-step protocol to save time",
+      "Avoid naming or imitating specific artists; describe movements, forms, and color systems instead",
+      "Text-heavy outputs violate the 90/10 rule and tend to look like slides; if the brief needs text, this is the wrong skill",
+      "Static formats only — for animated, dynamic, or interactive output, route to a different skill",
+      "User-provided constraints are seeds, not handcuffs; the philosophy should respect them but still take creative direction"
+    ],
+    "category": "tool",
+    "audience": "design",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}
