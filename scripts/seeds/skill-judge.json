@@ -1,0 +1,53 @@
+{
+  "sourceUrl": "https://github.com/softaworks/agent-toolkit/tree/main/skills/skill-judge",
+  "skill": {
+    "name": "skill-judge",
+    "description": "Use when reviewing, auditing, or improving an agent SKILL.md so the agent scores design quality across multiple dimensions and emits concrete fixes against the official skill spec.",
+    "whenToUse": [
+      "Auditing a freshly-written SKILL.md before publishing it to a marketplace",
+      "Reviewing a third-party skill to decide whether it's worth installing",
+      "Refactoring an in-house skill that has drifted from the official spec over time",
+      "Comparing two skills covering the same surface to pick the better-designed one"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Skill as knowledge externalization, not tutorial",
+        "explanation": "Skill Judge enforces the distinction: a skill encodes patterns and triggers the agent activates on, not step-by-step instructions for a human. Mis-framed skills score low here."
+      },
+      {
+        "term": "Multi-dimensional scoring",
+        "explanation": "Each skill is graded across activation clarity, trigger specificity, content quality, tool/format hygiene, and anti-pattern detection. The output is a per-dimension score plus an aggregate, not a single thumbs-up."
+      },
+      {
+        "term": "Reference library of 17+ examples",
+        "explanation": "Patterns are derived from real official skills, not invented. When the judge flags something, it can point to a reference skill that handles the same problem correctly."
+      },
+      {
+        "term": "Actionable fix suggestions",
+        "explanation": "Findings come with the specific change to make — exact wording for triggers, missing gotcha categories, mis-shaped tool blocks — instead of generic 'improve clarity' notes."
+      },
+      {
+        "term": "Anti-pattern detection",
+        "explanation": "Catches common drift: tutorial-shaped skills, over-broad triggers, missing failure modes, and skills that duplicate work the base model already does well."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add softaworks/agent-toolkit --skill skill-judge",
+        "purpose": "Install the skill-judge auditing skill.",
+        "example": "npx skills add softaworks/agent-toolkit --skill skill-judge"
+      }
+    ],
+    "gotchas": [
+      "Don't run the judge against itself or other judge-style skills; the rubric was tuned for action skills",
+      "Low scores don't mean delete; they mean 'rewrite against the spec' — the judge points to which dimension to fix first",
+      "A perfect score is rare and not the goal; aim for high marks on activation and triggers, the highest-leverage dimensions",
+      "Skill versioning matters; re-run the judge after any meaningful edit because triggers drift fast",
+      "Some legitimate niche skills score lower because their patterns are unique; treat the judge as a discussion partner, not a gate"
+    ],
+    "category": "tool",
+    "audience": "ai",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/softaworks/agent-toolkit"
+  }
+}

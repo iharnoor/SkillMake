@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/mcp-builder",
+  "skill": {
+    "name": "mcp-builder",
+    "description": "Use when building a Model Context Protocol server that exposes a real external service to an LLM, so the agent designs the right tools and ships in Python (FastMCP) or Node/TypeScript with the official SDK.",
+    "whenToUse": [
+      "Wrapping an existing API as an MCP server so a Claude or Cursor agent can call it natively",
+      "Designing the tool surface for a new MCP server — picking which actions become tools, what the args look like, and how errors flow back",
+      "Choosing between Python FastMCP and the Node/TypeScript MCP SDK for a new server",
+      "Reviewing an existing MCP server for tool-design anti-patterns before broader adoption"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Quality = task completion, not coverage",
+        "explanation": "The skill measures an MCP server by how well an LLM can accomplish real tasks with it, not by how many endpoints it exposes. Five well-shaped tools beat 50 thin wrappers."
+      },
+      {
+        "term": "Tool design as the primary surface",
+        "explanation": "Each tool is a contract: name, args schema, return shape, error mode. The skill walks how to shape them so an LLM picks the right tool first try and recovers cleanly on failure."
+      },
+      {
+        "term": "Python (FastMCP) vs TypeScript path",
+        "explanation": "FastMCP is the fast track for Python services; the Node SDK is the path when the target codebase is JS/TS. The skill picks based on the host language, not personal preference."
+      },
+      {
+        "term": "Local stdio vs remote transports",
+        "explanation": "Stdio works for the developer's machine; HTTP/SSE transports unlock multi-user and remote deployment. Pick transport at design time, not retrofit later."
+      },
+      {
+        "term": "Workflow-driven tool grouping",
+        "explanation": "Tools that compose into a workflow (find → fetch → edit → confirm) reduce LLM round-trips. The skill steers tool boundaries to match how an agent actually completes work."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add anthropics/skills --skill mcp-builder",
+        "purpose": "Install the MCP server builder skill.",
+        "example": "npx skills add anthropics/skills --skill mcp-builder"
+      },
+      {
+        "signature": "FastMCP / @modelcontextprotocol/sdk",
+        "purpose": "Reference implementations the skill points at; pick based on the project language.",
+        "example": "pip install fastmcp  # Python\nnpm install @modelcontextprotocol/sdk  # TypeScript"
+      }
+    ],
+    "gotchas": [
+      "Don't expose every API endpoint; thin wrappers create discovery overhead for the LLM with no win for the user",
+      "Tool args should describe intent, not URL parameters; 'find_issue_by_keyword' beats 'GET_issues_with_q_param'",
+      "Errors must be parseable by an LLM; opaque stack traces or numeric codes leave the agent guessing at recovery",
+      "Stdio transports don't survive multi-user setups; design for HTTP/SSE from the start if remote is on the roadmap",
+      "MCP server names collide across registries; pick a unique, descriptive name early or you'll be renaming later"
+    ],
+    "category": "tool",
+    "audience": "ai",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}

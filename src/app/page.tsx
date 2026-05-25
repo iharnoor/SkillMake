@@ -397,6 +397,7 @@ function collectionEntries(slug: CollectionSlug, entries: MarketplaceEntry[]): (
     syntheticFromSkill(byName, "free-claude-code", "Route Claude Code through free or cheaper model providers.", "tool"),
     syntheticEntry("fan out subagents", "Run independent investigations in parallel subagents so the parent context stays clean.", "technique"),
     syntheticEntry("/goal", "Write explicit success criteria, non-goals, and the riskiest unknown before a session drifts.", "technique"),
+    syntheticEntry("ask-expert-mcp", "Let a cheap model escalate to a stronger one only when stuck — pay frontier prices for the hard 5%, not the easy 95%.", "technique"),
   ];
 }
 

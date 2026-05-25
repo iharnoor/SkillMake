@@ -59,6 +59,15 @@ export default async function TricksPage() {
       source: "workflow",
       href: "#goal",
     },
+    {
+      name: "ask-expert-mcp",
+      description:
+        "Let a cheap or open-source model escalate to a stronger one only when it gets stuck — so you pay frontier prices for the hard 5%, not the easy 95%.",
+      audience: "general",
+      category: "technique",
+      source: "workflow",
+      href: "#ask-expert-mcp",
+    },
   ];
 
   return (
@@ -67,7 +76,7 @@ export default async function TricksPage() {
         active="tricks"
         eyebrow="Tricks"
         title="Save tokens. Same agent."
-        description="Four practical ways to drop agent cost or context waste. Two are installable skills; two are pure technique."
+        description="Five practical ways to drop agent cost or context waste. Two are installable skills; three are pure technique."
         countLabel={`${entries.length} tricks`}
       />
       <CollectionTable entries={entries} />
@@ -97,14 +106,21 @@ export default async function TricksPage() {
           >
             fan out subagents
           </a>{" "}
-          keeps parent context smaller, and{" "}
+          keeps parent context smaller,{" "}
           <a
             href="#goal"
             className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"
           >
             /goal
           </a>{" "}
-          keeps the work from drifting.
+          keeps the work from drifting, and{" "}
+          <a
+            href="#ask-expert-mcp"
+            className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+          >
+            ask-expert-mcp
+          </a>{" "}
+          reserves frontier-model spend for the hard 5% of decisions.
         </p>
       </section>
     </div>
