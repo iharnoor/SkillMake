@@ -1,0 +1,49 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/swift-concurrency-expert",
+  "skill": {
+    "name": "swift-concurrency-expert",
+    "description": "Use when working with swift concurrency review/fix: compiler errors, Sendable, isolation, remediation from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the swift-concurrency-expert skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing swift concurrency expert behavior.",
+      "Needing a compact agent reference for swift concurrency review/fix: compiler errors, Sendable, isolation, remediation."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Overview",
+        "explanation": "Review and fix Swift Concurrency issues in Swift 6.2+ codebases by applying actor isolation, Sendable safety, and modern concurrency patterns with minimal behavior changes."
+      },
+      {
+        "term": "Workflow",
+        "explanation": "Workflow guidance for the swift-concurrency-expert skill."
+      },
+      {
+        "term": "1. Triage the issue",
+        "explanation": "Capture the exact compiler diagnostics and the offending symbol(s). Identify the current actor context (@MainActor, actor, nonisolated) and whether a default actor isolation mode is enabled. Confirm whether the code is UI-bound or intended to run off the main actor."
+      },
+      {
+        "term": "2. Apply the smallest safe fix",
+        "explanation": "Prefer edits that preserve existing behavior while satisfying data-race safety. Common fixes: UI-bound types: annotate the type or relevant members with @MainActor. Protocol conformance on main actor types: make the conformance isolated (e.g., extension Foo: @MainActor SomeProtocol). Global/static state: protect with @MainActor or move into an actor. Background work: move expensive work into a @concurrent async function on a nonisolated type or use an actor to guard mutable state. Sendable..."
+      },
+      {
+        "term": "Reference material",
+        "explanation": "See references/swift-6-2-concurrency.md for Swift 6.2 changes, patterns, and examples. See references/swiftui-concurrency-tour-wwdc.md for SwiftUI-specific concurrency guidance."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill swift-concurrency-expert",
+        "purpose": "Install the swift-concurrency-expert skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill swift-concurrency-expert"
+      }
+    ],
+    "gotchas": [
+      "Confirm whether the code is UI-bound or intended to run off the main actor.",
+      "Prefer edits that preserve existing behavior while satisfying data-race safety."
+    ],
+    "category": "language",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/cloudflare-registrar",
+  "skill": {
+    "name": "cloudflare-registrar",
+    "description": "Use when working with cloudflare Registrar: domain availability, prices, registration via mcporter from steipete/agent-scripts.",
+    "whenToUse": [
+      "Cloudflare Registrar domain availability, pricing, listing, and registration.",
+      "Using the cloudflare-registrar skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing cloudflare registrar behavior.",
+      "Needing a compact agent reference for cloudflare Registrar: domain availability, prices, registration via mcporter."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Defaults",
+        "explanation": "MCP: cloudflare-openclaw Account: OPENCLAWCLOUDFLAREACCOUNTID Token: OPENCLAWCLOUDFLAREAPITOKEN Secrets: follow the root secret rule; export only needed Cloudflare vars for one command."
+      },
+      {
+        "term": "Guardrails",
+        "explanation": "Always run domain-check immediately before registration. Registration is billable/non-refundable. Ask Peter for explicit confirmation before POST /registrar/registrations. Do not print tokens."
+      },
+      {
+        "term": "Source-first workflow",
+        "explanation": "Start from the upstream cloudflare-registrar instructions and local project context before inventing commands or workflows."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill cloudflare-registrar",
+        "purpose": "Install the cloudflare-registrar skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill cloudflare-registrar"
+      },
+      {
+        "signature": "npx mcporter call cloudflare-openclaw.execute code='async () => {.",
+        "purpose": "Command or snippet documented by the upstream cloudflare-registrar skill.",
+        "example": "npx mcporter call cloudflare-openclaw.execute code='async () => {\n  return cloudflare.request({\n    method: \"POST\",\n    path: `/accounts/${accountId}/registrar/domain-check`,\n    body: { domains: [\"example.com\"] }\n  });\n}'"
+      },
+      {
+        "signature": "npx mcporter call cloudflare-openclaw.execute code='async () => {.",
+        "purpose": "Command or snippet documented by the upstream cloudflare-registrar skill.",
+        "example": "npx mcporter call cloudflare-openclaw.execute code='async () => {\n  return cloudflare.request({\n    method: \"POST\",\n    path: `/accounts/${accountId}/registrar/registrations`,\n    body: { domain_name: \"example.com\", auto_renew: false, privacy_mode: \"redaction\" }\n  });\n}'"
+      },
+      {
+        "signature": "npx mcporter call cloudflare-openclaw.execute code='async () => {.",
+        "purpose": "Command or snippet documented by the upstream cloudflare-registrar skill.",
+        "example": "npx mcporter call cloudflare-openclaw.execute code='async () => {\n  return cloudflare.request({\n    method: \"GET\",\n    path: `/accounts/${accountId}/registrar/registrations`\n  });\n}'"
+      }
+    ],
+    "gotchas": [
+      "Always run domain-check immediately before registration.",
+      "Registration is billable/non-refundable. Ask Peter for explicit confirmation before POST /registrar/registrations.",
+      "Do not print tokens."
+    ],
+    "category": "platform",
+    "audience": "devops",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/video-transcript-downloader",
+  "skill": {
+    "name": "video-transcript-downloader",
+    "description": "Use when working with yt-dlp downloads: video, audio, subtitles, transcripts, clips, playlists from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the video-transcript-downloader skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing video transcript downloader behavior.",
+      "Needing a compact agent reference for yt-dlp downloads: video, audio, subtitles, transcripts, clips, playlists."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Transcript (default: clean paragraph)",
+        "explanation": "Transcript (default: clean paragraph) guidance for the video-transcript-downloader skill."
+      },
+      {
+        "term": "Download video / audio / subtitles",
+        "explanation": "Download video / audio / subtitles guidance for the video-transcript-downloader skill."
+      },
+      {
+        "term": "Formats (list + choose)",
+        "explanation": "List available formats (format ids, resolution, container, audio-only, etc): Download a specific format id (example): Prefer MP4 container without re-encoding (remux when possible):."
+      },
+      {
+        "term": "Notes",
+        "explanation": "Default transcript output is a single paragraph. Use --timestamps only when asked. Bracketed cues like [Music] are stripped by default; keep them via --keep-brackets. Pass extra yt-dlp args after -- for transcript fallback, download, audio, subs, formats."
+      },
+      {
+        "term": "Troubleshooting (only when needed)",
+        "explanation": "Missing yt-dlp / ffmpeg: Verify:."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill video-transcript-downloader",
+        "purpose": "Install the video-transcript-downloader skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill video-transcript-downloader"
+      },
+      {
+        "signature": "cd ~/Projects/agent-scripts/skills/video-transcript-downloader && npm ci.",
+        "purpose": "Command or snippet documented by the upstream video-transcript-downloader skill.",
+        "example": "cd ~/Projects/agent-scripts/skills/video-transcript-downloader && npm ci"
+      },
+      {
+        "signature": "./scripts/vtd.js --help.",
+        "purpose": "Command or snippet documented by the upstream video-transcript-downloader skill.",
+        "example": "./scripts/vtd.js --help\n./scripts/vtd.js transcript --help"
+      },
+      {
+        "signature": "./scripts/vtd.js transcript --url 'https://…'.",
+        "purpose": "Command or snippet documented by the upstream video-transcript-downloader skill.",
+        "example": "./scripts/vtd.js transcript --url 'https://…'\n./scripts/vtd.js transcript --url 'https://…' --lang en\n./scripts/vtd.js transcript --url 'https://…' --timestamps\n./scripts/vtd.js transcript --url 'https://…' --keep-brackets"
+      },
+      {
+        "signature": "./scripts/vtd.js download --url 'https://…' --output-dir ~/Downloads.",
+        "purpose": "Command or snippet documented by the upstream video-transcript-downloader skill.",
+        "example": "./scripts/vtd.js download --url 'https://…' --output-dir ~/Downloads\n./scripts/vtd.js audio --url 'https://…' --output-dir ~/Downloads\n./scripts/vtd.js subs --url 'https://…' --output-dir ~/Downloads --lang en"
+      },
+      {
+        "signature": "./scripts/vtd.js formats --url 'https://…'.",
+        "purpose": "Command or snippet documented by the upstream video-transcript-downloader skill.",
+        "example": "./scripts/vtd.js formats --url 'https://…'"
+      },
+      {
+        "signature": "./scripts/vtd.js download --url 'https://…' --output-dir ~/Downloads -- --format 137+140.",
+        "purpose": "Command or snippet documented by the upstream video-transcript-downloader skill.",
+        "example": "./scripts/vtd.js download --url 'https://…' --output-dir ~/Downloads -- --format 137+140"
+      }
+    ],
+    "gotchas": [
+      "Prefer MP4 container without re-encoding (remux when possible):."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/instruments-profiling",
+  "skill": {
+    "name": "instruments-profiling",
+    "description": "Use when working with instruments/xctrace profiling: macOS/iOS traces, binaries, args, exports from steipete/agent-scripts.",
+    "whenToUse": [
+      "Use this skill when the user wants performance profiling or stack analysis for native apps. Focus: Time Profiler, xctrace CLI, and picking the correct binary/app instance.",
+      "Using the instruments-profiling skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing instruments profiling behavior.",
+      "Needing a compact agent reference for instruments/xctrace profiling: macOS/iOS traces, binaries, args, exports."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Quick Start (CLI)",
+        "explanation": "List templates: xcrun xctrace list templates Record Time Profiler (launch): - xcrun xctrace record --template 'Time Profiler' --time-limit 60s --output /tmp/App.trace --launch -- /path/To/App.app Record Time Profiler (attach): - Launch app yourself, get PID, then: - xcrun xctrace record --template 'Time Profiler' --time-limit 60s --output /tmp/App.trace --attach <pid> Open trace in Instruments: - open -a Instruments /tmp/App.trace Note: xcrun xctrace --help is not a valid subcommand. Use..."
+      },
+      {
+        "term": "Picking the Correct Binary (Critical)",
+        "explanation": "Gotcha: Instruments may profile the wrong app (e.g., one in /Applications) if LaunchServices resolves a different bundle. Use these rules: Prefer direct binary path for deterministic launch: - xcrun xctrace record... --launch -- /path/App.app/Contents/MacOS/App If launching.app, ensure it’s the intended bundle: - open -n /path/App.app - Verify with ps -p <pid> -o comm= -o command= If both /Applications/App.app and a local build exist, explicitly target the local build path. After launch..."
+      },
+      {
+        "term": "Command Arguments (xctrace)",
+        "explanation": "--template 'Time Profiler': template name from xctrace list templates. --launch -- <cmd>: everything after -- is the target command (binary or app bundle). --attach <pid|name>: attach to running process. --output <path>:.trace output. If omitted, file saved in CWD. --time-limit 60s|5m: set capture duration. --device <name|UDID>: required for iOS device runs. --target-stdout -: stream launched process stdout to terminal (useful for CLI tools)."
+      },
+      {
+        "term": "Exporting Stacks (CLI)",
+        "explanation": "Inspect trace tables: - xcrun xctrace export --input /tmp/App.trace --toc Export raw time-profile samples: - xcrun xctrace export --input /tmp/App.trace --xpath '/trace-toc/run[@number=\"1\"]/data/table[@schema=\"time-profile\"]' --output /tmp/time-profile.xml Post-process in a script (Python/Rust) to aggregate stacks."
+      },
+      {
+        "term": "Instruments UI Workflow",
+        "explanation": "Template: Time Profiler Use \"Record\" and capture the slow path (startup vs steady-state) Call Tree tips: - Hide System Libraries - Invert Call Tree - Separate by Thread - Focus on hot frames and call counts."
+      },
+      {
+        "term": "Gotchas & Fixes",
+        "explanation": "Wrong app profiled: LaunchServices resolves installed app instead of local build. - Fix: use direct binary path or --attach with known PID. No samples / empty trace: App exits quickly or never hits work. - Fix: longer capture, trigger workload during recording. Privacy prompts: xctrace may need Developer Tools permission. - Fix: System Settings → Privacy & Security → Developer Tools → allow Terminal/Xcode. Large XML exports: time-profile exports are huge. - Fix: filter with XPath and..."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill instruments-profiling",
+        "purpose": "Install the instruments-profiling skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill instruments-profiling"
+      }
+    ],
+    "gotchas": [
+      "Prefer direct binary path for deterministic launch:.",
+      "Confirm trace process path matches target build.",
+      "Confirm stacks show expected app frames."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

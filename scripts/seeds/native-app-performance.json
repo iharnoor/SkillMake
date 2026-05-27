@@ -1,0 +1,69 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/native-app-performance",
+  "skill": {
+    "name": "native-app-performance",
+    "description": "Use when working with native app performance: xctrace, Time Profiler, traces, hotspots from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the native-app-performance skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing native app performance behavior.",
+      "Needing a compact agent reference for native app performance: xctrace, Time Profiler, traces, hotspots."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Quick start (CLI)",
+        "explanation": "1) Record Time Profiler (attach): 2) Record Time Profiler (launch): 3) Extract time samples: 4) Get load address for symbolication: 5) Symbolicate + rank hotspots:."
+      },
+      {
+        "term": "Workflow notes",
+        "explanation": "Always confirm you’re profiling the correct binary (local build vs /Applications). Prefer direct binary path for --launch. Ensure you trigger the slow path during capture (menu open/close, refresh, etc.). If stacks are empty, capture longer or avoid idle sections. xcrun xctrace help record and xcrun xctrace help export show correct flags."
+      },
+      {
+        "term": "Included scripts",
+        "explanation": "scripts/recordtimeprofiler.sh: record via attach or launch. scripts/extracttimesamples.py: export time-sample XML from a trace. scripts/tophotspots.py: symbolicate and rank top app frames."
+      },
+      {
+        "term": "Gotchas",
+        "explanation": "ASLR means you must use the runtime TEXT load address from vmmap. If using a new build, update the --binary path; symbols must match the trace. CLI-only flow: no need to open Instruments if stacks are symbolicated via atos."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill native-app-performance",
+        "purpose": "Install the native-app-performance skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill native-app-performance"
+      },
+      {
+        "signature": "xcrun xctrace record --template 'Time Profiler' --time-limit 90s --output /tmp/App.trace --attach <pid>.",
+        "purpose": "Command or snippet documented by the upstream native-app-performance skill.",
+        "example": "# Start app yourself, then attach\nxcrun xctrace record --template 'Time Profiler' --time-limit 90s --output /tmp/App.trace --attach <pid>"
+      },
+      {
+        "signature": "xcrun xctrace record --template 'Time Profiler' --time-limit 90s --output /tmp/App.trace --launch ...",
+        "purpose": "Command or snippet documented by the upstream native-app-performance skill.",
+        "example": "xcrun xctrace record --template 'Time Profiler' --time-limit 90s --output /tmp/App.trace --launch -- /path/App.app/Contents/MacOS/App"
+      },
+      {
+        "signature": "scripts/extracttimesamples.py --trace /tmp/App.trace --output /tmp/time-sample.xml.",
+        "purpose": "Command or snippet documented by the upstream native-app-performance skill.",
+        "example": "scripts/extract_time_samples.py --trace /tmp/App.trace --output /tmp/time-sample.xml"
+      },
+      {
+        "signature": "vmmap <pid> | rg -m1 \"TEXT\" -n.",
+        "purpose": "Command or snippet documented by the upstream native-app-performance skill.",
+        "example": "# While app is running\nvmmap <pid> | rg -m1 \"__TEXT\" -n"
+      },
+      {
+        "signature": "scripts/tophotspots.py --samples /tmp/time-sample.xml \\.",
+        "purpose": "Command or snippet documented by the upstream native-app-performance skill.",
+        "example": "scripts/top_hotspots.py --samples /tmp/time-sample.xml \\\n  --binary /path/App.app/Contents/MacOS/App \\\n  --load-address 0x100000000 --top 30"
+      }
+    ],
+    "gotchas": [
+      "Always confirm you’re profiling the correct binary (local build vs /Applications). Prefer direct binary path for --launch."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

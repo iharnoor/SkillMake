@@ -1,0 +1,52 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/skill-cleaner",
+  "skill": {
+    "name": "skill-cleaner",
+    "description": "Use when an agent needs to audit Codex/OpenClaw skills: loaded roots, duplicate skills, unused skills, prompt-budget costs, compact descriptions from steipete/agent-scripts.",
+    "whenToUse": [
+      "Trimming skill prompt budget, finding duplicate skills, auditing enabled/disabled skill roots, or deciding which skills/plugins to remove.",
+      "Using the skill-cleaner skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing skill cleaner behavior.",
+      "Needing a compact agent reference for audit Codex/OpenClaw skills: loaded roots, duplicate skills, unused skills, prompt-budget costs, compact descriptions."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Workflow",
+        "explanation": "1. Run the analyzer from this skill directory or repo root: Useful variants: 2. Read the report in this order: Skill Budget: GPT-5.5 context size, 2% skills budget, Codex-budgeted usage, and pre-budget full-list pressure. Description candidates: long descriptions where relaxed grammar saves prompt budget. Duplicates: same skill name or near-identical description/body across Codex, plugin cache, repo siblings, and personal skill roots. Unused candidates: no recent $skill mention, SKILL.md..."
+      },
+      {
+        "term": "Analyzer Notes",
+        "explanation": "The script mirrors Codex's model-visible line shape: - name: description (file: path). It applies Codex-like frontmatter rules: YAML frontmatter only, default name from parent dir, single-line sanitized name and description. It follows Codex core-skills/src/render.rs: 2% of raw contextwindow, token cost ceil(utf8bytes / 4), then full descriptions -> equal description truncation -> omitted minimum lines. It reads ~/.codex/modelscache.json for GPT-5.5 contextwindow; fallback is 272,000 tokens..."
+      },
+      {
+        "term": "Output Policy",
+        "explanation": "Suggest first; edit only when the user asks. If asked to apply cleanup, make small grouped commits: descriptions, deletes, config disables. Do not delete ignored/untracked skill dirs without naming the destination or confirming they are disposable."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill skill-cleaner",
+        "purpose": "Install the skill-cleaner skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill skill-cleaner"
+      },
+      {
+        "signature": "node --experimental-strip-types skills/skill-cleaner/scripts/skill-cleaner.ts --months 3.",
+        "purpose": "Command or snippet documented by the upstream skill-cleaner skill.",
+        "example": "node --experimental-strip-types skills/skill-cleaner/scripts/skill-cleaner.ts --months 3"
+      },
+      {
+        "signature": "node --experimental-strip-types skills/skill-cleaner/scripts/skill-cleaner.ts --no-logs.",
+        "purpose": "Command or snippet documented by the upstream skill-cleaner skill.",
+        "example": "node --experimental-strip-types skills/skill-cleaner/scripts/skill-cleaner.ts --no-logs\nnode --experimental-strip-types skills/skill-cleaner/scripts/skill-cleaner.ts --months 6 --max-log-mb 800 --deep-logs\nnode --experimental-strip-types skills/skill-cleaner/scripts/skill-cleaner.ts --context-tokens 272000 --budget-percent 2 --no-logs\nnode --experimental-strip-types skills/skill-cleaner/scripts/skill-cleaner.ts --root ~/Dropbox/boxd/skills --no-logs"
+      }
+    ],
+    "gotchas": [
+      "Prefer deleting repo-local or agent-scripts duplicates when Codex built-ins cover them.",
+      "Do not delete ignored/untracked skill dirs without naming the destination or confirming they are disposable."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

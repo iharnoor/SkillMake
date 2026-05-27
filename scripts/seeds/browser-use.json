@@ -1,0 +1,79 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/browser-use",
+  "skill": {
+    "name": "browser-use",
+    "description": "Use when working with chrome DevTools MCP automation: existing Chrome tabs, no AppleScript from steipete/agent-scripts.",
+    "whenToUse": [
+      "Browser tasks against the existing Chrome session.",
+      "Using the browser-use skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing browser use behavior.",
+      "Needing a compact agent reference for chrome DevTools MCP automation: existing Chrome tabs, no AppleScript."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Check MCP",
+        "explanation": "listpages must show the user's real open tabs. If it shows a blank/default isolated Chrome, stop and say reattach failed. If the call appears to hang while Chrome shows an auth/attach/update prompt, handle the attach alert before falling back. Prefer Peekaboo to press an explicit Chrome Allow button when visible; otherwise wait for the human. Do not restart daemons or kill MCP processes just because the first output is slow. Tested attach-prompt recovery: Use coordinates from the current..."
+      },
+      {
+        "term": "Typical Flow",
+        "explanation": "Use takesnapshot before actions and use current uid values only. Avoid takescreenshot unless visual layout matters."
+      },
+      {
+        "term": "Live UI Proof",
+        "explanation": "For screenshot regressions, deployed dashboard checks, or anything where the rendered browser is the bug: Use the existing logged-in/profile-bearing tab set. If browser automation is unavailable, report that as a verification gap instead of substituting isolated browser tooling."
+      },
+      {
+        "term": "Secret Handling",
+        "explanation": "Never print tokens/passwords from page DOM, network logs, or inputs. For token checks, return shape only: present/absent, length, status code, account/org name."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill browser-use",
+        "purpose": "Install the browser-use skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill browser-use"
+      },
+      {
+        "signature": "mcporter call chrome-devtools.<tool>.",
+        "purpose": "Command or snippet documented by the upstream browser-use skill.",
+        "example": "mcporter call chrome-devtools.<tool>"
+      },
+      {
+        "signature": "mcporter list chrome-devtools --schema.",
+        "purpose": "Command or snippet documented by the upstream browser-use skill.",
+        "example": "mcporter list chrome-devtools --schema\nmcporter call chrome-devtools.list_pages --args '{}' --output text"
+      },
+      {
+        "signature": "PB=\"${PEEKABOOBIN:-$HOME/bin/peekaboo}\".",
+        "purpose": "Command or snippet documented by the upstream browser-use skill.",
+        "example": "PB=\"${PEEKABOO_BIN:-$HOME/bin/peekaboo}\"\n[ -x \"$PB\" ] || PB=\"$(command -v peekaboo)\"\n\"$PB\" permissions status --json\n\"$PB\" see --app frontmost --path /tmp/chrome-attach.png --json --annotate\n# If the UI shows Chrome \"Allow remote debugging?\", click only the visible Allow button.\n\"$PB\" click --coords <allow_x>,<allow_y> --json\nmcporter call chrome-devtools.list_pages --args '{}' --output text"
+      },
+      {
+        "signature": "mcporter daemon restart.",
+        "purpose": "Command or snippet documented by the upstream browser-use skill.",
+        "example": "mcporter daemon restart\nmcporter call chrome-devtools.list_pages --args '{}' --output text"
+      },
+      {
+        "signature": "mcporter call chrome-devtools.selectpage --args '{\"pageId\":9}' --output text.",
+        "purpose": "Command or snippet documented by the upstream browser-use skill.",
+        "example": "# pick the page id from list_pages\nmcporter call chrome-devtools.select_page --args '{\"pageId\":9}' --output text\n\n# inspect page\nmcporter call chrome-devtools.take_snapshot --args '{}' --output text\n\n# navigate selected page\nmcporter call chrome-devtools.navigate_page --args '{\"url\":\"https://example.com\"}' --output text\n\n# click an element uid from the latest snapshot\nmcporter call chrome-devtools.click --args '{\"uid\":\"1_38\",\"includeSnapshot\":true}' --output text\n\n# type/fill\nmcporter call chrome-devtools.fill --args '{\"uid\":\"1_13\",\"value\":\"text\",\"includeSnapshot\":true}' --output text\n\n# run JS, keep secrets out of output\nmcporter call chrome-devtools.evaluate_script --args '{\"function\":\"() => document.title\"}' --output json"
+      },
+      {
+        "signature": "mcporter call chrome-devtools.listpages --args '{}' --output text.",
+        "purpose": "Command or snippet documented by the upstream browser-use skill.",
+        "example": "mcporter call chrome-devtools.list_pages --args '{}' --output text\nmcporter call chrome-devtools.select_page --args '{\"pageId\":9}' --output text\nmcporter call chrome-devtools.navigate_page --args '{\"url\":\"https://example.com\"}' --output text\nmcporter call chrome-devtools.take_snapshot --args '{}' --output text\nmcporter call chrome-devtools.evaluate_script --args '{\"function\":\"() => document.body.innerText\"}' --output json"
+      }
+    ],
+    "gotchas": [
+      "Hard rule: reattach to the existing Chrome profile only. Use this target:.",
+      "Never use chrome-isolated, Playwright, Puppeteer, the Codex in-app browser, AppleScript, osascript, GUI scripting, or macOS open for browser control unless the user explicitly asks for an isolated/new browser.",
+      "do not treat them as equivalent when the user showed a rendered browser problem.",
+      "Avoid noisy recovery loops. Repeated MCP/browser restarts can trigger.",
+      "Never print tokens/passwords from page DOM, network logs, or inputs. For token checks, return shape only: present/absent, length, status code, account/org name."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/github-deep-review",
+  "skill": {
+    "name": "github-deep-review",
+    "description": "Use when working with gitHub deep review: bugs, PRs, best fix, stale-or-real, read code first from steipete/agent-scripts.",
+    "whenToUse": [
+      "Use this shape when the user asks \"what is this about\", \"is this the best fix\", or \"what did we fix\":.",
+      "Using the github-deep-review skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing github deep review behavior.",
+      "Needing a compact agent reference for gitHub deep review: bugs, PRs, best fix, stale-or-real, read code first."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Start",
+        "explanation": "Use gh, not web browsing, for GitHub refs: For PRs, collect author context by default unless the author is Peter (steipete or an obvious Peter-owned account). Use the local workflow in ~/Projects/agent-scripts/skills/github-author-context/SKILL.md and include a short Author context: block near the top of the review when the author is not Peter. After merge/rejection/close/review, use that same author-context workflow to append a contributor note only when the interaction creates durable..."
+      },
+      {
+        "term": "Review Contract",
+        "explanation": "Always answer these, explicitly: URL/ref: issue or PR number and affected surface. What is the bug or behavior being fixed? Can we identify the root cause? If yes, where in code and why. If no, what evidence is missing. For regressions, who/what introduced it and when? Include commit/PR provenance when traceable by bounded history; say unknown instead of guessing. Is the current/proposed fix the best possible fix after reading adjacent code? Would a bigger refactor improve correctness..."
+      },
+      {
+        "term": "Code Reading Depth",
+        "explanation": "Read past the first touched file. Follow the real call path: entrypoint -> validation/parsing -> routing/dispatch -> owner module -> shared helper -> persistence/network/runtime boundary config/schema/docs -> runtime usage -> doctor/migration/fix path provider/channel/plugin owner code -> generic core seam, only if multiple owners need it tests around the touched surface plus adjacent regression tests When behavior depends on a dependency, read the upstream docs/source/types or current..."
+      },
+      {
+        "term": "Provenance",
+        "explanation": "For bug/regression reviews, include a compact Provenance: answer when feasible: Use git log -S/-G, git blame, linked PRs/issues, and tests. Separate author, committer/merger, and current PR author when they differ. Phrase as introduced by, made visible by, or carried forward by. Include confidence: clear, likely, or unknown. For features, docs, refactors, or untraceable bugs, write N/A or say what evidence is missing."
+      },
+      {
+        "term": "Fix Quality Bar",
+        "explanation": "Good fixes usually: live at the ownership boundary where the bug belongs preserve public/backward-compatible behavior unless the issue is about retiring it add a regression test at the smallest meaningful seam avoid broad special cases, hidden migrations, semantic sentinels, and provider/channel IDs in generic core update docs/changelog when user-visible behavior changes fail clearly in runtime paths and repair through doctor/migration paths when that is the established contract Call out..."
+      },
+      {
+        "term": "PR Review Shape",
+        "explanation": "Lead with findings when reviewing a PR. Findings need file/line/symbol references and a concrete failure mode. Avoid vague \"consider\" comments. If no blocking issues: say no blocking correctness issues found list the strongest proof checked name residual risk/test gaps answer whether the design is the best available shape Do not approve, comment, close, merge, push, or land unless the user asked for that action."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill github-deep-review",
+        "purpose": "Install the github-deep-review skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill github-deep-review"
+      },
+      {
+        "signature": "gh issue view <n> --json number,title,state,author,body,comments,labels,updatedAt,url.",
+        "purpose": "Command or snippet documented by the upstream github-deep-review skill.",
+        "example": "gh issue view <n> --json number,title,state,author,body,comments,labels,updatedAt,url\ngh pr view <n> --json number,title,state,author,body,comments,reviews,files,commits,statusCheckRollup,mergeStateStatus,headRefName,headRepositoryOwner,url\ngh pr diff <n> --patch"
+      },
+      {
+        "signature": "git status --short --branch.",
+        "purpose": "Command or snippet documented by the upstream github-deep-review skill.",
+        "example": "git status --short --branch\ngit fetch origin\ngit log --oneline --decorate -20\nrg \"<key symbol/error/config/endpoint>\""
+      },
+      {
+        "signature": "Ref: #123 / PR #456.",
+        "purpose": "Command or snippet documented by the upstream github-deep-review skill.",
+        "example": "Ref: #123 / PR #456\nSurface: <runtime/CLI/provider/channel/docs>\n\nBug: <one or two sentences>\nCause: <code path + confidence>\nProvenance: <introduced/made visible/carried forward by commit/PR/date, or N/A/unknown>\nBest fix: <what should change and why>\nRefactor: <yes/no, specific shape>\nProof: <tests/live/CI/source/dependency docs>\nRisk: <remaining uncertainty>"
+      }
+    ],
+    "gotchas": [
+      "Always answer these, explicitly:.",
+      "Prefer current source and executable proof over issue comments. Treat stale comments, old CI, and old release behavior as hints until rechecked.",
+      "avoid broad special cases, hidden migrations, semantic sentinels, and provider/channel IDs in generic core.",
+      "Do not approve, comment, close, merge, push, or land unless the user asked for that action."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

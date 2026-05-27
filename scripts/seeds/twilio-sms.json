@@ -1,0 +1,84 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/twilio-sms",
+  "skill": {
+    "name": "twilio-sms",
+    "description": "Use when working with twilio SMS CLI: buy/list/keep numbers, send/check messages, credential routing from steipete/agent-scripts.",
+    "whenToUse": [
+      "Twilio phone-number and SMS work: create/buy numbers, list owned numbers, keep/label numbers, send texts, and check inbound/outbound messages.",
+      "Using the twilio-sms skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing twilio sms behavior.",
+      "Needing a compact agent reference for twilio SMS CLI: buy/list/keep numbers, send/check messages, credential routing."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Safety",
+        "explanation": "Never print Account SIDs, auth tokens, API secrets, TOTP codes, or full 1Password item JSON. Do not store real phone numbers, SIDs, names, or account-specific item IDs in this skill. Use $one-password for secret reads. op stays tmux-only. If desktop 1Password access is needed, unset service-account auth for those commands: env -u OPSERVICEACCOUNTTOKEN op.... Print credential shape only: field present, length, prefix class if useful. Public writes or logs: avoid leaking message bodies unless..."
+      },
+      {
+        "term": "Credential Route",
+        "explanation": "1. Check Twilio CLI/profile: - twilio --version or npx -y twilio-cli --version - twilio profiles:list or npx -y twilio-cli profiles:list 2. Check exact env presence only: - TWILIOACCOUNTSID - TWILIOAUTHTOKEN - optional API key/secret vars 3. If only partial env exists, search 1Password metadata first. 4. Prefer an item with fields matching: - TWILIOACCOUNTSID - TWILIOAUTHTOKEN - optional TWILIOFROMNUMBER 5. If op only sees a restricted vault, retry desktop-backed reads with env -u..."
+      },
+      {
+        "term": "CLI Setup",
+        "explanation": "Twilio CLI profile creation requires account auth token, not just API key creds: Use npx -y twilio-cli when twilio is not installed."
+      },
+      {
+        "term": "Numbers",
+        "explanation": "List owned: Search US local SMS-capable inventory: If the CLI shape is awkward or missing flags, use REST: Buy one candidate: Verify ownership/capabilities after purchase. Twilio JSON uses lowercase keys: Mark numbers the user wants to keep: Retention rule: a number is kept while it remains in the Twilio account and billing is healthy. Do not release/delete unless explicitly asked."
+      },
+      {
+        "term": "SMS",
+        "explanation": "Send: Fetch status: Check inbound to a number: Check outbound from a number: Twilio CLI JSON can return an array for single-resource commands. Parse defensively:."
+      },
+      {
+        "term": "Notes",
+        "explanation": "International SMS may show an alphanumeric or carrier sender instead of the purchased US number. US SMS can be compliance-gated. If sending to US recipients fails, check A2P/10DLC registration state before retrying blindly. Trial accounts may restrict recipients."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill twilio-sms",
+        "purpose": "Install the twilio-sms skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill twilio-sms"
+      },
+      {
+        "signature": "curl -sS -u \"$TWILIOACCOUNTSID:$TWILIOAUTHTOKEN\" \\.",
+        "purpose": "Command or snippet documented by the upstream twilio-sms skill.",
+        "example": "curl -sS -u \"$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN\" \\\n  \"https://api.twilio.com/2010-04-01/Accounts/$TWILIO_ACCOUNT_SID.json\""
+      },
+      {
+        "signature": "npx -y twilio-cli profiles:create \"$TWILIOACCOUNTSID\" \\.",
+        "purpose": "Command or snippet documented by the upstream twilio-sms skill.",
+        "example": "npx -y twilio-cli profiles:create \"$TWILIO_ACCOUNT_SID\" \\\n  --auth-token \"$TWILIO_AUTH_TOKEN\" \\\n  --profile default --force --silent\nnpx -y twilio-cli profiles:use default"
+      },
+      {
+        "signature": "npx -y twilio-cli api:core:incoming-phone-numbers:list \\.",
+        "purpose": "Command or snippet documented by the upstream twilio-sms skill.",
+        "example": "npx -y twilio-cli api:core:incoming-phone-numbers:list \\\n  --properties phoneNumber,friendlyName,capabilities"
+      },
+      {
+        "signature": "npx -y twilio-cli api:core:available-phone-numbers:local:list \\.",
+        "purpose": "Command or snippet documented by the upstream twilio-sms skill.",
+        "example": "npx -y twilio-cli api:core:available-phone-numbers:local:list \\\n  --country-code US --sms-enabled --voice-enabled --limit 5"
+      },
+      {
+        "signature": "curl -sS -u \"$TWILIOACCOUNTSID:$TWILIOAUTHTOKEN\" \\.",
+        "purpose": "Command or snippet documented by the upstream twilio-sms skill.",
+        "example": "curl -sS -u \"$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN\" \\\n  \"https://api.twilio.com/2010-04-01/Accounts/$TWILIO_ACCOUNT_SID/AvailablePhoneNumbers/US/Local.json?SmsEnabled=true&VoiceEnabled=true&PageSize=5\""
+      },
+      {
+        "signature": "curl -sS -u \"$TWILIOACCOUNTSID:$TWILIOAUTHTOKEN\" \\.",
+        "purpose": "Command or snippet documented by the upstream twilio-sms skill.",
+        "example": "curl -sS -u \"$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN\" \\\n  -X POST \"https://api.twilio.com/2010-04-01/Accounts/$TWILIO_ACCOUNT_SID/IncomingPhoneNumbers.json\" \\\n  --data-urlencode \"PhoneNumber=$PHONE_NUMBER\""
+      }
+    ],
+    "gotchas": [
+      "Never print Account SIDs, auth tokens, API secrets, TOTP codes, or full 1Password item JSON.",
+      "Do not store real phone numbers, SIDs, names, or account-specific item IDs in this skill."
+    ],
+    "category": "api",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

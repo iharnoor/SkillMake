@@ -1,0 +1,75 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/github-author-context",
+  "skill": {
+    "name": "github-author-context",
+    "description": "Use when working with gitHub contributor context: identity, activity, trust, company/team signal from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the github-author-context skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing github author context behavior.",
+      "Needing a compact agent reference for gitHub contributor context: identity, activity, trust, company/team signal."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Inputs",
+        "explanation": "Prefer a GitHub login. From a PR: Skip the profile pass for steipete unless the user explicitly asks."
+      },
+      {
+        "term": "Source Order",
+        "explanation": "1. OpenClaw contributor notes: If a contributor file matches in ~/Projects/maintainers/contributors/people, read only: Identity Signals Context Evidence Notes Fallback only when the new contributor file is missing and old maintainer context might help: If an old person file matches, read only the relevant sections: Verdict Identity Company Affiliation Metrics Discord Communication Evidence Risks / Concerns / Recommendation when present 2. Live GitHub public profile: 3. Target-repo activity..."
+      },
+      {
+        "term": "Output",
+        "explanation": "Keep it short. Add this block near the top of a PR review: Do not quote private phone/email/contact details unless Peter asks. Separate employer from company-directed OpenClaw work; almost everyone has an employer."
+      },
+      {
+        "term": "Contributor Notes",
+        "explanation": "After a merge/rejection/close/review, add a note only if it creates future review value: first good merge, unusually strong work, repeated quality problems, slop, no-repro churn, exceptional responsiveness, lack of follow-through, or identity confirmation. Use the maintainer repo helper so Markdown stays consistent: Keep notes terse, factual, dated, and linked. Do not record ordinary noise."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill github-author-context",
+        "purpose": "Install the github-author-context skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill github-author-context"
+      },
+      {
+        "signature": "gh pr view <n> --json author,url,headRepository,baseRepository -q '{author:.author.login,url:.url...",
+        "purpose": "Command or snippet documented by the upstream github-author-context skill.",
+        "example": "gh pr view <n> --json author,url,headRepository,baseRepository -q '{author:.author.login,url:.url,repo:.baseRepository.nameWithOwner}'"
+      },
+      {
+        "signature": "~/Projects/maintainers/scripts/clawtributors find github <login>.",
+        "purpose": "Command or snippet documented by the upstream github-author-context skill.",
+        "example": "~/Projects/maintainers/scripts/clawtributors find github <login>"
+      },
+      {
+        "signature": "rg -n -i \"<login>|<name>|<discord>\" ~/Projects/openclaw-maintainers/people ~/Projects/openclaw-maintainers/data.",
+        "purpose": "Command or snippet documented by the upstream github-author-context skill.",
+        "example": "rg -n -i \"<login>|<name>|<discord>\" ~/Projects/openclaw-maintainers/people ~/Projects/openclaw-maintainers/data"
+      },
+      {
+        "signature": "gh api \"users/<login>\" --jq '{login,name,company,location,bio,blog,twitterusername,createdat,followers,following...",
+        "purpose": "Command or snippet documented by the upstream github-author-context skill.",
+        "example": "gh api \"users/<login>\" --jq '{login,name,company,location,bio,blog,twitter_username,created_at,followers,following,public_repos}'"
+      },
+      {
+        "signature": "gh search prs --repo <owner/repo> --author <login> --state merged --limit 20 --json number,title,mergedAt,url.",
+        "purpose": "Command or snippet documented by the upstream github-author-context skill.",
+        "example": "gh search prs --repo <owner/repo> --author <login> --state merged --limit 20 --json number,title,mergedAt,url\ngh search prs --repo <owner/repo> --author <login> --state open --limit 20 --json number,title,updatedAt,url\ngh search issues --repo <owner/repo> --author <login> --state open --limit 20 --json number,title,updatedAt,url\ngh api \"repos/<owner>/<repo>/collaborators/<login>/permission\" --jq '{permission,user:.user.login}' 2>/dev/null || true"
+      },
+      {
+        "signature": "git log --all --author=\"<login>\" --since=\"90 days ago\" --oneline --decorate --no-merges | head -40.",
+        "purpose": "Command or snippet documented by the upstream github-author-context skill.",
+        "example": "git log --all --author=\"<login>\" --since=\"90 days ago\" --oneline --decorate --no-merges | head -40\ngit shortlog -sne --all | rg -i \"<login>|<name>|<email>\""
+      }
+    ],
+    "gotchas": [
+      "Prefer a GitHub login. From a PR:.",
+      "Do not quote private phone/email/contact details unless Peter asks. Separate employer from company-directed OpenClaw work; almost everyone has an employer."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/mac-maintenance",
+  "skill": {
+    "name": "mac-maintenance",
+    "description": "Use when working with mac upkeep: brew update/upgrade, pull clean repos, empty Trash from steipete/agent-scripts.",
+    "whenToUse": [
+      "Peter asks for Mac cleanup, maintenance, or package/repo refresh.",
+      "Using the mac-maintenance skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing mac maintenance behavior.",
+      "Needing a compact agent reference for mac upkeep: brew update/upgrade, pull clean repos, empty Trash."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Run",
+        "explanation": "1. Homebrew: 2. Repos under ~/Projects: Skip dirty repos unless Peter explicitly asked to handle them. Report skipped paths. 3. Empty Trash: 4. Finish with terse counts: brew: upgraded / already current repos: pulled / skipped / failed trash: emptied / failed."
+      },
+      {
+        "term": "Source-first workflow",
+        "explanation": "Start from the upstream mac-maintenance instructions and local project context before inventing commands or workflows."
+      },
+      {
+        "term": "Guardrails",
+        "explanation": "Respect the skill's safety boundaries, especially around secrets, writes, credentials, and user-visible side effects."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill mac-maintenance",
+        "purpose": "Install the mac-maintenance skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill mac-maintenance"
+      },
+      {
+        "signature": "brew update && brew upgrade.",
+        "purpose": "Command or snippet documented by the upstream mac-maintenance skill.",
+        "example": "brew update && brew upgrade"
+      },
+      {
+        "signature": "for repo in ~/Projects//.git; do.",
+        "purpose": "Command or snippet documented by the upstream mac-maintenance skill.",
+        "example": "for repo in ~/Projects/*/.git; do\n  dir=${repo:h}\n  git -C \"$dir\" status --short --branch\n  git -C \"$dir\" pull --ff-only\ndone"
+      },
+      {
+        "signature": "osascript -e 'tell application \"Finder\" to empty trash'.",
+        "purpose": "Command or snippet documented by the upstream mac-maintenance skill.",
+        "example": "osascript -e 'tell application \"Finder\" to empty trash'"
+      }
+    ],
+    "gotchas": [
+      "Read the upstream SKILL.md before use; several entries encode machine-specific paths, credentials, or local operational assumptions."
+    ],
+    "category": "tool",
+    "audience": "devops",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

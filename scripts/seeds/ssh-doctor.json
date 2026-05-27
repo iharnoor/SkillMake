@@ -1,0 +1,85 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/ssh-doctor",
+  "skill": {
+    "name": "ssh-doctor",
+    "description": "Use when working with sSH triage: Remote Login, launchd sshd, pre-auth closes, stale sessions from steipete/agent-scripts.",
+    "whenToUse": [
+      "SSH connects then closes before auth, Remote Login seems advertised but unusable, or local/remote Mac SSH needs diagnosis.",
+      "Using the ssh-doctor skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing ssh doctor behavior.",
+      "Needing a compact agent reference for sSH triage: Remote Login, launchd sshd, pre-auth closes, stale sessions."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Rules",
+        "explanation": "Do not print secrets, tokens, full env, or broad secret grep output. Validate locally first: loopback failure means server-side sshd/launchd/config; loopback success plus remote failure means network/firewall/filter/listen path. Report suspicious config lines before changing /etc/ssh/sshdconfig. Prefer non-interactive SSH:."
+      },
+      {
+        "term": "Baseline",
+        "explanation": "Use BatchMode=yes only when password fallback would hang or prompt."
+      },
+      {
+        "term": "Config",
+        "explanation": "Suspicious: DenyUsers matching target user restrictive AllowUsers / AllowGroups Match block accidentally applying tiny MaxStartups tiny LoginGraceTime ListenAddress missing target interface."
+      },
+      {
+        "term": "Logs",
+        "explanation": "Important Mac symptom: client: kexexchangeidentification: Connection closed by remote host server log: Could not create new instance of inetd service: 67: Too many processes launchctl print system/com.openssh.sshd: high copy count many sshd-session: USER processes parented by PID 1 This means launchd accepted TCP but refused to spawn more sshd inetd copies."
+      },
+      {
+        "term": "Stale sshd-session Fix",
+        "explanation": "Inspect first: If stale sessions are clearly stranded and blocking new SSH, terminate by selected command-line match: If TERM leaves blockers, re-check ownership and active shells before using KILL."
+      },
+      {
+        "term": "Firewall",
+        "explanation": "Only after loopback works but remote fails: Also check listen address and target interface:."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill ssh-doctor",
+        "purpose": "Install the ssh-doctor skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill ssh-doctor"
+      },
+      {
+        "signature": "ssh -o RequestTTY=no -o RemoteCommand=none HOST 'hostname; id -un'.",
+        "purpose": "Command or snippet documented by the upstream ssh-doctor skill.",
+        "example": "ssh -o RequestTTY=no -o RemoteCommand=none HOST 'hostname; id -un'"
+      },
+      {
+        "signature": "hostname; id -un; swvers.",
+        "purpose": "Command or snippet documented by the upstream ssh-doctor skill.",
+        "example": "hostname; id -un; sw_vers\nipconfig getifaddr en0\nipconfig getifaddr en1 2>/dev/null || true\nipconfig getifaddr en7 2>/dev/null || true\nsudo systemsetup -getremotelogin\nsudo systemsetup -setremotelogin on\nsudo launchctl print system/com.openssh.sshd 2>&1 | head -80\nsudo launchctl kickstart -k system/com.openssh.sshd\nsudo lsof -nP -iTCP:22 -sTCP:LISTEN\nnc -vz 127.0.0.1 22\nssh -4 -F /dev/null -o RequestTTY=no -o RemoteCommand=none USER@127.0.0.1 'hostname; id -un'"
+      },
+      {
+        "signature": "sudo sshd -T 2>&1 | egrep -i '^(allowusers|denyusers|allowgroups|denygroups|listenaddress|maxstartups|logingracetime|...",
+        "purpose": "Command or snippet documented by the upstream ssh-doctor skill.",
+        "example": "sudo sshd -T 2>&1 | egrep -i '^(allowusers|denyusers|allowgroups|denygroups|listenaddress|maxstartups|logingracetime|usepam|passwordauthentication|pubkeyauthentication|authenticationmethods)'\nsudo egrep -n '^[[:space:]]*(AllowUsers|DenyUsers|AllowGroups|DenyGroups|Match|MaxStartups|LoginGraceTime|ListenAddress|AuthenticationMethods|UsePAM|PasswordAuthentication|PubkeyAuthentication)\\b' /etc/ssh/sshd_config /etc/ssh/sshd_config.d/* 2>/dev/null || true"
+      },
+      {
+        "signature": "sudo log show --last 30m --predicate 'process == \"sshd\" OR process == \"launchd\"' --style compact | tail -160.",
+        "purpose": "Command or snippet documented by the upstream ssh-doctor skill.",
+        "example": "sudo log show --last 30m --predicate 'process == \"sshd\" OR process == \"launchd\"' --style compact | tail -160"
+      },
+      {
+        "signature": "sudo launchctl print system/com.openssh.sshd 2>&1 | egrep 'active count|copy count|state =|last exit code|runs ='.",
+        "purpose": "Command or snippet documented by the upstream ssh-doctor skill.",
+        "example": "sudo launchctl print system/com.openssh.sshd 2>&1 | egrep 'active count|copy count|state =|last exit code|runs ='\nps -axo pid,ppid,uid,user,state,lstart,etime,comm,args | awk '/sshd-session:/ && !/awk/ {print}'\nsudo lsof -nP -c sshd-session -iTCP 2>/dev/null | head -120"
+      },
+      {
+        "signature": "ps -axo pid=,args= | awk '/sshd-session: / && !/awk/ {print $1}' | xargs sudo kill -TERM.",
+        "purpose": "Command or snippet documented by the upstream ssh-doctor skill.",
+        "example": "ps -axo pid=,args= | awk '/sshd-session: / && !/awk/ {print $1}' | xargs sudo kill -TERM\nsleep 2\nps -axo pid=,args= | awk '/sshd-session: / && !/awk/ {print}'"
+      }
+    ],
+    "gotchas": [
+      "Do not print secrets, tokens, full env, or broad secret grep output.",
+      "Prefer non-interactive SSH:.",
+      "never echo the token."
+    ],
+    "category": "tool",
+    "audience": "devops",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

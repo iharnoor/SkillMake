@@ -1,0 +1,49 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/release-mac-app",
+  "skill": {
+    "name": "release-mac-app",
+    "description": "Use when working with macOS app release: Sparkle, notarization, GitHub Release, Homebrew, closeout from steipete/agent-scripts.",
+    "whenToUse": [
+      "BlackBar, RepoBar, CodexBar, Trimmy, and similar Sparkle-updated macOS apps.",
+      "Using the release-mac-app skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing release mac app behavior.",
+      "Needing a compact agent reference for macOS app release: Sparkle, notarization, GitHub Release, Homebrew, closeout."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Rules",
+        "explanation": "Work from the app repo. Read.mac-release.env; it is the repo-owned release manifest. Use scripts/mac-release from this skill for shared release/appcast/verify work. Keep app-specific build/package/sign behavior in repo scripts unless it is already manifest-driven. Never print private key material. Prefer Keychain Sparkle signing. SPARKLEPRIVATEKEYFILE is an explicit override only."
+      },
+      {
+        "term": "Manifest",
+        "explanation": "Each repo owns.mac-release.env. It must contain no secrets. Required: MACRELEASEAPPNAME MACRELEASEREPO MACRELEASEBUNDLEID MACRELEASEVERSIONFILE MACRELEASEAPPCAST MACRELEASEFEEDURL MACRELEASEDOWNLOADURLPREFIX MACRELEASEAPPZIP either MACRELEASEINFOPLIST or MACRELEASESUPUBLICEDKEY MACRELEASEPACKAGECMD Common optional: MACRELEASEPRECHECK MACRELEASESOURCEFILES (space-separated app helper files to source before expanding artifact names) MACRELEASEDSYMZIP MACRELEASEREQUIREDSYM=0 for app-only..."
+      },
+      {
+        "term": "Done",
+        "explanation": "appcast entry has URL, length, Sparkle signature. downloaded enclosure verifies with Sparkle. extracted app passes codesign, spctl, and stapler validate. GitHub release has app zip, dSYM zip when configured, plus app-specific extra assets. release notes match the changelog section. after verified release, bump changelog to next patch Unreleased in the app repo."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill release-mac-app",
+        "purpose": "Install the release-mac-app skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill release-mac-app"
+      },
+      {
+        "signature": "/Users/steipete/Projects/agent-scripts/skills/release-mac-app/scripts/mac-release status.",
+        "purpose": "Command or snippet documented by the upstream release-mac-app skill.",
+        "example": "/Users/steipete/Projects/agent-scripts/skills/release-mac-app/scripts/mac-release status\n/Users/steipete/Projects/agent-scripts/skills/release-mac-app/scripts/mac-release notes [version] [output.md]\n/Users/steipete/Projects/agent-scripts/skills/release-mac-app/scripts/mac-release changelog-html <version> [CHANGELOG.md]\n/Users/steipete/Projects/agent-scripts/skills/release-mac-app/scripts/mac-release make-appcast <zip> [feed-url]\n/Users/steipete/Projects/agent-scripts/skills/release-mac-app/scripts/mac-release verify-appcast [version]\n/Users/steipete/Projects/agent-scripts/skills/release-mac-app/scripts/mac-release check-assets [tag]\n/Users/steipete/Projects/agent-scripts/skills/release-mac-app/scripts/mac-release release"
+      }
+    ],
+    "gotchas": [
+      "Never print private key material.",
+      "Prefer Keychain Sparkle signing. SPARKLEPRIVATEKEYFILE is an explicit override only.",
+      "Prefer already-exported env vars first; no op call if all MACRELEASEOPFIELDS are present.",
+      "Do not retry op reads in a fresh shell; rerun only from the same tmux session after explicit user direction."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

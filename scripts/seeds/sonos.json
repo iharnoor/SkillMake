@@ -1,0 +1,47 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/sonos",
+  "skill": {
+    "name": "sonos",
+    "description": "Use when working with sonos control: search, queue, playlists, rooms/groups, volume, YouTube from steipete/agent-scripts.",
+    "whenToUse": [
+      "Sonos music, playback, queue, room/group, and YouTube workflows.",
+      "Using the sonos skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing sonos behavior.",
+      "Needing a compact agent reference for sonos control: search, queue, playlists, rooms/groups, volume, YouTube."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Rules",
+        "explanation": "Prefer existing local Sonos tooling in the current repo before inventing shell/API calls. Do not change speaker groups, queues, or playback unless the user asks for it. Confirm target room/group when ambiguous. For YouTube, prefer a playable audio URL or local extraction workflow already present in the repo; avoid downloading unless requested. Keep network/debug work out of scope unless the user explicitly asks for diagnostics. Secrets, service tokens, and account auth: check env/profile..."
+      },
+      {
+        "term": "Workflow",
+        "explanation": "1. Discover repo commands: - rg --files - package scripts or CLI help 2. Identify target: - room/group - service/source - query, URL, playlist, album, artist, or track 3. Dry-read current state when useful: - rooms/groups - now playing - queue 4. Execute the requested playback action. 5. Verify by reading current state again."
+      },
+      {
+        "term": "Common Tasks",
+        "explanation": "Search and play music by track, album, artist, playlist, or station. Add or replace the queue. Pause, resume, skip, seek, shuffle, repeat. Set volume or mute for a room/group. Move/group playback between rooms. Play YouTube audio/music through Sonos when supported by local tooling."
+      },
+      {
+        "term": "YouTube Notes",
+        "explanation": "Treat YouTube URLs as media sources first, not as download requests. If conversion/extraction is needed, prefer the local toolchain already used by the repo. State constraints clearly when Sonos/service support blocks direct playback."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill sonos",
+        "purpose": "Install the sonos skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill sonos"
+      }
+    ],
+    "gotchas": [
+      "Prefer existing local Sonos tooling in the current repo before inventing shell/API calls.",
+      "Do not change speaker groups, queues, or playback unless the user asks for it.",
+      "Confirm target room/group when ambiguous."
+    ],
+    "category": "tool",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

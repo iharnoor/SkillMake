@@ -1,0 +1,68 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/swiftui-liquid-glass",
+  "skill": {
+    "name": "swiftui-liquid-glass",
+    "description": "Use when working with swiftUI Liquid Glass: implement, adopt, refactor, review correctness/perf/design from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the swiftui-liquid-glass skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing swiftui liquid glass behavior.",
+      "Needing a compact agent reference for swiftUI Liquid Glass: implement, adopt, refactor, review correctness/perf/design."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Overview",
+        "explanation": "Use this skill to build or review SwiftUI features that fully align with the iOS 26+ Liquid Glass API. Prioritize native APIs (glassEffect, GlassEffectContainer, glass button styles) and Apple design guidance. Keep usage consistent, interactive where needed, and performance aware."
+      },
+      {
+        "term": "Workflow Decision Tree",
+        "explanation": "Choose the path that matches the request:."
+      },
+      {
+        "term": "1) Review an existing feature",
+        "explanation": "Inspect where Liquid Glass should be used and where it should not. Verify correct modifier order, shape usage, and container placement. Check for iOS 26+ availability handling and sensible fallbacks."
+      },
+      {
+        "term": "2) Improve a feature using Liquid Glass",
+        "explanation": "Identify target components for glass treatment (surfaces, chips, buttons, cards). Refactor to use GlassEffectContainer where multiple glass elements appear. Introduce interactive glass only for tappable or focusable elements."
+      },
+      {
+        "term": "3) Implement a new feature using Liquid Glass",
+        "explanation": "Design the glass surfaces and interactions first (shape, prominence, grouping). Add glass modifiers after layout/appearance modifiers. Add morphing transitions only when the view hierarchy changes with animation."
+      },
+      {
+        "term": "Core Guidelines",
+        "explanation": "Prefer native Liquid Glass APIs over custom blurs. Use GlassEffectContainer when multiple glass elements coexist. Apply.glassEffect(...) after layout and visual modifiers. Use.interactive() for elements that respond to touch/pointer. Keep shapes consistent across related elements for a cohesive look. Gate with #available(iOS 26, ) and provide a non-glass fallback."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill swiftui-liquid-glass",
+        "purpose": "Install the swiftui-liquid-glass skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill swiftui-liquid-glass"
+      },
+      {
+        "signature": "if #available(iOS 26, ) {.",
+        "purpose": "Command or snippet documented by the upstream swiftui-liquid-glass skill.",
+        "example": "if #available(iOS 26, *) {\n    Text(\"Hello\")\n        .padding()\n        .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 16))\n} else {\n    Text(\"Hello\")\n        .padding()\n        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))\n}"
+      },
+      {
+        "signature": "GlassEffectContainer(spacing: 24) {.",
+        "purpose": "Command or snippet documented by the upstream swiftui-liquid-glass skill.",
+        "example": "GlassEffectContainer(spacing: 24) {\n    HStack(spacing: 24) {\n        Image(systemName: \"scribble.variable\")\n            .frame(width: 72, height: 72)\n            .font(.system(size: 32))\n            .glassEffect()\n        Image(systemName: \"eraser.fill\")\n            .frame(width: 72, height: 72)\n            .font(.system(size: 32))\n            .glassEffect()\n    }\n}"
+      },
+      {
+        "signature": "Button(\"Confirm\") { }.",
+        "purpose": "Command or snippet documented by the upstream swiftui-liquid-glass skill.",
+        "example": "Button(\"Confirm\") { }\n    .buttonStyle(.glassProminent)"
+      }
+    ],
+    "gotchas": [
+      "Prefer native Liquid Glass APIs over custom blurs.",
+      "Prefer Apple docs for up-to-date API details."
+    ],
+    "category": "framework",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

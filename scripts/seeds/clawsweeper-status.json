@@ -1,0 +1,51 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/clawsweeper-status",
+  "skill": {
+    "name": "clawsweeper-status",
+    "description": "Use when working with clawSweeper status: URLs, workflow health, active workers, ops snapshot from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the clawsweeper-status skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing clawsweeper status behavior.",
+      "Needing a compact agent reference for clawSweeper status: URLs, workflow health, active workers, ops snapshot."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Output Contract",
+        "explanation": "Report these sections concisely: Workers: active workflow count, queued/waiting count, active Codex job estimate, and active workflow groups. Recently merged: merged PR URLs plus one-line titles. Recently reviewed: ClawSweeper/Codex review comment URLs plus one-line comment summary. Recently commented: other recent ClawSweeper comment URLs plus one-line comment summary. Recently closed: closed issue/PR URLs plus one-line titles. If the script returns no rows for a section, say none found in..."
+      },
+      {
+        "term": "Efficient Data Sources",
+        "explanation": "Prefer the script because it uses bounded API calls: one recent Actions runs page from openclaw/clawsweeper; one jobs page per active run to estimate live Codex jobs; recent issue comments for review/comment URLs; recent issue events for close URLs; recent closed PRs for merge URLs. Do not browse the web for these checks. Use gh directly."
+      },
+      {
+        "term": "Interpretation",
+        "explanation": "Cancelled repository-dispatch review runs are usually expected supersession when a newer event for the same item arrives. Count active Codex from in-progress/queued jobs whose names match review, commit review, repair, or worker execution lanes. Treat stale gh run list output cautiously; prefer gh api repos/openclaw/clawsweeper/actions/runs?... and per-run jobs when the numbers disagree. Use full GitHub URLs in the final answer."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill clawsweeper-status",
+        "purpose": "Install the clawsweeper-status skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill clawsweeper-status"
+      },
+      {
+        "signature": "/Users/steipete/Projects/agent-scripts/skills/clawsweeper-status/scripts/clawsweeper-status.sh.",
+        "purpose": "Command or snippet documented by the upstream clawsweeper-status skill.",
+        "example": "/Users/steipete/Projects/agent-scripts/skills/clawsweeper-status/scripts/clawsweeper-status.sh"
+      },
+      {
+        "signature": "/Users/steipete/Projects/agent-scripts/skills/clawsweeper-status/scripts/clawsweeper-status.sh --hours 10.",
+        "purpose": "Command or snippet documented by the upstream clawsweeper-status skill.",
+        "example": "# Last 10 hours for the default target repo, openclaw/openclaw\n/Users/steipete/Projects/agent-scripts/skills/clawsweeper-status/scripts/clawsweeper-status.sh --hours 10\n\n# A different target repo\n/Users/steipete/Projects/agent-scripts/skills/clawsweeper-status/scripts/clawsweeper-status.sh --repo openclaw/clawhub\n\n# More rows per activity section\n/Users/steipete/Projects/agent-scripts/skills/clawsweeper-status/scripts/clawsweeper-status.sh --limit 15"
+      }
+    ],
+    "gotchas": [
+      "Prefer the script because it uses bounded API calls:.",
+      "Do not browse the web for these checks. Use gh directly."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

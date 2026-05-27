@@ -1,0 +1,56 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/notcrawl",
+  "skill": {
+    "name": "notcrawl",
+    "description": "Use when working with notion archive: desktop/API sync, Markdown export, page search, read-only SQL from steipete/agent-scripts.",
+    "whenToUse": [
+      "Local Notion archive questions. Desktop reads local cache; API sync needs NOTIONTOKEN and page access.",
+      "Using the notcrawl skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing notcrawl behavior.",
+      "Needing a compact agent reference for notion archive: desktop/API sync, Markdown export, page search, read-only SQL."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Sources",
+        "explanation": "DB: ~/.notcrawl/notcrawl.db Pages: ~/.notcrawl/pages CLI: notcrawl."
+      },
+      {
+        "term": "Refresh",
+        "explanation": "Use API only when needed and credentials/page access are available:."
+      },
+      {
+        "term": "Query Workflow",
+        "explanation": "1. Check freshness for recent/current Notion questions. 2. Search pages first; use read-only SQL for exact counts or schema-level analysis. 3. Use export-md when the user needs Markdown files refreshed. 4. Report date spans, page/database IDs, counts, and source limits. Use root or subcommand help for syntax: notcrawl --help, notcrawl search --help, notcrawl sql --help. Common commands:."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill notcrawl",
+        "purpose": "Install the notcrawl skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill notcrawl"
+      },
+      {
+        "signature": "notcrawl doctor.",
+        "purpose": "Command or snippet documented by the upstream notcrawl skill.",
+        "example": "notcrawl doctor\nnotcrawl status\nnotcrawl sync --source desktop"
+      },
+      {
+        "signature": "notcrawl sync --source api.",
+        "purpose": "Command or snippet documented by the upstream notcrawl skill.",
+        "example": "notcrawl sync --source api"
+      },
+      {
+        "signature": "notcrawl search --limit 20 \"query\".",
+        "purpose": "Command or snippet documented by the upstream notcrawl skill.",
+        "example": "notcrawl search --limit 20 \"query\"\nnotcrawl databases\nnotcrawl sql \"select count(*) from pages;\"\nnotcrawl export-md"
+      }
+    ],
+    "gotchas": [
+      "Read the upstream SKILL.md before use; several entries encode machine-specific paths, credentials, or local operational assumptions."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

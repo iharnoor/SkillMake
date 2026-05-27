@@ -1,0 +1,51 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/beeper",
+  "skill": {
+    "name": "beeper",
+    "description": "Use when working with beeper cache: contact hints, room lookup, WhatsApp/iMessage traces, FTS from steipete/agent-scripts.",
+    "whenToUse": [
+      "Local Beeper history questions, especially vague contact hints across iMessage/WhatsApp bridges.",
+      "Using the beeper skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing beeper behavior.",
+      "Needing a compact agent reference for beeper cache: contact hints, room lookup, WhatsApp/iMessage traces, FTS."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Source",
+        "explanation": "DB: ~/Library/Application Support/BeeperTexts/index.db FTS: mxroommessagesfts Start by inspecting accounts/rooms before broad searching."
+      },
+      {
+        "term": "Workflow",
+        "explanation": "1. Identify likely account/bridge/room from accounts, participants, and room tables. 2. Use FTS for text discovery. 3. Narrow by date, participant, and room. 4. Report room/account names, date spans, and confidence. Useful probes: Keep results local; this DB can contain private messages."
+      },
+      {
+        "term": "Source-first workflow",
+        "explanation": "Start from the upstream beeper instructions and local project context before inventing commands or workflows."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill beeper",
+        "purpose": "Install the beeper skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill beeper"
+      },
+      {
+        "signature": "sqlite3 \"$HOME/Library/Application Support/BeeperTexts/index.db\" \\.",
+        "purpose": "Command or snippet documented by the upstream beeper skill.",
+        "example": "sqlite3 \"$HOME/Library/Application Support/BeeperTexts/index.db\" \\\n  \"select * from accounts limit 20;\""
+      },
+      {
+        "signature": "sqlite3 \"$HOME/Library/Application Support/BeeperTexts/index.db\" \\.",
+        "purpose": "Command or snippet documented by the upstream beeper skill.",
+        "example": "sqlite3 \"$HOME/Library/Application Support/BeeperTexts/index.db\" \\\n  \"select rowid, content from mx_room_messages_fts where mx_room_messages_fts match 'query' limit 20;\""
+      }
+    ],
+    "gotchas": [
+      "Read the upstream SKILL.md before use; several entries encode machine-specific paths, credentials, or local operational assumptions."
+    ],
+    "category": "tool",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

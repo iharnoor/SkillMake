@@ -1,0 +1,59 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/github-cache-hygiene",
+  "skill": {
+    "name": "github-cache-hygiene",
+    "description": "Use when working with gitHub quota/cache hygiene: gh, ghx, xcache, gitcrawl, mirrors, limits from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the github-cache-hygiene skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing github cache hygiene behavior.",
+      "Needing a compact agent reference for gitHub quota/cache hygiene: gh, ghx, xcache, gitcrawl, mirrors, limits."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Default Path",
+        "explanation": "Use gh normally. On Peter's machines it is expected to be the gitcrawl-backed shim, so supported reads can be answered locally or cached without changing commands. Prefer these local/cached reads: Use exact refs and narrow fields. Avoid broad loops like one gh issue view per result when a single gh search or gh issue list --json... can answer the first-pass question. For CI, avoid tight gh run list / gh run view polling loops. After a push or workflow dispatch, identify one exact run, then..."
+      },
+      {
+        "term": "Freshness",
+        "explanation": "Local answers are good for discovery, duplicate search, old thread review, author/label triage, and \"is there likely already an issue/PR?\" checks. Use a live call when: writing, commenting, closing, merging, rerunning, or editing checking final current state before a maintainer action verifying CI status after a push the local result is missing or obviously stale the user asks for latest/live state For PR review, prefer hydrating exact PR details once with gitcrawl sync owner/repo --numbers..."
+      },
+      {
+        "term": "XCache",
+        "explanation": "Inspect cache behavior when rate limits are suspected: Read backendmissesbycommand and backendmissesbyroute in gh xcache stats --json before adding new live GitHub loops. Those maps show which command shapes are still escaping the cache. Use gh xcache flush only when a stale cached fallback read is misleading a decision. For local-only proof, temporarily make the backend unavailable for a single command:."
+      },
+      {
+        "term": "Agent Etiquette",
+        "explanation": "Batch questions by repo and state. Reuse data already printed in the session. Back off CI polling; inspect logs only for failing runs or the exact run under review. Do not bypass the shim with /opt/homebrew/opt/gh/bin/gh unless diagnosing the shim itself."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill github-cache-hygiene",
+        "purpose": "Install the github-cache-hygiene skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill github-cache-hygiene"
+      },
+      {
+        "signature": "gitcrawl sync owner/repo --numbers 123 --with pr-details.",
+        "purpose": "Command or snippet documented by the upstream github-cache-hygiene skill.",
+        "example": "gitcrawl sync owner/repo --numbers 123 --with pr-details\ngh search issues \"<terms>\" -R owner/repo --state open --json number,title,state,url,updatedAt,labels,author\ngh search prs \"<terms>\" -R owner/repo --state open --json number,title,state,url,updatedAt,isDraft,author\ngh issue list -R owner/repo --state open --author user --assignee user --label bug --json number,title,url\ngh pr list -R owner/repo --state open --author user --label dependencies --json number,title,url\ngh issue view 123 -R owner/repo --json number,title,state,body,comments,labels,url\ngh pr view 123 -R owner/repo --json number,title,state,body,comments,labels,files,commits,statusCheckRollup,url\ngh pr checks 123 -R owner/repo --json name,state,detailsUrl,workflow\ngh run list -R owner/repo --branch branch-name --json databaseId,workflowName,status,conclusion,url\ngh pr diff 123 -R owner/repo --patch"
+      },
+      {
+        "signature": "gh xcache stats.",
+        "purpose": "Command or snippet documented by the upstream github-cache-hygiene skill.",
+        "example": "gh xcache stats\ngh xcache keys\ngh xcache gc"
+      },
+      {
+        "signature": "GITCRAWLGHPATH=/tmp/no-real-gh gh search issues \"<terms>\" -R owner/repo --json number,title,url.",
+        "purpose": "Command or snippet documented by the upstream github-cache-hygiene skill.",
+        "example": "GITCRAWL_GH_PATH=/tmp/no-real-gh gh search issues \"<terms>\" -R owner/repo --json number,title,url"
+      }
+    ],
+    "gotchas": [
+      "Prefer these local/cached reads:."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

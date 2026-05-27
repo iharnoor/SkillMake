@@ -1,0 +1,48 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/npm",
+  "skill": {
+    "name": "npm",
+    "description": "Use when working with npm registry ops: login, whoami, names, publish; 1Password tmux from steipete/agent-scripts.",
+    "whenToUse": [
+      "Npm registry/account tasks: npm whoami, package availability, package reservation, publish, org checks, and auth debugging.",
+      "Using the npm skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing npm behavior.",
+      "Needing a compact agent reference for npm registry ops: login, whoami, names, publish; 1Password tmux."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Auth",
+        "explanation": "Use one-password first for secret rules. Never run op directly in the shell tool. Known npm 1Password item: npmjs on my.1password.com. The item may contain username/password/TOTP, not a stored npm token. That is fine. Explicit user requests to release, publish, or npm publish are consent to complete npm auth, including a desktop 1Password sign-in/unlock prompt for the known npmjs item when service-account access cannot read it. Do not stop to ask for separate permission just because the npm..."
+      },
+      {
+        "term": "Package Reservation",
+        "explanation": "Use scripts/reserve-packages.sh from inside the same tmux session: What it does: reads npmjs once via op creates an npm registry session from username/password/TOTP publishes 0.0.0 placeholder packages with a generic README continues after per-package publish failures redacts tokens/OTP in logs cleans temp npmrc/work dirs Notes: npm may reject names as too similar to already-published names. Treat that as a registry policy result, not an auth failure. npm CLI prompt piping is brittle on npm..."
+      },
+      {
+        "term": "Source-first workflow",
+        "explanation": "Start from the upstream npm instructions and local project context before inventing commands or workflows."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill npm",
+        "purpose": "Install the npm skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill npm"
+      },
+      {
+        "signature": "/Users/steipete/Projects/agent-scripts/skills/npm/scripts/reserve-packages.sh package-one package-two.",
+        "purpose": "Command or snippet documented by the upstream npm skill.",
+        "example": "/Users/steipete/Projects/agent-scripts/skills/npm/scripts/reserve-packages.sh package-one package-two"
+      }
+    ],
+    "gotchas": [
+      "Never run op directly in the shell tool.",
+      "Avoid expect for npm login unless necessary; logs can echo prompts and are easy to get wrong.",
+      "Prefer the helper's registry API login path (npm-profile loginCouch) for automation."
+    ],
+    "category": "platform",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

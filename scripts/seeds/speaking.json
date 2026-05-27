@@ -1,0 +1,63 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/speaking",
+  "skill": {
+    "name": "speaking",
+    "description": "Use when working with speaking ops: invites, keynotes, panels, Gmail/calendar, conferences from steipete/agent-scripts.",
+    "whenToUse": [
+      "Peter's speaking-opportunity workflow.",
+      "Using the speaking skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing speaking behavior.",
+      "Needing a compact agent reference for speaking ops: invites, keynotes, panels, Gmail/calendar, conferences."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Sources",
+        "explanation": "Repo: /Users/steipete/Projects/conferences Sheet: Peter Steinberger Inbounds Sheet URL: https://docs.google.com/spreadsheets/d/1dNt5EjgfgvPoAx5fa-igk681gniCkzL-IZ2FmjFl8fs/edit?gid=0#gid=0 Main tab: Invitations Main brief: /Users/steipete/Projects/conferences/conference-opportunities.md One note per opportunity: /Users/steipete/Projects/conferences/opportunities/NNN-slug.md Use gog first for Google data when available:."
+      },
+      {
+        "term": "Scope",
+        "explanation": "Track: conferences, summits, retreats, keynotes, panels, firesides, workshops, university talks, high-signal private rooms calendar holds that look like speaking commitments email invites where Peter expressed interest, declined, or needs to respond Do not track in the conference list: podcasts press interviews generic networking dinners without a speaking/event ask vague intro calls with no event or audience Talks and firesides are welcome. Do not delete them just because they are not..."
+      },
+      {
+        "term": "Evaluation",
+        "explanation": "Score with these heuristics: Audience leverage: developers, founders, AI researchers, senior enterprise buyers/advisors, policy/media only if strategic. Role quality: keynote/main stage/fireside > panel > passive attendance. Proof: verified email thread, named organizer, calendar invite, public event page, agenda, attendee size. Fit: OpenClaw, agents, developer tools, AI-native software, open source, founder story, OpenAI-aligned narrative. Logistics: date conflicts, visa, travel, time zone..."
+      },
+      {
+        "term": "Verification",
+        "explanation": "Before changing status: 1. Search Gmail for the event name, organizer, contact email, and likely aliases. 2. Read the full thread, not just snippets. 3. Check Google Calendar for matching holds/invites. 4. Treat calendar-only holds as unverified unless email supports them. 5. Preserve Peter corrections: OMR/ORM is not a commitment; do not mark accepted unless Peter explicitly reverses that. Useful status meanings: CALENDARED: calendar plus email evidence, or accepted invite. INBOX: needs..."
+      },
+      {
+        "term": "Repo Notes",
+        "explanation": "Per-opportunity files should stay short and structured: markdown # Event Name Number: N Index: [Conference Opportunities Brief](../conference-opportunities.md)."
+      },
+      {
+        "term": "Brief",
+        "explanation": "Date/location: Host/ask: Format: Audience/scale: Impact: Fit: Risks: Status: Recommendation: Sources: When adding an opportunity: 1. Pick next number from opportunities/.md. 2. Add opportunities/NNN-slug.md. 3. Add the link to conference-opportunities.md. 4. Update the shortlist only if it changes prioritization. 5. Keep podcasts and press out."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill speaking",
+        "purpose": "Install the speaking skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill speaking"
+      },
+      {
+        "signature": "gog gmail search 'speaker OR keynote OR panel OR fireside OR conference OR summit after:2026-01-01' --json --no-input.",
+        "purpose": "Command or snippet documented by the upstream speaking skill.",
+        "example": "gog gmail search 'speaker OR keynote OR panel OR fireside OR conference OR summit after:2026-01-01' --json --no-input\ngog gmail read <thread-or-message-id> --json --no-input\ngog calendar events primary --time-min 2026-01-01T00:00:00Z --time-max 2026-12-31T23:59:59Z --json --no-input\ngog sheets get 1dNt5EjgfgvPoAx5fa-igk681gniCkzL-IZ2FmjFl8fs 'Invitations!A1:Q110' --json --no-input"
+      },
+      {
+        "signature": "- Number: N.",
+        "purpose": "Command or snippet documented by the upstream speaking skill.",
+        "example": "# Event Name\n\n- Number: N\n- Index: [Conference Opportunities Brief](../conference-opportunities.md)\n\n## Brief\n\n- Date/location:\n- Host/ask:\n- Format:\n- Audience/scale:\n- Impact:\n- Fit:\n- Risks:\n- Status:\n- Recommendation:\n- Sources:"
+      }
+    ],
+    "gotchas": [
+      "Do not track in the conference list:."
+    ],
+    "category": "other",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

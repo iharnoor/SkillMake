@@ -1,0 +1,76 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/hopper-debugger",
+  "skill": {
+    "name": "hopper-debugger",
+    "description": "Use when working with hopper debugging: macOS/iOS binaries, ObjC/Swift symbols, dyld, LLDB from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the hopper-debugger skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing hopper debugger behavior.",
+      "Needing a compact agent reference for hopper debugging: macOS/iOS binaries, ObjC/Swift symbols, dyld, LLDB."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Apple Frameworks",
+        "explanation": "Prefer already extracted dyld-cache framework binaries when present: Open one at a time when debugging SwiftUI/AppKit boundary issues: Verify access: Document names can start as Untitled; retry after Hopper finishes importing. Use currentdocument, symbol/string searches, and window title changes to identify AppKit vs SwiftUI."
+      },
+      {
+        "term": "Query Workflow",
+        "explanation": "1. Start from the local source path or runtime symbol you are trying to explain. 2. Search names/procedures/strings: 3. Inspect one small target at a time: 4. Summarize the relevant control flow; do not paste large decompilations. 5. Validate the hypothesis with LLDB/logging/repro before editing app code."
+      },
+      {
+        "term": "Status Item / Menu Click Bugs",
+        "explanation": "Useful AppKit/SwiftUI searches: Symbols worth inspecting when menu bar clicks do nothing: -[NSStatusBarButtonCell trackMouse:inRect:ofView:untilMouseUp:] -[NSStatusBarButtonCell sendActionFrom:] -[NSStatusItem popUpStatusBarMenu:] -[NSApplication sendAction:to:from:] SwiftUI status/menu symbols that reference NSStatusItemPrivateForSwiftUI Compare disassembly against runtime state: For hardened signed apps, attach may fail without get-task-allow; launch the raw debug binary under LLDB when..."
+      },
+      {
+        "term": "Failure Handling",
+        "explanation": "Wrap Hopper calls with timeout; a modal/import or closed document can leave the transport stuck. Do not send concurrent Hopper MCP requests during import. If a query is expensive, wait for it to finish before starting another. If calls report Connection closed, check for a Hopper modal, then retry after confirmation. If Hopper crashes, reopen a single document, wait for import/analysis, and re-run listdocuments before deeper searches. If mcporter is wedged, inspect processes before killing..."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill hopper-debugger",
+        "purpose": "Install the hopper-debugger skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill hopper-debugger"
+      },
+      {
+        "signature": "MCPORTERLISTTIMEOUT=15000 timeout 20 mcporter list hopper --brief.",
+        "purpose": "Command or snippet documented by the upstream hopper-debugger skill.",
+        "example": "MCPORTER_LIST_TIMEOUT=15000 timeout 20 mcporter list hopper --brief"
+      },
+      {
+        "signature": "MCPORTERCALLTIMEOUT=20000 timeout 30 mcporter call hopper.listdocuments --output json.",
+        "purpose": "Command or snippet documented by the upstream hopper-debugger skill.",
+        "example": "MCPORTER_CALL_TIMEOUT=20000 timeout 30 mcporter call hopper.list_documents --output json"
+      },
+      {
+        "signature": "open -a \"Hopper Disassembler\" /path/to/Binary.",
+        "purpose": "Command or snippet documented by the upstream hopper-debugger skill.",
+        "example": "open -a \"Hopper Disassembler\" /path/to/Binary"
+      },
+      {
+        "signature": "/tmp/dsc-appkit/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit.",
+        "purpose": "Command or snippet documented by the upstream hopper-debugger skill.",
+        "example": "/tmp/dsc-appkit/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit\n/tmp/dsc-appkit/System/Library/Frameworks/SwiftUI.framework/Versions/A/SwiftUI"
+      },
+      {
+        "signature": "open -a \"Hopper Disassembler\" /tmp/dsc-appkit/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit.",
+        "purpose": "Command or snippet documented by the upstream hopper-debugger skill.",
+        "example": "open -a \"Hopper Disassembler\" /tmp/dsc-appkit/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit\nmcporter call hopper.list_documents --output json\n\nopen -a \"Hopper Disassembler\" /tmp/dsc-appkit/System/Library/Frameworks/SwiftUI.framework/Versions/A/SwiftUI\nmcporter call hopper.list_documents --output json"
+      },
+      {
+        "signature": "mcporter call hopper.listdocuments --output json.",
+        "purpose": "Command or snippet documented by the upstream hopper-debugger skill.",
+        "example": "mcporter call hopper.list_documents --output json\nmcporter call hopper.current_document --output json\nmcporter call hopper.search_strings pattern=SwiftUI --output json\nmcporter call hopper.search_strings pattern=NSStatusItem --output json"
+      }
+    ],
+    "gotchas": [
+      "Prefer already extracted dyld-cache framework binaries when present:.",
+      "Do not send concurrent Hopper MCP requests during import. If a query is expensive, wait for it to finish before starting another.",
+      "Prefer restarting the mcporter daemon over broad process kills:."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

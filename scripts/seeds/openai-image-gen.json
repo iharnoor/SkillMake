@@ -1,0 +1,50 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/openai-image-gen",
+  "skill": {
+    "name": "openai-image-gen",
+    "description": "Use when working with openAI Images API: batches, prompt sampler, gallery from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the openai-image-gen skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing openai image gen behavior.",
+      "Needing a compact agent reference for openAI Images API: batches, prompt sampler, gallery."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Run",
+        "explanation": "From any directory (outputs to ~/Projects/tmp/... when present; else./tmp/...): Useful flags:."
+      },
+      {
+        "term": "Output",
+        "explanation": ".png images prompts.json (prompt ↔ file mapping) index.html (thumbnail gallery)."
+      },
+      {
+        "term": "Source-first workflow",
+        "explanation": "Start from the upstream openai-image-gen instructions and local project context before inventing commands or workflows."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill openai-image-gen",
+        "purpose": "Install the openai-image-gen skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill openai-image-gen"
+      },
+      {
+        "signature": "python3 ~/Projects/agent-scripts/skills/openai-image-gen/scripts/gen.py.",
+        "purpose": "Command or snippet documented by the upstream openai-image-gen skill.",
+        "example": "python3 ~/Projects/agent-scripts/skills/openai-image-gen/scripts/gen.py\nopen ~/Projects/tmp/openai-image-gen-*/index.html"
+      },
+      {
+        "signature": "python3 ~/Projects/agent-scripts/skills/openai-image-gen/scripts/gen.py --count 16 --model gpt-image-1.5.",
+        "purpose": "Command or snippet documented by the upstream openai-image-gen skill.",
+        "example": "python3 ~/Projects/agent-scripts/skills/openai-image-gen/scripts/gen.py --count 16 --model gpt-image-1.5\npython3 ~/Projects/agent-scripts/skills/openai-image-gen/scripts/gen.py --prompt \"ultra-detailed studio photo of a lobster astronaut\" --count 4\npython3 ~/Projects/agent-scripts/skills/openai-image-gen/scripts/gen.py --size 1536x1024 --quality high --out-dir ./out/images"
+      }
+    ],
+    "gotchas": [
+      "Read the upstream SKILL.md before use; several entries encode machine-specific paths, credentials, or local operational assumptions."
+    ],
+    "category": "api",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

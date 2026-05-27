@@ -1,0 +1,52 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/oracle",
+  "skill": {
+    "name": "oracle",
+    "description": "Use when working with oracle second-model review: bundle prompts/files, debug, refactor, design from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the oracle skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing oracle behavior.",
+      "Needing a compact agent reference for oracle second-model review: bundle prompts/files, debug, refactor, design."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Main use case (browser, GPT‑5.5 Pro)",
+        "explanation": "Default workflow here: --engine browser with GPT‑5.5 Pro in ChatGPT. This is the \"human in the loop\" path: it can take ~10 minutes to ~1 hour; expect a stored session you can reattach to. Recommended defaults: Engine: browser (--engine browser) Model: GPT‑5.5 Pro (either --model gpt-5.5-pro or a ChatGPT picker label like --model \"5.5 Pro\") Attachments: directories/globs + excludes; avoid secrets."
+      },
+      {
+        "term": "Golden path (fast + reliable)",
+        "explanation": "1. Pick a tight file set (fewest files that still contain the truth). 2. Preview what you’re about to send (--dry-run + --files-report when needed). 3. Run in browser mode for the usual GPT‑5.5 Pro ChatGPT workflow; use API only when you explicitly want it. 4. If the run detaches/timeouts: reattach to the stored session (don’t re-run)."
+      },
+      {
+        "term": "Commands (preferred)",
+        "explanation": "Show help (once/session): - npx -y @steipete/oracle --help Preview (no tokens): - npx -y @steipete/oracle --dry-run summary -p \"<task>\" --file \"src/\" --file \"!/.test.\" - npx -y @steipete/oracle --dry-run full -p \"<task>\" --file \"src/\" Token/cost sanity: - npx -y @steipete/oracle --dry-run summary --files-report -p \"<task>\" --file \"src/\" Startup/perf trace: - npx -y @steipete/oracle --perf-trace --perf-trace-path /tmp/oracle-perf.json --dry-run summary -p \"<task>\" --file \"src/\" - Use when CLI..."
+      },
+      {
+        "term": "Attaching files (--file)",
+        "explanation": "--file accepts files, directories, and globs. You can pass it multiple times; entries can be comma-separated. Include: - --file \"src/\" (directory glob) - --file src/index.ts (literal file) - --file docs --file README.md (literal directory + file) Exclude (prefix with !): - --file \"src/\" --file \"!src//.test.ts\" --file \"!/.snap\" Defaults (important behavior from the implementation): - Default-ignored dirs: nodemodules, dist, coverage,.git,.turbo,.next, build, tmp (skipped unless you explicitly..."
+      },
+      {
+        "term": "Budget + observability",
+        "explanation": "Target: keep total input under ~196k tokens. Use --files-report (and/or --dry-run json) to spot the token hogs before spending. Use --perf-trace / ORACLEPERFTRACE=1 for startup and first-output timing. Traces redact prompts, tokens, keys, cookies, and inline cookie payloads; detached API children write a session-suffixed sidecar trace. If you need hidden/advanced knobs: npx -y @steipete/oracle --help --verbose."
+      },
+      {
+        "term": "Engines (API vs browser)",
+        "explanation": "Auto-pick: uses api when OPENAIAPIKEY is set, otherwise browser. Browser engine supports GPT + Gemini only; use --engine api for Claude/Grok/Codex or multi-model runs. API runs require explicit user consent before starting because they incur usage costs. Browser attachments: - --browser-attachments auto|never|always (auto pastes inline up to ~60k chars then uploads). - Add --browser-bundle-files --browser-bundle-format zip to upload many text files as one ZIP while preserving file names..."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill oracle",
+        "purpose": "Install the oracle skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill oracle"
+      }
+    ],
+    "gotchas": [
+      "Prefer \"just enough context\": fewer files + better prompt beats whole-repo dumps."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

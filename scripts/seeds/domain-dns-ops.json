@@ -1,0 +1,49 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/domain-dns-ops",
+  "skill": {
+    "name": "domain-dns-ops",
+    "description": "Use when working with dNS/domain ops: registrars, zones, redirects, DNS/HTTP verify, manager truth from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the domain-dns-ops skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing domain dns ops behavior.",
+      "Needing a compact agent reference for dNS/domain ops: registrars, zones, redirects, DNS/HTTP verify, manager truth."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Source of truth (read first)",
+        "explanation": "~/Projects/manager/DOMAINS.md (domain -> target map; registrar hints; exclusions) ~/Projects/manager/DNS.md (Cloudflare onboarding + DNS/redirect checklist) ~/Projects/manager/redirect-worker.ts + ~/Projects/manager/redirect-worker-mapping.md (worker redirects)."
+      },
+      {
+        "term": "Golden path (new vanity domain -> Cloudflare -> redirect)",
+        "explanation": "1. Decide routing model - Page Rule redirect (small scale, per-zone). - Rulesets / Bulk Redirects (account-level; needs token perms). - Worker route (fallback; uses redirect-worker). 2. Cloudflare zone - Create zone (UI), then confirm with cli4: - cli4 --get name=example.com /zones 3. Nameservers - If registrar = Namecheap: cd ~/Projects/manager && source profile && bin/namecheap-set-ns example.com emma.ns.cloudflare.com scott.ns.cloudflare.com - If registrar = DNSimple: see..."
+      },
+      {
+        "term": "Common ops",
+        "explanation": "Cloudflare token sanity: follow the root secret rule; export only the needed Cloudflare token for one command. Disable \"Block AI bots\": cd ~/Projects/manager && source profile && bin/cloudflare-ai-bots status / bin/cloudflare-ai-bots disable."
+      },
+      {
+        "term": "After edits (commit/push)",
+        "explanation": "If you changed anything in ~/Projects/manager (docs, worker, scripts, mappings): commit there too. 1. Review: cd ~/Projects/manager && git status && git diff 2. Stage: git add <paths> 3. Commit (Conventional Commits): git commit -m \"feat: …\" / fix: / docs: / chore: 4. Push only when explicitly asked: git push origin main."
+      },
+      {
+        "term": "Guardrails",
+        "explanation": "Don’t touch.md lore domains or steipete.md unless explicitly asked; check ~/Projects/manager/DOMAINS.md. Confirm registrar before debugging CF \"invalid nameservers\" (often \"wrong registrar\"). Prefer reversible steps; verify after each change (NS → DNS → redirect)."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill domain-dns-ops",
+        "purpose": "Install the domain-dns-ops skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill domain-dns-ops"
+      }
+    ],
+    "gotchas": [
+      "Confirm registrar before debugging CF \"invalid nameservers\" (often \"wrong registrar\").",
+      "Prefer reversible steps; verify after each change (NS → DNS → redirect)."
+    ],
+    "category": "platform",
+    "audience": "devops",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

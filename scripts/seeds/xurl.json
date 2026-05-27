@@ -1,0 +1,85 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/xurl",
+  "skill": {
+    "name": "xurl",
+    "description": "Use when working with xurl X API CLI: install, auth, app choice, shortcuts, raw endpoints from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the xurl skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing xurl behavior.",
+      "Needing a compact agent reference for xurl X API CLI: install, auth, app choice, shortcuts, raw endpoints."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Install",
+        "explanation": "Homebrew: npm: Shell script: Go:."
+      },
+      {
+        "term": "Safety",
+        "explanation": "Never read, print, summarize, upload, or paste ~/.xurl into LLM context. Never ask the user to paste client secrets, bearer tokens, or OAuth tokens into chat. Never use --verbose in agent runs; it can expose auth headers. Do not run auth commands with inline secret flags in an agent session. The user must register app credentials manually on their machine outside the agent session."
+      },
+      {
+        "term": "Auth",
+        "explanation": "Check current state: If an app is already registered, complete OAuth 2.0: Multi-app: Notes: xurl stores app config and tokens in ~/.xurl. OAuth 2.0 redirect URI in the X developer portal should be http://localhost:8080/callback. App registration examples with inline secrets are intentionally omitted here. Do that outside the agent session."
+      },
+      {
+        "term": "Common shortcuts",
+        "explanation": "POSTID can also be a full X status URL."
+      },
+      {
+        "term": "Raw endpoint mode",
+        "explanation": "GET: POST JSON: Headers: Choose auth type: Choose OAuth2 account: Streaming:."
+      },
+      {
+        "term": "Quick checks",
+        "explanation": "Install: Auth: Live request after auth:."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill xurl",
+        "purpose": "Install the xurl skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill xurl"
+      },
+      {
+        "signature": "brew install --cask xdevplatform/tap/xurl.",
+        "purpose": "Command or snippet documented by the upstream xurl skill.",
+        "example": "brew install --cask xdevplatform/tap/xurl"
+      },
+      {
+        "signature": "npm install -g @xdevplatform/xurl.",
+        "purpose": "Command or snippet documented by the upstream xurl skill.",
+        "example": "npm install -g @xdevplatform/xurl"
+      },
+      {
+        "signature": "go install github.com/xdevplatform/xurl@latest.",
+        "purpose": "Command or snippet documented by the upstream xurl skill.",
+        "example": "go install github.com/xdevplatform/xurl@latest"
+      },
+      {
+        "signature": "xurl auth status.",
+        "purpose": "Command or snippet documented by the upstream xurl skill.",
+        "example": "xurl auth status"
+      },
+      {
+        "signature": "xurl auth oauth2.",
+        "purpose": "Command or snippet documented by the upstream xurl skill.",
+        "example": "xurl auth oauth2"
+      },
+      {
+        "signature": "xurl auth apps list.",
+        "purpose": "Command or snippet documented by the upstream xurl skill.",
+        "example": "xurl auth apps list\nxurl auth default my-app\nxurl auth default my-app alice\nxurl --app dev-app /2/users/me"
+      }
+    ],
+    "gotchas": [
+      "Never read, print, summarize, upload, or paste ~/.xurl into LLM context.",
+      "Never ask the user to paste client secrets, bearer tokens, or OAuth tokens into chat.",
+      "Never use --verbose in agent runs; it can expose auth headers.",
+      "Do not run auth commands with inline secret flags in an agent session."
+    ],
+    "category": "api",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/github-project-triage",
+  "skill": {
+    "name": "github-project-triage",
+    "description": "Use when working with gitHub issue/PR triage: summarize, assess risk/testability, inspect CI/diffs/trust from steipete/agent-scripts.",
+    "whenToUse": [
+      "Use this only when the scope is broad. Start with repo-level queue maps. This finds repos with open issues and/or PRs and gives counts.",
+      "Using the github-project-triage skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing github project triage behavior.",
+      "Needing a compact agent reference for gitHub issue/PR triage: summarize, assess risk/testability, inspect CI/diffs/trust."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Local Repo Gate",
+        "explanation": "Before starting work inside any local project, verify the checkout is ready: Proceed only when the branch is main, the pull succeeds, and the worktree is clean. If the branch is not main, the pull fails, or git status --short shows changes, stop and ask Peter what to do. Do not switch branches, stash, commit, reset, restore, or clean without explicit direction."
+      },
+      {
+        "term": "Scope Rule",
+        "explanation": "If the user says triage and the current working directory is a Git repo with a GitHub remote, triage only that project. Do not broaden to all Peter/org queues unless the user says broad, all, everything, names multiple owners/orgs, or asks for cross-repo triage. If the repo has VISION.md, read it before judging what can be handled autonomously. Use it as the product-fit source of truth, then apply this skill's risk/testability rules. If no VISION.md exists, use the autonomous-fit rules..."
+      },
+      {
+        "term": "Autonomous Work Mode",
+        "explanation": "When the user says do work autonomously, work you can do autonomously, keep going, or similar, do not stop after a queue summary or one local patch. Treat it as permission to process the eligible issue/PR queue sequentially until no safe autonomous item remains, each item is landed/closed/deferred with proof, or a blocker requires Peter. Never work multiple tickets at once. For each item: 1. Read the issue/PR, related code, docs, CI, and VISION.md if present; Google/use official docs when..."
+      },
+      {
+        "term": "Trust Signals",
+        "explanation": "Include author/opener trust for every non-maintainer item you recommend acting on. For low-risk Dependabot/internal items, a terse bot/internal trust line is enough. Prefer the bundled helper: Fallback if this skill checkout lacks the helper: Also use github-author-context when a PR needs deeper trust judgment, especially for OpenClaw, security-sensitive changes, broad PRs, new accounts, or unusual author behavior. Prefer existing contributor notes first: Trust output must stay factual: Do..."
+      },
+      {
+        "term": "Item Evaluation",
+        "explanation": "Classify each item: bug: require repro/log/failing test/current-main proof when feasible; identify root cause before recommending fix/merge. feature: require end-to-end test plan. If live validation needs a provider key, account, device, service, model access, or paid API, say exactly what credential/access is missing before work can be considered complete. dependency: explain package group, major/minor risk, failing checks, runtime/engine changes, and whether to split. security: raise..."
+      },
+      {
+        "term": "Fast Queue Map",
+        "explanation": "Use this only when the scope is broad. Start with repo-level queue maps. This finds repos with open issues and/or PRs and gives counts. PR queue, primary triage order: Issue pressure, second pass when issues matter: Use --forks and --archived only when the user says \"all\", \"everything\", or asks for archaeology. Default triage should omit forks and archived repos unless their queues are specifically relevant. For a compact terminal view: Useful jq summary: When summarizing a PR-sorted queue..."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill github-project-triage",
+        "purpose": "Install the github-project-triage skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill github-project-triage"
+      },
+      {
+        "signature": "repobarcmd() {.",
+        "purpose": "Command or snippet documented by the upstream github-project-triage skill.",
+        "example": "repobar_cmd() {\n  if command -v repobar >/dev/null 2>&1; then\n    repobar \"$@\"\n  elif [ -x \"$HOME/Projects/RepoBar/.build/debug/repobarcli\" ]; then\n    \"$HOME/Projects/RepoBar/.build/debug/repobarcli\" \"$@\"\n  else\n    swift run --package-path \"$HOME/Projects/RepoBar\" repobarcli \"$@\"\n  fi\n}\n\nrepobar_cmd status --json"
+      },
+      {
+        "signature": "git status --short --branch.",
+        "purpose": "Command or snippet documented by the upstream github-project-triage skill.",
+        "example": "git status --short --branch\ngit branch --show-current\ngit pull --ff-only\ngit status --short --branch"
+      },
+      {
+        "signature": "repo=$(gh repo view --json nameWithOwner --jq.nameWithOwner 2>/dev/null || true).",
+        "purpose": "Command or snippet documented by the upstream github-project-triage skill.",
+        "example": "repo=$(gh repo view --json nameWithOwner --jq .nameWithOwner 2>/dev/null || true)\nif [ -z \"$repo\" ]; then\n  url=$(git remote get-url origin 2>/dev/null || true)\n  repo=$(printf '%s\\n' \"$url\" |\n    sed -E 's#^git@github.com:##; s#^https://github.com/##; s#\\\\.git$##')\nfi\nprintf '%s\\n' \"$repo\""
+      },
+      {
+        "signature": "gh issue list --repo \"$repo\" --state open --limit 50 \\.",
+        "purpose": "Command or snippet documented by the upstream github-project-triage skill.",
+        "example": "gh issue list --repo \"$repo\" --state open --limit 50 \\\n  --json number,title,author,labels,createdAt,updatedAt,url\ngh pr list --repo \"$repo\" --state open --limit 50 \\\n  --json number,title,author,isDraft,reviewDecision,mergeStateStatus,createdAt,updatedAt,url"
+      },
+      {
+        "signature": "gh issue view <n> --repo \"$repo\" \\.",
+        "purpose": "Command or snippet documented by the upstream github-project-triage skill.",
+        "example": "gh issue view <n> --repo \"$repo\" \\\n  --json number,title,author,body,comments,labels,createdAt,updatedAt,url\ngh pr view <n> --repo \"$repo\" \\\n  --json number,title,author,body,comments,files,commits,isDraft,reviewDecision,mergeStateStatus,statusCheckRollup,createdAt,updatedAt,url\ngh pr diff <n> --repo \"$repo\" --patch"
+      },
+      {
+        "signature": "skills/github-project-triage/scripts/github-activity.sh --repo <owner/repo> --global <login>.",
+        "purpose": "Command or snippet documented by the upstream github-project-triage skill.",
+        "example": "skills/github-project-triage/scripts/github-activity.sh --repo <owner/repo> --global <login>"
+      }
+    ],
+    "gotchas": [
+      "Prefer a real repobar binary when installed. In this workspace it may only exist as a SwiftPM product in ~/Projects/RepoBar.",
+      "Never work multiple tickets at once. For each item:.",
+      "Ask first: new features, product/vision choices, broad behavior changes, risky dependencies, security-sensitive changes without strong proof, live-provider work without usable credentials, anything that cannot be end-to-end tested.",
+      "Do not end autonomous mode with dirty files or an unpushed local fix unless blocked. If blocked, state the exact blocker, current branch/status, proof already gathered, and the next decision needed.",
+      "Prefer the bundled helper:.",
+      "Do not treat trust as proof. It changes review depth, not correctness.",
+      "prefer external/user-reported bugs and PRs with clear proof.",
+      "Do not run destructive local actions (local reset, branch deletes, checkout moves) unless the user explicitly asks."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

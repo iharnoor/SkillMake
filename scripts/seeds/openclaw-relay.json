@@ -1,0 +1,83 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/openclaw-relay",
+  "skill": {
+    "name": "openclaw-relay",
+    "description": "Use when working with openClaw session relay: prompts/posts via local/remote acpx over SSH from steipete/agent-scripts.",
+    "whenToUse": [
+      "The job is:.",
+      "Using the openclaw-relay skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing openclaw relay behavior.",
+      "Needing a compact agent reference for openClaw session relay: prompts/posts via local/remote acpx over SSH."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Mode Selection",
+        "explanation": "Choose local when: the user explicitly says acpx the target session is on the current machine the goal is quick relay or private ask Choose ssh when: the target agent/session lives on another host you want a persistent bridge session you need async queue/wait/show flows on a remote machine."
+      },
+      {
+        "term": "Defaults",
+        "explanation": "The script avoids baked-in personal paths. Override with env or flags when needed. transport: local local repo cwd: current working directory local acpx repo: <cwd>/extensions/acpx ssh host: steipete@steipete-macstudio.local remote repo cwd: <remote-home>/clawdbot remote acpx repo: <remote-home>/Projects/oss/acpx gateway token file: <home>/.openclaw/gateway.token control session name: codex-bridge target aliases file: config/sessionaliases.json Useful env vars: OPENCLAWRELAYTRANSPORT..."
+      },
+      {
+        "term": "Async Workflow",
+        "explanation": "Queue work and poll the same control session:."
+      },
+      {
+        "term": "Target Aliases",
+        "explanation": "config/sessionaliases.json ships with placeholders. Replace them with real values for your setup. Example shape:."
+      },
+      {
+        "term": "Session Rules",
+        "explanation": "Use these rules when choosing a command: Want a private reply from a specific session: ask Want the target session to decide whether to post: publish Want a guaranteed direct post: force-send Want blocking continuity with the control brain: send Want fire-and-forget async: start, then wait and show Want to stop queued work: cancel."
+      },
+      {
+        "term": "Failure Handling",
+        "explanation": "If relay work fails: 1. Run doctor. 2. Run status. 3. Run show. 4. If the control session is wedged, run cancel, then ensure, then retry. If route discovery is uncertain: 1. Resolve the target first. 2. Prefer alias or exact session key. 3. Use a tiny probe ask before sending the real payload."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill openclaw-relay",
+        "purpose": "Install the openclaw-relay skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill openclaw-relay"
+      },
+      {
+        "signature": "python3 scripts/openclawrelay.py doctor.",
+        "purpose": "Command or snippet documented by the upstream openclaw-relay skill.",
+        "example": "python3 scripts/openclaw_relay.py doctor"
+      },
+      {
+        "signature": "python3 scripts/openclawrelay.py targets.",
+        "purpose": "Command or snippet documented by the upstream openclaw-relay skill.",
+        "example": "python3 scripts/openclaw_relay.py targets"
+      },
+      {
+        "signature": "python3 scripts/openclawrelay.py resolve --target maintainers.",
+        "purpose": "Command or snippet documented by the upstream openclaw-relay skill.",
+        "example": "python3 scripts/openclaw_relay.py resolve --target maintainers"
+      },
+      {
+        "signature": "python3 scripts/openclawrelay.py ask \\.",
+        "purpose": "Command or snippet documented by the upstream openclaw-relay skill.",
+        "example": "python3 scripts/openclaw_relay.py ask \\\n  --target maintainers \\\n  --message \"Summarize the current vibe in this channel.\""
+      },
+      {
+        "signature": "python3 scripts/openclawrelay.py force-send \\.",
+        "purpose": "Command or snippet documented by the upstream openclaw-relay skill.",
+        "example": "python3 scripts/openclaw_relay.py force-send \\\n  --target maintainers \\\n  --text \"Deploy is done.\""
+      },
+      {
+        "signature": "python3 scripts/openclawrelay.py force-send \\.",
+        "purpose": "Command or snippet documented by the upstream openclaw-relay skill.",
+        "example": "python3 scripts/openclaw_relay.py force-send \\\n  --transport ssh \\\n  --host steipete@steipete-macstudio.local \\\n  --target maintainers \\\n  --text \"Demo video.\" \\\n  --media /tmp/demo.mp4"
+      }
+    ],
+    "gotchas": [
+      "Ask a target session a question privately:."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

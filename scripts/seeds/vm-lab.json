@@ -1,0 +1,87 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/vm-lab",
+  "skill": {
+    "name": "vm-lab",
+    "description": "Use when working with parallels macOS VM lab: GUI automation, Peekaboo, TCC, Ghostty from steipete/agent-scripts.",
+    "whenToUse": [
+      "The task needs a clean macOS VM to test GUI automation, TCC prompts, screenshot capture, clicking, typing, performance, or \"two-way validation\" of Peekaboo-like tools.",
+      "Using the vm-lab skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing vm lab behavior.",
+      "Needing a compact agent reference for parallels macOS VM lab: GUI automation, Peekaboo, TCC, Ghostty."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Safety Rules",
+        "explanation": "Treat the VM snapshot as disposable, not the host. Never print secrets. If op is needed, follow the 1Password skill and run it only inside tmux. Prefer fresh app windows you create yourself: TextEdit, a local HTML test page, or a small test app. Avoid modifying host state except temporary screenshots under /tmp. For git repos inside the VM, use HTTPS remotes and normal branch discipline."
+      },
+      {
+        "term": "VM Discovery",
+        "explanation": "List VMs: Get VM status/IP: Run guest commands as Peter: Capture an independent host-side screenshot:."
+      },
+      {
+        "term": "TCC / GUI Attribution",
+        "explanation": "For macOS Screen Recording and Accessibility, the responsible process matters. prlctl exec is headless and can fail to produce useful Screen Recording attribution. Launch the test command from a visible terminal app in the guest when Screen Recording is involved. Ghostty works as a GUI terminal if installed. After a first failed capture, check System Settings > Privacy & Security > Screen & System Audio Recording. permissions status run through prlctl exec may still report Screen Recording..."
+      },
+      {
+        "term": "Running Commands Through Ghostty",
+        "explanation": "Best path: create a guest script with prlctl exec, open/focus Ghostty, then type only a short launcher path into the visible terminal. Guest script pattern: Then link the launcher into Ghostty's home directory and type./r with scripts/parallelstype.py. This avoids unreliable path characters in Parallels key injection. Avoid long command typing. Parallels key injection uses its own key-code table and can be layout-sensitive."
+      },
+      {
+        "term": "Known Pitfalls",
+        "explanation": "macOS clipboard APIs may fail from prlctl exec; pbcopy, AppleScript clipboard, and Peekaboo paste can all fail in headless guest context. open -na Ghostty.app --args -e... may only focus an existing Ghostty window on macOS; do not assume it runs the command. prlctl exec may re-join argv through a guest shell; for complex payloads, pass one fully shell-quoted command string or create the file with a tiny Python writer. Parallels send-key-event --key uses Parallels key values, not macOS..."
+      },
+      {
+        "term": "Two-Way Validation",
+        "explanation": "For each GUI action, verify through two independent signals: Tool-under-test output: JSON, screenshot file, AX result, or app state. External verifier: prlctl capture, host-side image inspection, file content in guest, or process/window state. Examples: Screenshot: compare Peekaboo image dimensions/content against prlctl capture. Click: use Peekaboo to click a test button, then verify both guest app state and host screenshot. Type: use Peekaboo to type into a controlled text field, then..."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill vm-lab",
+        "purpose": "Install the vm-lab skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill vm-lab"
+      },
+      {
+        "signature": "prlctl list --all.",
+        "purpose": "Command or snippet documented by the upstream vm-lab skill.",
+        "example": "prlctl list --all"
+      },
+      {
+        "signature": "prlctl list --info \"macOS Tahoe\".",
+        "purpose": "Command or snippet documented by the upstream vm-lab skill.",
+        "example": "prlctl list --info \"macOS Tahoe\""
+      },
+      {
+        "signature": "prlctl exec \"macOS Tahoe\" \\.",
+        "purpose": "Command or snippet documented by the upstream vm-lab skill.",
+        "example": "prlctl exec \"macOS Tahoe\" \\\n  'sudo -u steipete -H /bin/zsh -lc '\\''source ~/.zprofile 2>/dev/null || true; uname -a'\\'''"
+      },
+      {
+        "signature": "prlctl capture \"macOS Tahoe\" --file /tmp/vm-reference.png.",
+        "purpose": "Command or snippet documented by the upstream vm-lab skill.",
+        "example": "prlctl capture \"macOS Tahoe\" --file /tmp/vm-reference.png\nsips -g pixelWidth -g pixelHeight /tmp/vm-reference.png"
+      },
+      {
+        "signature": "prlctl exec \"macOS Tahoe\" \\.",
+        "purpose": "Command or snippet documented by the upstream vm-lab skill.",
+        "example": "prlctl exec \"macOS Tahoe\" \\\n  'sudo -u steipete -H open \"x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture\"'"
+      },
+      {
+        "signature": "prlctl exec \"macOS Tahoe\" 'sudo -u steipete -H open -a Ghostty'.",
+        "purpose": "Command or snippet documented by the upstream vm-lab skill.",
+        "example": "prlctl exec \"macOS Tahoe\" 'sudo -u steipete -H open -a Ghostty'"
+      }
+    ],
+    "gotchas": [
+      "Never print secrets. If op is needed, follow the 1Password skill and run it only inside tmux.",
+      "Prefer fresh app windows you create yourself: TextEdit, a local HTML test page, or a small test app.",
+      "Avoid modifying host state except temporary screenshots under /tmp.",
+      "Avoid long command typing. Parallels key injection uses its own key-code table and can be layout-sensitive.",
+      "Prefer one prlctl send-key-event --json batch over many separate send-key-event processes; separate calls can drift under focus/latency."
+    ],
+    "category": "tool",
+    "audience": "devops",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

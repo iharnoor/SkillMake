@@ -1,0 +1,51 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/codex-debugging",
+  "skill": {
+    "name": "codex-debugging",
+    "description": "Use when working with codex debugging: codex-rs core/tui/exec/cli/app-server/config from steipete/agent-scripts.",
+    "whenToUse": [
+      "Investigating Codex CLI/app behavior, config parsing, tool behavior, prompts, MCP/app wiring, or runtime bugs.",
+      "Using the codex-debugging skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing codex debugging behavior.",
+      "Needing a compact agent reference for codex debugging: codex-rs core/tui/exec/cli/app-server/config."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Source First",
+        "explanation": "Prefer local source before web/docs: Then search targeted areas:."
+      },
+      {
+        "term": "Workflow",
+        "explanation": "1. Identify whether the behavior is CLI, TUI, app server, protocol, config, or exec/tooling. 2. Read the owning module and adjacent tests before proposing changes. 3. Check local config in ~/.codex/config.toml only after understanding the source contract. 4. Prefer small repros or focused tests over broad speculation."
+      },
+      {
+        "term": "Notes",
+        "explanation": "For OpenAI API/product docs, use the official-docs path only when source is insufficient. For local browser automation in CLI, use $browser-use; the bundled Browser plugin is Codex app-only."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill codex-debugging",
+        "purpose": "Install the codex-debugging skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill codex-debugging"
+      },
+      {
+        "signature": "cd ~/Projects/codex.",
+        "purpose": "Command or snippet documented by the upstream codex-debugging skill.",
+        "example": "cd ~/Projects/codex\nsed -n '1,220p' codex-rs/AGENTS.md"
+      },
+      {
+        "signature": "rg \"<symbol|setting|error|feature>\" codex-rs/{core,tui,exec,cli,app-server,app-server-protocol,config}.",
+        "purpose": "Command or snippet documented by the upstream codex-debugging skill.",
+        "example": "rg \"<symbol|setting|error|feature>\" codex-rs/{core,tui,exec,cli,app-server,app-server-protocol,config}"
+      }
+    ],
+    "gotchas": [
+      "Prefer local source before web/docs:."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

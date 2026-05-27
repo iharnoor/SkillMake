@@ -1,0 +1,63 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/markdown-converter",
+  "skill": {
+    "name": "markdown-converter",
+    "description": "Use when working with markdown conversion: PDF, Office, HTML, data, OCR, audio, ZIP, YouTube from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the markdown-converter skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing markdown converter behavior.",
+      "Needing a compact agent reference for markdown conversion: PDF, Office, HTML, data, OCR, audio, ZIP, YouTube."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Basic Usage",
+        "explanation": "Basic Usage guidance for the markdown-converter skill."
+      },
+      {
+        "term": "Supported Formats",
+        "explanation": "Documents: PDF, Word (.docx), PowerPoint (.pptx), Excel (.xlsx,.xls) Web/Data: HTML, CSV, JSON, XML Media: Images (EXIF + OCR), Audio (EXIF + transcription) Other: ZIP (iterates contents), YouTube URLs, EPub."
+      },
+      {
+        "term": "Options",
+        "explanation": "Options guidance for the markdown-converter skill."
+      },
+      {
+        "term": "Examples",
+        "explanation": "Examples guidance for the markdown-converter skill."
+      },
+      {
+        "term": "Notes",
+        "explanation": "Output preserves document structure: headings, tables, lists, links First run caches dependencies; subsequent runs are faster For complex PDFs with poor extraction, use -d with Azure Document Intelligence."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill markdown-converter",
+        "purpose": "Install the markdown-converter skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill markdown-converter"
+      },
+      {
+        "signature": "uvx markitdown input.pdf.",
+        "purpose": "Command or snippet documented by the upstream markdown-converter skill.",
+        "example": "# Convert to stdout\nuvx markitdown input.pdf\n\n# Save to file\nuvx markitdown input.pdf -o output.md\nuvx markitdown input.docx > output.md\n\n# From stdin\ncat input.pdf | uvx markitdown"
+      },
+      {
+        "signature": "-o OUTPUT # Output file.",
+        "purpose": "Command or snippet documented by the upstream markdown-converter skill.",
+        "example": "-o OUTPUT      # Output file\n-x EXTENSION   # Hint file extension (for stdin)\n-m MIME_TYPE   # Hint MIME type\n-c CHARSET     # Hint charset (e.g., UTF-8)\n-d             # Use Azure Document Intelligence\n-e ENDPOINT    # Document Intelligence endpoint\n--use-plugins  # Enable 3rd-party plugins\n--list-plugins # Show installed plugins"
+      },
+      {
+        "signature": "uvx markitdown report.docx -o report.md.",
+        "purpose": "Command or snippet documented by the upstream markdown-converter skill.",
+        "example": "# Convert Word document\nuvx markitdown report.docx -o report.md\n\n# Convert Excel spreadsheet\nuvx markitdown data.xlsx > data.md\n\n# Convert PowerPoint presentation\nuvx markitdown slides.pptx -o slides.md\n\n# Convert with file type hint (for stdin)\ncat document | uvx markitdown -x .pdf > output.md\n\n# Use Azure Document Intelligence for better PDF extraction\nuvx markitdown scan.pdf -d -e \"https://your-resource.cognitiveservices.azure.com/\""
+      }
+    ],
+    "gotchas": [
+      "Read the upstream SKILL.md before use; several entries encode machine-specific paths, credentials, or local operational assumptions."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/remote-mac",
+  "skill": {
+    "name": "remote-mac",
+    "description": "Use when working with remote Macs: MacBook, Mac Studio, clawmac, Tailscale, SSH, OpenClaw from steipete/agent-scripts.",
+    "whenToUse": [
+      "The user says MacBook, Mac Studio, clawmac, moltymac, Molty, Tailscale, or asks to run/check something on one of Peter's Macs.",
+      "Using the remote-mac skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing remote mac behavior.",
+      "Needing a compact agent reference for remote Macs: MacBook, Mac Studio, clawmac, Tailscale, SSH, OpenClaw."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Peter's Topology",
+        "explanation": "Primary daily driver: Peter's MacBook Pro, local host steipete-mbp, Tailscale peters-macbook-pro-1. Workhorse: Mac Studio, Tailscale peters-mac-studio-1, usually best reached as steipete@steipete-macstudio.local. Personal cloud OpenClaw: clawmac (Peter may typo/say crabmac), Tailscale/SSH steipete@clawmac, gateway via LaunchAgent ai.openclaw.gateway, loopback 127.0.0.1:18789, Telegram connected. Molty: runs on Mac Studio, not moltymac, when healthy. Expected runtime is tmux session..."
+      },
+      {
+        "term": "Discovery",
+        "explanation": "1. Start with tailscale status and pick the matching host. 2. If Tailscale is down or SSH times out, try LAN discovery: 3. Try mDNS names such as HOST.local when visible. 4. For Mac Studio, prefer steipete-macstudio.local when Tailscale SSH times out."
+      },
+      {
+        "term": "SSH Rules",
+        "explanation": "Use non-interactive SSH by default: The local SSH alias mac-studio auto-attaches tmux. For one-shot commands, either use steipete@steipete-macstudio.local or override both options above. For long-running or interactive remote work, use tmux on the remote host and keep the session name obvious."
+      },
+      {
+        "term": "OpenClaw Checks",
+        "explanation": "Use login shells on remote Macs so Homebrew and pnpm are on PATH: Mac Studio / Molty healthy shape: tmux list-sessions includes openclaw-gateway-watch-main. ps axww includes pnpm gateway:watch --benchmark. lsof -nP -iTCP:18789 -sTCP:LISTEN shows a listener on:18789. openclaw channels status --json shows Discord Molty, Slack, and Telegram connected. clawmac healthy shape: launchctl list includes ai.openclaw.gateway. lsof -nP -iTCP:18789 -sTCP:LISTEN shows loopback listeners. openclaw channels..."
+      },
+      {
+        "term": "clawmac GUI Access",
+        "explanation": "Prefer direct clawmac automation over Tailscale/SSH first: open -a \"Google Chrome\", AppleScript, Chrome DOM JavaScript, and remote Peekaboo clicks. For gog OAuth on clawmac, keep the browser on clawmac. Start gog auth add in remote tmux, open the printed URL on clawmac Chrome, click consent with AppleScript/DOM automation, then verify with zsh -lc 'gog auth list --check --json --no-input'. If GOGKEYRINGPASSWORD is exported by the remote shell environment, use the matching login shell for..."
+      },
+      {
+        "term": "Safety",
+        "explanation": "Do not assume host identity from a stale IP; verify hostname/user when possible. Do not print secrets from remote files or shells. If a host is unavailable after Tailscale + LAN fallback, say what was tried. For OpenClaw Gateway on Peter's machines, follow repo docs/AGENTS; do not install/start/stop services unless asked."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill remote-mac",
+        "purpose": "Install the remote-mac skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill remote-mac"
+      },
+      {
+        "signature": "dns-sd -B ssh.tcp local.",
+        "purpose": "Command or snippet documented by the upstream remote-mac skill.",
+        "example": "dns-sd -B _ssh._tcp local\narp -a"
+      },
+      {
+        "signature": "ssh -o RequestTTY=no -o RemoteCommand=none HOST 'COMMAND'.",
+        "purpose": "Command or snippet documented by the upstream remote-mac skill.",
+        "example": "ssh -o RequestTTY=no -o RemoteCommand=none HOST 'COMMAND'"
+      },
+      {
+        "signature": "ssh -o RequestTTY=no -o RemoteCommand=none steipete@steipete-macstudio.local \\.",
+        "purpose": "Command or snippet documented by the upstream remote-mac skill.",
+        "example": "ssh -o RequestTTY=no -o RemoteCommand=none steipete@steipete-macstudio.local \\\n  'zsh -lc \"openclaw gateway status --json; openclaw channels status --json\"'"
+      }
+    ],
+    "gotchas": [
+      "Prefer direct clawmac automation over Tailscale/SSH first: open -a \"Google Chrome\", AppleScript, Chrome DOM JavaScript, and remote Peekaboo clicks.",
+      "Do not assume host identity from a stale IP; verify hostname/user when possible.",
+      "Do not print secrets from remote files or shells."
+    ],
+    "category": "tool",
+    "audience": "devops",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

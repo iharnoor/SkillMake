@@ -1,0 +1,75 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/swiftui-view-refactor",
+  "skill": {
+    "name": "swiftui-view-refactor",
+    "description": "Use when working with swiftUI view refactor/review: layout, DI, Observation, view models from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the swiftui-view-refactor skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing swiftui view refactor behavior.",
+      "Needing a compact agent reference for swiftUI view refactor/review: layout, DI, Observation, view models."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Overview",
+        "explanation": "Apply a consistent structure and dependency pattern to SwiftUI views, with a focus on ordering, Model-View (MV) patterns, careful view model handling, and correct Observation usage."
+      },
+      {
+        "term": "Core Guidelines",
+        "explanation": "Core Guidelines guidance for the swiftui-view-refactor skill."
+      },
+      {
+        "term": "1) View ordering (top → bottom)",
+        "explanation": "Environment private/public let @State / other stored properties computed var (non-view) init body computed view builders / other view helpers helper / async functions."
+      },
+      {
+        "term": "2) Prefer MV (Model-View) patterns",
+        "explanation": "Default to MV: Views are lightweight state expressions; models/services own business logic. Favor @State, @Environment, @Query, and task/onChange for orchestration. Inject services and shared models via @Environment; keep views small and composable. Split large views into subviews rather than introducing a view model."
+      },
+      {
+        "term": "3) Split large bodies and view properties",
+        "explanation": "If body grows beyond a screen or has multiple logical sections, split it into smaller subviews. Extract large computed view properties (var header: some View {... }) into dedicated View types when they carry state or complex branching. It's fine to keep related subviews as computed view properties in the same file; extract to a standalone View struct only when it structurally makes sense or when reuse is intended. Prefer passing small inputs (data, bindings, callbacks) over reusing the..."
+      },
+      {
+        "term": "4) View model handling (only if already present)",
+        "explanation": "Do not introduce a view model unless the request or existing code clearly calls for one. If a view model exists, make it non-optional when possible. Pass dependencies to the view via init, then pass them into the view model in the view's init. Avoid bootstrapIfNeeded patterns. Example (Observation-based):."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill swiftui-view-refactor",
+        "purpose": "Install the swiftui-view-refactor skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill swiftui-view-refactor"
+      },
+      {
+        "signature": "var body: some View {.",
+        "purpose": "Command or snippet documented by the upstream swiftui-view-refactor skill.",
+        "example": "var body: some View {\n    VStack(alignment: .leading, spacing: 16) {\n        HeaderSection(title: title, isPinned: isPinned)\n        DetailsSection(details: details)\n        ActionsSection(onSave: onSave, onCancel: onCancel)\n    }\n}"
+      },
+      {
+        "signature": "var body: some View {.",
+        "purpose": "Command or snippet documented by the upstream swiftui-view-refactor skill.",
+        "example": "var body: some View {\n    List {\n        header\n        filters\n        results\n        footer\n    }\n}\n\nprivate var header: some View {\n    VStack(alignment: .leading, spacing: 6) {\n        Text(title).font(.title2)\n        Text(subtitle).font(.subheadline)\n    }\n}\n\nprivate var filters: some View {\n    ScrollView(.horizontal, showsIndicators: false) {\n        HStack {\n            ForEach(filterOptions, id: \\.self) { option in\n                FilterChip(option: option, isSelected: option == selectedFilter)\n                    .onTapGesture { selectedFilter = option }\n            }\n        }\n    }\n}"
+      },
+      {
+        "signature": "private var header: some View {.",
+        "purpose": "Command or snippet documented by the upstream swiftui-view-refactor skill.",
+        "example": "private var header: some View {\n    HeaderSection(title: title, subtitle: subtitle, status: status)\n}\n\nprivate struct HeaderSection: View {\n    let title: String\n    let subtitle: String?\n    let status: Status\n\n    var body: some View {\n        VStack(alignment: .leading, spacing: 4) {\n            Text(title).font(.headline)\n            if let subtitle { Text(subtitle).font(.subheadline) }\n            StatusBadge(status: status)\n        }\n    }\n}"
+      },
+      {
+        "signature": "@State private var viewModel: SomeViewModel.",
+        "purpose": "Command or snippet documented by the upstream swiftui-view-refactor skill.",
+        "example": "@State private var viewModel: SomeViewModel\n\ninit(dependency: Dependency) {\n    _viewModel = State(initialValue: SomeViewModel(dependency: dependency))\n}"
+      }
+    ],
+    "gotchas": [
+      "Prefer passing small inputs (data, bindings, callbacks) over reusing the entire parent view state.",
+      "Do not introduce a view model unless the request or existing code clearly calls for one.",
+      "Avoid bootstrapIfNeeded patterns.",
+      "Prefer small, explicit helpers over large conditional blocks."
+    ],
+    "category": "framework",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

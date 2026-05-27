@@ -1,0 +1,89 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/swiftui-performance-audit",
+  "skill": {
+    "name": "swiftui-performance-audit",
+    "description": "Use when working with swiftUI performance: render, scroll, CPU/memory, updates, layout, Instruments from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the swiftui-performance-audit skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing swiftui performance audit behavior.",
+      "Needing a compact agent reference for swiftUI performance: render, scroll, CPU/memory, updates, layout, Instruments."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Overview",
+        "explanation": "Audit SwiftUI view performance end-to-end, from instrumentation and baselining to root-cause analysis and concrete remediation steps."
+      },
+      {
+        "term": "Workflow Decision Tree",
+        "explanation": "If the user provides code, start with \"Code-First Review.\" If the user only describes symptoms, ask for minimal code/context, then do \"Code-First Review.\" If code review is inconclusive, go to \"Guide the User to Profile\" and ask for a trace or screenshots."
+      },
+      {
+        "term": "1. Code-First Review",
+        "explanation": "Collect: Target view/feature code. Data flow: state, environment, observable models. Symptoms and reproduction steps. Focus on: View invalidation storms from broad state changes. Unstable identity in lists (id churn, UUID() per render). Heavy work in body (formatting, sorting, image decoding). Layout thrash (deep stacks, GeometryReader, preference chains). Large images without downsampling or resizing. Over-animated hierarchies (implicit animations on large trees). Provide: Likely root..."
+      },
+      {
+        "term": "2. Guide the User to Profile",
+        "explanation": "Explain how to collect data with Instruments: Use the SwiftUI template in Instruments (Release build). Reproduce the exact interaction (scroll, navigation, animation). Capture SwiftUI timeline and Time Profiler. Export or screenshot the relevant lanes and the call tree. Ask for: Trace export or screenshots of SwiftUI lanes + Time Profiler call tree. Device/OS/build configuration."
+      },
+      {
+        "term": "3. Analyze and Diagnose",
+        "explanation": "Prioritize likely SwiftUI culprits: View invalidation storms from broad state changes. Unstable identity in lists (id churn, UUID() per render). Heavy work in body (formatting, sorting, image decoding). Layout thrash (deep stacks, GeometryReader, preference chains). Large images without downsampling or resizing. Over-animated hierarchies (implicit animations on large trees). Summarize findings with evidence from traces/logs."
+      },
+      {
+        "term": "4. Remediate",
+        "explanation": "Apply targeted fixes: Narrow state scope (@State/@Observable closer to leaf views). Stabilize identities for ForEach and lists. Move heavy work out of body (precompute, cache, @State). Use equatable() or value wrappers for expensive subtrees. Downsample images before rendering. Reduce layout complexity or use fixed sizing where possible."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill swiftui-performance-audit",
+        "purpose": "Install the swiftui-performance-audit skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill swiftui-performance-audit"
+      },
+      {
+        "signature": "var body: some View {.",
+        "purpose": "Command or snippet documented by the upstream swiftui-performance-audit skill.",
+        "example": "var body: some View {\n    let number = NumberFormatter() // slow allocation\n    let measure = MeasurementFormatter() // slow allocation\n    Text(measure.string(from: .init(value: meters, unit: .meters)))\n}"
+      },
+      {
+        "signature": "final class DistanceFormatter {.",
+        "purpose": "Command or snippet documented by the upstream swiftui-performance-audit skill.",
+        "example": "final class DistanceFormatter {\n    static let shared = DistanceFormatter()\n    let number = NumberFormatter()\n    let measure = MeasurementFormatter()\n}"
+      },
+      {
+        "signature": "var filtered: [Item] {.",
+        "purpose": "Command or snippet documented by the upstream swiftui-performance-audit skill.",
+        "example": "var filtered: [Item] {\n    items.filter { $0.isEnabled } // runs on every body eval\n}"
+      },
+      {
+        "signature": "@State private var filtered: [Item] = [].",
+        "purpose": "Command or snippet documented by the upstream swiftui-performance-audit skill.",
+        "example": "@State private var filtered: [Item] = []\n// update filtered when inputs change"
+      },
+      {
+        "signature": "List {.",
+        "purpose": "Command or snippet documented by the upstream swiftui-performance-audit skill.",
+        "example": "List {\n    ForEach(items.sorted(by: sortRule)) { item in\n        Row(item)\n    }\n}"
+      },
+      {
+        "signature": "let sortedItems = items.sorted(by: sortRule).",
+        "purpose": "Command or snippet documented by the upstream swiftui-performance-audit skill.",
+        "example": "let sortedItems = items.sorted(by: sortRule)"
+      }
+    ],
+    "gotchas": [
+      "Ask for:.",
+      "Prefer cached formatters in a model or a dedicated helper:.",
+      "Prefer precompute or cache on change:.",
+      "Prefer sort once before view updates:.",
+      "Prefer a prefiltered collection with stable identity.",
+      "Avoid id: \\.self for non-stable values; use a stable ID.",
+      "Prefer decode/downsample off the main thread and store the result.",
+      "Prefer granular view models or per-item state to reduce update fan-out."
+    ],
+    "category": "framework",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

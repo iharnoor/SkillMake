@@ -1,0 +1,75 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/things-todo",
+  "skill": {
+    "name": "things-todo",
+    "description": "Use when working with things 3 via things CLI: add, list, search, update, delete, verify from steipete/agent-scripts.",
+    "whenToUse": [
+      "Things 3 tasks on Peter's Macs. Prefer things for Things-backed todos; use $reminders only when the user asks for Apple Reminders.",
+      "Using the things-todo skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing things todo behavior.",
+      "Needing a compact agent reference for things 3 via things CLI: add, list, search, update, delete, verify."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Start",
+        "explanation": "Use JSON for scripted reads and verification: Things DB reads may need Full Disk Access for the calling app. Writes should go through Things URL Scheme or AppleScript via things; do not write the SQLite DB directly."
+      },
+      {
+        "term": "Add",
+        "explanation": "Default: add, then search/read back. Useful flags: --notes \"text\" --when today|tomorrow|evening|anytime|someday|YYYY-MM-DD --deadline YYYY-MM-DD --list \"Project or Area\" --tags tag1,tag2 --checklist-item \"text\" repeatable --dry-run to inspect the things:/// URL without mutating."
+      },
+      {
+        "term": "Update / Delete",
+        "explanation": "Find the UUID first, then mutate by id: Always read back after writes. Delete moves items to Things Trash; verify normal search is empty and trash search contains the item when cleanup matters."
+      },
+      {
+        "term": "Conventions",
+        "explanation": "Turn vague asks into concrete next-action titles. Preserve wording when the user clearly wants capture, not rewriting. Split unrelated actions into separate to-dos. Use Today only when the user implies it; otherwise use Inbox/Anytime defaults. Prefer --dry-run before bulk updates/deletes. For current date math, run date; do not guess."
+      },
+      {
+        "term": "Gotchas",
+        "explanation": "macOS only; remote hosts may show Things.app version as UNKNOWN if the app is absent or not visible there. update needs THINGSAUTHTOKEN; add does not. --tags is plural for add/update; tasks --tag is singular for filtering. today JSON may show start: Anytime plus a real startdate; use command membership/read-back, not one field alone, to verify Today placement."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill things-todo",
+        "purpose": "Install the things-todo skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill things-todo"
+      },
+      {
+        "signature": "GOBIN=/opt/homebrew/bin go install github.com/ossianhempel/things3-cli/cmd/things@latest.",
+        "purpose": "Command or snippet documented by the upstream things-todo skill.",
+        "example": "GOBIN=/opt/homebrew/bin go install github.com/ossianhempel/things3-cli/cmd/things@latest"
+      },
+      {
+        "signature": "source ~/.profile >/dev/null 2>&1 || true.",
+        "purpose": "Command or snippet documented by the upstream things-todo skill.",
+        "example": "source ~/.profile >/dev/null 2>&1 || true\nthings auth"
+      },
+      {
+        "signature": "things tasks --format json --limit 20.",
+        "purpose": "Command or snippet documented by the upstream things-todo skill.",
+        "example": "things tasks --format json --limit 20\nthings today --format json\nthings search \"query\" --format json"
+      },
+      {
+        "signature": "things add \"Book LHR-SFO nonstop business flight\" --notes \"Nonstop only.\" --when tomorrow --tags travel.",
+        "purpose": "Command or snippet documented by the upstream things-todo skill.",
+        "example": "things add \"Book LHR-SFO nonstop business flight\" --notes \"Nonstop only.\" --when tomorrow --tags travel\nthings tasks --search \"LHR-SFO\" --format json"
+      },
+      {
+        "signature": "things tasks --search \"flight\" --format json.",
+        "purpose": "Command or snippet documented by the upstream things-todo skill.",
+        "example": "things tasks --search \"flight\" --format json\nthings update --id <uuid> \"New title\" --notes \"Updated notes\"\nthings tasks --search \"New title\" --format json\nthings delete --id <uuid> --confirm <uuid>\nthings tasks --search \"New title\" --format json\nthings trash --search \"New title\" --format json"
+      }
+    ],
+    "gotchas": [
+      "Always read back after writes. Delete moves items to Things Trash; verify normal.",
+      "Prefer --dry-run before bulk updates/deletes."
+    ],
+    "category": "tool",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

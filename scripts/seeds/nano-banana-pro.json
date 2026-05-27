@@ -1,0 +1,72 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/nano-banana-pro",
+  "skill": {
+    "name": "nano-banana-pro",
+    "description": "Use when working with nano Banana/Gemini image gen/edit: text/image input, 512-4K workflows from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the nano-banana-pro skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing nano banana pro behavior.",
+      "Needing a compact agent reference for nano Banana/Gemini image gen/edit: text/image input, 512-4K workflows."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Usage",
+        "explanation": "Run the script using absolute path (do NOT cd to skill directory first): Generate new image: Edit existing image: Important: Always run from the user's current working directory so images are saved where the user is working, not in the skill directory."
+      },
+      {
+        "term": "Default Workflow (draft → iterate → final)",
+        "explanation": "Goal: fast iteration without burning time on 4K until the prompt is correct. Draft (1K): quick feedback loop - uv run ~/.codex/skills/nano-banana-pro/scripts/generateimage.py --prompt \"<draft prompt>\" --filename \"yyyy-mm-dd-hh-mm-ss-draft.png\" --resolution 1K Iterate: adjust prompt in small diffs; keep filename new per run - If editing: keep the same --input-image for every iteration until you’re happy. Final (4K): only when prompt is locked - uv run..."
+      },
+      {
+        "term": "Resolution Options",
+        "explanation": "The Gemini 3.1 Flash Image API supports these output size values: 512 - compact ~512px-class resolution 1K (default) - ~1024px resolution 2K - ~2048px resolution 4K - ~4096px resolution Map user requests to API parameters: \"512\", \"512px\", \"0.5K\", \"thumbnail\", \"tiny\" → 512 No mention of resolution → 1K \"low resolution\", \"1080\", \"1080p\", \"1K\" → 1K \"2K\", \"2048\", \"normal\", \"medium resolution\" → 2K \"high resolution\", \"high-res\", \"hi-res\", \"4K\", \"ultra\" → 4K."
+      },
+      {
+        "term": "API Key",
+        "explanation": "The script checks for API key in this order: 1. --api-key argument (use if user provided key in chat) 2. GEMINIAPIKEY environment variable If neither is available, the script exits with an error message."
+      },
+      {
+        "term": "Preflight + Common Failures (fast fixes)",
+        "explanation": "Preflight: - command -v uv (must exist) - test -n \\\"$GEMINIAPIKEY\\\" (or pass --api-key) - If editing: test -f \\\"path/to/input.png\\\" Common failures: - Error: No API key provided. → set GEMINIAPIKEY or pass --api-key - Error loading input image: → wrong path / unreadable file; verify --input-image points to a real image - \"quota/permission/403\" style API errors → wrong key, no access, or quota exceeded; try a different key/account."
+      },
+      {
+        "term": "Filename Generation",
+        "explanation": "Generate filenames with the pattern: yyyy-mm-dd-hh-mm-ss-name.png Format: {timestamp}-{descriptive-name}.png Timestamp: Current date/time in format yyyy-mm-dd-hh-mm-ss (24-hour format) Name: Descriptive lowercase text with hyphens Keep the descriptive part concise (1-5 words typically) Use context from user's prompt or conversation If unclear, use random identifier (e.g., x9k2, a7b3) Examples: Prompt \"A serene Japanese garden\" → 2025-11-23-14-23-05-japanese-garden.png Prompt \"sunset over..."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill nano-banana-pro",
+        "purpose": "Install the nano-banana-pro skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill nano-banana-pro"
+      },
+      {
+        "signature": "uv run ~/.codex/skills/nano-banana-pro/scripts/generateimage.py --prompt \"your image description\" --filename...",
+        "purpose": "Command or snippet documented by the upstream nano-banana-pro skill.",
+        "example": "uv run ~/.codex/skills/nano-banana-pro/scripts/generate_image.py --prompt \"your image description\" --filename \"output-name.png\" [--resolution 512|1K|2K|4K] [--api-key KEY]"
+      },
+      {
+        "signature": "uv run ~/.codex/skills/nano-banana-pro/scripts/generateimage.py --prompt \"editing instructions\" --filename...",
+        "purpose": "Command or snippet documented by the upstream nano-banana-pro skill.",
+        "example": "uv run ~/.codex/skills/nano-banana-pro/scripts/generate_image.py --prompt \"editing instructions\" --filename \"output-name.png\" --input-image \"path/to/input.png\" [--resolution 512|1K|2K|4K] [--api-key KEY]"
+      },
+      {
+        "signature": "uv run ~/.codex/skills/nano-banana-pro/scripts/generateimage.py --prompt \"A serene Japanese garden with cherry...",
+        "purpose": "Command or snippet documented by the upstream nano-banana-pro skill.",
+        "example": "uv run ~/.codex/skills/nano-banana-pro/scripts/generate_image.py --prompt \"A serene Japanese garden with cherry blossoms\" --filename \"2025-11-23-14-23-05-japanese-garden.png\" --resolution 4K"
+      },
+      {
+        "signature": "uv run ~/.codex/skills/nano-banana-pro/scripts/generateimage.py --prompt \"make the sky more dramatic with storm...",
+        "purpose": "Command or snippet documented by the upstream nano-banana-pro skill.",
+        "example": "uv run ~/.codex/skills/nano-banana-pro/scripts/generate_image.py --prompt \"make the sky more dramatic with storm clouds\" --filename \"2025-11-23-14-25-30-dramatic-sky.png\" --input-image \"original-photo.jpg\" --resolution 2K"
+      }
+    ],
+    "gotchas": [
+      "Read the upstream SKILL.md before use; several entries encode machine-specific paths, credentials, or local operational assumptions."
+    ],
+    "category": "api",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

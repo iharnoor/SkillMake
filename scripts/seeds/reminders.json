@@ -1,0 +1,84 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/reminders",
+  "skill": {
+    "name": "reminders",
+    "description": "Use when working with apple Reminders via rem CLI: add, list, search, update, complete, delete from steipete/agent-scripts.",
+    "whenToUse": [
+      "Apple Reminders tasks. Prefer rem over Things/AppleScript when the user wants an AI-friendly personal todo backend on macOS.",
+      "Using the reminders skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing reminders behavior.",
+      "Needing a compact agent reference for apple Reminders via rem CLI: add, list, search, update, complete, delete."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Start",
+        "explanation": "Check access: Use JSON for anything scripted or verified:."
+      },
+      {
+        "term": "Add Tasks",
+        "explanation": "Default: add directly, then verify by search/show. Useful flags: --list \"Name\": target list --due \"tomorrow 9am\": due date/time; natural language is supported --priority high|medium|low|none --notes \"text\" --url https://... --silent: due date without notification --remind-me 15m: alarm before due time --repeat daily|weekly|monthly|yearly."
+      },
+      {
+        "term": "Update / Complete / Delete",
+        "explanation": "Find the UUID first, then mutate by id or unique short id: Always read back after writes; do not trust exit status alone."
+      },
+      {
+        "term": "Lists",
+        "explanation": "Lists guidance for the reminders skill."
+      },
+      {
+        "term": "Conventions",
+        "explanation": "Use executable task titles. Rewrite vague notes into the next concrete action. Preserve user wording when they clearly want verbatim capture. Split multiple unrelated actions into separate reminders. Use the default list unless the user names a list or the category is obvious. Do not add calendar events here; use calendar tooling instead. For current date math, run date; do not guess."
+      },
+      {
+        "term": "Gotchas",
+        "explanation": "macOS only. First run may fail with reminders access denied until the calling app has Reminders permission. The default local list may be localized, e.g. Erinnerungen. rem search is plain query search, not shell regex. --due creates an alarm at the due time unless --silent is passed. Flagged reminders use private ReminderKit under the hood and may be more OS fragile than ordinary CRUD."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill reminders",
+        "purpose": "Install the reminders skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill reminders"
+      },
+      {
+        "signature": "GOBIN=/opt/homebrew/bin go install github.com/BRO3886/rem/cmd/rem@latest.",
+        "purpose": "Command or snippet documented by the upstream reminders skill.",
+        "example": "GOBIN=/opt/homebrew/bin go install github.com/BRO3886/rem/cmd/rem@latest"
+      },
+      {
+        "signature": "rem lists -o json.",
+        "purpose": "Command or snippet documented by the upstream reminders skill.",
+        "example": "rem lists -o json\nrem today -o json"
+      },
+      {
+        "signature": "rem list --incomplete -o json.",
+        "purpose": "Command or snippet documented by the upstream reminders skill.",
+        "example": "rem list --incomplete -o json\nrem search \"flight\" -o json\nrem show <id> -o json"
+      },
+      {
+        "signature": "rem add \"Book LHR-SFO nonstop business flight\" --due \"tomorrow 9am\" --priority high --notes \"Nonstop only.\" -o json.",
+        "purpose": "Command or snippet documented by the upstream reminders skill.",
+        "example": "rem add \"Book LHR-SFO nonstop business flight\" --due \"tomorrow 9am\" --priority high --notes \"Nonstop only.\" -o json\nrem search \"LHR-SFO\" -o json"
+      },
+      {
+        "signature": "rem search \"flight\" -o json.",
+        "purpose": "Command or snippet documented by the upstream reminders skill.",
+        "example": "rem search \"flight\" -o json\nrem update <id> --name \"New title\" --due \"friday 2pm\" --notes \"...\" -o json\nrem complete <id> -o json\nrem delete <id> --force"
+      },
+      {
+        "signature": "rem lists --count -o json.",
+        "purpose": "Command or snippet documented by the upstream reminders skill.",
+        "example": "rem lists --count -o json\nrem list-mgmt create \"Travel\"\nrem list-mgmt rename \"Old\" \"New\"\nrem list-mgmt delete \"Name\" --force"
+      }
+    ],
+    "gotchas": [
+      "Always read back after writes; do not trust exit status alone.",
+      "Do not add calendar events here; use calendar tooling instead."
+    ],
+    "category": "tool",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

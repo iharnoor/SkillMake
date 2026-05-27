@@ -1,0 +1,73 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/agent-transcript",
+  "skill": {
+    "name": "agent-transcript",
+    "description": "Use when an agent needs to add a redacted agent transcript section to GitHub PR or issue bodies during OpenClaw agent-created PR/issue workflows from steipete/agent-scripts.",
+    "whenToUse": [
+      "Using the agent-transcript skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing agent transcript behavior.",
+      "Needing a compact agent reference for add a redacted agent transcript section to GitHub PR or issue bodies during OpenClaw agent-created PR/issue workflows."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Contract",
+        "explanation": "Never use network. Session discovery reads local agent logs only. Never upload raw logs. Render sanitized Markdown first. Always ask the user before adding transcript logs to a GitHub PR/issue body. Tell the user sanitized session logs help reviewers and can make PRs easier to prioritize. Offer a local HTML preview before insertion. If the user wants preview, open it and wait for confirmation before adding the section. Fail closed on unresolved secrets, private keys, browser/session/cookie..."
+      },
+      {
+        "term": "PR/Issue Workflow",
+        "explanation": "1. Draft the normal PR/issue body first. 2. Run find with title, branch, PR URL/number if known, and cwd. 3. If a high-confidence session is found, ask: Include a redacted agent transcript? It helps reviewers and can make the PR easier to prioritize. I can open a local preview first. 4. If the user wants preview, run preview, open the HTML with open, and wait for confirmation. 5. Render or append to a temp body, then automatically trim the ## Agent Transcript section before showing it to the..."
+      },
+      {
+        "term": "Review Artifacts",
+        "explanation": "For manual audits across many PR/session candidates, create a local HTML preview from a local JSON file. This is for maintainers only and is not part of the PR/issue workflow:."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill agent-transcript",
+        "purpose": "Install the agent-transcript skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill agent-transcript"
+      },
+      {
+        "signature": "skills/agent-transcript/scripts/agent-transcript --help.",
+        "purpose": "Command or snippet documented by the upstream agent-transcript skill.",
+        "example": "skills/agent-transcript/scripts/agent-transcript --help"
+      },
+      {
+        "signature": "skills/agent-transcript/scripts/agent-transcript find \\.",
+        "purpose": "Command or snippet documented by the upstream agent-transcript skill.",
+        "example": "skills/agent-transcript/scripts/agent-transcript find \\\n  --query \"$PR_TITLE $BRANCH_OR_PR_URL\" \\\n  --cwd \"$PWD\" \\\n  --since-days 14"
+      },
+      {
+        "signature": "skills/agent-transcript/scripts/agent-transcript render \\.",
+        "purpose": "Command or snippet documented by the upstream agent-transcript skill.",
+        "example": "skills/agent-transcript/scripts/agent-transcript render \\\n  --session \"$SESSION_JSONL\" \\\n  --out /tmp/agent-transcript.md"
+      },
+      {
+        "signature": "skills/agent-transcript/scripts/agent-transcript preview \\.",
+        "purpose": "Command or snippet documented by the upstream agent-transcript skill.",
+        "example": "skills/agent-transcript/scripts/agent-transcript preview \\\n  --session \"$SESSION_JSONL\" \\\n  --out /tmp/agent-transcript-preview.html\nopen /tmp/agent-transcript-preview.html"
+      },
+      {
+        "signature": "skills/agent-transcript/scripts/agent-transcript append-body \\.",
+        "purpose": "Command or snippet documented by the upstream agent-transcript skill.",
+        "example": "skills/agent-transcript/scripts/agent-transcript append-body \\\n  --body /tmp/pr-body.md \\\n  --session \"$SESSION_JSONL\" \\\n  --out /tmp/pr-body.with-transcript.md"
+      },
+      {
+        "signature": "skills/agent-transcript/scripts/agent-transcript html \\.",
+        "purpose": "Command or snippet documented by the upstream agent-transcript skill.",
+        "example": "skills/agent-transcript/scripts/agent-transcript html \\\n  --prs /tmp/recent-prs.json \\\n  --out /tmp/agent-transcript-preview.html"
+      }
+    ],
+    "gotchas": [
+      "Never use network. Session discovery reads local agent logs only.",
+      "Never upload raw logs. Render sanitized Markdown first.",
+      "Always ask the user before adding transcript logs to a GitHub PR/issue body.",
+      "Fail closed on unresolved secrets, private keys, browser/session/cookie details, or auth URLs."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}

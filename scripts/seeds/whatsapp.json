@@ -1,0 +1,86 @@
+{
+  "sourceUrl": "https://github.com/steipete/agent-scripts/tree/main/skills/whatsapp",
+  "skill": {
+    "name": "whatsapp",
+    "description": "Use when working with whatsApp router: history/search/read/send; wacrawl read, wacli live from steipete/agent-scripts.",
+    "whenToUse": [
+      "Use this as the first stop for WhatsApp work. Keep the source boundary sharp:.",
+      "Using the whatsapp skill's upstream workflow, guardrails, and local-tool assumptions.",
+      "Auditing commands or operational steps before changing whatsapp behavior.",
+      "Needing a compact agent reference for whatsApp router: history/search/read/send; wacrawl read, wacli live."
+    ],
+    "keyConcepts": [
+      {
+        "term": "Routing",
+        "explanation": "Primary WhatsApp reads/search/history: use wacrawl. Read/unread counts from WhatsApp Desktop: use wacrawl; it has chat-level unread counts, not per-message read state. Freshness-sensitive primary reads: check wacrawl status; run wacrawl sync when asked or when current data matters. Alt accounts such as me, molty, or named stores: use wacli --account NAME. Sending, reactions, presence, archive/pin/mute/mark-read, group/channel mutations: use wacli only after explicit user intent. Comparing..."
+      },
+      {
+        "term": "Safety",
+        "explanation": "Never send or mutate WhatsApp state unless explicitly requested. Prefer read-only wacli commands for inspection: pass --read-only or set WACLIREADONLY=1. Do not write into WhatsApp Desktop's app container. Do not edit wacli session.db directly. Keep named wacli accounts isolated; do not merge stores. Report source freshness, account name, and known gaps when answering from local stores."
+      },
+      {
+        "term": "Common Commands",
+        "explanation": "Common Commands guidance for the whatsapp skill."
+      },
+      {
+        "term": "Primary Archive",
+        "explanation": "Freshness and status: Unread triage: Search and slice messages: Archive media or backups, only when asked:."
+      },
+      {
+        "term": "Alt/Live Accounts",
+        "explanation": "Account discovery and read-only inspection: Background live sync, only when requested. Prefer tmux for follow-mode: Media, sending, and live mutations, only when explicitly requested:."
+      },
+      {
+        "term": "Comparisons",
+        "explanation": "When comparing wacrawl and wacli, compare both counts and overlap: message counts and date spans chat counts newest message timestamp overlap by msgid overlap by chatjid + msgid when JIDs are normalized enough obvious gaps explained by linked-device history limits vs Desktop archive coverage."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add steipete/agent-scripts --skill whatsapp",
+        "purpose": "Install the whatsapp skill from steipete/agent-scripts.",
+        "example": "npx skills add steipete/agent-scripts --skill whatsapp"
+      },
+      {
+        "signature": "wacrawl status.",
+        "purpose": "Command or snippet documented by the upstream whatsapp skill.",
+        "example": "wacrawl status\nwacrawl doctor\nwacrawl sync"
+      },
+      {
+        "signature": "wacrawl chats --limit 20.",
+        "purpose": "Command or snippet documented by the upstream whatsapp skill.",
+        "example": "wacrawl chats --limit 20\nwacrawl unread --limit 20\nwacrawl --json unread --limit 100"
+      },
+      {
+        "signature": "wacrawl messages --after 2026-01-01 --limit 50.",
+        "purpose": "Command or snippet documented by the upstream whatsapp skill.",
+        "example": "wacrawl messages --after 2026-01-01 --limit 50\nwacrawl messages --chat JID --asc --limit 100\nwacrawl messages --has-media --limit 50\nwacrawl --json search \"query\"\nwacrawl search \"query\" --after 2026-01-01 --from-them"
+      },
+      {
+        "signature": "wacrawl import --copy-media.",
+        "purpose": "Command or snippet documented by the upstream whatsapp skill.",
+        "example": "wacrawl import --copy-media\nwacrawl backup status\nwacrawl --sync never backup push"
+      },
+      {
+        "signature": "wacli accounts list --json.",
+        "purpose": "Command or snippet documented by the upstream whatsapp skill.",
+        "example": "wacli accounts list --json\nwacli --account me auth status --read-only --json\nwacli --account me chats list --read-only --json\nwacli --account me messages list --read-only --json --limit 50\nwacli --account me messages search --read-only --json \"query\""
+      },
+      {
+        "signature": "wacli --account me sync --follow --events.",
+        "purpose": "Command or snippet documented by the upstream whatsapp skill.",
+        "example": "wacli --account me sync --follow --events\nwacli --account me sync --once --events"
+      }
+    ],
+    "gotchas": [
+      "Never send or mutate WhatsApp state unless explicitly requested.",
+      "Prefer read-only wacli commands for inspection: pass --read-only or set WACLIREADONLY=1.",
+      "Do not write into WhatsApp Desktop's app container.",
+      "Do not edit wacli session.db directly."
+    ],
+    "category": "tool",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/steipete/agent-scripts"
+  }
+}
