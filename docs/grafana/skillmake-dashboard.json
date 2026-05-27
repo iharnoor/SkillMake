@@ -2,7 +2,7 @@
   "title": "skillmake observability",
   "uid": "skillmake-observability",
   "schemaVersion": 39,
-  "version": 4,
+  "version": 5,
   "tags": [
     "skillmake",
     "cloudflare",
@@ -791,7 +791,7 @@
             ],
             "body_type": "raw",
             "body_content_type": "text/plain",
-            "data": "SELECT blob2 AS slug, sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob2 != '' GROUP BY slug ORDER BY installs DESC LIMIT 25\nFORMAT JSON"
+            "data": "SELECT splitByChar('@', blob2)[1] AS slug, sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob2 != '' GROUP BY slug ORDER BY installs DESC LIMIT 25\nFORMAT JSON"
           },
           "root_selector": "data",
           "columns": [
@@ -945,7 +945,7 @@
             ],
             "body_type": "raw",
             "body_content_type": "text/plain",
-            "data": "SELECT blob2 AS slug, sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob2 != '' AND timestamp >= NOW() - INTERVAL '24' HOUR GROUP BY slug ORDER BY installs DESC LIMIT 20\nFORMAT JSON"
+            "data": "SELECT splitByChar('@', blob2)[1] AS slug, sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob2 != '' AND timestamp >= NOW() - INTERVAL '24' HOUR GROUP BY slug ORDER BY installs DESC LIMIT 20\nFORMAT JSON"
           },
           "root_selector": "data",
           "columns": [
@@ -1022,7 +1022,7 @@
             ],
             "body_type": "raw",
             "body_content_type": "text/plain",
-            "data": "SELECT blob2 AS slug, sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob2 != '' AND timestamp >= NOW() - INTERVAL '7' DAY GROUP BY slug ORDER BY installs DESC LIMIT 20\nFORMAT JSON"
+            "data": "SELECT splitByChar('@', blob2)[1] AS slug, sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob2 != '' AND timestamp >= NOW() - INTERVAL '7' DAY GROUP BY slug ORDER BY installs DESC LIMIT 20\nFORMAT JSON"
           },
           "root_selector": "data",
           "columns": [
@@ -1099,7 +1099,7 @@
             ],
             "body_type": "raw",
             "body_content_type": "text/plain",
-            "data": "SELECT blob2 AS slug, sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob5 = 'curl' AND blob2 != '' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY slug ORDER BY installs DESC LIMIT 20\nFORMAT JSON"
+            "data": "SELECT splitByChar('@', blob2)[1] AS slug, sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob5 = 'curl' AND blob2 != '' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY slug ORDER BY installs DESC LIMIT 20\nFORMAT JSON"
           },
           "root_selector": "data",
           "columns": [
@@ -1176,7 +1176,7 @@
             ],
             "body_type": "raw",
             "body_content_type": "text/plain",
-            "data": "SELECT blob2 AS slug, sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob5 = 'browser' AND blob2 != '' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY slug ORDER BY installs DESC LIMIT 20\nFORMAT JSON"
+            "data": "SELECT splitByChar('@', blob2)[1] AS slug, sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob5 = 'browser' AND blob2 != '' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY slug ORDER BY installs DESC LIMIT 20\nFORMAT JSON"
           },
           "root_selector": "data",
           "columns": [
@@ -2115,6 +2115,142 @@
             "rowField": "day",
             "valueField": "installs"
           }
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "title": "Top skill versions — installs all-time (top 30)",
+      "type": "bargauge",
+      "gridPos": {
+        "x": 0,
+        "y": 115,
+        "w": 12,
+        "h": 14
+      },
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "showUnfilled": true,
+        "valueMode": "color",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": true,
+          "fields": ""
+        }
+      },
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {
+            "mappings": [
+              {
+                "fieldName": "slug_version",
+                "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "installs",
+                "handlerKey": "field.value"
+              }
+            ]
+          }
+        }
+      ],
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource"
+          },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/f9d7efb12a2713ce5af52d882165c543/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT blob2 AS slug_version, sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob2 != '' AND blob2 LIKE '%@%' GROUP BY slug_version ORDER BY installs DESC LIMIT 30\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            {
+              "selector": "slug_version",
+              "text": "slug_version",
+              "type": "string"
+            },
+            {
+              "selector": "installs",
+              "text": "installs",
+              "type": "number"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "title": "Active A/B candidates (≥2 version hashes seen, 14d)",
+      "type": "table",
+      "gridPos": {
+        "x": 12,
+        "y": 115,
+        "w": 12,
+        "h": 14
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource"
+          },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/f9d7efb12a2713ce5af52d882165c543/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT splitByChar('@', blob2)[1] AS slug,        count(DISTINCT splitByChar('@', blob2)[2]) AS versions_seen,        sum(_sample_interval) AS total_installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob2 LIKE '%@%'   AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY slug HAVING versions_seen > 1 ORDER BY total_installs DESC\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            {
+              "selector": "slug",
+              "text": "slug",
+              "type": "string"
+            },
+            {
+              "selector": "versions_seen",
+              "text": "versions_seen",
+              "type": "number"
+            },
+            {
+              "selector": "total_installs",
+              "text": "total_installs",
+              "type": "number"
+            }
+          ]
         }
       ]
     }

@@ -33,7 +33,7 @@ SQL
 |------------|----------------------------------------------------------|
 | `index1`   | event name (`install_hit`, `home_view`, `marketplace_view`, `tricks_view`, `powerhouse_view`, `submit_started`, `submit_completed`, `convert_success`, `convert_error`, `search_submitted`, `github_click`, `page_dwell`, `scroll_depth`, `api_error`) |
 | `blob1`    | event name (mirrors `index1`)                            |
-| `blob2`    | skill slug, bucket, route fragment, or hashed search query — depends on event |
+| `blob2`    | skill slug (or `slug@hash8` for `install_hit` rows since SkillOpt Phase 1b), bucket, route fragment, or hashed search query — depends on event |
 | `blob3`    | country (`cf-ipcountry`, `??` if unknown)                |
 | `blob4`    | referer host (empty for direct hits)                     |
 | `blob5`    | UA category (`curl` / `browser` / `bot` / `other`)       |
@@ -44,11 +44,91 @@ SQL
 Analytics Engine samples on write, so always use `sum(_sample_interval)` — not
 `count()` — to get the true total.
 
-## Install leaderboard (all-time)
+## SkillOpt — per-version queries (Phase 1b onward)
+
+`install_hit.blob2` is `slug@hash8` so every install attributes to a specific
+SKILL.md content hash. The slug aggregations below use `splitByChar('@',
+blob2)[1]` to strip the suffix; that returns the whole string on legacy rows
+written before versioning, so old data still attributes correctly.
+
+### Top skill versions (per-hash leaderboard, 14d)
 
 ```sql
 SELECT
-  blob2 AS slug,
+  blob2 AS slug_version,
+  sum(_sample_interval) AS installs
+FROM skillmake_metrics
+WHERE index1 = 'install_hit'
+  AND blob2 LIKE '%@%'
+  AND timestamp >= NOW() - INTERVAL '14' DAY
+GROUP BY slug_version
+ORDER BY installs DESC
+LIMIT 30
+```
+
+### Active A/B candidates (skills with ≥2 version hashes)
+
+When this returns rows, a candidate is live in production. Each row tells you
+the slug and how many distinct version hashes saw installs in the window —
+exactly `2` for a clean current+candidate A/B; `3+` means a candidate was
+promoted and the new candidate is already being tested.
+
+```sql
+SELECT
+  splitByChar('@', blob2)[1] AS slug,
+  count(DISTINCT splitByChar('@', blob2)[2]) AS versions_seen,
+  sum(_sample_interval) AS total_installs
+FROM skillmake_metrics
+WHERE index1 = 'install_hit'
+  AND blob2 LIKE '%@%'
+  AND timestamp >= NOW() - INTERVAL '14' DAY
+GROUP BY slug
+HAVING versions_seen > 1
+ORDER BY total_installs DESC
+```
+
+### Per-version conversion ratio for one skill
+
+The dynamic validation gate compares `install_hit / marketplace_view` ratios
+between candidate and current arms. `marketplace_view` is route-agnostic
+(same slug for both arms), so the denominator is shared.
+
+```sql
+WITH
+  installs AS (
+    SELECT
+      splitByChar('@', blob2)[2] AS version_hash,
+      sum(_sample_interval) AS installs
+    FROM skillmake_metrics
+    WHERE index1 = 'install_hit'
+      AND splitByChar('@', blob2)[1] = 'caveman'        -- ← change skill name
+      AND timestamp >= NOW() - INTERVAL '7' DAY
+    GROUP BY version_hash
+  ),
+  views AS (
+    SELECT sum(_sample_interval) AS views
+    FROM skillmake_metrics
+    WHERE index1 = 'marketplace_view'
+      AND blob2 = 'caveman'                              -- ← change skill name
+      AND timestamp >= NOW() - INTERVAL '7' DAY
+  )
+SELECT
+  installs.version_hash AS version_hash,
+  installs.installs AS installs,
+  views.views AS detail_page_views,
+  round(installs.installs / views.views, 3) AS conversion_ratio
+FROM installs CROSS JOIN views
+ORDER BY conversion_ratio DESC
+```
+
+## Install leaderboard (all-time)
+
+After SkillOpt Phase 1b, install rows carry `slug@hash8`. The leaderboard
+strips the suffix so the totals match what the old query returned.
+
+```sql
+SELECT
+  splitByChar('@', blob2)[1] AS slug,
   sum(_sample_interval) AS installs
 FROM skillmake_metrics
 WHERE index1 = 'install_hit' AND blob2 != ''
