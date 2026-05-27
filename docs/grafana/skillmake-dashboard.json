@@ -2,7 +2,7 @@
   "title": "skillmake observability",
   "uid": "skillmake-observability",
   "schemaVersion": 39,
-  "version": 1,
+  "version": 2,
   "tags": [
     "skillmake",
     "cloudflare",
@@ -20,7 +20,7 @@
   "panels": [
     {
       "id": 1,
-      "title": "Total installs (window)",
+      "title": "Total installs (14d)",
       "type": "stat",
       "gridPos": {
         "x": 0,
@@ -33,10 +33,11 @@
           "calcs": [
             "sum"
           ],
-          "fields": "/installs/"
+          "fields": ""
         },
         "graphMode": "none",
-        "colorMode": "value"
+        "colorMode": "value",
+        "textMode": "value"
       },
       "targets": [
         {
@@ -72,7 +73,7 @@
     },
     {
       "id": 2,
-      "title": "Unique visitors (window)",
+      "title": "Unique visitors (14d)",
       "type": "stat",
       "gridPos": {
         "x": 6,
@@ -85,10 +86,11 @@
           "calcs": [
             "sum"
           ],
-          "fields": "/uniques/"
+          "fields": ""
         },
         "graphMode": "none",
-        "colorMode": "value"
+        "colorMode": "value",
+        "textMode": "value"
       },
       "targets": [
         {
@@ -124,7 +126,7 @@
     },
     {
       "id": 3,
-      "title": "Total events (window)",
+      "title": "Total events (14d)",
       "type": "stat",
       "gridPos": {
         "x": 12,
@@ -137,10 +139,11 @@
           "calcs": [
             "sum"
           ],
-          "fields": "/hits/"
+          "fields": ""
         },
         "graphMode": "none",
-        "colorMode": "value"
+        "colorMode": "value",
+        "textMode": "value"
       },
       "targets": [
         {
@@ -176,7 +179,7 @@
     },
     {
       "id": 4,
-      "title": "API errors (window)",
+      "title": "API errors (14d)",
       "type": "stat",
       "gridPos": {
         "x": 18,
@@ -189,10 +192,11 @@
           "calcs": [
             "sum"
           ],
-          "fields": "/errors/"
+          "fields": ""
         },
         "graphMode": "none",
         "colorMode": "value",
+        "textMode": "value",
         "thresholds": {
           "mode": "absolute",
           "steps": [
@@ -206,6 +210,24 @@
             }
           ]
         }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
+            ]
+          }
+        },
+        "overrides": []
       },
       "targets": [
         {
@@ -240,13 +262,13 @@
       ]
     },
     {
-      "id": 10,
-      "title": "Installs per day",
+      "id": 5,
+      "title": "Installs per day (14d)",
       "type": "timeseries",
       "gridPos": {
         "x": 0,
         "y": 4,
-        "w": 18,
+        "w": 16,
         "h": 8
       },
       "options": {
@@ -263,6 +285,9 @@
           "custom": {
             "drawStyle": "bars",
             "fillOpacity": 80
+          },
+          "color": {
+            "mode": "palette-classic"
           }
         },
         "overrides": []
@@ -305,24 +330,33 @@
       ]
     },
     {
-      "id": 11,
-      "title": "UA split (last 14d)",
-      "type": "piechart",
+      "id": 6,
+      "title": "UA split — installs (14d)",
+      "type": "barchart",
       "gridPos": {
-        "x": 18,
+        "x": 16,
         "y": 4,
-        "w": 6,
+        "w": 8,
         "h": 8
       },
       "options": {
+        "orientation": "horizontal",
         "legend": {
-          "displayMode": "list",
-          "placement": "right"
+          "displayMode": "hidden"
         },
-        "displayLabels": [
-          "name",
-          "value"
-        ]
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100,
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 80
+          }
+        },
+        "overrides": []
       },
       "targets": [
         {
@@ -343,7 +377,7 @@
             ],
             "body_type": "raw",
             "body_content_type": "text/plain",
-            "data": "SELECT blob5 AS ua_cat, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE index1 = 'install_hit' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY ua_cat\nFORMAT JSON"
+            "data": "SELECT blob5 AS ua_cat, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE index1 = 'install_hit' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY ua_cat ORDER BY hits DESC\nFORMAT JSON"
           },
           "root_selector": "data",
           "columns": [
@@ -362,20 +396,104 @@
       ]
     },
     {
-      "id": 20,
-      "title": "Install leaderboard (top 25, all-time)",
-      "type": "bargauge",
+      "id": 7,
+      "title": "Hourly install pulse (last 24h)",
+      "type": "timeseries",
       "gridPos": {
         "x": 0,
         "y": 12,
+        "w": 24,
+        "h": 6
+      },
+      "options": {
+        "tooltip": {
+          "mode": "single"
+        },
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "auto",
+            "pointSize": 5
+          },
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource"
+          },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/f9d7efb12a2713ce5af52d882165c543/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT toStartOfHour(timestamp) AS hour, sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND timestamp >= NOW() - INTERVAL '24' HOUR GROUP BY hour ORDER BY hour\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            {
+              "selector": "hour",
+              "text": "hour",
+              "type": "timestamp"
+            },
+            {
+              "selector": "installs",
+              "text": "installs",
+              "type": "number"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Install leaderboard — top 25 all-time",
+      "type": "barchart",
+      "gridPos": {
+        "x": 0,
+        "y": 18,
         "w": 12,
-        "h": 12
+        "h": 10
       },
       "options": {
         "orientation": "horizontal",
-        "displayMode": "gradient",
-        "showUnfilled": true,
-        "valueMode": "color"
+        "legend": {
+          "displayMode": "hidden"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100,
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 80
+          }
+        },
+        "overrides": []
       },
       "targets": [
         {
@@ -415,20 +533,33 @@
       ]
     },
     {
-      "id": 21,
-      "title": "Top countries (last 14d)",
-      "type": "bargauge",
+      "id": 9,
+      "title": "Top countries — installs (14d)",
+      "type": "barchart",
       "gridPos": {
         "x": 12,
-        "y": 12,
+        "y": 18,
         "w": 12,
-        "h": 12
+        "h": 10
       },
       "options": {
         "orientation": "horizontal",
-        "displayMode": "gradient",
-        "showUnfilled": true,
-        "valueMode": "color"
+        "legend": {
+          "displayMode": "hidden"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100,
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 80
+          }
+        },
+        "overrides": []
       },
       "targets": [
         {
@@ -449,7 +580,7 @@
             ],
             "body_type": "raw",
             "body_content_type": "text/plain",
-            "data": "SELECT blob3 AS country, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE index1 = 'install_hit' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY country ORDER BY hits DESC LIMIT 15\nFORMAT JSON"
+            "data": "SELECT blob3 AS country, sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY country ORDER BY installs DESC LIMIT 15\nFORMAT JSON"
           },
           "root_selector": "data",
           "columns": [
@@ -459,8 +590,8 @@
               "type": "string"
             },
             {
-              "selector": "hits",
-              "text": "hits",
+              "selector": "installs",
+              "text": "installs",
               "type": "number"
             }
           ]
@@ -468,17 +599,33 @@
       ]
     },
     {
-      "id": 30,
-      "title": "Event volume by type (last 14d)",
-      "type": "table",
+      "id": 10,
+      "title": "Funnel — home → marketplace → install (14d)",
+      "type": "barchart",
       "gridPos": {
         "x": 0,
-        "y": 24,
-        "w": 12,
-        "h": 8
+        "y": 28,
+        "w": 24,
+        "h": 6
       },
       "options": {
-        "showHeader": true
+        "orientation": "horizontal",
+        "legend": {
+          "displayMode": "hidden"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100,
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 80
+          }
+        },
+        "overrides": []
       },
       "targets": [
         {
@@ -499,13 +646,13 @@
             ],
             "body_type": "raw",
             "body_content_type": "text/plain",
-            "data": "SELECT index1 AS event, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE timestamp >= NOW() - INTERVAL '14' DAY GROUP BY event ORDER BY hits DESC\nFORMAT JSON"
+            "data": "SELECT index1 AS step, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE index1 IN ('home_view','marketplace_view','install_hit') AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY step ORDER BY hits DESC\nFORMAT JSON"
           },
           "root_selector": "data",
           "columns": [
             {
-              "selector": "event",
-              "text": "event",
+              "selector": "step",
+              "text": "step",
               "type": "string"
             },
             {
@@ -518,17 +665,33 @@
       ]
     },
     {
-      "id": 31,
-      "title": "Home filter clicks (last 14d)",
-      "type": "table",
+      "id": 11,
+      "title": "Audience demand — homepage filter clicks (14d)",
+      "type": "barchart",
       "gridPos": {
-        "x": 12,
-        "y": 24,
+        "x": 0,
+        "y": 34,
         "w": 12,
         "h": 8
       },
       "options": {
-        "showHeader": true
+        "orientation": "horizontal",
+        "legend": {
+          "displayMode": "hidden"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100,
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 80
+          }
+        },
+        "overrides": []
       },
       "targets": [
         {
@@ -549,7 +712,7 @@
             ],
             "body_type": "raw",
             "body_content_type": "text/plain",
-            "data": "SELECT blob2 AS filter, sum(_sample_interval) AS views FROM skillmake_metrics WHERE index1 = 'home_view' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY filter ORDER BY views DESC\nFORMAT JSON"
+            "data": "SELECT blob2 AS filter, sum(_sample_interval) AS views FROM skillmake_metrics WHERE index1 = 'home_view' AND blob2 != '' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY filter ORDER BY views DESC\nFORMAT JSON"
           },
           "root_selector": "data",
           "columns": [
@@ -568,12 +731,12 @@
       ]
     },
     {
-      "id": 40,
-      "title": "Dwell-time distribution (last 14d)",
+      "id": 12,
+      "title": "Dwell-time distribution (14d)",
       "type": "barchart",
       "gridPos": {
-        "x": 0,
-        "y": 32,
+        "x": 12,
+        "y": 34,
         "w": 12,
         "h": 8
       },
@@ -581,7 +744,20 @@
         "orientation": "horizontal",
         "legend": {
           "displayMode": "hidden"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100,
+        "tooltip": {
+          "mode": "single"
         }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 80
+          }
+        },
+        "overrides": []
       },
       "targets": [
         {
@@ -602,7 +778,7 @@
             ],
             "body_type": "raw",
             "body_content_type": "text/plain",
-            "data": "SELECT blob2 AS bucket, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE index1 = 'page_dwell' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY bucket ORDER BY bucket\nFORMAT JSON"
+            "data": "SELECT blob2 AS bucket, sum(_sample_interval) AS sessions FROM skillmake_metrics WHERE index1 = 'page_dwell' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY bucket ORDER BY CASE bucket WHEN '0-5s' THEN 1 WHEN '5-15s' THEN 2 WHEN '15-30s' THEN 3 WHEN '30-60s' THEN 4 WHEN '60-300s' THEN 5 WHEN '300s+' THEN 6 ELSE 99 END\nFORMAT JSON"
           },
           "root_selector": "data",
           "columns": [
@@ -612,8 +788,8 @@
               "type": "string"
             },
             {
-              "selector": "hits",
-              "text": "hits",
+              "selector": "sessions",
+              "text": "sessions",
               "type": "number"
             }
           ]
@@ -621,12 +797,12 @@
       ]
     },
     {
-      "id": 41,
-      "title": "Scroll-depth distribution (last 14d)",
+      "id": 13,
+      "title": "Scroll-depth distribution (14d)",
       "type": "barchart",
       "gridPos": {
-        "x": 12,
-        "y": 32,
+        "x": 0,
+        "y": 42,
         "w": 12,
         "h": 8
       },
@@ -634,6 +810,210 @@
         "orientation": "horizontal",
         "legend": {
           "displayMode": "hidden"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100,
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 80
+          }
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource"
+          },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/f9d7efb12a2713ce5af52d882165c543/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT blob2 AS depth, sum(_sample_interval) AS sessions FROM skillmake_metrics WHERE index1 = 'scroll_depth' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY depth ORDER BY toInt32OrZero(depth)\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            {
+              "selector": "depth",
+              "text": "depth",
+              "type": "string"
+            },
+            {
+              "selector": "sessions",
+              "text": "sessions",
+              "type": "number"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Errors per hour (7d)",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 12,
+        "y": 42,
+        "w": 12,
+        "h": 8
+      },
+      "options": {
+        "tooltip": {
+          "mode": "single"
+        },
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "auto",
+            "pointSize": 5
+          },
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource"
+          },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/f9d7efb12a2713ce5af52d882165c543/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT toStartOfHour(timestamp) AS hour, sum(_sample_interval) AS errors FROM skillmake_metrics WHERE index1 IN ('api_error','convert_error') AND timestamp >= NOW() - INTERVAL '7' DAY GROUP BY hour ORDER BY hour\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            {
+              "selector": "hour",
+              "text": "hour",
+              "type": "timestamp"
+            },
+            {
+              "selector": "errors",
+              "text": "errors",
+              "type": "number"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "title": "Top skill detail pages — views (14d)",
+      "type": "barchart",
+      "gridPos": {
+        "x": 0,
+        "y": 50,
+        "w": 12,
+        "h": 10
+      },
+      "options": {
+        "orientation": "horizontal",
+        "legend": {
+          "displayMode": "hidden"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100,
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 80
+          }
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource"
+          },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/f9d7efb12a2713ce5af52d882165c543/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT blob2 AS slug, sum(_sample_interval) AS views FROM skillmake_metrics WHERE index1 = 'marketplace_view' AND blob2 != '' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY slug ORDER BY views DESC LIMIT 25\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            {
+              "selector": "slug",
+              "text": "slug",
+              "type": "string"
+            },
+            {
+              "selector": "views",
+              "text": "views",
+              "type": "number"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "title": "Top searches — hashed (14d)",
+      "type": "table",
+      "gridPos": {
+        "x": 12,
+        "y": 50,
+        "w": 12,
+        "h": 10
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
         }
       },
       "targets": [
@@ -655,18 +1035,18 @@
             ],
             "body_type": "raw",
             "body_content_type": "text/plain",
-            "data": "SELECT blob2 AS depth, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE index1 = 'scroll_depth' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY depth ORDER BY depth\nFORMAT JSON"
+            "data": "SELECT blob2 AS query_hash, sum(_sample_interval) AS searches FROM skillmake_metrics WHERE index1 = 'search_submitted' AND blob2 != '' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY query_hash ORDER BY searches DESC LIMIT 25\nFORMAT JSON"
           },
           "root_selector": "data",
           "columns": [
             {
-              "selector": "depth",
-              "text": "depth",
+              "selector": "query_hash",
+              "text": "query_hash",
               "type": "string"
             },
             {
-              "selector": "hits",
-              "text": "hits",
+              "selector": "searches",
+              "text": "searches",
               "type": "number"
             }
           ]
@@ -674,17 +1054,33 @@
       ]
     },
     {
-      "id": 50,
-      "title": "GitHub click leaderboard (last 14d)",
-      "type": "table",
+      "id": 17,
+      "title": "GitHub click leaderboard (14d)",
+      "type": "barchart",
       "gridPos": {
         "x": 0,
-        "y": 40,
+        "y": 60,
         "w": 12,
         "h": 8
       },
       "options": {
-        "showHeader": true
+        "orientation": "horizontal",
+        "legend": {
+          "displayMode": "hidden"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100,
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 80
+          }
+        },
+        "overrides": []
       },
       "targets": [
         {
@@ -724,17 +1120,21 @@
       ]
     },
     {
-      "id": 51,
-      "title": "API errors by route + code (last 14d)",
+      "id": 18,
+      "title": "API errors by route + code (14d)",
       "type": "table",
       "gridPos": {
         "x": 12,
-        "y": 40,
+        "y": 60,
         "w": 12,
         "h": 8
       },
       "options": {
-        "showHeader": true
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
       },
       "targets": [
         {
@@ -771,12 +1171,137 @@
             },
             {
               "selector": "http_status",
-              "text": "status",
+              "text": "http_status",
               "type": "number"
             },
             {
               "selector": "hits",
               "text": "hits",
+              "type": "number"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "title": "Event volume by type (14d)",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 68,
+        "w": 12,
+        "h": 8
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource"
+          },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/f9d7efb12a2713ce5af52d882165c543/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT index1 AS event, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE timestamp >= NOW() - INTERVAL '14' DAY GROUP BY event ORDER BY hits DESC\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            {
+              "selector": "event",
+              "text": "event",
+              "type": "string"
+            },
+            {
+              "selector": "hits",
+              "text": "hits",
+              "type": "number"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "title": "Daily unique visitors (14d)",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 12,
+        "y": 68,
+        "w": 12,
+        "h": 8
+      },
+      "options": {
+        "tooltip": {
+          "mode": "single"
+        },
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "auto",
+            "pointSize": 5
+          },
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource"
+          },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/f9d7efb12a2713ce5af52d882165c543/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT toStartOfDay(timestamp) AS day, count(DISTINCT blob6) AS uniques FROM skillmake_metrics WHERE timestamp >= NOW() - INTERVAL '14' DAY GROUP BY day ORDER BY day\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            {
+              "selector": "day",
+              "text": "day",
+              "type": "timestamp"
+            },
+            {
+              "selector": "uniques",
+              "text": "uniques",
               "type": "number"
             }
           ]
