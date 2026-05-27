@@ -1,0 +1,406 @@
+{
+  "title": "skillmake observability",
+  "uid": "skillmake-observability",
+  "schemaVersion": 39,
+  "version": 1,
+  "tags": ["skillmake", "cloudflare", "analytics-engine"],
+  "timezone": "browser",
+  "refresh": "5m",
+  "time": { "from": "now-14d", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "account_id",
+        "type": "constant",
+        "label": "Cloudflare Account ID",
+        "current": { "value": "f9d7efb12a2713ce5af52d882165c543", "text": "f9d7efb12a2713ce5af52d882165c543" },
+        "hide": 2
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Total installs (window)",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "options": { "reduceOptions": { "calcs": ["sum"], "fields": "/installs/" }, "graphMode": "none", "colorMode": "value" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "yesoreyeram-infinity-datasource" },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/${account_id}/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND timestamp >= NOW() - INTERVAL '14' DAY\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [{ "selector": "installs", "text": "installs", "type": "number" }]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Unique visitors (window)",
+      "type": "stat",
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "options": { "reduceOptions": { "calcs": ["sum"], "fields": "/uniques/" }, "graphMode": "none", "colorMode": "value" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "yesoreyeram-infinity-datasource" },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/${account_id}/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT count(DISTINCT blob6) AS uniques FROM skillmake_metrics WHERE timestamp >= NOW() - INTERVAL '14' DAY\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [{ "selector": "uniques", "text": "uniques", "type": "number" }]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Total events (window)",
+      "type": "stat",
+      "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
+      "options": { "reduceOptions": { "calcs": ["sum"], "fields": "/hits/" }, "graphMode": "none", "colorMode": "value" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "yesoreyeram-infinity-datasource" },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/${account_id}/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT sum(_sample_interval) AS hits FROM skillmake_metrics WHERE timestamp >= NOW() - INTERVAL '14' DAY\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [{ "selector": "hits", "text": "hits", "type": "number" }]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "API errors (window)",
+      "type": "stat",
+      "gridPos": { "x": 18, "y": 0, "w": 6, "h": 4 },
+      "options": { "reduceOptions": { "calcs": ["sum"], "fields": "/errors/" }, "graphMode": "none", "colorMode": "value", "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 10 }] } },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "yesoreyeram-infinity-datasource" },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/${account_id}/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT sum(_sample_interval) AS errors FROM skillmake_metrics WHERE index1 IN ('api_error','convert_error') AND timestamp >= NOW() - INTERVAL '14' DAY\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [{ "selector": "errors", "text": "errors", "type": "number" }]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Installs per day",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 4, "w": 18, "h": 8 },
+      "options": { "tooltip": { "mode": "single" }, "legend": { "displayMode": "list", "placement": "bottom" } },
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "bars", "fillOpacity": 80 } }, "overrides": [] },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "yesoreyeram-infinity-datasource" },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/${account_id}/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT toStartOfDay(timestamp) AS day, sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY day ORDER BY day\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            { "selector": "day", "text": "day", "type": "timestamp" },
+            { "selector": "installs", "text": "installs", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "UA split (last 14d)",
+      "type": "piechart",
+      "gridPos": { "x": 18, "y": 4, "w": 6, "h": 8 },
+      "options": { "legend": { "displayMode": "list", "placement": "right" }, "displayLabels": ["name", "value"] },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "yesoreyeram-infinity-datasource" },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/${account_id}/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT blob5 AS ua_cat, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE index1 = 'install_hit' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY ua_cat\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            { "selector": "ua_cat", "text": "ua_cat", "type": "string" },
+            { "selector": "hits", "text": "hits", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "title": "Install leaderboard (top 25, all-time)",
+      "type": "bargauge",
+      "gridPos": { "x": 0, "y": 12, "w": 12, "h": 12 },
+      "options": { "orientation": "horizontal", "displayMode": "gradient", "showUnfilled": true, "valueMode": "color" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "yesoreyeram-infinity-datasource" },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/${account_id}/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT blob2 AS slug, sum(_sample_interval) AS installs FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob2 != '' GROUP BY slug ORDER BY installs DESC LIMIT 25\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            { "selector": "slug", "text": "slug", "type": "string" },
+            { "selector": "installs", "text": "installs", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "title": "Top countries (last 14d)",
+      "type": "bargauge",
+      "gridPos": { "x": 12, "y": 12, "w": 12, "h": 12 },
+      "options": { "orientation": "horizontal", "displayMode": "gradient", "showUnfilled": true, "valueMode": "color" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "yesoreyeram-infinity-datasource" },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/${account_id}/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT blob3 AS country, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE index1 = 'install_hit' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY country ORDER BY hits DESC LIMIT 15\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            { "selector": "country", "text": "country", "type": "string" },
+            { "selector": "hits", "text": "hits", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "title": "Event volume by type (last 14d)",
+      "type": "table",
+      "gridPos": { "x": 0, "y": 24, "w": 12, "h": 8 },
+      "options": { "showHeader": true },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "yesoreyeram-infinity-datasource" },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/${account_id}/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT index1 AS event, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE timestamp >= NOW() - INTERVAL '14' DAY GROUP BY event ORDER BY hits DESC\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            { "selector": "event", "text": "event", "type": "string" },
+            { "selector": "hits", "text": "hits", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "title": "Home filter clicks (last 14d)",
+      "type": "table",
+      "gridPos": { "x": 12, "y": 24, "w": 12, "h": 8 },
+      "options": { "showHeader": true },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "yesoreyeram-infinity-datasource" },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/${account_id}/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT blob2 AS filter, sum(_sample_interval) AS views FROM skillmake_metrics WHERE index1 = 'home_view' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY filter ORDER BY views DESC\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            { "selector": "filter", "text": "filter", "type": "string" },
+            { "selector": "views", "text": "views", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "title": "Dwell-time distribution (last 14d)",
+      "type": "barchart",
+      "gridPos": { "x": 0, "y": 32, "w": 12, "h": 8 },
+      "options": { "orientation": "horizontal", "legend": { "displayMode": "hidden" } },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "yesoreyeram-infinity-datasource" },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/${account_id}/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT blob2 AS bucket, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE index1 = 'page_dwell' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY bucket ORDER BY bucket\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            { "selector": "bucket", "text": "bucket", "type": "string" },
+            { "selector": "hits", "text": "hits", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "title": "Scroll-depth distribution (last 14d)",
+      "type": "barchart",
+      "gridPos": { "x": 12, "y": 32, "w": 12, "h": 8 },
+      "options": { "orientation": "horizontal", "legend": { "displayMode": "hidden" } },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "yesoreyeram-infinity-datasource" },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/${account_id}/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT blob2 AS depth, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE index1 = 'scroll_depth' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY depth ORDER BY depth\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            { "selector": "depth", "text": "depth", "type": "string" },
+            { "selector": "hits", "text": "hits", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "title": "GitHub click leaderboard (last 14d)",
+      "type": "table",
+      "gridPos": { "x": 0, "y": 40, "w": 12, "h": 8 },
+      "options": { "showHeader": true },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "yesoreyeram-infinity-datasource" },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/${account_id}/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT blob2 AS slug, sum(_sample_interval) AS clicks FROM skillmake_metrics WHERE index1 = 'github_click' AND blob2 != '' AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY slug ORDER BY clicks DESC LIMIT 25\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            { "selector": "slug", "text": "slug", "type": "string" },
+            { "selector": "clicks", "text": "clicks", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "title": "API errors by route + code (last 14d)",
+      "type": "table",
+      "gridPos": { "x": 12, "y": 40, "w": 12, "h": 8 },
+      "options": { "showHeader": true },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "yesoreyeram-infinity-datasource" },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/${account_id}/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT index1 AS event, blob2 AS slug, double2 AS http_status, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE index1 IN ('api_error','convert_error') AND timestamp >= NOW() - INTERVAL '14' DAY GROUP BY event, slug, http_status ORDER BY hits DESC\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            { "selector": "event", "text": "event", "type": "string" },
+            { "selector": "slug", "text": "slug", "type": "string" },
+            { "selector": "http_status", "text": "status", "type": "number" },
+            { "selector": "hits", "text": "hits", "type": "number" }
+          ]
+        }
+      ]
+    }
+  ]
+}
