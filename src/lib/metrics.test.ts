@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { buildMetricDataPoint, hashSearchQuery } from "./metrics-core.ts";
+import {
+  buildMetricDataPoint,
+  hashSearchQuery,
+  encodeVersionedSlug,
+  parseVersionedSlug,
+} from "./metrics-core.ts";
 
 test("buildMetricDataPoint writes standard product event shape", () => {
   const point = buildMetricDataPoint(
@@ -47,4 +52,31 @@ test("hashSearchQuery is stable and does not echo raw query text", async () => {
   assert.equal(a, c);
   assert.match(a, /^[0-9a-f]{16}$/);
   assert.doesNotMatch(a, /react/i);
+});
+
+test("encodeVersionedSlug uses first 8 chars of contentHash", () => {
+  assert.equal(encodeVersionedSlug("caveman", "abcdef0123456789"), "caveman@abcdef01");
+  assert.equal(encodeVersionedSlug("hyperframes", "deadbeefcafef00d"), "hyperframes@deadbeef");
+});
+
+test("parseVersionedSlug round-trips encodeVersionedSlug", () => {
+  const slug = encodeVersionedSlug("ralph-loop", "fedcba9876543210");
+  const parsed = parseVersionedSlug(slug);
+  assert.equal(parsed.name, "ralph-loop");
+  assert.equal(parsed.versionHash, "fedcba98");
+});
+
+test("parseVersionedSlug treats legacy unversioned slugs as name-only", () => {
+  // install_hit rows written before Phase 1b have no @hash suffix; they
+  // should still attribute to their skill name.
+  const parsed = parseVersionedSlug("caveman");
+  assert.equal(parsed.name, "caveman");
+  assert.equal(parsed.versionHash, null);
+});
+
+test("parseVersionedSlug handles names containing @ defensively (split on first)", () => {
+  // skill names are kebab-case-only by Zod (no @), but be paranoid anyway.
+  const parsed = parseVersionedSlug("weird-name@abc12345");
+  assert.equal(parsed.name, "weird-name");
+  assert.equal(parsed.versionHash, "abc12345");
 });

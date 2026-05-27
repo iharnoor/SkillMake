@@ -64,6 +64,31 @@ export async function hashSearchQuery(query: string): Promise<string> {
   return sha8(`search|${normalized}`);
 }
 
+/**
+ * SkillOpt slug encoding for install_hit (and any per-version event):
+ *
+ *   blob2 = `<skill-name>@<contentHash[:8]>`
+ *
+ * The Analytics Engine schema is unchanged; the version is encoded inside
+ * blob2 by convention. Old slug-only dashboards still work via
+ * `SPLIT(blob2, '@')[1]` (the part before the @). Per-version dashboards
+ * read both sides.
+ */
+export function encodeVersionedSlug(name: string, contentHash: string): string {
+  return `${name}@${contentHash.slice(0, 8)}`;
+}
+
+/**
+ * Inverse of encodeVersionedSlug. Returns the bare name when no `@` is
+ * present so legacy install_hit rows (written before versioning landed) are
+ * still attributable to their skill.
+ */
+export function parseVersionedSlug(slug: string): { name: string; versionHash: string | null } {
+  const at = slug.indexOf("@");
+  if (at < 0) return { name: slug, versionHash: null };
+  return { name: slug.slice(0, at), versionHash: slug.slice(at + 1) };
+}
+
 async function sha8(s: string): Promise<string> {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
   const view = new Uint8Array(buf, 0, 8);

@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SkillOpt on skillmake.xyz — Status & Operator Guide (2026-05-27)</title>
+<style>
+  :root {
+    --bg: #000;
+    --fg: #e8e8e8;
+    --muted: #8a8a8a;
+    --dim: #5a5a5a;
+    --accent: #c6ff5b;
+    --accent-dim: #7fa83a;
+    --rule: #1f1f1f;
+    --rule-hi: #2c2c2c;
+    --code-bg: #0c0c0c;
+    --code-border: #1a1a1a;
+    --good: #7be37b;
+    --warn: #ffb84d;
+    --bad: #ff6b6b;
+    --mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", "Menlo", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--fg); }
+  body {
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 48px 24px 96px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  header { border-bottom: 1px solid var(--rule); padding-bottom: 28px; margin-bottom: 36px; }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-family: var(--mono);
+    font-size: 32px;
+    line-height: 1.15;
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
+    color: #fff;
+  }
+  h2 {
+    font-family: var(--mono);
+    font-size: 22px;
+    margin: 56px 0 14px;
+    color: #fff;
+    letter-spacing: -0.005em;
+    border-top: 1px solid var(--rule);
+    padding-top: 28px;
+  }
+  h2 .num { color: var(--accent); margin-right: 10px; }
+  h3 {
+    font-family: var(--mono);
+    font-size: 16px;
+    margin: 32px 0 10px;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+  h4 {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: #fff;
+    margin: 22px 0 8px;
+    letter-spacing: 0.02em;
+  }
+  p { margin: 0 0 14px; }
+  .lede { color: var(--muted); font-size: 17px; max-width: 720px; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent-dim); }
+  a:hover { color: #fff; border-bottom-color: #fff; }
+  strong { color: #fff; font-weight: 600; }
+  em { color: var(--muted); font-style: italic; }
+  code, pre, kbd {
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  code {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-left: 2px solid var(--accent);
+    padding: 16px 18px;
+    overflow-x: auto;
+    border-radius: 4px;
+    margin: 16px 0 24px;
+    line-height: 1.55;
+  }
+  pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: var(--fg);
+    font-size: 13px;
+  }
+  pre .c { color: var(--dim); }
+  pre .k { color: var(--accent); }
+  pre .s { color: #ffb84d; }
+  pre .n { color: #7be3c9; }
+  ul, ol { margin: 0 0 18px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  li::marker { color: var(--accent-dim); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0 24px;
+    font-size: 14px;
+  }
+  th, td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  th {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule-hi);
+    font-weight: 500;
+  }
+  td code { font-size: 12px; }
+  blockquote {
+    border-left: 2px solid var(--accent);
+    padding: 4px 16px;
+    margin: 18px 0;
+    color: var(--muted);
+    background: rgba(198, 255, 91, 0.03);
+  }
+  blockquote p:last-child { margin-bottom: 0; }
+  .callout {
+    border: 1px solid var(--rule-hi);
+    border-left: 2px solid var(--accent);
+    background: rgba(198, 255, 91, 0.04);
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-radius: 4px;
+  }
+  .callout strong { color: var(--accent); }
+  .meta {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 2px 8px;
+    border: 1px solid var(--rule-hi);
+    border-radius: 99px;
+    color: var(--muted);
+    margin-right: 6px;
+    letter-spacing: 0.04em;
+  }
+  .tag.live { color: var(--good); border-color: rgba(123, 227, 123, 0.35); }
+  .tag.next { color: var(--accent); border-color: rgba(198, 255, 91, 0.35); }
+  .tag.cron { color: var(--warn); border-color: rgba(255, 184, 77, 0.35); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin: 18px 0 24px;
+  }
+  .card {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 4px;
+    padding: 14px 16px;
+  }
+  .card .v {
+    font-family: var(--mono);
+    font-size: 22px;
+    color: var(--accent);
+    line-height: 1;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .card .l {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .leaderboard {
+    list-style: none;
+    padding: 0;
+    margin: 14px 0 24px;
+    counter-reset: rank;
+    border-top: 1px solid var(--rule);
+  }
+  .leaderboard li {
+    counter-increment: rank;
+    display: flex;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  .leaderboard li::before {
+    content: counter(rank, decimal-leading-zero);
+    color: var(--dim);
+    width: 32px;
+    flex-shrink: 0;
+  }
+  .leaderboard li::marker { content: none; }
+  .leaderboard .slug { flex: 1; color: #fff; }
+  .leaderboard .n { color: var(--accent); }
+  .step {
+    margin: 18px 0 22px;
+    padding-left: 56px;
+    position: relative;
+  }
+  .step .step-num {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    border: 1px solid var(--accent-dim);
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: rgba(198, 255, 91, 0.05);
+  }
+  .step h4 { margin-top: 0; }
+  footer {
+    border-top: 1px solid var(--rule);
+    margin-top: 64px;
+    padding-top: 24px;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: var(--mono);
+  }
+  hr { border: 0; border-top: 1px solid var(--rule); margin: 36px 0; }
+  .toc {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    padding: 16px 20px;
+    border-radius: 4px;
+    margin: 24px 0 32px;
+  }
+  .toc-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .toc ol { margin: 0; padding-left: 22px; column-count: 2; column-gap: 24px; }
+  .toc li { margin-bottom: 4px; font-size: 14px; break-inside: avoid; }
+  @media (max-width: 700px) {
+    body { padding: 24px 14px 64px; font-size: 15px; }
+    h1 { font-size: 26px; }
+    h2 { font-size: 19px; }
+    .toc ol { column-count: 1; }
+    pre { font-size: 12px; padding: 12px 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">Status report · 2026-05-27</div>
+  <h1>SkillOpt on skillmake.xyz</h1>
+  <p class="lede">A frozen model with trained markdown. We are turning every <code>SKILL.md</code> on skillmake into a trainable parameter — bounded edits, held-out validation, A/B routed installs. This page explains what we are building, what data we already collect, and how to evaluate an A/B test once it is live.</p>
+  <div class="meta">
+    <span class="tag live">Phase 1 — building</span>
+    <span class="tag next">Phase 2 — planned</span>
+    <span class="tag cron">Phase 3-4 — cron-driven</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="toc-title">Contents</div>
+  <ol>
+    <li><a href="#what">What SkillOpt is</a></li>
+    <li><a href="#figure">SkillOpt figure mapping</a></li>
+    <li><a href="#phases">What we are building (4 phases)</a></li>
+    <li><a href="#data">Are we collecting usage data?</a></li>
+    <li><a href="#entry">MarketplaceEntry shape (new fields)</a></li>
+    <li><a href="#evaluate">Evaluating an A/B test (7 steps)</a></li>
+    <li><a href="#insights">Key insights from the paper</a></li>
+    <li><a href="#snapshot">Current state snapshot</a></li>
+    <li><a href="#queries">Sample SQL queries</a></li>
+  </ol>
+</nav>
+
+<h2 id="what"><span class="num">01</span>What SkillOpt is</h2>
+
+<p>SkillOpt (Wang et al., arXiv <code>2605.23904</code>) reframes a <code>SKILL.md</code> file as the <strong>trainable parameter</strong> of an agent system. The base model stays frozen — we never fine-tune Claude or Cursor — but the markdown the agent reads gets optimized over time the same way a neural net's weights would: bounded edits per step, held-out validation gate, strict-improvement promotion, protected sections that the edit machinery refuses to touch.</p>
+
+<p>That framing matters because "self-improving agents" without those guardrails mostly produce slop. SkillOpt is the discipline that turns a freeform <code>edit this skill</code> button into a stable optimization loop.</p>
+
+<blockquote>
+  <p>The frozen model plus a trained context window is the practical adaptation. We are not training Claude. We are training the document Claude reads.</p>
+</blockquote>
+
+<h2 id="figure"><span class="num">02</span>SkillOpt figure mapping</h2>
+
+<p>The paper's Figure 1 walks through the gradient-descent analogy. Here is the exact translation we use on skillmake:</p>
+
+<table>
+  <thead>
+    <tr><th>Paper concept</th><th>skillmake equivalent</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Parameter <code>θ</code></td><td>A published <code>SKILL.md</code> (<code>MarketplaceEntry.markdown</code> in KV)</td></tr>
+    <tr><td>Frozen model <code>f</code></td><td>Whatever agent the visitor runs (Claude Code, Cursor, etc.) — we never touch it</td></tr>
+    <tr><td>Gradient direction</td><td>Trajectory-derived edits from the optimizer (4-8 atomic <code>SkillEdit</code> ops, derived from telemetry + failure signal)</td></tr>
+    <tr><td>Learning rate</td><td>Bounded edit budget — max 8 ops per candidate; <code>replace_apiReference.signature</code> is forbidden</td></tr>
+    <tr><td>Validation check</td><td>Held-out conversion gate: <code>install_hit / marketplace_view</code> strictly improves on A/B-routed traffic, p &lt; 0.05</td></tr>
+    <tr><td>Batch / minibatch</td><td>N-install threshold before the gate fires (default <strong>200 installs per arm</strong>)</td></tr>
+    <tr><td>"Suboptimal skill" trajectory</td><td>Ad-hoc curator edit that bypasses the gate (deprecated path)</td></tr>
+    <tr><td>Rejected side updates</td><td>Candidates that fail the static or dynamic gate — logged as negative feedback for the next optimizer pass</td></tr>
+    <tr><td>Protected section invariant</td><td><code>protectedSections</code> + <code>&lt;!-- @protected:&lt;id&gt; --&gt;</code> markers, byte-identical between candidate and parent</td></tr>
+  </tbody>
+</table>
+
+<h2 id="phases"><span class="num">03</span>What we are building (4 phases, ~1 week)</h2>
+
+<h3>Phase 1 — Foundation <span class="tag">Day 1-3</span></h3>
+<p>Versioned KV storage, bounded edits, static gate, protected sections.</p>
+<ul>
+  <li><strong>Versioned storage.</strong> <code>skill:&lt;id&gt;</code> stays as the current pointer; new <code>skill:&lt;id&gt;:v&lt;n&gt;</code> append-only versions, plus at most one <code>skill:&lt;id&gt;:candidate</code> at a time. Old reads keep working — the migration is additive.</li>
+  <li><strong>Version binding on install.</strong> The install route encodes the content hash in the slug as <code>name@hash8</code> when writing to Analytics Engine, so a single dashboard can split conversion by version without a schema change. Existing dashboards keep working via <code>SPLIT(blob2,'@')[0]</code>.</li>
+  <li><strong>Bounded-edit endpoint.</strong> The freeform admin update is replaced by a structured <code>SkillEdit[]</code> payload — 9 op kinds, max 8 per candidate. Forbidden ops (would break router behavior): <code>replace_name</code>, <code>replace_apiReference.signature</code>, <code>replace_category</code>, <code>replace_audience</code>.</li>
+  <li><strong>Static gate.</strong> Runs synchronously on every candidate. Checks token count (≤ 1500, target 920 per the paper), description ↔ <code>whenToUse</code> coherence, protected-section byte-identity, schema shape, and edit budget. Curator can override with a logged reason — matching the paper's "researcher override" pattern.</li>
+  <li><strong>Protected sections.</strong> A new <code>protectedSections: string[]</code> field wraps named sections in <code>&lt;!-- @protected:&lt;id&gt; --&gt;</code> markers. The static gate refuses any byte difference inside those markers.</li>
+</ul>
+
+<h3>Phase 2 — A/B routing <span class="tag">Day 4</span></h3>
+<p>Deterministic split at <code>/i/&lt;name&gt;</code>:</p>
+<pre><code><span class="k">const</span> candidate = <span class="k">await</span> getCandidateSkill(id);
+<span class="k">const</span> useCandidate = candidate &amp;&amp; shouldRouteCandidate(req, candidate.abTrafficShare);
+<span class="k">const</span> served = useCandidate ? candidate : current;</code></pre>
+<p><code>shouldRouteCandidate</code> hashes <code>(cf-connecting-ip + name)</code>, so the same visitor sees the same arm across reloads. Default share: <strong>20% candidate / 80% current</strong>. While a candidate exists for a skill, cache headers flip to <code>private, no-store</code> to prevent Cloudflare or upstream proxies from poisoning the split.</p>
+
+<h3>Phase 3 — Dynamic validation gate <span class="tag cron">cron · hourly</span> <span class="tag">Day 5</span></h3>
+<p>An hourly Cloudflare Cron at <code>/api/cron/validate-candidates</code> reads Analytics Engine for the last 7 days. For each candidate:</p>
+<ol>
+  <li>Query <code>marketplace_view</code> count for the slug (route-agnostic — same on both arms).</li>
+  <li>Query <code>install_hit</code> count for <code>name@candidate_hash</code> and <code>name@current_hash</code>.</li>
+  <li>Require ≥ 200 installs per arm; otherwise "insufficient data, keep collecting."</li>
+  <li>Welch's t-test on the conversion ratios; require <strong>p &lt; 0.05 AND strict improvement</strong>. Ties reject.</li>
+  <li>Pass → <code>promoteCandidate(id)</code> atomically flips the pointer. Regress → retire the candidate and log to a negative-feedback store so the optimizer doesn't re-propose the same diff.</li>
+</ol>
+<p><strong>Long-tail fallback.</strong> Any candidate that fails to cross 200 installs in 14 days falls back to an LLM-judge call against the <code>skill-judge</code> skill we already seeded from softaworks/agent-toolkit. The judge has to score strictly higher than the current version. This is our answer to the paper's open verifier problem — we don't solve it generally; we punt to a peer skill trained on official examples.</p>
+
+<h3>Phase 4 — Optimizer loop <span class="tag cron">cron · weekly</span> <span class="tag">Day 6-7</span></h3>
+<p>Weekly cron <code>/api/cron/propose-edits</code>:</p>
+<ol>
+  <li>Find every approved skill below the 25th percentile in conversion with no active candidate.</li>
+  <li>Pull 14 days of telemetry — install volume, conversion ratio, github_click rate, top countries, dwell distribution.</li>
+  <li>Pull the last N rejected candidates (avoids loops).</li>
+  <li>Render current <code>SKILL.md</code> + telemetry + rejected-edits as a narrow prompt to a frontier model.</li>
+  <li>Model must respond with a Zod-validated <code>SkillEdit[]</code> of length 4-8.</li>
+  <li>Apply edits → static gate → save as candidate → enters A/B at 20% share.</li>
+</ol>
+<p>An <code>SKILLOPT_ENABLED=true|false</code> env var gates every cron — kill switch is one config flip. Budget at current corpus size (94 skills, top quartile under target ≈ 24 weekly calls × $0.40 avg) is roughly <strong>$10/month</strong>.</p>
+
+<h2 id="data"><span class="num">04</span>Are we collecting usage data?</h2>
+
+<div class="callout">
+  <p><strong>Yes — and we have been for weeks.</strong> Every event lands in the <code>skillmake_metrics</code> Cloudflare Workers Analytics Engine dataset. No personally identifying info is stored; the daily visitor id is a SHA-256 hash of <code>ip + ua + day</code> truncated to 8 bytes, so the same person on the same day collapses into one id but cannot be tracked across days. Search queries are also hashed before write.</p>
+</div>
+
+<p>Here is every <code>MetricEvent</code> type the codebase currently fires, and what each one tells us:</p>
+
+<table>
+  <thead><tr><th>Event</th><th>What it tells us</th></tr></thead>
+  <tbody>
+    <tr><td><code>install_hit</code></td><td>Someone hit <code>/i/&lt;name&gt;</code> and got the markdown. After Phase 1, the slug includes <code>@hash8</code> so we can split by version. <strong>This is the gradient signal.</strong></td></tr>
+    <tr><td><code>marketplace_view</code></td><td>The marketplace listing page loaded for a given skill — denominator for conversion.</td></tr>
+    <tr><td><code>home_view</code></td><td>The homepage loaded; <code>blob2</code> carries the audience filter slug if one is active (engineers/creators/etc.).</td></tr>
+    <tr><td><code>tricks_view</code> / <code>powerhouse_view</code></td><td>Cross-page interest — which subsection of the site people drift toward.</td></tr>
+    <tr><td><code>search_submitted</code></td><td>A search query was submitted (hashed). Volume + funnel signal, not literal text.</td></tr>
+    <tr><td><code>github_click</code></td><td>Outbound click to the repo. Paired with <code>install_hit</code>, this catches the "intent leak" — people who read the listing and bounced to GitHub instead of installing.</td></tr>
+    <tr><td><code>page_dwell</code></td><td>Bucketed dwell time: <code>0-5s / 5-15s / 15-30s / 30-60s / 60-300s / 300s+</code>.</td></tr>
+    <tr><td><code>scroll_depth</code></td><td>Bucketed reading depth: <code>0 / 25 / 50 / 75 / 100</code>.</td></tr>
+    <tr><td><code>submit_started</code> / <code>submit_completed</code></td><td>Submit funnel — top and bottom of the conversion flow for new skill submissions.</td></tr>
+    <tr><td><code>convert_success</code> / <code>convert_error</code></td><td>The <code>/api/convert</code> extraction pipeline succeeded or failed. <code>blob2</code> carries error code; <code>double2</code> carries HTTP status.</td></tr>
+    <tr><td><code>api_error</code></td><td>Any 4xx/5xx from a server route. Logged via <code>observability.ts</code> as a structured JSON line + Analytics Engine row.</td></tr>
+  </tbody>
+</table>
+
+<p>And the blob columns are stable across every event:</p>
+
+<table>
+  <thead><tr><th>Column</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>index1</code> / <code>blob1</code></td><td>Event name (mirrored for SQL convenience)</td></tr>
+    <tr><td><code>blob2</code></td><td>Slug / bucket / route fragment / hashed search query (event-dependent)</td></tr>
+    <tr><td><code>blob3</code></td><td>Country (<code>cf-ipcountry</code>; <code>??</code> if unknown)</td></tr>
+    <tr><td><code>blob4</code></td><td>Referer host (empty for direct hits)</td></tr>
+    <tr><td><code>blob5</code></td><td>UA category — <code>curl</code> / <code>browser</code> / <code>bot</code> / <code>other</code></td></tr>
+    <tr><td><code>blob6</code></td><td>Daily visitor id — SHA-256(ip+ua+day), 8 bytes</td></tr>
+    <tr><td><code>double1</code></td><td>Always <code>1</code> (sample interval anchor)</td></tr>
+    <tr><td><code>double2</code></td><td>HTTP status (<code>api_error</code>, <code>convert_error</code> only)</td></tr>
+  </tbody>
+</table>
+
+<p>The Grafana dashboard (<code>docs/grafana/skillmake-dashboard.json</code>) already renders 30+ panels off this dataset — total installs, agent vs human split, hourly install pulse, top countries, GitHub-click leaderboard, dwell/scroll distributions, audience demand from homepage filter clicks, errors per hour, the home → marketplace → install funnel, and the per-skill leaderboards we will repurpose for per-version A/B comparison in Phase 1f.</p>
+
+<h2 id="entry"><span class="num">05</span>MarketplaceEntry shape — new fields</h2>
+
+<p>This is what one entry looks like after Phase 1 lands. The five new fields at the top of the entry are the entire surface area of versioning:</p>
+
+<pre><code>{
+  <span class="s">"id"</span>: <span class="s">"superpowers-a1b2c3d4"</span>,
+  <span class="s">"name"</span>: <span class="s">"superpowers"</span>,
+  <span class="s">"contentHash"</span>: <span class="s">"a1b2c3d4e5f6g7h8"</span>,
+
+  <span class="c">// --- new in Phase 1 ---</span>
+  <span class="s">"versionId"</span>: <span class="n">7</span>,
+  <span class="s">"parentContentHash"</span>: <span class="s">"f9e8d7c6b5a4"</span>,
+  <span class="s">"edits"</span>: [
+    { <span class="s">"op"</span>: <span class="s">"add_gotcha"</span>, <span class="s">"value"</span>: <span class="s">"Don't forget to..."</span> },
+    { <span class="s">"op"</span>: <span class="s">"replace_whenToUse_item"</span>, <span class="s">"index"</span>: <span class="n">1</span>, <span class="s">"value"</span>: <span class="s">"Use when..."</span> }
+  ],
+  <span class="s">"status"</span>: <span class="s">"candidate"</span>,        <span class="c">// "candidate" | "current" | "retired"</span>
+  <span class="s">"abTrafficShare"</span>: <span class="n">0.2</span>,        <span class="c">// only meaningful when status === "candidate"</span>
+  <span class="c">// -----------------------</span>
+
+  <span class="s">"description"</span>: <span class="s">"..."</span>,
+  <span class="s">"category"</span>: <span class="s">"tool"</span>,
+  <span class="s">"audience"</span>: <span class="s">"engineers"</span>,
+  <span class="s">"protectedSections"</span>: [<span class="s">"apiReference"</span>],
+  <span class="s">"markdown"</span>: <span class="s">"# superpowers\n\n&lt;!-- @protected:apiReference --&gt;\n..."</span>,
+  <span class="s">"createdAt"</span>: <span class="s">"2026-05-27T12:00:00Z"</span>
+}</code></pre>
+
+<h2 id="evaluate"><span class="num">06</span>How an A/B test gets evaluated — 7-step operator playbook</h2>
+
+<p>Once Phase 2 lands, here is exactly what running an experiment looks like from the operator side.</p>
+
+<div class="step">
+  <span class="step-num">STEP 0</span>
+  <h4>Pre-flight static gate</h4>
+  <p>The candidate goes through <code>skill-validator</code> on insert. Token count must be under 1500 (the paper's compactness lesson — best skills land around 920). Description must share at least one keyword with each <code>whenToUse</code> item — the cheap proxy for router/body alignment. Protected sections must be byte-identical to the parent. Edit budget ≤ 8 ops. If any check fails, the candidate doesn't enter the A/B at all; the curator sees the rejection reasons and can either revise or force-pass with a logged override.</p>
+</div>
+
+<div class="step">
+  <span class="step-num">STEP 1</span>
+  <h4>Start at 20% candidate share</h4>
+  <p>Default is <code>abTrafficShare: 0.2</code>. <code>shouldRouteCandidate(req, share)</code> hashes <code>(cf-connecting-ip + name)</code> so the same visitor never flips arms between reloads. The cache header on <code>/i/&lt;name&gt;</code> drops to <code>private, no-store</code> for the duration — otherwise Cloudflare's edge cache would poison the split.</p>
+</div>
+
+<div class="step">
+  <span class="step-num">STEP 2</span>
+  <h4>Wait for ≥ 200 installs per arm — or 14 days</h4>
+  <p>The hourly cron checks both arm counts each tick. Below 200 per arm it reports "insufficient data, keep collecting." If 14 days pass without either arm hitting 200 installs, it routes to the <code>skill-judge</code> LLM-judge fallback and decides on judge score instead of conversion. Curator can manually nudge the share higher (50% / 80%) for low-traffic skills if they want to accelerate.</p>
+</div>
+
+<div class="step">
+  <span class="step-num">STEP 3</span>
+  <h4>Read the dashboard panels</h4>
+  <p>The Grafana dashboard exposes everything an operator needs to sanity-check the test before the cron decides for you:</p>
+  <ul>
+    <li><strong>Top skill versions by install rate (14d)</strong> — per-version bargauge, candidate next to current</li>
+    <li><strong>Conversion delta per skill version</strong> — <code>install_hit / marketplace_view</code> ratio with explicit delta</li>
+    <li><strong>UA split per version</strong> — is the candidate winning on agents (<code>curl</code>) but losing on browsers? That's a router-vs-body drift signal</li>
+    <li><strong>Top countries per version</strong> — geographic skew often hides an audience-fit problem</li>
+    <li><strong>GitHub-click ratio per version</strong> — if <code>github_click</code> goes up while installs go down, the candidate is making people bounce to the repo. Intent leak.</li>
+    <li><strong>Errors per hour</strong> — a candidate that breaks downstream agent flow shows up here first</li>
+  </ul>
+</div>
+
+<div class="step">
+  <span class="step-num">STEP 4</span>
+  <h4>Cron decides — Welch's t-test, p &lt; 0.05, strict improvement</h4>
+  <p>The hourly cron computes conversion ratios per arm, runs a Welch's t-test (unequal variance is the realistic assumption for differently-sized arms), and requires <strong>p &lt; 0.05 AND strict improvement</strong>. Ties reject. Regressions retire the candidate and the diff goes into the negative-feedback store keyed at <code>skill:&lt;id&gt;:rejected:v&lt;hash&gt;</code>, with the telemetry snapshot that triggered rejection. The next optimizer pass reads those rejected diffs and is prompted to avoid them.</p>
+</div>
+
+<div class="step">
+  <span class="step-num">STEP 5</span>
+  <h4>Post-promotion sanity check</h4>
+  <p>Promoted? The pointer flips atomically. Cache header restores to <code>public, max-age=300, must-revalidate</code>. The previous current moves to <code>retired</code> but stays queryable for 30 days from <code>/admin/audit</code> — every auto-promote is reversible. Operator should pull up the per-version panels for the next 24 hours and confirm the conversion lift holds at 100% traffic, not just at 20%.</p>
+</div>
+
+<div class="step">
+  <span class="step-num">STEP 6</span>
+  <h4>Per-skill effect size &gt; corpus average</h4>
+  <p>This is the test that matters. The paper's central insight: <strong>aggregate accuracy is the wrong unit</strong>. You can ship a candidate that raises the corpus mean by 2pp while making three high-traffic skills measurably worse. The cron decides per-skill; the operator's job is to spot-check that the effect size on this skill exceeds the corpus average over the last 14 days. If it doesn't, the promotion is technically valid but probably a wash.</p>
+</div>
+
+<div class="step">
+  <span class="step-num">STEP 7</span>
+  <h4>Failure modes to watch</h4>
+  <ul>
+    <li><strong>Low traffic + judge fallback drift.</strong> If a skill never crosses 200 installs/arm and the judge keeps promoting candidates that don't show up in conversion later, the judge prompt itself has drifted. Re-seed <code>skill-judge</code>.</li>
+    <li><strong>Optimizer loops.</strong> If the same skill goes through five rejected candidates in a row, the model is stuck in a local minimum. The rejected-edits store should prevent literal repetition; if it's still happening, the telemetry input is too narrow. Widen the context.</li>
+    <li><strong>Cache poisoning.</strong> Always confirm the candidate cache header is <code>no-store</code> before running. A cached <code>/i/&lt;name&gt;</code> response at the CDN edge will silently break the split.</li>
+    <li><strong>Curator surprise.</strong> Every auto-promote writes to <code>audit:&lt;timestamp&gt;:&lt;id&gt;</code>. Retired versions are kept for 30 days; reverting a bad auto-promote is a one-click operation in <code>/admin/audit</code>.</li>
+  </ul>
+</div>
+
+<h2 id="insights"><span class="num">07</span>Key insights from the paper</h2>
+
+<p>These are the bullets that shaped every architectural choice above:</p>
+
+<blockquote><p>The validation gate is the only thing that matters. The best skills in the paper landed with just <strong>1-4 accepted edits total</strong> — everything else was rejected by the gate.</p></blockquote>
+
+<blockquote><p>Bounded edits beat full rewrites. 4-8 atomic ops per step is the sweet spot. Bigger steps regress more than they help.</p></blockquote>
+
+<blockquote><p>Compactness wins. The median final skill in SkillOpt was <strong>~920 tokens</strong>. Our static gate targets that number; warns at 1200; rejects at 1500.</p></blockquote>
+
+<blockquote><p>The description is the router; the body is the agent. They are two surfaces and they can drift apart. Only end-to-end tests catch it. On skillmake we proxy with <code>description ↔ whenToUse</code> keyword coherence and then let the conversion gate make the final call.</p></blockquote>
+
+<blockquote><p>Aggregate accuracy is the wrong unit. Per-skill effect size is where the action is. Hence the cron decides per-skill and the operator review checks per-skill effect against corpus average.</p></blockquote>
+
+<blockquote><p>Frozen model + trained context is the practical adaptation. We are not training Claude. We are training the document Claude reads.</p></blockquote>
+
+<h2 id="snapshot"><span class="num">08</span>Current state snapshot</h2>
+
+<p class="meta">Live as of 2026-05-27. Marketplace data from <code>GET /api/marketplace</code>; install counts from Cloudflare Analytics Engine <code>skillmake_metrics</code> dataset (all-time).</p>
+
+<div class="grid">
+  <div class="card"><span class="v">94</span><span class="l">Total skills</span></div>
+  <div class="card"><span class="v">43</span><span class="l">Engineers</span></div>
+  <div class="card"><span class="v">23</span><span class="l">Creators</span></div>
+  <div class="card"><span class="v">8</span><span class="l">DevOps</span></div>
+  <div class="card"><span class="v">6</span><span class="l">Design</span></div>
+  <div class="card"><span class="v">6</span><span class="l">Marketing</span></div>
+  <div class="card"><span class="v">4</span><span class="l">AI</span></div>
+  <div class="card"><span class="v">4</span><span class="l">General</span></div>
+</div>
+
+<h3>Top 10 skills by install count (all-time)</h3>
+<p class="meta">Sourced live from Cloudflare Analytics Engine via the leaderboard query in <code>docs/analytics-queries.md</code>.</p>
+
+<ol class="leaderboard">
+  <li><span class="slug">superpowers</span><span class="n">773</span></li>
+  <li><span class="slug">anthropic-webapp-testing</span><span class="n">689</span></li>
+  <li><span class="slug">karpathy-claude-md</span><span class="n">665</span></li>
+  <li><span class="slug">ui-ux-pro-max</span><span class="n">664</span></li>
+  <li><span class="slug">podcast-show-notes</span><span class="n">654</span></li>
+  <li><span class="slug">anthropic-skill-creator</span><span class="n">641</span></li>
+  <li><span class="slug">video-transcript-to-blog</span><span class="n">637</span></li>
+  <li><span class="slug">shadcn-ui-skill</span><span class="n">625</span></li>
+  <li><span class="slug">mp-triage</span><span class="n">521</span></li>
+  <li><span class="slug">mp-zoom-out</span><span class="n">492</span></li>
+</ol>
+
+<p>These ten are the ones with enough traffic to drive a real A/B test against the conversion gate without falling back to <code>skill-judge</code>. At ~50-100 installs/day each, the top entries can clear the 200-installs-per-arm threshold in roughly <strong>5-10 days at 20% candidate share</strong>. The long tail will lean on the LLM-judge fallback.</p>
+
+<h2 id="queries"><span class="num">09</span>Sample SQL queries</h2>
+
+<p>Both queries below run against the Cloudflare Analytics Engine SQL API. Full recipe collection lives in <code>docs/analytics-queries.md</code>.</p>
+
+<h4>Install leaderboard (all-time)</h4>
+<pre><code><span class="k">SELECT</span>
+  blob2 <span class="k">AS</span> slug,
+  <span class="k">sum</span>(_sample_interval) <span class="k">AS</span> installs
+<span class="k">FROM</span> skillmake_metrics
+<span class="k">WHERE</span> index1 = <span class="s">'install_hit'</span> <span class="k">AND</span> blob2 != <span class="s">''</span>
+<span class="k">GROUP BY</span> slug
+<span class="k">ORDER BY</span> installs <span class="k">DESC</span>
+<span class="k">LIMIT</span> 50</code></pre>
+
+<h4>Funnel — same-day home view → install</h4>
+<pre><code><span class="k">WITH</span>
+  home <span class="k">AS</span> (
+    <span class="k">SELECT</span> blob6 <span class="k">AS</span> visitor, toStartOfDay(timestamp) <span class="k">AS</span> day
+    <span class="k">FROM</span> skillmake_metrics
+    <span class="k">WHERE</span> index1 = <span class="s">'home_view'</span>
+      <span class="k">AND</span> timestamp &gt;= <span class="k">NOW</span>() - <span class="k">INTERVAL</span> <span class="s">'30'</span> <span class="k">DAY</span>
+    <span class="k">GROUP BY</span> visitor, day
+  ),
+  installs <span class="k">AS</span> (
+    <span class="k">SELECT</span> blob6 <span class="k">AS</span> visitor, toStartOfDay(timestamp) <span class="k">AS</span> day
+    <span class="k">FROM</span> skillmake_metrics
+    <span class="k">WHERE</span> index1 = <span class="s">'install_hit'</span>
+      <span class="k">AND</span> timestamp &gt;= <span class="k">NOW</span>() - <span class="k">INTERVAL</span> <span class="s">'30'</span> <span class="k">DAY</span>
+    <span class="k">GROUP BY</span> visitor, day
+  )
+<span class="k">SELECT</span>
+  home.day <span class="k">AS</span> day,
+  <span class="k">count</span>(<span class="k">DISTINCT</span> home.visitor) <span class="k">AS</span> home_visitors,
+  <span class="k">count</span>(<span class="k">DISTINCT</span> installs.visitor) <span class="k">AS</span> installers,
+  <span class="k">round</span>(<span class="k">count</span>(<span class="k">DISTINCT</span> installs.visitor) / <span class="k">count</span>(<span class="k">DISTINCT</span> home.visitor) * 100, 2) <span class="k">AS</span> pct
+<span class="k">FROM</span> home
+<span class="k">LEFT JOIN</span> installs <span class="k">ON</span> home.visitor = installs.visitor <span class="k">AND</span> home.day = installs.day
+<span class="k">GROUP BY</span> day
+<span class="k">ORDER BY</span> day <span class="k">ASC</span></code></pre>
+
+<p>After Phase 1 lands, every per-version query is the same shape with <code>SPLIT(blob2,'@')[1] AS hash</code> tacked on for the split.</p>
+
+<footer>
+  <p>skillopt-status-2026-05-27.html · single-file, no deps · written for skillmake.xyz</p>
+  <p>plan: <code>/Users/harnoorsingh/.claude/plans/gradient-descent-for-skill-md-mossy-gray.md</code></p>
+  <p>queries: <code>/Users/harnoorsingh/Developer/SkillIt/docs/analytics-queries.md</code></p>
+  <p>dashboard: <code>/Users/harnoorsingh/Developer/SkillIt/docs/grafana/skillmake-dashboard.json</code></p>
+</footer>
+
+</div>
+</body>
+</html>
