@@ -135,15 +135,15 @@ export async function getAnalyticsDashboardData(): Promise<AnalyticsDashboardRes
       query(`SELECT toStartOfHour(timestamp) AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 IN ('api_error','convert_error') AND ${DAY_7} GROUP BY label ORDER BY label`),
       query(`SELECT toStartOfDay(timestamp) AS label, count(DISTINCT blob6) AS value FROM skillmake_metrics WHERE ${DAY_14} GROUP BY label ORDER BY label`),
       query(`SELECT blob5 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'install_hit' AND ${DAY_14} GROUP BY label ORDER BY value DESC`),
-      query(`SELECT splitByChar('@', blob2)[1] AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob2 != '' GROUP BY label ORDER BY value DESC LIMIT 20`),
-      query(`SELECT splitByChar('@', blob2)[1] AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob5 = 'browser' AND blob2 != '' AND ${DAY_14} GROUP BY label ORDER BY value DESC LIMIT 16`),
-      query(`SELECT splitByChar('@', blob2)[1] AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob5 IN ('curl','bot','other') AND blob2 != '' AND ${DAY_14} GROUP BY label ORDER BY value DESC LIMIT 16`),
+      query(`SELECT blob2 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob2 != '' GROUP BY label ORDER BY value DESC LIMIT 200`),
+      query(`SELECT blob2 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob5 = 'browser' AND blob2 != '' AND ${DAY_14} GROUP BY label ORDER BY value DESC LIMIT 120`),
+      query(`SELECT blob2 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'install_hit' AND blob5 IN ('curl','bot','other') AND blob2 != '' AND ${DAY_14} GROUP BY label ORDER BY value DESC LIMIT 120`),
       query(`SELECT blob2 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'marketplace_view' AND blob2 != '' AND ${DAY_14} GROUP BY label ORDER BY value DESC LIMIT 16`),
       query(`SELECT blob2 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'github_click' AND blob2 != '' AND ${DAY_14} GROUP BY label ORDER BY value DESC LIMIT 16`),
       query(`SELECT index1 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE ${DAY_14} GROUP BY label ORDER BY value DESC LIMIT 18`),
       query(`SELECT blob3 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'install_hit' AND ${DAY_14} GROUP BY label ORDER BY value DESC LIMIT 12`),
-      query(`SELECT blob2 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'page_dwell' AND ${DAY_14} GROUP BY label ORDER BY CASE label WHEN '0-5s' THEN 1 WHEN '5-15s' THEN 2 WHEN '15-30s' THEN 3 WHEN '30-60s' THEN 4 WHEN '60-300s' THEN 5 WHEN '300s+' THEN 6 ELSE 99 END`),
-      query(`SELECT blob2 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'scroll_depth' AND ${DAY_14} GROUP BY label ORDER BY toInt32OrZero(label)`),
+      query(`SELECT blob2 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'page_dwell' AND ${DAY_14} GROUP BY label ORDER BY value DESC`),
+      query(`SELECT blob2 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'scroll_depth' AND ${DAY_14} GROUP BY label ORDER BY value DESC`),
       query(`SELECT index1 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 IN ('home_view','marketplace_view','install_hit','submit_started','submit_completed','search_submitted') AND ${DAY_14} GROUP BY label ORDER BY value DESC`),
       query(`SELECT blob7 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'skill_approved' AND blob7 != '' AND ${DAY_28} GROUP BY label ORDER BY value DESC LIMIT 10`),
       query(`SELECT index1 AS event, blob2 AS slug, double2 AS status, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE index1 IN ('api_error','convert_error') AND ${DAY_14} GROUP BY event, slug, status ORDER BY hits DESC LIMIT 12`),
@@ -173,15 +173,15 @@ export async function getAnalyticsDashboardData(): Promise<AnalyticsDashboardRes
       },
       bars: {
         uaSplit: bars(uaSplit),
-        topInstalls: bars(topInstalls),
-        topBrowserInstalls: bars(topBrowserInstalls),
-        topAgentInstalls: bars(topAgentInstalls),
+        topInstalls: installBars(topInstalls).slice(0, 20),
+        topBrowserInstalls: installBars(topBrowserInstalls).slice(0, 16),
+        topAgentInstalls: installBars(topAgentInstalls).slice(0, 16),
         topViews: bars(topViews),
         topClicks: bars(topClicks),
         topEvents: bars(topEvents),
         topCountries: bars(topCountries),
-        dwell: bars(dwell),
-        scroll: bars(scroll),
+        dwell: bars(dwell).sort((a, b) => dwellRank(a.label) - dwellRank(b.label)),
+        scroll: bars(scroll).sort((a, b) => Number(a.label) - Number(b.label)),
         funnel: bars(funnel),
         audienceDemand: bars(audienceDemand),
       },
@@ -222,6 +222,20 @@ function bars(rows: Row[]): Bar[] {
       value: numeric(row.value),
     }))
     .filter((row) => row.value > 0);
+}
+
+function installBars(rows: Row[]): Bar[] {
+  const totals = new Map<string, number>();
+  for (const row of bars(rows)) {
+    const label = row.label.includes("@") ? row.label.slice(0, row.label.indexOf("@")) : row.label;
+    totals.set(label, (totals.get(label) ?? 0) + row.value);
+  }
+  return Array.from(totals, ([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
+}
+
+function dwellRank(label: string): number {
+  const rank = ["0-5s", "5-15s", "15-30s", "30-60s", "60-300s", "300s+"].indexOf(label);
+  return rank === -1 ? 99 : rank;
 }
 
 function numeric(value: unknown): number {
