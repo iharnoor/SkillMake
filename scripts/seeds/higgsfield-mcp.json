@@ -1,0 +1,54 @@
+{
+  "sourceUrl": "https://higgsfield.ai/mcp",
+  "skill": {
+    "name": "higgsfield-mcp",
+    "description": "Generate images and videos with Higgsfield's full model roster — Seedance, Kling, Veo, Sora, Soul, Flux, and more — directly from an agent through the official hosted MCP.",
+    "whenToUse": [
+      "Generating images via an agent using Higgsfield models (Soul, Nano Banana, Seedream, Flux, GPT Image)",
+      "Generating video from text or image prompts using Seedance, Kling, Veo, Sora, WAN, or Hailuo",
+      "Training and managing character avatars that persist across generations",
+      "Checking credits balance or listing past generations before starting a batch run",
+      "Scoring creative assets for hook strength, retention, and engagement before publishing"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Hosted OAuth MCP",
+        "explanation": "Higgsfield runs the MCP server at mcp.higgsfield.ai/mcp. No local binary needed — connect once with OAuth and the agent calls tools over HTTP."
+      },
+      {
+        "term": "Model routing",
+        "explanation": "The MCP exposes individual tools per model family. Pick the narrowest model that fits the task: image models for stills, video models for motion, character tools for avatar continuity."
+      },
+      {
+        "term": "Character training",
+        "explanation": "Upload reference images once to train a character. The trained character ID can then be referenced in subsequent video or image generation calls for consistent identity across outputs."
+      },
+      {
+        "term": "Creative analytics",
+        "explanation": "Hook strength, retention score, and engagement scoring tools evaluate finished assets — useful for gating a publish step or comparing variants before human review."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "claude mcp add higgsfield -- npx -y higgsfield-mcp",
+        "purpose": "Register Higgsfield as an MCP server using the community npm wrapper (requires HIGGSFIELD_API_KEY in env).",
+        "example": "claude mcp add higgsfield \\\n  -e HIGGSFIELD_API_KEY=hf_xxxxxxxxx \\\n  -- npx -y higgsfield-mcp"
+      },
+      {
+        "signature": "Hosted SSE endpoint: https://mcp.higgsfield.ai/mcp",
+        "purpose": "Connect via the official OAuth-authenticated hosted endpoint instead of a local install.",
+        "example": "Add to mcp config:\n{\n  \"higgsfield\": {\n    \"type\": \"sse\",\n    \"url\": \"https://mcp.higgsfield.ai/mcp\"\n  }\n}"
+      }
+    ],
+    "gotchas": [
+      "Generated video URLs expire — download assets before referencing them downstream",
+      "Character training is async; poll for completion before using the character ID in a generation call",
+      "Credits are consumed per generation; check balance before running large batches",
+      "Do not expose HIGGSFIELD_API_KEY in logs, screenshots, or generated artifacts",
+      "Workspace context (private vs shared) affects which characters and past generations are visible — set it explicitly when running in a team environment"
+    ],
+    "category": "tool",
+    "audience": "ai",
+    "videoUrls": []
+  }
+}

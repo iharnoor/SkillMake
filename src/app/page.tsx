@@ -17,7 +17,7 @@ const LIVE_CATEGORIES = [
 ] as const;
 const COLLECTION_FILTERS = [
   { slug: "tricks", label: "tricks" },
-  { slug: "powerhouse", label: "powerhouse" },
+  { slug: "mcps", label: "mcps" },
 ] as const;
 
 type CollectionSlug = (typeof COLLECTION_FILTERS)[number]["slug"];
@@ -44,9 +44,9 @@ const ASCII = String.raw` ____  _    _ _ _                 _
 
 const FEATURED_LINKS = [
   {
-    href: "/powerhouse",
-    label: "Powerhouse",
-    description: "Research, HTML artifacts, Codex delegation, and API-to-CLI generation.",
+    href: "/mcps",
+    label: "MCPs",
+    description: "Agent-callable tools for browsers, APIs, SaaS, and custom workflows.",
   },
   {
     href: "/tricks",
@@ -330,8 +330,10 @@ export default async function Home({
                 )}
               </div>
               <div className="flex flex-wrap justify-start sm:justify-end gap-1.5 self-start">
-                <Signal hot href={`/i/${e.name}`}>install</Signal>
-                <Signal>reviewed</Signal>
+                <Signal hot href={e.href.startsWith("http") ? e.href : `/i/${e.name}`}>
+                  {e.href.startsWith("http") ? "open" : "install"}
+                </Signal>
+                <Signal>{e.href.startsWith("http") ? "candidate" : "reviewed"}</Signal>
                 {e.videoCount > 0 && <Signal>{e.videoCount} video</Signal>}
                 {e.repoUrl && <Signal>source</Signal>}
                 {e.stars != null && <Signal>★ {formatStars(e.stars)}</Signal>}
@@ -382,13 +384,31 @@ function hostFromUrl(u: string): string {
 
 function collectionEntries(slug: CollectionSlug, entries: MarketplaceEntry[]): (MarketplaceEntry | DisplayEntry)[] {
   const byName = new Map(entries.map((entry) => [entry.skill.name, entry]));
-  if (slug === "powerhouse") {
+  if (slug === "mcps") {
     return [
-      syntheticFromSkill(byName, "html-everything", "Turn Markdown, JSON, text, or a doc URL into one self-contained editorial HTML page.", "tool"),
-      syntheticFromSkill(byName, "last72hours", "Scan the last three days of social and web signals, then produce a sourced brief.", "tool"),
-      syntheticFromSkill(byName, "last30days", "Research what people actually said in the last month, then synthesize it with citations.", "tool"),
+      syntheticFromSkill(byName, "mcp-builder", "Design and ship a Model Context Protocol server with a tool surface an agent can actually use.", "tool"),
+      syntheticFromSkill(byName, "zero-xyz", "Search Zero for agent-callable paid APIs and external capabilities before saying a task is unavailable.", "tool"),
+      syntheticFromSkill(byName, "firecrawl-mcp", "Expose Firecrawl scraping, crawling, mapping, and extraction to an agent through MCP.", "tool"),
+      syntheticFromSkill(byName, "playwright-skill", "Give an agent a Playwright browser runner for end-to-end checks, screenshots, and custom web flows.", "tool"),
+      syntheticFromSkill(byName, "linear-claude-skill", "Use Linear's official MCP server for issue, project, and workspace workflows.", "tool"),
+      syntheticFromSkill(byName, "resend-email-skill", "Send and inspect Resend email resources through an MCP-backed Claude workflow.", "tool"),
       syntheticFromSkill(byName, "printingpress", "Generate an agent-native CLI and MCP server from an API spec, HAR file, or website.", "tool"),
-      syntheticFromSkill(byName, "codex-plugin-cc", "Bring Codex into Claude Code for reviews, adversarial checks, and delegated fixes.", "tool"),
+      syntheticFromSkill(byName, "browser-use", "Attach an agent to a real browser through MCP-style browser control and inspection tools.", "tool"),
+      syntheticFromSkill(byName, "higgsfield-mcp", "Generate images and videos with Higgsfield's model roster through the official hosted MCP.", "tool"),
+      syntheticFromSkill(byName, "runway-mcp", "Run Runway text-to-video, image-to-video, and upscaling from an agent through MCP.", "tool"),
+      famousMcpEntry("context7-mcp", "Up-to-date package docs and code examples for AI coding agents.", "https://github.com/upstash/context7", 56309),
+      famousMcpEntry("github-mcp-server", "GitHub's official MCP server for repository, issue, pull request, and workflow context.", "https://github.com/github/github-mcp-server", 30245),
+      famousMcpEntry("playwright-mcp", "Microsoft's Playwright MCP server for browser automation through accessibility snapshots.", "https://github.com/microsoft/playwright-mcp", 33158),
+      famousMcpEntry("chrome-devtools-mcp", "Chrome DevTools for coding agents: console, network, performance, and page inspection.", "https://github.com/ChromeDevTools/chrome-devtools-mcp", 42133),
+      famousMcpEntry("mcp-toolbox-databases", "Google's MCP Toolbox for Databases across Postgres, MySQL, BigQuery, Redis, and more.", "https://github.com/googleapis/mcp-toolbox", 15379),
+      famousMcpEntry("figma-context-mcp", "Figma layout context for AI coding agents building UI from designs.", "https://github.com/GLips/Figma-Context-MCP", 14901),
+      famousMcpEntry("notion-mcp-server", "Notion's official MCP server for workspace pages, databases, and knowledge workflows.", "https://github.com/makenotion/notion-mcp-server", 4368),
+      famousMcpEntry("browserbase-mcp", "Cloud browser control for agents through Browserbase and Stagehand.", "https://github.com/browserbase/mcp-server-browserbase", 3359),
+      famousMcpEntry("supabase-mcp", "Connect AI assistants to Supabase project, database, and app-building workflows.", "https://github.com/supabase-community/supabase-mcp", 2709),
+      famousMcpEntry("apify-mcp", "Apify's MCP server for ready-made scrapers, crawlers, and automation actors.", "https://github.com/apify/apify-mcp-server", 1283),
+      famousMcpEntry("kubernetes-mcp", "Kubernetes management commands exposed to agents through kubectl-backed MCP tools.", "https://github.com/Flux159/mcp-server-kubernetes", 1399),
+      famousMcpEntry("sentry-mcp", "Sentry's MCP server for production error, issue, and observability workflows.", "https://github.com/getsentry/sentry-mcp", 706),
+      famousMcpEntry("official-mcp-servers", "The reference MCP server collection: filesystem, fetch, git, memory, sequential thinking, and time.", "https://github.com/modelcontextprotocol/servers", 86412),
     ];
   }
 
@@ -408,6 +428,26 @@ function syntheticFromSkill(
   category: string
 ): MarketplaceEntry | DisplayEntry {
   return byName.get(name) ?? syntheticEntry(name, description, category);
+}
+
+function famousMcpEntry(
+  name: string,
+  description: string,
+  repoUrl: string,
+  stars: number
+): DisplayEntry {
+  return {
+    id: name,
+    name,
+    description,
+    audience: "ai",
+    category: "tool",
+    source: hostFromUrl(repoUrl),
+    href: repoUrl,
+    repoUrl,
+    stars,
+    videoCount: 0,
+  };
 }
 
 function buildDisplayEntries(entries: (MarketplaceEntry | DisplayEntry)[]): DisplayEntry[] {
@@ -444,4 +484,3 @@ function syntheticEntry(name: string, description: string, category: string): Di
     videoCount: 0,
   };
 }
-

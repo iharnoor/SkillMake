@@ -1,0 +1,55 @@
+{
+  "sourceUrl": "https://github.com/runwayml/runway-api-mcp-server",
+  "skill": {
+    "name": "runway-mcp",
+    "description": "Run Runway's Gen-3 and Gen-4 video models from an agent — text-to-video, image-to-video, and upscaling — through Runway's official MCP server.",
+    "whenToUse": [
+      "Generating video from a text prompt using Runway Gen-3 Alpha or Gen-4 Turbo",
+      "Animating a reference image into video with image-to-video generation",
+      "Upscaling an existing video to higher resolution through the agent",
+      "Polling task status and retrieving finished video URLs without leaving the agent loop",
+      "Building an automated creative pipeline that produces video assets programmatically"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Task-based generation",
+        "explanation": "Runway generation is async — create a task, get a task ID, poll until complete, then retrieve the output URL. The MCP handles all three steps as separate tool calls."
+      },
+      {
+        "term": "24-hour asset expiry",
+        "explanation": "Generated video URLs expire 24 hours after creation. Download and store assets before referencing them in downstream steps."
+      },
+      {
+        "term": "Model versions",
+        "explanation": "Gen-3 Alpha is stable and widely supported; Gen-4 Turbo offers faster generation and higher fidelity. Specify the model when creating a task or default to the latest available."
+      },
+      {
+        "term": "RUNWAYML_API_SECRET",
+        "explanation": "All API calls require a Runway API secret. Store it in env and never paste or log the value in chat or generated files."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "git clone https://github.com/runwayml/runway-api-mcp-server && npm install && npm run build",
+        "purpose": "Build the MCP server locally — no npm package is published, so clone and build before registering with the MCP client.",
+        "example": "git clone https://github.com/runwayml/runway-api-mcp-server\ncd runway-api-mcp-server\nnpm install && npm run build\n# Then register:\nclaude mcp add runway \\\n  -e RUNWAYML_API_SECRET=key_xxx \\\n  -- node /path/to/runway-api-mcp-server/build/index.js"
+      },
+      {
+        "signature": "text_to_video / image_to_video / upscale_video / get_task tools",
+        "purpose": "Use the Runway MCP tools through the client after registration. Always follow create → poll → retrieve pattern.",
+        "example": "Ask the agent: \"Use Runway to generate a 5-second cinematic video of a futuristic city at night, then return the download URL.\""
+      }
+    ],
+    "gotchas": [
+      "No npm package — must clone the repo and run npm run build before registering",
+      "Video URLs expire after 24 hours; save outputs immediately in pipelines that run across days",
+      "Generation is async; do not assume the video is ready in the same turn as the create call — poll until status is complete",
+      "Do not expose RUNWAYML_API_SECRET in logs, screenshots, or generated artifacts",
+      "Image-to-video input images must be accessible URLs or base64-encoded data — local file paths will not work"
+    ],
+    "category": "tool",
+    "audience": "ai",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/runwayml/runway-api-mcp-server"
+  }
+}

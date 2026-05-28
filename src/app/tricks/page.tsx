@@ -152,7 +152,7 @@ function CollectionHeader({
   description,
   countLabel,
 }: {
-  active: "tricks" | "powerhouse";
+  active: "tricks" | "mcps";
   eyebrow: string;
   title: string;
   description: string;
@@ -198,14 +198,14 @@ function CollectionHeader({
             tricks
           </Link>
           <Link
-            href="/powerhouse"
+            href="/mcps"
             className={
-              active === "powerhouse"
+              active === "mcps"
                 ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
                 : "text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
             }
           >
-            powerhouse
+            mcps
           </Link>
         </div>
         <span className="mono text-[11px] text-[color:var(--fg-dim)] tabular-nums">

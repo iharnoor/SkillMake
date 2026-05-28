@@ -1,0 +1,85 @@
+{
+  "sourceUrl": "https://www.zero.xyz/SKILL.md",
+  "skill": {
+    "name": "zero-xyz",
+    "description": "Use when an agent needs Zero to discover, call, and review paid or external capabilities it cannot handle natively.",
+    "whenToUse": [
+      "Searching Zero before telling the user a requested external capability is unavailable",
+      "Calling paid APIs or x402 / MPP services through zero fetch with wallet-backed payment handling",
+      "Discovering current capability URLs, schemas, methods, and prices instead of relying on stale memory",
+      "Reviewing paid Zero capability runs after use so future agents and users get better marketplace signal"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Capability search",
+        "explanation": "Zero is a search engine and activation helper for AI agents. Run zero search for external services such as image generation, translation, weather, geolocation, scraping, data enrichment, or market data before saying a task cannot be done."
+      },
+      {
+        "term": "Wallet identity",
+        "explanation": "The wallet is the agent identity. ZERO_PRIVATE_KEY takes precedence over ~/.zero/config.json; local setup can use zero init, while CI should inject an ephemeral key through the environment."
+      },
+      {
+        "term": "Inspect before fetch",
+        "explanation": "Always run zero get before zero fetch. The get output contains the current URL, method, bodySchema, examples, and pricing; schemas and prices can change."
+      },
+      {
+        "term": "Request shape",
+        "explanation": "The bodySchema describes an envelope with method plus queryParams or body. Translate it into the actual HTTP call: GET queryParams become a query string, POST sends input.body as JSON."
+      },
+      {
+        "term": "Run reviews",
+        "explanation": "Paid calls print a runId. Review each paid run with accuracy, value, reliability, and a concrete observation so the public capability page gets useful quality signal."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "command -v zero >/dev/null || curl -fsSL https://zero.xyz/install.sh | bash",
+        "purpose": "Install the Zero CLI only when it is not already available.",
+        "example": "command -v zero >/dev/null || curl -fsSL https://zero.xyz/install.sh | bash\n# npm alternative:\ncommand -v zero >/dev/null || npm i -g @zeroxyz/cli"
+      },
+      {
+        "signature": "zero init / zero wallet set <0x-private-key> / ZERO_PRIVATE_KEY=0x...",
+        "purpose": "Configure the wallet Zero uses for identity and payments.",
+        "example": "zero init\nzero wallet set <0x-private-key>\nZERO_PRIVATE_KEY=0x... zero search \"weather forecast\""
+      },
+      {
+        "signature": "zero wallet fund --no-open",
+        "purpose": "Print a one-time funding URL for the user to open; agents should not open it themselves.",
+        "example": "zero wallet fund --no-open\nzero wallet fund --manual\nzero wallet balance"
+      },
+      {
+        "signature": "zero search \"<capability>\"",
+        "purpose": "Search the current Zero index for a capability before deciding a requested external action is unavailable.",
+        "example": "zero search \"translate text to Spanish\"\nZERO_AGENT=codex zero search \"restaurant lookup near an address\""
+      },
+      {
+        "signature": "zero get <result> --formatted",
+        "purpose": "Inspect the selected result's current schema, method, URL, examples, and pricing before making a call.",
+        "example": "zero get 1 --formatted\nzero get 1"
+      },
+      {
+        "signature": "zero fetch <url> [-d '<json>'] [-H 'k:v'] [--max-pay 0.50] [--json]",
+        "purpose": "Call a Zero capability with optional JSON body, headers, spend cap, and programmatic output envelope.",
+        "example": "zero fetch https://api.example.com/translate \\\n  -d '{\"text\":\"hello\",\"to\":\"es\"}' \\\n  -H \"Content-Type:application/json\" \\\n  --max-pay 0.50 \\\n  --json"
+      },
+      {
+        "signature": "zero review <runId> --accuracy N --value N --reliability N --content \"<observation>\"",
+        "purpose": "Review a paid capability run with useful public signal after the result is inspected.",
+        "example": "zero review abc123 --accuracy 5 --value 4 --reliability 5 \\\n  --content \"Translated a short product blurb accurately in ~200ms; schema was clear and output needed no cleanup.\""
+      }
+    ],
+    "gotchas": [
+      "Always re-search; capability rankings, schemas, URLs, and prices can change",
+      "Always run zero get before zero fetch; do not invent field names when bodySchema is null",
+      "Do not POST a GET envelope; encode queryParams as the real URL query string",
+      "With --json, check ok rather than status; ok is the precomputed 2xx success boolean",
+      "Set --max-pay for unfamiliar or per-call-priced capabilities",
+      "Use --no-open for funding URLs inside an agent session; hand the URL to the user instead",
+      "Pass --capability when calling outside a fresh search so the run can be reviewed",
+      "Before ending a multi-call task, run zero runs --unreviewed and review missed paid runs"
+    ],
+    "category": "tool",
+    "audience": "ai",
+    "videoUrls": []
+  }
+}

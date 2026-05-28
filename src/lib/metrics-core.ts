@@ -7,6 +7,7 @@ export type MetricEvent =
   | "convert_success"
   | "convert_error"
   | "tricks_view"
+  | "mcps_view"
   | "powerhouse_view"
   | "search_submitted"
   | "github_click"
