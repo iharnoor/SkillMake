@@ -2,6 +2,7 @@ import { getEnv } from "./env";
 import {
   buildMetricDataPoint,
   metricContextFromHeaders,
+  type MetricContext,
   type MetricEvent,
 } from "./metrics-core";
 
@@ -42,10 +43,43 @@ export interface TrackOpts {
 export async function track(event: MetricEvent, opts: TrackOpts = {}): Promise<void> {
   try {
     const env = await getEnv();
-    if (!env.METRICS) return;
     const ctx = await metricContextFromHeaders(opts.headers);
-    env.METRICS.writeDataPoint(buildMetricDataPoint(event, opts, ctx));
+    env.METRICS?.writeDataPoint(buildMetricDataPoint(event, opts, ctx));
+    await mirrorGoogleAnalyticsEvent(env, event, opts, ctx);
   } catch {
     // metric writes must never break the response
   }
+}
+
+async function mirrorGoogleAnalyticsEvent(
+  env: Awaited<ReturnType<typeof getEnv>>,
+  event: MetricEvent,
+  opts: TrackOpts,
+  ctx: MetricContext
+): Promise<void> {
+  if (!env.GOOGLE_ANALYTICS_MEASUREMENT_ID || !env.GOOGLE_ANALYTICS_API_SECRET) return;
+  if (event === "github_click" || event === "page_dwell" || event === "scroll_depth") return;
+
+  const params: Record<string, string | number> = {
+    country: ctx.country,
+    referer_host: ctx.refererHost,
+    ua_category: ctx.uaCat,
+  };
+  if (opts.slug) params.skill_slug = opts.slug;
+  if (opts.status != null) params.http_status = opts.status;
+  if (opts.audience) params.skill_audience = opts.audience;
+  if (opts.category) params.skill_category = opts.category;
+
+  const url = new URL("https://www.google-analytics.com/mp/collect");
+  url.searchParams.set("measurement_id", env.GOOGLE_ANALYTICS_MEASUREMENT_ID);
+  url.searchParams.set("api_secret", env.GOOGLE_ANALYTICS_API_SECRET);
+
+  await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      client_id: ctx.visitor,
+      events: [{ name: event, params }],
+    }),
+  }).catch(() => {});
 }

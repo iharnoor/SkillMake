@@ -102,6 +102,7 @@ function TelemetryScript() {
   const beacon = (payload) => {
     try {
       const data = JSON.stringify(payload);
+      googleAnalyticsEvent(payload);
       if (navigator.sendBeacon) {
         navigator.sendBeacon("/api/track", new Blob([data], { type: "application/json" }));
         return;
@@ -112,6 +113,17 @@ function TelemetryScript() {
         body: data,
         keepalive: true
       }).catch(() => {});
+    } catch {}
+  };
+  const googleAnalyticsEvent = (payload) => {
+    try {
+      if (!payload?.event) return;
+      window.skillmakeGaQueue = window.skillmakeGaQueue || [];
+      if (typeof window.skillmakeGaEvent === "function") {
+        window.skillmakeGaEvent(payload);
+        return;
+      }
+      window.skillmakeGaQueue.push(payload);
     } catch {}
   };
   const dwellBucket = (seconds) => seconds < 5 ? "0-5s" : seconds < 15 ? "5-15s" : seconds < 30 ? "15-30s" : seconds < 60 ? "30-60s" : seconds < 300 ? "60-300s" : "300s+";
@@ -177,12 +189,22 @@ function GoogleAnalyticsScript({ gaId }: { gaId: string }) {
   const start = () => {
     window.dataLayer = window.dataLayer || [];
     window.gtag = function gtag(){ dataLayer.push(arguments); };
+    window.skillmakeGaEvent = (payload) => {
+      if (!payload?.event) return;
+      const params = {};
+      if (payload.slug) params.skill_slug = payload.slug;
+      gtag("event", payload.event, params);
+    };
     const script = document.createElement("script");
     script.async = true;
     script.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(gaId);
     script.onload = () => {
       gtag("js", new Date());
       gtag("config", gaId);
+      for (const payload of window.skillmakeGaQueue || []) {
+        window.skillmakeGaEvent(payload);
+      }
+      window.skillmakeGaQueue = [];
     };
     document.head.appendChild(script);
   };

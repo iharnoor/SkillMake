@@ -63,13 +63,26 @@ NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
 
 This must be present when the app is built, because `NEXT_PUBLIC_*` values are exposed to browser code by Next.js at build time.
 
+To mirror server-side events that currently feed Grafana into GA4 too, create a
+Measurement Protocol API secret in Google Analytics under Admin -> Data streams
+-> your web stream -> Measurement Protocol API secrets, then set:
+
+```bash
+GOOGLE_ANALYTICS_MEASUREMENT_ID=G-XXXXXXXXXX
+GOOGLE_ANALYTICS_API_SECRET=your-secret
+```
+
+Browser events (`github_click`, `page_dwell`, and `scroll_depth`) are sent by
+`gtag` directly when `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` is set. Server events use
+Measurement Protocol only when both server env vars above are set.
+
 After deploy, verify the page source contains:
 
 ```txt
 googletagmanager.com/gtag/js?id=G-XXXXXXXXXX
 ```
 
-GA4 pageviews for client-side navigation are handled by `@next/third-parties`.
+GA4 pageviews are handled by the root layout's `gtag` loader.
 
 ## Cloudflare notes
 
@@ -80,6 +93,7 @@ For Cloudflare deploys, set the env vars in the build environment used by the de
 ```bash
 export NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
 export GOOGLE_SITE_VERIFICATION=google-token-here
+export GOOGLE_ANALYTICS_MEASUREMENT_ID=G-XXXXXXXXXX
 npm run deploy
 ```
 
