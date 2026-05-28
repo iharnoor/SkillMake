@@ -127,7 +127,7 @@ export default async function Home({
             <a href="#marketplace-list" className="btn-accent rounded-md px-5 py-2.5 text-sm">
               Browse skills
             </a>
-            <Link href="/submit" className="btn-ghost rounded-md px-5 py-2.5 text-sm">
+            <Link href="/submit" prefetch={false} className="btn-ghost rounded-md px-5 py-2.5 text-sm">
               Submit a skill
             </Link>
           </div>
@@ -155,6 +155,7 @@ export default async function Home({
           <Link
             key={collection.href}
             href={collection.href}
+            prefetch={false}
             className="card p-4 hover:border-[color:var(--accent)] transition"
           >
             <div className="mono text-[13px] text-[color:var(--fg)]">{collection.label}</div>
@@ -171,6 +172,7 @@ export default async function Home({
         <div className="flex items-center gap-x-5 gap-y-2 flex-wrap mono text-[12px]">
           <Link
             href="/"
+            prefetch={false}
             className={
               activeAudience === null
                 && activeCategory === null
@@ -187,6 +189,7 @@ export default async function Home({
               <Link
                 key={a}
                 href={`/?audience=${a}`}
+                prefetch={false}
                 className={
                   selected
                     ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
@@ -203,6 +206,7 @@ export default async function Home({
               <Link
                 key={category.slug}
                 href={`/?category=${category.slug}`}
+                prefetch={false}
                 className={
                   selected
                     ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
@@ -219,6 +223,7 @@ export default async function Home({
               <Link
                 key={collection.slug}
                 href={`/?collection=${collection.slug}`}
+                prefetch={false}
                 className={
                   selected
                     ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
@@ -261,11 +266,11 @@ export default async function Home({
           {activeAudience || activeCategory || activeCollection ? (
             <>
               // no {activeAudience ?? activeCategory?.label ?? activeCollection?.label} skills yet.{" "}
-              <Link href="/" className="text-[color:var(--accent)]">
+              <Link href="/" prefetch={false} className="text-[color:var(--accent)]">
                 show all
               </Link>{" "}
               or{" "}
-              <Link href="/submit" className="text-[color:var(--accent)]">
+              <Link href="/submit" prefetch={false} className="text-[color:var(--accent)]">
                 submit one
               </Link>
               .
@@ -273,7 +278,7 @@ export default async function Home({
           ) : (
             <>
               // no skills yet. Be the first —{" "}
-              <Link href="/submit" className="text-[color:var(--accent)]">
+              <Link href="/submit" prefetch={false} className="text-[color:var(--accent)]">
                 submit one
               </Link>
               .
@@ -297,7 +302,7 @@ export default async function Home({
               <span className="mono text-[12px] text-[color:var(--fg-dim)] tabular-nums text-right self-start mt-1">
                 {i + 1}
               </span>
-              <Link href={e.href} className="min-w-0">
+              <Link href={e.href} prefetch={false} className="min-w-0">
                 <div className="flex items-baseline gap-2 flex-wrap">
                   <span className="mono text-[14px] text-[color:var(--fg)] group-hover:text-[color:var(--accent)] transition truncate">
                     {e.name}
@@ -366,7 +371,7 @@ function Signal({
     : "mono text-[10px] rounded-full border border-[color:var(--border)] text-[color:var(--fg-muted)] px-2 py-1";
   if (href) {
     return (
-      <Link href={href} className={className}>
+      <Link href={href} prefetch={false} className={className}>
         {children}
       </Link>
     );

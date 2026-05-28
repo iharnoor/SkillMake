@@ -15,6 +15,7 @@
     "@ai-sdk/anthropic": "^3.0.71",
     "@hydra_db/node": "^0.1.2",
     "@mozilla/readability": "^0.6.0",
+    "@next/third-parties": "^16.2.4",
     "ai": "^6.0.168",
     "isomorphic-dompurify": "^3.10.0",
     "linkedom": "^0.18.12",

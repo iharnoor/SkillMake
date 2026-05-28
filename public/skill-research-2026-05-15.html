@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SkillIt — Vetting list, 25 skill candidates</title>
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --muted: #5b5b5b;
+    --line: #e8e6e1;
+    --bg: #f6f4ef;
+    --card: #ffffff;
+    --accent: #b34700;
+    --ok: #036b3b;
+    --warn: #9a6b00;
+    --weak: #7d5a00;
+    --pill: #f0ede6;
+    --row-hover: #fbf9f3;
+    --row-vetted: #eef6f0;
+    --row-skipped: #f5ecec;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Inter", sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  header { border-bottom: 1px solid var(--line); padding-bottom: 20px; margin-bottom: 24px; }
+  .eyebrow {
+    text-transform: uppercase; letter-spacing: 0.14em; font-size: 11px; color: var(--muted); font-weight: 600;
+  }
+  h1 { font-size: 28px; line-height: 1.15; margin: 6px 0 8px; letter-spacing: -0.02em; font-weight: 700; }
+  .lede { font-size: 15px; color: var(--muted); max-width: 800px; margin: 0; }
+
+  .toolbar {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--bg);
+    padding: 14px 0 14px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 16px;
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+  .toolbar input[type="search"] {
+    flex: 1; min-width: 240px;
+    padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px;
+    background: #fff; color: var(--ink); font-size: 14px; font-family: inherit;
+    outline: none;
+  }
+  .toolbar input[type="search"]:focus { border-color: var(--accent); }
+  .toolbar .filter-btn {
+    border: 1px solid var(--line); background: #fff; color: var(--ink);
+    padding: 7px 12px; border-radius: 999px; font-size: 12px; cursor: pointer;
+    font-family: inherit; font-weight: 500;
+  }
+  .toolbar .filter-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .toolbar .counts {
+    font-size: 12px; color: var(--muted); margin-left: auto; display: flex; gap: 14px;
+  }
+  .toolbar .counts strong { color: var(--ink); font-weight: 600; }
+  .toolbar .reset {
+    font-size: 11px; color: var(--muted); cursor: pointer; background: none; border: 0;
+    text-decoration: underline; font-family: inherit;
+  }
+
+  .section-title {
+    font-size: 13px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted);
+    margin: 28px 0 8px; font-weight: 600;
+  }
+  .section-title:first-of-type { margin-top: 8px; }
+
+  .row {
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px 14px 14px; margin-bottom: 8px;
+    display: grid; grid-template-columns: 28px 1fr; gap: 12px;
+    transition: background 0.12s ease;
+  }
+  .row:hover { background: var(--row-hover); }
+  .row[data-status="vetted"] { background: var(--row-vetted); border-color: #cfe6d4; }
+  .row[data-status="skip"] { background: var(--row-skipped); border-color: #e6cfcf; opacity: 0.7; }
+  .row[data-status="skip"] .title a { text-decoration: line-through; }
+
+  .checkbox-col { padding-top: 2px; display: flex; flex-direction: column; gap: 6px; align-items: center; }
+  .checkbox-col label { cursor: pointer; display: flex; align-items: center; }
+  .checkbox-col input { margin: 0; cursor: pointer; transform: scale(1.15); }
+  .checkbox-col .vet-mark { font-size: 14px; }
+  .checkbox-col .skip-btn {
+    font-size: 10px; color: var(--muted); background: none; border: 1px solid var(--line);
+    border-radius: 4px; padding: 1px 5px; cursor: pointer; font-family: inherit;
+    margin-top: 2px;
+  }
+  .row[data-status="skip"] .skip-btn { background: #c43a3a; color: #fff; border-color: #c43a3a; }
+
+  .body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .top-line { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .title { font-size: 15px; font-weight: 600; letter-spacing: -0.005em; margin: 0; }
+  .title a { color: var(--ink); text-decoration: none; border-bottom: 1px solid transparent; }
+  .title a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .slug {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px; color: var(--muted); background: var(--pill);
+    padding: 2px 6px; border-radius: 4px;
+  }
+  .source-link {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px; color: var(--accent); text-decoration: none;
+    border-bottom: 1px dotted var(--accent);
+  }
+  .source-link:hover { background: var(--accent); color: #fff; }
+
+  .desc { font-size: 13px; color: #2a2a2a; margin: 0; }
+  .desc em { font-style: normal; color: var(--accent); font-weight: 500; }
+  .why { font-size: 12px; color: var(--muted); margin: 0; }
+  .why strong { color: var(--ink); font-weight: 600; }
+
+  .meta-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .pill {
+    background: var(--pill); border-radius: 999px; padding: 2px 8px;
+    font-size: 11px; letter-spacing: 0.02em; text-transform: lowercase;
+  }
+  .pill.cat { background: #ece9df; color: var(--ink); }
+  .pill.aud { background: #e6efe9; color: #084a2a; }
+  .pill.evidence { font-weight: 600; }
+  .pill.evidence.strong { background: #e9f3ec; color: var(--ok); }
+  .pill.evidence.medium { background: #f6ecd6; color: var(--warn); }
+  .pill.evidence.emerging { background: #f0e8cf; color: var(--weak); }
+  .pill.evidence.editorial { background: #ece9df; color: var(--muted); }
+
+  .hidden { display: none !important; }
+
+  .dropped {
+    margin-top: 40px; padding: 16px 18px; background: #fff;
+    border: 1px solid var(--line); border-radius: 10px;
+    font-size: 13px; color: var(--muted);
+  }
+  .dropped h3 { margin: 0 0 8px; font-size: 13px; color: var(--ink); }
+  .dropped ul { margin: 0; padding-left: 18px; }
+  .dropped li + li { margin-top: 4px; }
+
+  .legend {
+    margin-top: 24px; font-size: 11px; color: var(--muted);
+    display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  }
+
+  @media print {
+    .toolbar, .checkbox-col .skip-btn { display: none; }
+    .row { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Vetting list · 2026-05-15</div>
+    <h1>25 skill candidates — vet before seeding</h1>
+    <p class="lede">
+      Every candidate has a direct link to its canonical source. Tick the box on rows you approve,
+      hit "Skip" on rows you reject. Decisions persist in localStorage so you can come back. No
+      auto-push — when you're done, ping me with the approved slugs and I'll generate seed JSON files.
+    </p>
+  </header>
+
+  <div class="toolbar">
+    <input type="search" id="q" placeholder="Filter by name, slug, audience, category…" />
+    <button class="filter-btn active" data-filter="all">All (25)</button>
+    <button class="filter-btn" data-filter="pending">Pending</button>
+    <button class="filter-btn" data-filter="vetted">Vetted</button>
+    <button class="filter-btn" data-filter="skip">Skipped</button>
+    <span class="counts">
+      <span><strong id="cnt-vetted">0</strong> vetted</span>
+      <span><strong id="cnt-skip">0</strong> skipped</span>
+      <span><strong id="cnt-pending">25</strong> pending</span>
+    </span>
+    <button class="reset" id="reset">reset all</button>
+  </div>
+
+  <!-- A. PUBLISHED AGENT SKILLS -->
+  <div class="section-title">A · Published agent skills (13)</div>
+
+  <div class="row" data-slug="superpowers" data-status="pending" data-category="framework" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://github.com/obra/superpowers" target="_blank" rel="noopener">Superpowers — TDD + worktrees framework</a></h3>
+        <span class="slug">superpowers</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence strong">193,114 ★</span>
+        <span class="pill cat">framework</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://github.com/obra/superpowers" target="_blank" rel="noopener">github.com/obra/superpowers ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> running a full plan → worktree → TDD → review → land workflow with subagents.</p>
+      <p class="why"><strong>Why add:</strong> Most-cited "how to actually use Claude Code" methodology in 2026. Accepted into Anthropic's plugin marketplace Jan 2026. Jesse Vincent.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="anthropic-skill-creator" data-status="pending" data-category="tool" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://github.com/anthropics/skills/tree/main/skills/skill-creator" target="_blank" rel="noopener">Anthropic Skill Creator</a></h3>
+        <span class="slug">anthropic-skill-creator</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence strong">135,376 ★ · first-party</span>
+        <span class="pill cat">tool</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://github.com/anthropics/skills" target="_blank" rel="noopener">github.com/anthropics/skills ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> authoring, evaluating, or A/B-testing a new agent skill from scratch.</p>
+      <p class="why"><strong>Why add:</strong> Canonical "how to build a skill" skill — table stakes for a marketplace whose authors are creating skills.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="karpathy-claude-md" data-status="pending" data-category="concept" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://github.com/forrestchang/andrej-karpathy-skills" target="_blank" rel="noopener">Karpathy CLAUDE.md guardrails</a></h3>
+        <span class="slug">karpathy-claude-md</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence strong">131,342 ★</span>
+        <span class="pill cat">concept</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://github.com/forrestchang/andrej-karpathy-skills" target="_blank" rel="noopener">github.com/forrestchang/andrej-karpathy-skills ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> dropping a single <code>CLAUDE.md</code> into a repo to enforce "think before coding / surgical changes / no overengineering."</p>
+      <p class="why"><strong>Why add:</strong> Compresses Karpathy's viral observations on LLM coding pitfalls into one file every agent picks up automatically.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="shadcn-ui-skill" data-status="pending" data-category="library" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://ui.shadcn.com/docs/skills" target="_blank" rel="noopener">shadcn/ui — official skill</a></h3>
+        <span class="slug">shadcn-ui-skill</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence strong">114,457 ★ · first-party</span>
+        <span class="pill cat">library</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://ui.shadcn.com/docs/skills" target="_blank" rel="noopener">ui.shadcn.com/docs/skills ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> an agent needs to install, compose, and customize shadcn components the right way. Install: <code>pnpm dlx skills add shadcn/ui</code>.</p>
+      <p class="why"><strong>Why add:</strong> Dominant React component library; agents constantly get the registry/CLI wrong without it.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="anthropic-webapp-testing" data-status="pending" data-category="tool" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://github.com/anthropics/skills/tree/main/skills/webapp-testing" target="_blank" rel="noopener">Webapp Testing (Playwright, official)</a></h3>
+        <span class="slug">anthropic-webapp-testing</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence strong">135,376 ★ · first-party</span>
+        <span class="pill cat">tool</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://github.com/anthropics/skills/tree/main/skills/webapp-testing" target="_blank" rel="noopener">github.com/anthropics/skills/webapp-testing ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> Claude needs a real browser to QA a local dev server during a build.</p>
+      <p class="why"><strong>Why add:</strong> Reference Playwright-driven QA skill. Pairs with any frontend skill on the marketplace.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="vercel-agent-skills" data-status="pending" data-category="platform" data-audience="devops">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://github.com/vercel-labs/agent-skills" target="_blank" rel="noopener">Vercel Agent Skills</a></h3>
+        <span class="slug">vercel-agent-skills</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence strong">26,628 ★ · first-party</span>
+        <span class="pill cat">platform</span>
+        <span class="pill aud">devops</span>
+        <a class="source-link" href="https://github.com/vercel-labs/agent-skills" target="_blank" rel="noopener">github.com/vercel-labs/agent-skills ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> deploying, previewing, and managing Vercel projects from a conversation.</p>
+      <p class="why"><strong>Why add:</strong> Vercel's official collection — Next.js builds, env vars, deploys, AI SDK patterns. Authoritative for largest Next.js host.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="better-auth-nextjs" data-status="pending" data-category="library" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://github.com/better-auth/better-auth" target="_blank" rel="noopener">Better Auth for Next 16</a></h3>
+        <span class="slug">better-auth-nextjs</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence strong">28,313 ★</span>
+        <span class="pill cat">library</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://github.com/better-auth/better-auth" target="_blank" rel="noopener">github.com/better-auth/better-auth ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> wiring email/password + OAuth + 2FA + passkeys into a Next 16 app.</p>
+      <p class="why"><strong>Why add:</strong> Overtaking NextAuth as default. Next 16 Turbopack/pg adapter footguns are exactly what agents need encoded.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="voltagent-awesome" data-status="pending" data-category="concept" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://github.com/VoltAgent/awesome-agent-skills" target="_blank" rel="noopener">VoltAgent — awesome-agent-skills index</a></h3>
+        <span class="slug">voltagent-awesome</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence strong">21,883 ★</span>
+        <span class="pill cat">concept</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://github.com/VoltAgent/awesome-agent-skills" target="_blank" rel="noopener">github.com/VoltAgent/awesome-agent-skills ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> discovering and installing third-party skills across Claude Code, Codex, Cursor, Gemini CLI from one index.</p>
+      <p class="why"><strong>Why add:</strong> Most-contributed agent-skill index — lets your audience discover deeper niches without you seeding them all.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="claude-code-github-action" data-status="pending" data-category="tool" data-audience="devops">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://github.com/anthropics/claude-code-action" target="_blank" rel="noopener">Claude Code GitHub Action</a></h3>
+        <span class="slug">claude-code-github-action</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence strong">7,593 ★ · first-party</span>
+        <span class="pill cat">tool</span>
+        <span class="pill aud">devops</span>
+        <a class="source-link" href="https://github.com/anthropics/claude-code-action" target="_blank" rel="noopener">github.com/anthropics/claude-code-action ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> wiring @claude PR review, auto-fix, and issue-to-PR loops into CI.</p>
+      <p class="why"><strong>Why add:</strong> Canonical way to run Claude inside GitHub Actions. Required for shipping skills that actually fire on CI.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="playwright-skill" data-status="pending" data-category="tool" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://github.com/lackeyjb/playwright-skill" target="_blank" rel="noopener">Playwright Skill (TestDino / lackeyjb)</a></h3>
+        <span class="slug">playwright-skill</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence strong">2,631 ★</span>
+        <span class="pill cat">tool</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://github.com/lackeyjb/playwright-skill" target="_blank" rel="noopener">github.com/lackeyjb/playwright-skill ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> writing or healing E2E browser tests with locators, page objects, CI.</p>
+      <p class="why"><strong>Why add:</strong> Most polished community Playwright skill — agent autonomously writes and runs tests.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="supabase-agent-skills" data-status="pending" data-category="platform" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://github.com/supabase/agent-skills" target="_blank" rel="noopener">Supabase Agent Skills</a></h3>
+        <span class="slug">supabase-agent-skills</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence strong">2,103 ★ · first-party</span>
+        <span class="pill cat">platform</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://github.com/supabase/agent-skills" target="_blank" rel="noopener">github.com/supabase/agent-skills ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> building Postgres + Auth + RLS + Edge Functions + Realtime on Supabase.</p>
+      <p class="why"><strong>Why add:</strong> Top-3 AI-app backend in 2026. Covers DB/Auth/Storage/Edge/Realtime/Vectors/Cron in one install.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="hamel-evals-skills" data-status="pending" data-category="concept" data-audience="ai">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://github.com/hamelsmu/evals-skills" target="_blank" rel="noopener">Hamel Husain — Evals Skills</a></h3>
+        <span class="slug">hamel-evals-skills</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence strong">1,280 ★ · creator</span>
+        <span class="pill cat">concept</span>
+        <span class="pill aud">ai</span>
+        <a class="source-link" href="https://github.com/hamelsmu/evals-skills" target="_blank" rel="noopener">github.com/hamelsmu/evals-skills ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> auditing or building LLM-product eval pipelines (error analysis, judge validation, labeled data).</p>
+      <p class="why"><strong>Why add:</strong> Husain is the canonical eval-pipeline voice. Fills the "ai" audience hole where you currently have zero skills.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="linear-claude-skill" data-status="pending" data-category="platform" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://github.com/wrsmith108/linear-claude-skill" target="_blank" rel="noopener">Linear — issue &amp; project skill</a></h3>
+        <span class="slug">linear-claude-skill</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence medium">102 ★</span>
+        <span class="pill cat">platform</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://github.com/wrsmith108/linear-claude-skill" target="_blank" rel="noopener">github.com/wrsmith108/linear-claude-skill ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> triaging backlog, planning, and converting Linear issues directly into PRs.</p>
+      <p class="why"><strong>Why add:</strong> Linear is the dominant modern issue tracker. Wrapped with subagent worktrees + Superpowers integration.</p>
+    </div>
+  </div>
+
+  <!-- B. FIRST-PARTY TOOL WRAPPERS -->
+  <div class="section-title">B · First-party tool wrappers (6)</div>
+
+  <div class="row" data-slug="remotion-agent-skills" data-status="pending" data-category="framework" data-audience="creators">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://www.remotion.dev/docs/ai/skills" target="_blank" rel="noopener">Remotion Agent Skills (official)</a></h3>
+        <span class="slug">remotion-agent-skills</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence editorial">first-party</span>
+        <span class="pill cat">framework</span>
+        <span class="pill aud">creators</span>
+        <a class="source-link" href="https://www.remotion.dev/docs/ai/skills" target="_blank" rel="noopener">remotion.dev/docs/ai/skills ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> generating programmatic videos as React components from a prompt.</p>
+      <p class="why"><strong>Why add:</strong> Pairs with your existing <code>remotion-fundamentals</code> and <code>shorts-from-long-video</code> as the canonical install.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="resend-email-skill" data-status="pending" data-category="api" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://resend.com/claude-code" target="_blank" rel="noopener">Resend — transactional email</a></h3>
+        <span class="slug">resend-email-skill</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence editorial">first-party</span>
+        <span class="pill cat">api</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://resend.com/claude-code" target="_blank" rel="noopener">resend.com/claude-code ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> sending single, batch, or scheduled transactional emails with React Email templates.</p>
+      <p class="why"><strong>Why add:</strong> Default modern transactional-email API for the AI-app stack. Pairs with <code>newsletter-signup-flow</code>.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="postmark-skills" data-status="pending" data-category="api" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://postmarkapp.com/blog/teach-your-ai-coding-agent-how-to-send-email-with-postmark-skills" target="_blank" rel="noopener">Postmark — email automation</a></h3>
+        <span class="slug">postmark-skills</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence editorial">first-party</span>
+        <span class="pill cat">api</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://postmarkapp.com/blog/teach-your-ai-coding-agent-how-to-send-email-with-postmark-skills" target="_blank" rel="noopener">postmarkapp.com/blog/...postmark-skills ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> templated/batch/bulk transactional sends with delivery monitoring.</p>
+      <p class="why"><strong>Why add:</strong> Credible deliverability-first alternative to Resend — gives the marketplace catalog feel, not monoculture.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="hookdeck-webhook-skills" data-status="pending" data-category="api" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://github.com/hookdeck/webhook-skills" target="_blank" rel="noopener">Hookdeck — webhook skills (Stripe, Shopify, GitHub)</a></h3>
+        <span class="slug">hookdeck-webhook-skills</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence medium">71 ★ · first-party</span>
+        <span class="pill cat">api</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://github.com/hookdeck/webhook-skills" target="_blank" rel="noopener">github.com/hookdeck/webhook-skills ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> wiring webhook receivers — signature verification, retries, idempotency — for Stripe, Shopify, GitHub, and more.</p>
+      <p class="why"><strong>Why add:</strong> Webhooks are where agents lose production time. One skill covers the top three payment/commerce/dev integrations.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="inngest-workflows" data-status="pending" data-category="library" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://github.com/inngest/inngest-js/blob/main/CLAUDE.md" target="_blank" rel="noopener">Inngest — durable workflows</a></h3>
+        <span class="slug">inngest-workflows</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence medium">945 ★ · first-party</span>
+        <span class="pill cat">library</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://github.com/inngest/inngest-js/blob/main/CLAUDE.md" target="_blank" rel="noopener">github.com/inngest/inngest-js (CLAUDE.md) ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> building event-driven background jobs, crons, fan-out / saga patterns.</p>
+      <p class="why"><strong>Why add:</strong> Leading durable-execution platform for JS/Python. Step-function patterns prevent retry/idempotency bugs.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="convex-quickstart" data-status="pending" data-category="platform" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://github.com/get-convex/agent-skills" target="_blank" rel="noopener">Convex — backend quickstart</a></h3>
+        <span class="slug">convex-quickstart</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence emerging">29 ★ · first-party · emerging</span>
+        <span class="pill cat">platform</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://github.com/get-convex/agent-skills" target="_blank" rel="noopener">github.com/get-convex/agent-skills ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> scaffolding a real-time React/Next backend on Convex from zero.</p>
+      <p class="why"><strong>Why add:</strong> First-party but newly published. Convex is rising fast — "we're early on this curve" signal.</p>
+    </div>
+  </div>
+
+  <!-- C. CREATOR METHODOLOGIES -->
+  <div class="section-title">C · Creator-codified methodologies (3)</div>
+
+  <div class="row" data-slug="ralph-loop" data-status="pending" data-category="concept" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://ghuntley.com/loop/" target="_blank" rel="noopener">Ralph loop (Geoffrey Huntley)</a></h3>
+        <span class="slug">ralph-loop</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence editorial">creator</span>
+        <span class="pill cat">concept</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://ghuntley.com/loop/" target="_blank" rel="noopener">ghuntley.com/loop ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> running a <code>while true</code> agent loop that converges on a PRD without supervision.</p>
+      <p class="why"><strong>Why add:</strong> One of the most-cited agent patterns of 2025–26. Already a plugin (ralph-wiggum) in anthropics/claude-code.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="simonw-agentic-patterns" data-status="pending" data-category="concept" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://simonwillison.net/2025/Oct/16/claude-skills/" target="_blank" rel="noopener">Simon Willison — agentic patterns</a></h3>
+        <span class="slug">simonw-agentic-patterns</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence editorial">creator</span>
+        <span class="pill cat">concept</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://simonwillison.net/2025/Oct/16/claude-skills/" target="_blank" rel="noopener">simonwillison.net/2025/Oct/16/claude-skills ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> picking a battle-tested pattern (sandbox, append-only log, dangerous-skip-permissions) for a coding-agent loop.</p>
+      <p class="why"><strong>Why add:</strong> Willison shapes the AI-coding discourse. He called Skills "a bigger deal than MCP." Editorial authority.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="hrishioa-scratchpad-loop" data-status="pending" data-category="concept" data-audience="engineers">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://x.com/hrishioa/status/1936472182001221981" target="_blank" rel="noopener">Hrishi — append-only scratchpad loop</a></h3>
+        <span class="slug">hrishioa-scratchpad-loop</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence editorial">creator</span>
+        <span class="pill cat">concept</span>
+        <span class="pill aud">engineers</span>
+        <a class="source-link" href="https://x.com/hrishioa/status/1936472182001221981" target="_blank" rel="noopener">x.com/hrishioa/status/1936472182001221981 ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> running a multi-day change where the agent must keep a gotchas + judgement log across sessions.</p>
+      <p class="why"><strong>Why add:</strong> Cheap to codify, addresses real pain (context loss across sessions). Already in multiple "10x Claude Code" writeups.</p>
+    </div>
+  </div>
+
+  <!-- D. WORKFLOW RECIPES -->
+  <div class="section-title">D · Workflow recipes — no repo (3)</div>
+
+  <div class="row" data-slug="cloudflare-workers-deploy" data-status="pending" data-category="platform" data-audience="devops">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://developers.cloudflare.com/workers/" target="_blank" rel="noopener">Cloudflare Workers — agent deploy</a></h3>
+        <span class="slug">cloudflare-workers-deploy</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence editorial">workflow</span>
+        <span class="pill cat">platform</span>
+        <span class="pill aud">devops</span>
+        <a class="source-link" href="https://developers.cloudflare.com/workers/" target="_blank" rel="noopener">developers.cloudflare.com/workers ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> spinning up serverless functions, KV/D1/R2 wiring, and <code>wrangler deploy</code> from a chat.</p>
+      <p class="why"><strong>Why add:</strong> skillmake.xyz already runs on Cloudflare/OpenNext — a Workers walkthrough is the obvious "deploy your skill site" companion.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="threads-bluesky-crosspost" data-status="pending" data-category="other" data-audience="marketing">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://www.threads.net/" target="_blank" rel="noopener">Threads + Bluesky cross-poster</a></h3>
+        <span class="slug">threads-bluesky-crosspost</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence editorial">workflow</span>
+        <span class="pill cat">other</span>
+        <span class="pill aud">marketing</span>
+        <a class="source-link" href="https://www.threads.net/" target="_blank" rel="noopener">threads.net</a>
+        <a class="source-link" href="https://bsky.app/" target="_blank" rel="noopener">bsky.app ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> turning one piece of long-form content into Threads + Bluesky + X micro-posts with consistent voice.</p>
+      <p class="why"><strong>Why add:</strong> Threads + Bluesky are the two creator-network gainers of 2026 and neither is in any seeded skill. Extends <code>content-repurposing</code>.</p>
+    </div>
+  </div>
+
+  <div class="row" data-slug="figma-to-shadcn-handoff" data-status="pending" data-category="tool" data-audience="design">
+    <div class="checkbox-col">
+      <label><input type="checkbox" /></label>
+      <span class="vet-mark"></span>
+      <button class="skip-btn">skip</button>
+    </div>
+    <div class="body">
+      <div class="top-line">
+        <h3 class="title"><a href="https://www.figma.com/developers/api" target="_blank" rel="noopener">Figma → shadcn handoff</a></h3>
+        <span class="slug">figma-to-shadcn-handoff</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill evidence editorial">workflow</span>
+        <span class="pill cat">tool</span>
+        <span class="pill aud">design</span>
+        <a class="source-link" href="https://www.figma.com/developers/api" target="_blank" rel="noopener">figma.com/developers/api ↗</a>
+      </div>
+      <p class="desc"><em>Use when</em> turning a Figma frame into a working shadcn-based React page with tokens, spacing, and responsive breakpoints intact.</p>
+      <p class="why"><strong>Why add:</strong> Designer→engineer handoff is the highest-leverage workflow you don't have yet. Pairs with <code>brand-system-from-reference</code> + new <code>shadcn-ui-skill</code>.</p>
+    </div>
+  </div>
+
+  <div class="dropped">
+    <h3>Dropped during verification (not on this list)</h3>
+    <ul>
+      <li><strong>mattpocock/skills (parent, 85,430 ★):</strong> your 19 seeded <code>mp-*</code> skills already cover it.</li>
+      <li><strong>wrsmith108/stripe-mcp-skill (1 ★):</strong> too thin — replaced with hookdeck/webhook-skills (covers Stripe + 2 more).</li>
+      <li><strong>twanahc/claude-linear-skill (0 ★):</strong> replaced with wrsmith108/linear-claude-skill (102 ★).</li>
+      <li><strong>prisma/skills (36 ★):</strong> ORM space crowded; Drizzle has stronger 2026 momentum — flag for follow-up.</li>
+      <li><strong>Sentry "Seer" debugger:</strong> strong product but agent-skill packaging is still vendor-internal.</li>
+      <li><strong>proficiently-claude-skills (job-search):</strong> overlaps heavily with seeded <code>career-ops</code>.</li>
+    </ul>
+  </div>
+
+  <div class="legend">
+    <strong>Evidence pills:</strong>
+    <span class="pill evidence strong">strong · first-party or &gt;1k ★</span>
+    <span class="pill evidence medium">medium · ~100–1k ★</span>
+    <span class="pill evidence emerging">emerging · &lt;100 ★ but first-party</span>
+    <span class="pill evidence editorial">editorial · workflow / no repo</span>
+    <span style="margin-left:auto">Star counts verified via GitHub API on 2026-05-15.</span>
+  </div>
+
+</div>
+
+<script>
+  const KEY = "skillit-vetting-2026-05-15";
+  const rows = Array.from(document.querySelectorAll(".row"));
+  const state = JSON.parse(localStorage.getItem(KEY) || "{}");
+
+  function persist() { localStorage.setItem(KEY, JSON.stringify(state)); }
+
+  function applyState(row) {
+    const slug = row.dataset.slug;
+    const s = state[slug] || "pending";
+    row.dataset.status = s;
+    const cb = row.querySelector('input[type="checkbox"]');
+    const mark = row.querySelector(".vet-mark");
+    const skip = row.querySelector(".skip-btn");
+    cb.checked = s === "vetted";
+    mark.textContent = s === "vetted" ? "✓" : (s === "skip" ? "✕" : "");
+    mark.style.color = s === "vetted" ? "var(--ok)" : (s === "skip" ? "#c43a3a" : "var(--muted)");
+    skip.textContent = s === "skip" ? "skipped" : "skip";
+  }
+
+  function updateCounts() {
+    let v = 0, s = 0, p = 0;
+    rows.forEach(r => {
+      const st = state[r.dataset.slug] || "pending";
+      if (st === "vetted") v++;
+      else if (st === "skip") s++;
+      else p++;
+    });
+    document.getElementById("cnt-vetted").textContent = v;
+    document.getElementById("cnt-skip").textContent = s;
+    document.getElementById("cnt-pending").textContent = p;
+  }
+
+  function applyFilters() {
+    const q = document.getElementById("q").value.trim().toLowerCase();
+    const activeFilter = document.querySelector(".filter-btn.active").dataset.filter;
+    rows.forEach(row => {
+      const slug = row.dataset.slug;
+      const status = state[slug] || "pending";
+      const text = row.textContent.toLowerCase();
+      const matchesQ = !q || text.includes(q);
+      const matchesF = activeFilter === "all" || status === activeFilter;
+      row.classList.toggle("hidden", !(matchesQ && matchesF));
+    });
+  }
+
+  rows.forEach(row => {
+    applyState(row);
+    const cb = row.querySelector('input[type="checkbox"]');
+    const skip = row.querySelector(".skip-btn");
+    cb.addEventListener("change", () => {
+      state[row.dataset.slug] = cb.checked ? "vetted" : "pending";
+      persist(); applyState(row); updateCounts(); applyFilters();
+    });
+    skip.addEventListener("click", () => {
+      const cur = state[row.dataset.slug] || "pending";
+      state[row.dataset.slug] = cur === "skip" ? "pending" : "skip";
+      persist(); applyState(row); updateCounts(); applyFilters();
+    });
+  });
+
+  document.getElementById("q").addEventListener("input", applyFilters);
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      applyFilters();
+    });
+  });
+  document.getElementById("reset").addEventListener("click", () => {
+    if (!confirm("Clear all vetting decisions?")) return;
+    Object.keys(state).forEach(k => delete state[k]);
+    persist();
+    rows.forEach(applyState);
+    updateCounts();
+    applyFilters();
+  });
+
+  updateCounts();
+</script>
+
+</body>
+</html>

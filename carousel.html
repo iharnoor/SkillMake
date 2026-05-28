@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Carousel — visual-flourish kit</title>
+<style>
+  :root {
+    --slide-w: clamp(260px, 72vw, 520px);
+    --slide-h: clamp(360px, 70vh, 640px);
+    --gap: clamp(16px, 3vw, 32px);
+    --ease: cubic-bezier(.2,.8,.2,1);
+    --radius: 22px;
+    --bg: #0b0b0f;
+    --fg: #f5f5f7;
+    --muted: #8a8a93;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: ui-sans-serif, system-ui, -apple-system, "SF Pro Text", sans-serif; }
+  body { min-height: 100vh; display: grid; place-items: center; padding: 40px 0; }
+
+  /* ---------- carousel shell ---------- */
+  .carousel {
+    --active-scale: 1;
+    --peek-scale: .9;
+    --peek-blur: 6px;
+    --peek-opacity: .55;
+    width: min(100%, 1100px);
+    position: relative;
+    user-select: none;
+  }
+
+  .carousel__track {
+    display: flex;
+    gap: var(--gap);
+    padding: 60px max(calc(50% - var(--slide-w) / 2), var(--gap));
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;        /* JS handles horizontal pointer drag */
+  }
+  .carousel__track::-webkit-scrollbar { display: none; }
+  .carousel.is-dragging .carousel__track { scroll-behavior: auto; cursor: grabbing; }
+
+  /* ---------- slides ---------- */
+  .slide {
+    flex: 0 0 var(--slide-w);
+    height: var(--slide-h);
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #16161d;
+    transform: scale(var(--peek-scale));
+    opacity: var(--peek-opacity);
+    filter: blur(var(--peek-blur)) saturate(.9);
+    transition:
+      transform .55s var(--ease),
+      opacity   .55s var(--ease),
+      filter    .55s var(--ease);
+    will-change: transform, filter, opacity;
+    box-shadow: 0 30px 80px -30px rgba(0,0,0,.6);
+  }
+  .slide.is-active {
+    transform: scale(var(--active-scale));
+    opacity: 1;
+    filter: blur(0) saturate(1);
+  }
+
+  .slide__media {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+    transform: translate3d(var(--parallax,0), 0, 0) scale(1.12);
+    transition: transform .15s linear;
+    will-change: transform;
+  }
+  .slide__media::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,.65) 100%);
+  }
+
+  .slide__body {
+    position: absolute; left: 24px; right: 24px; bottom: 24px;
+    z-index: 2;
+    transform: translateY(8px);
+    opacity: 0;
+    transition: transform .55s var(--ease) .05s, opacity .55s var(--ease) .05s;
+  }
+  .slide.is-active .slide__body { transform: translateY(0); opacity: 1; }
+  .slide__eyebrow {
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 8px;
+  }
+  .slide__title {
+    font-size: clamp(22px, 3.2vw, 34px);
+    line-height: 1.1; margin: 0 0 6px; font-weight: 600;
+  }
+  .slide__sub { margin: 0; color: var(--muted); font-size: 14px; }
+
+  /* ---------- controls ---------- */
+  .carousel__nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    display: grid; place-items: center;
+    width: 44px; height: 44px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.06);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.08);
+    color: var(--fg);
+    cursor: pointer;
+    z-index: 3;
+    transition: background .2s var(--ease), transform .2s var(--ease);
+  }
+  .carousel__nav:hover { background: rgba(255,255,255,.12); transform: translateY(-50%) scale(1.05); }
+  .carousel__nav[disabled] { opacity: .3; cursor: default; }
+  .carousel__nav--prev { left: 8px; }
+  .carousel__nav--next { right: 8px; }
+  .carousel__nav svg { width: 18px; height: 18px; }
+
+  .carousel__dots {
+    display: flex; gap: 8px; justify-content: center;
+    margin-top: 12px;
+  }
+  .carousel__dot {
+    width: 8px; height: 8px; border-radius: 999px;
+    background: rgba(255,255,255,.2);
+    border: 0; padding: 0; cursor: pointer;
+    transition: width .35s var(--ease), background .35s var(--ease);
+  }
+  .carousel__dot.is-active {
+    width: 22px;
+    background: var(--fg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slide, .slide__body, .slide__media { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== MARKUP ===================== -->
+<section class="carousel" data-carousel data-autoplay="0">
+  <div class="carousel__track" data-track>
+    <article class="slide">
+      <div class="slide__media" style="background-image:url('https://picsum.photos/seed/a/900/1200')"></div>
+      <div class="slide__body">
+        <p class="slide__eyebrow">Chapter 01</p>
+        <h3 class="slide__title">Drift into focus</h3>
+        <p class="slide__sub">Neighbors blur, the active slide sharpens.</p>
+      </div>
+    </article>
+    <article class="slide">
+      <div class="slide__media" style="background-image:url('https://picsum.photos/seed/b/900/1200')"></div>
+      <div class="slide__body">
+        <p class="slide__eyebrow">Chapter 02</p>
+        <h3 class="slide__title">Depth, not just motion</h3>
+        <p class="slide__sub">Parallax on the media gives a sense of layers.</p>
+      </div>
+    </article>
+    <article class="slide">
+      <div class="slide__media" style="background-image:url('https://picsum.photos/seed/c/900/1200')"></div>
+      <div class="slide__body">
+        <p class="slide__eyebrow">Chapter 03</p>
+        <h3 class="slide__title">Throwable</h3>
+        <p class="slide__sub">Drag with inertia, snaps to the nearest card.</p>
+      </div>
+    </article>
+    <article class="slide">
+      <div class="slide__media" style="background-image:url('https://picsum.photos/seed/d/900/1200')"></div>
+      <div class="slide__body">
+        <p class="slide__eyebrow">Chapter 04</p>
+        <h3 class="slide__title">Keyboard friendly</h3>
+        <p class="slide__sub">Arrow keys, Home / End, focus moves with you.</p>
+      </div>
+    </article>
+    <article class="slide">
+      <div class="slide__media" style="background-image:url('https://picsum.photos/seed/e/900/1200')"></div>
+      <div class="slide__body">
+        <p class="slide__eyebrow">Chapter 05</p>
+        <h3 class="slide__title">Reduced motion safe</h3>
+        <p class="slide__sub">Honors prefers-reduced-motion automatically.</p>
+      </div>
+    </article>
+  </div>
+
+  <button class="carousel__nav carousel__nav--prev" data-prev aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="carousel__nav carousel__nav--next" data-next aria-label="Next slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+
+  <div class="carousel__dots" data-dots></div>
+</section>
+
+<!-- ===================== SCRIPT ===================== -->
+<script>
+/**
+ * Carousel — visual-flourish kit
+ * - scroll-snap rail + smooth scroll
+ * - active slide detected via IntersectionObserver
+ * - neighbors get blur + scale-down + opacity drop
+ * - per-slide media parallax tied to distance-from-center
+ * - pointer drag with velocity-based throw (inertia)
+ * - keyboard: ArrowLeft / ArrowRight / Home / End
+ * - dots, prev/next controls, optional autoplay (data-autoplay="ms")
+ *
+ * Drop the markup + this script into any page. Zero deps.
+ */
+(() => {
+  const carousels = document.querySelectorAll('[data-carousel]');
+  carousels.forEach(initCarousel);
+
+  function initCarousel(root) {
+    const track   = root.querySelector('[data-track]');
+    const slides  = Array.from(track.children);
+    const prevBtn = root.querySelector('[data-prev]');
+    const nextBtn = root.querySelector('[data-next]');
+    const dotsEl  = root.querySelector('[data-dots]');
+    const autoplayMs = parseInt(root.dataset.autoplay || '0', 10);
+    let activeIndex = 0;
+    let autoplayTimer = null;
+
+    // ---------- dots ----------
+    slides.forEach((_, i) => {
+      const d = document.createElement('button');
+      d.className = 'carousel__dot';
+      d.type = 'button';
+      d.setAttribute('aria-label', `Go to slide ${i + 1}`);
+      d.addEventListener('click', () => scrollToIndex(i));
+      dotsEl.appendChild(d);
+    });
+    const dots = Array.from(dotsEl.children);
+
+    // ---------- active detection ----------
+    const io = new IntersectionObserver((entries) => {
+      // pick the entry with the highest intersection ratio
+      let best = null;
+      entries.forEach(e => {
+        if (!best || e.intersectionRatio > best.intersectionRatio) best = e;
+      });
+      if (best && best.isIntersecting) {
+        const idx = slides.indexOf(best.target);
+        if (idx !== -1) setActive(idx);
+      }
+    }, { root: track, threshold: [0.5, 0.75, 1] });
+    slides.forEach(s => io.observe(s));
+
+    function setActive(idx) {
+      if (idx === activeIndex) return;
+      slides[activeIndex]?.classList.remove('is-active');
+      dots[activeIndex]?.classList.remove('is-active');
+      activeIndex = idx;
+      slides[idx].classList.add('is-active');
+      dots[idx].classList.add('is-active');
+      updateNavDisabled();
+    }
+
+    function updateNavDisabled() {
+      prevBtn.toggleAttribute('disabled', activeIndex === 0);
+      nextBtn.toggleAttribute('disabled', activeIndex === slides.length - 1);
+    }
+
+    // ---------- scroll to slide ----------
+    function scrollToIndex(idx, behavior = 'smooth') {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      const target = slides[idx];
+      const offset = target.offsetLeft - (track.clientWidth - target.clientWidth) / 2;
+      track.scrollTo({ left: offset, behavior });
+    }
+
+    prevBtn.addEventListener('click', () => scrollToIndex(activeIndex - 1));
+    nextBtn.addEventListener('click', () => scrollToIndex(activeIndex + 1));
+
+    // ---------- keyboard ----------
+    root.tabIndex = 0;
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); scrollToIndex(activeIndex + 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); scrollToIndex(activeIndex - 1); }
+      else if (e.key === 'Home') { e.preventDefault(); scrollToIndex(0); }
+      else if (e.key === 'End')  { e.preventDefault(); scrollToIndex(slides.length - 1); }
+    });
+
+    // ---------- parallax per slide ----------
+    // Each slide's media shifts opposite to its distance from track center.
+    function updateParallax() {
+      const trackRect = track.getBoundingClientRect();
+      const center = trackRect.left + trackRect.width / 2;
+      slides.forEach(slide => {
+        const media = slide.querySelector('.slide__media');
+        if (!media) return;
+        const r = slide.getBoundingClientRect();
+        const slideCenter = r.left + r.width / 2;
+        const dist = slideCenter - center;
+        const norm = Math.max(-1, Math.min(1, dist / trackRect.width));
+        const px = (-norm * 40).toFixed(2); // shift up to 40px
+        media.style.setProperty('--parallax', `${px}px`);
+      });
+    }
+    let rafId = null;
+    track.addEventListener('scroll', () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        updateParallax();
+        rafId = null;
+      });
+    }, { passive: true });
+    window.addEventListener('resize', updateParallax);
+
+    // ---------- pointer drag with inertia ----------
+    let isDown = false, startX = 0, startScroll = 0;
+    let lastX = 0, lastT = 0, velocity = 0;
+
+    track.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      isDown = true;
+      root.classList.add('is-dragging');
+      startX = e.clientX;
+      lastX = e.clientX;
+      lastT = performance.now();
+      startScroll = track.scrollLeft;
+      velocity = 0;
+      track.setPointerCapture(e.pointerId);
+      pauseAutoplay();
+    });
+
+    track.addEventListener('pointermove', (e) => {
+      if (!isDown) return;
+      const dx = e.clientX - startX;
+      track.scrollLeft = startScroll - dx;
+      const now = performance.now();
+      const dt = now - lastT;
+      if (dt > 0) velocity = (e.clientX - lastX) / dt; // px/ms
+      lastX = e.clientX;
+      lastT = now;
+    });
+
+    function endDrag(e) {
+      if (!isDown) return;
+      isDown = false;
+      root.classList.remove('is-dragging');
+      track.releasePointerCapture?.(e.pointerId);
+
+      // throw: project final position using velocity, then snap.
+      const throwDist = velocity * 180; // tune feel
+      const projected = track.scrollLeft - throwDist;
+
+      // find nearest slide to projected center
+      const trackRect = track.getBoundingClientRect();
+      let bestIdx = 0, bestDelta = Infinity;
+      slides.forEach((s, i) => {
+        const center = s.offsetLeft + s.clientWidth / 2 - track.clientWidth / 2;
+        const delta = Math.abs(center - projected);
+        if (delta < bestDelta) { bestDelta = delta; bestIdx = i; }
+      });
+      scrollToIndex(bestIdx);
+      resumeAutoplay();
+    }
+    track.addEventListener('pointerup', endDrag);
+    track.addEventListener('pointercancel', endDrag);
+    track.addEventListener('pointerleave', endDrag);
+
+    // ---------- autoplay (optional) ----------
+    function startAutoplay() {
+      if (!autoplayMs || autoplayMs < 1500) return;
+      stopAutoplay();
+      autoplayTimer = setInterval(() => {
+        const next = activeIndex >= slides.length - 1 ? 0 : activeIndex + 1;
+        scrollToIndex(next);
+      }, autoplayMs);
+    }
+    function stopAutoplay() { if (autoplayTimer) { clearInterval(autoplayTimer); autoplayTimer = null; } }
+    function pauseAutoplay() { stopAutoplay(); }
+    function resumeAutoplay() { startAutoplay(); }
+    root.addEventListener('mouseenter', pauseAutoplay);
+    root.addEventListener('mouseleave', resumeAutoplay);
+    document.addEventListener('visibilitychange', () => document.hidden ? pauseAutoplay() : resumeAutoplay());
+
+    // ---------- init ----------
+    requestAnimationFrame(() => {
+      scrollToIndex(0, 'auto');
+      updateParallax();
+      setActive(0);
+      slides[0].classList.add('is-active');
+      dots[0].classList.add('is-active');
+      updateNavDisabled();
+      startAutoplay();
+    });
+  }
+})();
+</script>
+</body>
+</html>

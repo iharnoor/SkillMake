@@ -1,7 +1,3 @@
-"use client";
-
-import { trackGithubClick } from "./Telemetry";
-
 interface Props {
   href: string;
   slug: string;
@@ -18,7 +14,7 @@ export function GithubLink({ href, slug, className, title, children }: Props) {
       rel="noreferrer"
       className={className}
       title={title}
-      onClick={() => trackGithubClick(slug)}
+      data-github-slug={slug.toLowerCase().slice(0, 64)}
     >
       {children}
     </a>

@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Three SEO Wins for Skillmake · /html-everything</title>
+<meta name="description" content="Google Search Console, Google Analytics, and a dynamic sitemap — why each matters, how hard people think it is, and how easy it actually is." />
+<meta name="generator" content="/html-everything · https://github.com/iharnoor/html-everything" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<style>
+  :root {
+    --ground: #FFFFFF;
+    --ink: #0A0A0A;
+    --accent: #0029FF;
+    --mute: #6B7280;
+    --hair: #E5E5E5;
+    --panel: #F5F5F5;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--ground); color: var(--ink); }
+  body { font-family: 'Inter Tight', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+  a:hover { text-decoration-thickness: 2px; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 80px 64px; display: flex; flex-direction: column; gap: 56px; }
+  .eyebrow { display: flex; align-items: center; gap: 12px; font-weight: 500; font-size: 11px; letter-spacing: 0.2em; color: var(--mute); text-transform: uppercase; }
+  .eyebrow .dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; display: inline-block; }
+  h1.display { font-family: 'Archivo Black', system-ui, sans-serif; font-size: 96px; line-height: 92px; letter-spacing: -0.03em; margin: 0; max-width: 18ch; }
+  h2 { font-family: 'Archivo Black', system-ui, sans-serif; font-size: 36px; line-height: 42px; letter-spacing: -0.02em; margin: 0 0 16px 0; }
+  h3 { font-family: 'Archivo Black', system-ui, sans-serif; font-size: 22px; line-height: 26px; letter-spacing: -0.01em; margin: 0 0 8px 0; }
+  p { font-size: 16px; line-height: 24px; margin: 0 0 16px 0; max-width: 70ch; }
+  ul, ol { padding-left: 24px; }
+  li { font-size: 16px; line-height: 24px; margin-bottom: 8px; }
+  code, .mono { font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+  pre { background: var(--panel); padding: 16px 20px; overflow-x: auto; font-size: 13px; line-height: 20px; }
+  blockquote { border-left: 4px solid var(--accent); padding: 4px 20px; margin: 16px 0; color: var(--mute); font-style: normal; }
+  .thesis { display: flex; gap: 0; }
+  .thesis .strip { width: 6px; background: var(--accent); flex-shrink: 0; }
+  .thesis .body { padding: 20px 28px; flex: 1; }
+  .section { padding-top: 24px; border-top: 1px solid var(--hair); }
+  .card { padding: 24px 0; border-top: 1px solid var(--ink); display: flex; flex-direction: column; gap: 12px; }
+  .meta-row { display: flex; gap: 24px; align-items: baseline; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--mute); }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  footer { padding-top: 32px; border-top: 2px solid var(--ink); font-size: 13px; color: var(--mute); display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .scorecard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--ink); margin: 16px 0 24px 0; }
+  .scorecard .cell { padding: 16px 20px; border-right: 1px solid var(--ink); }
+  .scorecard .cell:last-child { border-right: none; }
+  .scorecard .label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); margin-bottom: 6px; }
+  .scorecard .value { font-family: 'Archivo Black', system-ui, sans-serif; font-size: 32px; line-height: 36px; letter-spacing: -0.02em; }
+  .scorecard .value .accent { color: var(--accent); }
+  .pill { display: inline-block; background: var(--accent); color: var(--ground); padding: 4px 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .pill.muted { background: var(--ink); }
+  .lede { font-size: 22px; line-height: 32px; max-width: 56ch; color: var(--ink); }
+  .lede b { color: var(--accent); font-weight: 600; }
+  .why-easy { background: var(--panel); padding: 20px 24px; margin: 16px 0 0 0; border-left: 4px solid var(--accent); }
+  .why-easy .label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); margin-bottom: 8px; }
+  .number-stack { display: flex; align-items: baseline; gap: 12px; }
+  .number-stack .big { font-family: 'Archivo Black', system-ui, sans-serif; font-size: 64px; line-height: 64px; color: var(--accent); letter-spacing: -0.03em; }
+  .number-stack .unit { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--mute); text-transform: uppercase; letter-spacing: 0.12em; }
+  @media (max-width: 640px) {
+    .wrap { padding: 40px 24px; gap: 32px; }
+    h1.display { font-size: 56px; line-height: 56px; }
+    .grid, .scorecard { grid-template-columns: 1fr; }
+    .scorecard .cell { border-right: none; border-bottom: 1px solid var(--ink); }
+    .scorecard .cell:last-child { border-bottom: none; }
+    .number-stack .big { font-size: 48px; line-height: 48px; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <div class="eyebrow">
+    <span class="dot"></span>
+    <span>SEO Setup · Next.js 16 · Skillmake</span>
+    <span style="margin-left:auto;color:var(--mute);">Mood · editorial</span>
+  </div>
+
+  <h1 class="display">Three SEO wins. One afternoon.</h1>
+
+  <p class="lede">
+    Search Console, Analytics, and a dynamic sitemap sound like <b>three weekends of plumbing</b>. They're not. Each is a 5&ndash;15 minute job on a Next.js 16 + Cloudflare stack — and skipping them means Google indexes you slowly, you fly blind on traffic, and your <a href="https://skillmake.xyz/marketplace">/marketplace</a> pages never get crawled. Here's the honest scorecard.
+  </p>
+
+  <div class="thesis">
+    <div class="strip"></div>
+    <div class="body">
+      <p style="margin:0;font-size:18px;line-height:28px;"><b>The thesis:</b> the perceived difficulty of each task is roughly <b>10&times; higher</b> than the real difficulty. The bottleneck isn't engineering — it's overcoming the assumption that "SEO infra" is a project.</p>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <section class="section">
+    <div class="meta-row">
+      <span class="pill">01</span>
+      <span>Google Search Console</span>
+      <span style="margin-left:auto;">verify · monitor · diagnose</span>
+    </div>
+    <h2>Search Console: the index begins here.</h2>
+
+    <div class="scorecard">
+      <div class="cell">
+        <div class="label">Perceived difficulty</div>
+        <div class="value">8<span class="accent">/10</span></div>
+      </div>
+      <div class="cell">
+        <div class="label">Actual difficulty</div>
+        <div class="value">1<span class="accent">/10</span></div>
+      </div>
+      <div class="cell">
+        <div class="label">Time to ship</div>
+        <div class="value">5<span class="accent"> min</span></div>
+      </div>
+    </div>
+
+    <h3>Why you should have it</h3>
+    <p>
+      Search Console is the only direct channel Google offers you. Without it, you have no idea which queries surface your skills, which pages got indexed, or — critically — when Google found a crawl error on <a href="https://skillmake.xyz">skillmake.xyz</a> and quietly dropped a page from results. It also lets you <b>submit your sitemap</b>, which accelerates discovery of every <code>/marketplace/[id]</code> page from "maybe in a month" to "within a day."
+    </p>
+
+    <h3>Why it feels hard</h3>
+    <p>
+      The DNS verification step has a vague "wait for propagation" reputation, and the dashboard surface looks like enterprise software. People assume it'll need ops involvement.
+    </p>
+
+    <div class="why-easy">
+      <div class="label">Why it's actually easy</div>
+      <ul>
+        <li>One TXT record in Cloudflare DNS. Cloudflare propagates in under a minute.</li>
+        <li>The fallback is a single <code>verification</code> field in <code>src/app/layout.tsx</code> — one line of TypeScript.</li>
+        <li>After verification you submit <code>https://skillmake.xyz/sitemap.xml</code> in one click and you're done.</li>
+      </ul>
+    </div>
+
+    <div class="number-stack" style="margin-top:24px;">
+      <span class="big">3</span>
+      <span class="unit">DNS clicks → verified domain</span>
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <section class="section">
+    <div class="meta-row">
+      <span class="pill">02</span>
+      <span>Google Analytics 4</span>
+      <span style="margin-left:auto;">traffic · acquisition · funnels</span>
+    </div>
+    <h2>Analytics: stop guessing where users come from.</h2>
+
+    <div class="scorecard">
+      <div class="cell">
+        <div class="label">Perceived difficulty</div>
+        <div class="value">7<span class="accent">/10</span></div>
+      </div>
+      <div class="cell">
+        <div class="label">Actual difficulty</div>
+        <div class="value">2<span class="accent">/10</span></div>
+      </div>
+      <div class="cell">
+        <div class="label">Time to ship</div>
+        <div class="value">10<span class="accent"> min</span></div>
+      </div>
+    </div>
+
+    <h3>Why you should have it</h3>
+    <p>
+      Your existing <code>track()</code> helper captures funnel events (marketplace_view → install_hit) — that's product analytics. GA4 fills the other half: <b>acquisition</b>. Which referrer drove the spike on May 22? Which country reads <a href="https://skillmake.xyz/powerhouse">/powerhouse</a>? What's the bounce rate on <a href="https://skillmake.xyz/tricks">/tricks</a>? You can't optimize what you can't see, and right now you can't see any of it.
+    </p>
+
+    <h3>Why it feels hard</h3>
+    <p>
+      Old <code>gtag.js</code> snippets were finicky in SPAs — route changes wouldn't fire pageviews, you had to wire up history listeners, consent banners were a separate engineering project. People remember that pain.
+    </p>
+
+    <div class="why-easy">
+      <div class="label">Why it's actually easy</div>
+      <ul>
+        <li><a href="https://www.npmjs.com/package/@next/third-parties">@next/third-parties</a> is the official Next.js wrapper. <code>&lt;GoogleAnalytics gaId=&#123;...&#125; /&gt;</code> in <code>layout.tsx</code> and you're done.</li>
+        <li>SPA route changes are tracked automatically — no manual <code>gtag('config')</code> on navigation.</li>
+        <li>One env var, one component, one deploy. Three commits at most.</li>
+        <li>Privacy-conscious? Swap GA4 for Cloudflare Web Analytics — zero code, zero cookies, dashboard toggle.</li>
+      </ul>
+    </div>
+
+    <div class="number-stack" style="margin-top:24px;">
+      <span class="big">1</span>
+      <span class="unit">component import → live realtime data</span>
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <section class="section">
+    <div class="meta-row">
+      <span class="pill">03</span>
+      <span>Dynamic Sitemap</span>
+      <span style="margin-left:auto;">discoverability · crawl · index</span>
+    </div>
+    <h2>Sitemap: the crawler's tour guide.</h2>
+
+    <div class="scorecard">
+      <div class="cell">
+        <div class="label">Perceived difficulty</div>
+        <div class="value">9<span class="accent">/10</span></div>
+      </div>
+      <div class="cell">
+        <div class="label">Actual difficulty</div>
+        <div class="value">2<span class="accent">/10</span></div>
+      </div>
+      <div class="cell">
+        <div class="label">Time to ship</div>
+        <div class="value">15<span class="accent"> min</span></div>
+      </div>
+    </div>
+
+    <h3>Why you should have it</h3>
+    <p>
+      Every approved skill at <code>/marketplace/&lt;id&gt;</code> is a discoverable surface — a page Google could rank for the exact query "<i>cursor skill for X</i>" or "<i>claude code &lt;skill name&gt;</i>." Without a sitemap, Googlebot only finds those pages by following links it happens to crawl. With one, you hand it a complete, dated manifest and it indexes the whole catalog. Every new skill becomes findable on the day it ships.
+    </p>
+
+    <h3>Why it feels hard</h3>
+    <p>
+      "Dynamic sitemap" sounds like a build job, a cron, a separate worker, an XML library, escape-character bugs. People imagine writing the XML by hand and hooking it into the deploy pipeline.
+    </p>
+
+    <div class="why-easy">
+      <div class="label">Why it's actually easy</div>
+      <ul>
+        <li>Next.js 16 has a native file convention: drop a <code>sitemap.ts</code> in <code>src/app/</code>, export a default function, return an array. Next builds and serves the XML.</li>
+        <li>The whole file is ~25 lines. It calls <code>listSkills()</code> from your existing storage layer.</li>
+        <li>Add <code>export const revalidate = 3600</code> and it refreshes hourly — no cron, no worker, no manual rebuild.</li>
+        <li>Pair it with a <code>robots.ts</code> (10 lines) that points crawlers to it and blocks <code>/admin</code> and <code>/api</code>.</li>
+      </ul>
+    </div>
+
+    <pre>// src/app/sitemap.ts
+import type { MetadataRoute } from "next";
+import { listSkills } from "@/lib/storage";
+
+export const revalidate = 3600;
+
+export default async function sitemap(): Promise&lt;MetadataRoute.Sitemap&gt; {
+  const skills = await listSkills();
+  return [
+    { url: "https://skillmake.xyz",            priority: 1.0 },
+    { url: "https://skillmake.xyz/powerhouse", priority: 0.7 },
+    { url: "https://skillmake.xyz/tricks",     priority: 0.7 },
+    ...skills.map(s =&gt; ({
+      url: `https://skillmake.xyz/marketplace/${s.skill.name}`,
+      lastModified: s.approvedAt ? new Date(s.approvedAt) : undefined,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    })),
+  ];
+}</pre>
+
+    <div class="number-stack" style="margin-top:24px;">
+      <span class="big">25</span>
+      <span class="unit">lines → full catalog indexed</span>
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <section class="section">
+    <div class="meta-row">
+      <span class="pill muted">SUMMARY</span>
+      <span>The compounding case</span>
+    </div>
+    <h2>Why all three, and why now.</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>They compound</h3>
+        <p>Sitemap feeds Search Console. Search Console tells you which queries land. GA4 tells you what those visitors do once they arrive. Skip one and the other two lose half their value.</p>
+      </div>
+      <div class="card">
+        <h3>They're cheap</h3>
+        <p>Total cost: ~30 minutes of focused work, $0/month in tooling, zero new dependencies beyond <code>@next/third-parties</code>. No infra, no ops, no maintenance.</p>
+      </div>
+      <div class="card">
+        <h3>They age well</h3>
+        <p>Once shipped, the dynamic sitemap auto-includes every future skill. GA4 keeps collecting. Search Console quietly accumulates query data you'll mine in six months.</p>
+      </div>
+      <div class="card">
+        <h3>The cost of waiting</h3>
+        <p>Every week without indexing is a week of <a href="https://skillmake.xyz/marketplace">/marketplace</a> pages Google doesn't know exist. Search rankings reward longevity — late indexing is a permanent disadvantage on those URLs.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <section class="section">
+    <div class="meta-row">
+      <span class="pill">SHIP ORDER</span>
+      <span>Recommended sequence</span>
+    </div>
+    <h2>Do it in this order.</h2>
+    <ol>
+      <li><b>Sitemap + robots first.</b> Lowest risk, ships in one PR, doesn't depend on anything external.</li>
+      <li><b>Search Console second.</b> Verify the domain, submit the sitemap you just shipped.</li>
+      <li><b>GA4 last.</b> Independent of the other two, lowest urgency, easiest to come back to if interrupted.</li>
+    </ol>
+    <p>Total elapsed time end-to-end, including a deploy: <b>under 45 minutes</b>. The hardest part is deciding to start.</p>
+  </section>
+
+  <footer>
+    <span>Generated by <a href="https://github.com/iharnoor/html-everything">/html-everything</a> · 2026-05-27</span>
+    <span class="mono">skillmake.xyz · seo-setup</span>
+  </footer>
+
+</main>
+</body>
+</html>
