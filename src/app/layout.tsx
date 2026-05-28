@@ -56,8 +56,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <footer className="border-t border-[color:var(--border)] mt-24">
           <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm text-[color:var(--fg-dim)]">
             <span className="mono">skillmake.xyz · personally vetted skills for creators</span>
-            <div className="flex items-center gap-4 mono text-xs">
+            <div className="flex items-center gap-4 mono text-xs flex-wrap">
               <span>prompt-injection-hardened by default</span>
+              <a
+                href="/skillopt-guide-2026-05-27.html"
+                title="SkillOpt: treat each SKILL.md as a trainable parameter. Bounded edits, static gate, version history."
+                className="hover:text-[color:var(--fg)] transition"
+              >
+                skills self-optimize with SkillOpt ↗
+              </a>
               <a
                 href="https://hydradb.com"
                 target="_blank"
