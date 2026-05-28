@@ -59,7 +59,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <div className="flex items-center gap-4 mono text-xs flex-wrap">
               <span>prompt-injection-hardened by default</span>
               <a
-                href="/skillopt-guide-2026-05-27.html"
+                href="/skillopt-guide-2026-05-27"
                 title="SkillOpt: treat each SKILL.md as a trainable parameter. Bounded edits, static gate, version history."
                 className="hover:text-[color:var(--fg)] transition"
               >
