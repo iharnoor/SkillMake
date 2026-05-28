@@ -60,6 +60,7 @@
   //   wrangler secret put ADMIN_TOKEN     # gates /admin/*; rotating it logs every curator out
   //   wrangler secret put GITHUB_TOKEN    # optional; raises ★ stars rate limit 60→5000/hr
   //   wrangler secret put CLOUDFLARE_ANALYTICS_API_TOKEN  # required for SkillOpt cron telemetry reads
+  //                                                       # and /admin/analytics
   //   wrangler secret put GOOGLE_ANALYTICS_API_SECRET     # optional; mirrors server metrics into GA4
   //   wrangler secret put SKILLOPT_AUTONOMOUS=true        # flips the cron on
   // Install volume is read out of Analytics Engine directly from the

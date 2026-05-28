@@ -35,6 +35,9 @@ export default async function AdminQueuePage() {
         <span className="tag tag-accent">{pending.length} pending</span>
         <span className="tag">{approved.length} approved</span>
         <span className="tag">{rejected.length} rejected</span>
+        <Link href="/admin/analytics" className="tag hover:border-[color:var(--accent)]">
+          analytics
+        </Link>
       </div>
 
       {pending.length === 0 ? (
