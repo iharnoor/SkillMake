@@ -173,6 +173,7 @@ export default async function Home({
           <Link
             href="/"
             prefetch={false}
+            scroll={false}
             className={
               activeAudience === null
                 && activeCategory === null
@@ -190,6 +191,7 @@ export default async function Home({
                 key={a}
                 href={`/?audience=${a}`}
                 prefetch={false}
+                scroll={false}
                 className={
                   selected
                     ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
@@ -207,6 +209,7 @@ export default async function Home({
                 key={category.slug}
                 href={`/?category=${category.slug}`}
                 prefetch={false}
+                scroll={false}
                 className={
                   selected
                     ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
@@ -224,6 +227,7 @@ export default async function Home({
                 key={collection.slug}
                 href={`/?collection=${collection.slug}`}
                 prefetch={false}
+                scroll={false}
                 className={
                   selected
                     ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
