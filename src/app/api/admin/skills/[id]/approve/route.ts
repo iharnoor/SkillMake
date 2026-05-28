@@ -1,18 +1,29 @@
 import { NextResponse } from "next/server";
+import { after } from "next/server";
 import { isAdmin } from "@/lib/admin-guard";
 import { setSkillStars, setSkillStatus } from "@/lib/storage";
 import { indexSkill } from "@/lib/vector";
 import { fetchRepoStars } from "@/lib/github";
+import { track } from "@/lib/metrics";
 
 export const runtime = "nodejs";
 
-export async function POST(_req: Request, ctx: { params: Promise<{ id: string }> }) {
+export async function POST(req: Request, ctx: { params: Promise<{ id: string }> }) {
   if (!(await isAdmin())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const { id } = await ctx.params;
   const approved = await setSkillStatus(id, "approved");
   if (!approved) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  after(() =>
+    track("skill_approved", {
+      slug: approved.skill.name,
+      audience: approved.skill.audience,
+      category: approved.skill.category,
+      headers: req.headers,
+    })
+  );
 
   // Indexing is the side-effect that flips this skill into search results.
   // If HydraDB is unreachable we still return ok — search just degrades to

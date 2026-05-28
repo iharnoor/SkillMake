@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
+import { after } from "next/server";
 import { isAdmin } from "@/lib/admin-guard";
 import { getSkill, promoteCandidate } from "@/lib/storage";
 import { logApiError } from "@/lib/observability";
+import { track } from "@/lib/metrics";
 
 export const runtime = "nodejs";
 
@@ -39,6 +41,15 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
       { status: 409 }
     );
   }
+  after(() =>
+    track("skill_promoted", {
+      slug: result.promoted.skill.name,
+      audience: result.promoted.skill.audience,
+      category: result.promoted.skill.category,
+      headers: req.headers,
+    })
+  );
+
   return NextResponse.json({
     ok: true,
     promoted: { id: result.promoted.id, versionId: result.promoted.versionId },

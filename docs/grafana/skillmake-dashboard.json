@@ -2253,6 +2253,248 @@
           ]
         }
       ]
+    },
+    {
+      "id": 32,
+      "title": "Catalog growth — approved / rejected / promoted per day (28d)",
+      "type": "barchart",
+      "gridPos": {
+        "x": 0,
+        "y": 129,
+        "w": 12,
+        "h": 10
+      },
+      "options": {
+        "orientation": "auto",
+        "stacking": "normal",
+        "showValue": "auto",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource"
+          },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/f9d7efb12a2713ce5af52d882165c543/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT toStartOfDay(timestamp) AS day, index1 AS event, sum(_sample_interval) AS count FROM skillmake_metrics WHERE index1 IN ('skill_approved','skill_rejected','skill_promoted') AND timestamp >= NOW() - INTERVAL '28' DAY GROUP BY day, event ORDER BY day\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            {
+              "selector": "day",
+              "text": "day",
+              "type": "timestamp"
+            },
+            {
+              "selector": "event",
+              "text": "event",
+              "type": "string"
+            },
+            {
+              "selector": "count",
+              "text": "count",
+              "type": "number"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "title": "MCPs added per week (12w)",
+      "type": "barchart",
+      "gridPos": {
+        "x": 12,
+        "y": 129,
+        "w": 12,
+        "h": 10
+      },
+      "options": {
+        "orientation": "auto",
+        "showValue": "always",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource"
+          },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/f9d7efb12a2713ce5af52d882165c543/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT toStartOfWeek(timestamp) AS week, sum(_sample_interval) AS mcps_added FROM skillmake_metrics WHERE index1 = 'skill_approved' AND blob8 = 'mcp' AND timestamp >= NOW() - INTERVAL '84' DAY GROUP BY week ORDER BY week\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            {
+              "selector": "week",
+              "text": "week",
+              "type": "timestamp"
+            },
+            {
+              "selector": "mcps_added",
+              "text": "mcps_added",
+              "type": "number"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "title": "Skills approved by audience (28d)",
+      "type": "piechart",
+      "gridPos": {
+        "x": 0,
+        "y": 139,
+        "w": 8,
+        "h": 10
+      },
+      "options": {
+        "pieType": "donut",
+        "legend": {
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true,
+          "values": ["value", "percent"]
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource"
+          },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/f9d7efb12a2713ce5af52d882165c543/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT blob7 AS audience, sum(_sample_interval) AS approved FROM skillmake_metrics WHERE index1 = 'skill_approved' AND blob7 != '' AND timestamp >= NOW() - INTERVAL '28' DAY GROUP BY audience ORDER BY approved DESC\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            {
+              "selector": "audience",
+              "text": "audience",
+              "type": "string"
+            },
+            {
+              "selector": "approved",
+              "text": "approved",
+              "type": "number"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "title": "Submission → approval funnel (28d)",
+      "type": "stat",
+      "gridPos": {
+        "x": 8,
+        "y": 139,
+        "w": 16,
+        "h": 10
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "horizontal",
+        "textMode": "value_and_name",
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource"
+          },
+          "type": "json",
+          "source": "url",
+          "url": "https://api.cloudflare.com/client/v4/accounts/f9d7efb12a2713ce5af52d882165c543/analytics_engine/sql",
+          "url_options": {
+            "method": "POST",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body_type": "raw",
+            "body_content_type": "text/plain",
+            "data": "SELECT sum(if(index1 = 'submit_completed', _sample_interval, 0)) AS submitted, sum(if(index1 = 'skill_approved', _sample_interval, 0)) AS approved, sum(if(index1 = 'skill_rejected', _sample_interval, 0)) AS rejected, sum(if(index1 = 'skill_promoted', _sample_interval, 0)) AS promoted FROM skillmake_metrics WHERE index1 IN ('submit_completed','skill_approved','skill_rejected','skill_promoted') AND timestamp >= NOW() - INTERVAL '28' DAY\nFORMAT JSON"
+          },
+          "root_selector": "data",
+          "columns": [
+            {
+              "selector": "submitted",
+              "text": "submitted",
+              "type": "number"
+            },
+            {
+              "selector": "approved",
+              "text": "approved",
+              "type": "number"
+            },
+            {
+              "selector": "rejected",
+              "text": "rejected",
+              "type": "number"
+            },
+            {
+              "selector": "promoted",
+              "text": "promoted",
+              "type": "number"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

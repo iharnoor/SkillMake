@@ -3,6 +3,7 @@ import { listSkills, type MarketplaceEntry } from "@/lib/storage";
 import { optimizeSkill, isEligibleForOptimization } from "@/lib/skill-optimizer";
 import { getEnv } from "@/lib/env";
 import { logApiError } from "@/lib/observability";
+import { track } from "@/lib/metrics";
 
 export const runtime = "nodejs";
 export const maxDuration = 300; // optimizer cron may iterate many skills
@@ -116,6 +117,14 @@ async function handle(req: Request): Promise<Response> {
             tokenCount: result.validation?.tokenCount,
             edits: result.proposedEdits?.length,
           }));
+          // Cron-driven promotion lands in the same catalog-growth funnel as
+          // the manual /promote endpoint — counted together in dashboards.
+          await track("skill_promoted", {
+            slug: entry.skill.name,
+            audience: entry.skill.audience,
+            category: entry.skill.category,
+            headers: req.headers,
+          });
           break;
         case "no_telemetry":
           summary.noTelemetry.push(entry.skill.name);

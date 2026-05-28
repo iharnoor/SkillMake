@@ -13,6 +13,9 @@ export type MetricEvent =
   | "github_click"
   | "page_dwell"
   | "scroll_depth"
+  | "skill_approved"
+  | "skill_rejected"
+  | "skill_promoted"
   | "api_error";
 
 export interface MetricContext {
@@ -24,12 +27,26 @@ export interface MetricContext {
 
 export function buildMetricDataPoint(
   event: MetricEvent,
-  opts: { slug?: string; status?: number },
+  opts: { slug?: string; status?: number; audience?: string; category?: string },
   ctx: MetricContext
 ) {
+  const blobs: string[] = [
+    event,
+    opts.slug ?? "",
+    ctx.country,
+    ctx.refererHost,
+    ctx.uaCat,
+    ctx.visitor,
+  ];
+  // Catalog-mutation events (skill_approved/rejected/promoted) carry the
+  // skill's audience + category so dashboards can slice "MCPs added" vs
+  // "other approved skills" without re-joining against storage.
+  if (opts.audience != null || opts.category != null) {
+    blobs.push(opts.audience ?? "", opts.category ?? "");
+  }
   return {
     indexes: [event],
-    blobs: [event, opts.slug ?? "", ctx.country, ctx.refererHost, ctx.uaCat, ctx.visitor],
+    blobs,
     doubles: opts.status != null ? [1, opts.status] : [1],
   };
 }

@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
+import { after } from "next/server";
 import { z } from "zod";
 import { isAdmin } from "@/lib/admin-guard";
 import { getSkill } from "@/lib/storage";
 import { optimizeSkill } from "@/lib/skill-optimizer";
 import { logApiError } from "@/lib/observability";
+import { track } from "@/lib/metrics";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -51,6 +53,18 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
       allowZeroTelemetry: options.allowZeroTelemetry ?? true, // manual runs default permissive
       modelId: options.modelId,
     });
+
+    if (result.status === "promoted" && result.promoted) {
+      const promoted = result.promoted;
+      after(() =>
+        track("skill_promoted", {
+          slug: promoted.skill.name,
+          audience: promoted.skill.audience,
+          category: promoted.skill.category,
+          headers: req.headers,
+        })
+      );
+    }
 
     return NextResponse.json({
       ok: true,

@@ -30,6 +30,39 @@ test("buildMetricDataPoint writes standard product event shape", () => {
   assert.deepEqual(point.doubles, [1]);
 });
 
+test("buildMetricDataPoint appends audience + category for catalog events", () => {
+  const point = buildMetricDataPoint(
+    "skill_approved",
+    { slug: "firecrawl-mcp", audience: "claude-code", category: "mcp" },
+    {
+      country: "US",
+      refererHost: "",
+      uaCat: "browser",
+      visitor: "feedface",
+    }
+  );
+  assert.deepEqual(point.blobs, [
+    "skill_approved",
+    "firecrawl-mcp",
+    "US",
+    "",
+    "browser",
+    "feedface",
+    "claude-code",
+    "mcp",
+  ]);
+});
+
+test("buildMetricDataPoint omits audience/category blobs when not provided", () => {
+  // Backwards compat: install_hit and other non-catalog events keep 6 blobs.
+  const point = buildMetricDataPoint(
+    "marketplace_view",
+    { slug: "caveman" },
+    { country: "US", refererHost: "", uaCat: "browser", visitor: "abc12345" }
+  );
+  assert.equal(point.blobs.length, 6);
+});
+
 test("buildMetricDataPoint stores HTTP status in double2 for ops events", () => {
   const point = buildMetricDataPoint(
     "api_error",
