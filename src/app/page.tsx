@@ -338,9 +338,7 @@ export default async function Home({
                 <Signal hot href={e.href.startsWith("http") ? e.href : `/i/${e.name}`}>
                   {e.href.startsWith("http") ? "open" : "install"}
                 </Signal>
-                <Signal>{e.href.startsWith("http") ? "candidate" : "reviewed"}</Signal>
                 {e.videoCount > 0 && <Signal>{e.videoCount} video</Signal>}
-                {e.repoUrl && <Signal>source</Signal>}
                 {e.stars != null && <Signal>★ {formatStars(e.stars)}</Signal>}
               </div>
             </div>
@@ -392,7 +390,6 @@ function collectionEntries(slug: CollectionSlug, entries: MarketplaceEntry[]): (
   if (slug === "mcps") {
     return [
       syntheticFromSkill(byName, "mcp-builder", "Design and ship a Model Context Protocol server with a tool surface an agent can actually use.", "tool"),
-      syntheticFromSkill(byName, "zero-xyz", "Search Zero for agent-callable paid APIs and external capabilities before saying a task is unavailable.", "tool"),
       syntheticFromSkill(byName, "firecrawl-mcp", "Expose Firecrawl scraping, crawling, mapping, and extraction to an agent through MCP.", "tool"),
       syntheticFromSkill(byName, "playwright-skill", "Give an agent a Playwright browser runner for end-to-end checks, screenshots, and custom web flows.", "tool"),
       syntheticFromSkill(byName, "linear-claude-skill", "Use Linear's official MCP server for issue, project, and workspace workflows.", "tool"),

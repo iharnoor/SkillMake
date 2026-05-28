@@ -270,9 +270,7 @@ function CollectionTable({ entries }: { entries: CollectionEntry[] }) {
             <ProofSignal hot href={entry.href}>
               {entry.href.startsWith("/marketplace/") ? "inspect" : "open"}
             </ProofSignal>
-            <ProofSignal>reviewed</ProofSignal>
             {entry.videoCount ? <ProofSignal>{entry.videoCount} video</ProofSignal> : null}
-            {entry.repoUrl && <ProofSignal>source</ProofSignal>}
             {entry.stars != null && <ProofSignal>★ {formatStars(entry.stars)}</ProofSignal>}
           </div>
         </div>

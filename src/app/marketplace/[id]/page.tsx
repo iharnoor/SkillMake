@@ -79,9 +79,7 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ id
             Install confidence
           </div>
           <div className="flex flex-wrap gap-2">
-            <span className="tag tag-accent">reviewed</span>
             {videos.length > 0 && <span className="tag">{videos.length} tutorial{videos.length === 1 ? "" : "s"}</span>}
-            {entry.skill.repoUrl && <span className="tag">source repo</span>}
           </div>
         </div>
         <InstallCommand skillName={entry.skill.name} />
