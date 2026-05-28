@@ -259,6 +259,14 @@ function SparkBars({ points }: { points: Point[] }) {
 
 function LineBars({ points, danger = false }: { points: Point[]; danger?: boolean }) {
   const max = Math.max(...points.map((p) => p.value), 1);
+  if (points.length > 0 && points.length < 8) {
+    return (
+      <HorizontalBars
+        bars={points.map((point) => ({ label: point.label, value: point.value }))}
+        compact
+      />
+    );
+  }
   return (
     <div className="h-[170px] flex items-end gap-[3px] border-b border-[color:var(--border)]">
       {points.length === 0 ? (
