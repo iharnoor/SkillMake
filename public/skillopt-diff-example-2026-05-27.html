@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SkillOpt A/B diff — caveman v1 → v2</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-elev: #141414;
+    --fg: #e6e6e6;
+    --fg-muted: #a0a0a0;
+    --fg-dim: #6a6a6a;
+    --border: #1f1f1f;
+    --border-strong: #2a2a2a;
+    --accent: #c6ff5b;
+    --add: #1e3a1e;
+    --add-text: #b8f0a0;
+    --remove: #3a1e1e;
+    --remove-text: #f0a0a0;
+    --warn: #3a3a1e;
+    --warn-text: #f0e0a0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 32px 24px 80px;
+    max-width: 1400px;
+    margin-inline: auto;
+  }
+  h1, h2, h3, .mono {
+    font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  }
+  h1 { font-size: 22px; font-weight: 600; margin: 0 0 4px; }
+  h2 {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    margin: 36px 0 12px;
+  }
+  h3 { font-size: 13px; font-weight: 600; margin: 24px 0 6px; color: var(--fg); }
+  p { margin: 0 0 12px; max-width: 800px; }
+  .lede { color: var(--fg-muted); margin-bottom: 28px; }
+  code {
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 12px;
+    background: var(--bg-elev);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+  pre {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    overflow-x: auto;
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--fg-muted);
+  }
+  pre code { background: none; padding: 0; color: inherit; }
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+    font-size: 12px;
+    font-family: ui-monospace, monospace;
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid var(--border-strong);
+  }
+  .sw-add { background: var(--add); }
+  .sw-remove { background: var(--remove); }
+  .sw-unchanged { background: var(--bg-elev); }
+
+  .meta-card {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+  .meta-card .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px 36px;
+    font-size: 13px;
+  }
+  .meta-card .label {
+    color: var(--fg-dim);
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 4px;
+  }
+  .meta-card .val {
+    color: var(--fg);
+    font-family: ui-monospace, monospace;
+  }
+  .meta-card .val.accent { color: var(--accent); }
+
+  .ops-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: op;
+  }
+  .ops-list li {
+    counter-increment: op;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    font-family: ui-monospace, monospace;
+    font-size: 12px;
+    background: var(--bg-elev);
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 12px;
+  }
+  .ops-list li::before {
+    content: counter(op);
+    color: var(--fg-dim);
+    text-align: right;
+  }
+  .ops-list .op-name { color: var(--accent); }
+  .ops-list .op-target { color: var(--fg-muted); }
+
+  .diff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 880px) {
+    .diff-grid { grid-template-columns: 1fr; }
+  }
+  .pane {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .pane-head {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    font-family: ui-monospace, monospace;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .pane-head.v1 { background: linear-gradient(to right, rgba(58, 30, 30, 0.35), transparent 70%); }
+  .pane-head.v2 { background: linear-gradient(to right, rgba(30, 58, 30, 0.35), transparent 70%); }
+  .pane-head .tag {
+    background: var(--border-strong);
+    color: var(--fg);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+  .pane-head.v1 .tag { background: var(--remove); color: var(--remove-text); }
+  .pane-head.v2 .tag { background: var(--add); color: var(--add-text); }
+  .pane-body {
+    padding: 18px 20px;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 12px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--fg-muted);
+    max-height: 720px;
+    overflow-y: auto;
+  }
+  .pane-body .frontmatter { color: var(--fg-dim); }
+  .pane-body .heading { color: var(--accent); }
+  .pane-body .changed-remove,
+  .pane-body .changed-add {
+    display: block;
+    padding: 2px 6px;
+    margin: 0 -6px;
+    border-radius: 3px;
+  }
+  .pane-body .changed-remove {
+    background: var(--remove);
+    color: var(--remove-text);
+  }
+  .pane-body .changed-add {
+    background: var(--add);
+    color: var(--add-text);
+  }
+  .pane-body .unchanged-tag {
+    color: var(--fg-dim);
+    font-style: italic;
+  }
+
+  .ab-explain {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin-top: 36px;
+  }
+  .ab-explain h3 { margin-top: 0; }
+  .ab-explain .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin: 18px 0;
+  }
+  @media (max-width: 720px) { .ab-explain .split { grid-template-columns: 1fr; } }
+  .ab-explain .arm {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    background: var(--bg);
+  }
+  .ab-explain .arm.v1 { border-color: var(--remove); }
+  .ab-explain .arm.v2 { border-color: var(--add); }
+  .ab-explain .pct {
+    font-size: 28px;
+    font-family: ui-monospace, monospace;
+    color: var(--fg);
+    margin-bottom: 4px;
+  }
+  .ab-explain .pct.v1 { color: var(--remove-text); }
+  .ab-explain .pct.v2 { color: var(--add-text); }
+  .ab-explain .arm-label {
+    color: var(--fg-dim);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-family: ui-monospace, monospace;
+    margin-bottom: 6px;
+  }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--fg-dim);
+    font-family: ui-monospace, monospace;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  .arrow { color: var(--fg-dim); }
+</style>
+</head>
+<body>
+
+<h1>SkillOpt A/B diff — <span style="color:var(--accent)">caveman</span> v1 → v2</h1>
+<p class="lede">
+  Four bounded edits applied to <code>caveman</code>'s SKILL.md. Validator passed.
+  Candidate stored. Below is exactly what an agent installing
+  <code>skillmake.xyz/i/caveman</code> sees on each side of the A/B split.
+</p>
+
+<div class="meta-card">
+  <div class="row">
+    <div>
+      <div class="label">Skill name (slug)</div>
+      <div class="val accent">caveman</div>
+    </div>
+    <div>
+      <div class="label">Install URL (unchanged)</div>
+      <div class="val">/i/caveman</div>
+    </div>
+    <div>
+      <div class="label">v1 content hash</div>
+      <div class="val">d7649816</div>
+    </div>
+    <div>
+      <div class="label">v2 content hash</div>
+      <div class="val accent">a1b2c3d4</div>
+    </div>
+    <div>
+      <div class="label">Static gate</div>
+      <div class="val accent">PASS · 4/8 ops · ~860 tok</div>
+    </div>
+    <div>
+      <div class="label">A/B share (v2)</div>
+      <div class="val">20%</div>
+    </div>
+  </div>
+</div>
+
+<h2>Edit ops in the candidate</h2>
+<ol class="ops-list">
+  <li>
+    <span></span>
+    <span>
+      <span class="op-name">replace_description</span>
+      <span class="op-target">— tighten router-visible line, drop the 30+ agents parenthetical</span>
+    </span>
+  </li>
+  <li>
+    <span></span>
+    <span>
+      <span class="op-name">replace_whenToUse_item</span>(index 3)
+      <span class="op-target">— rephrase MCP trigger with sharper "tax" keyword</span>
+    </span>
+  </li>
+  <li>
+    <span></span>
+    <span>
+      <span class="op-name">replace_keyConcept</span>(index 0)
+      <span class="op-target">— compress "talk like caveman" explanation, keep benchmark numbers</span>
+    </span>
+  </li>
+  <li>
+    <span></span>
+    <span>
+      <span class="op-name">add_gotcha</span>
+      <span class="op-target">— new failure mode: pair-screenshare readability</span>
+    </span>
+  </li>
+</ol>
+
+<h2>Legend</h2>
+<div class="legend">
+  <span><span class="swatch sw-remove"></span> removed in v2 (left pane only)</span>
+  <span><span class="swatch sw-add"></span> added in v2 (right pane only)</span>
+  <span><span class="swatch sw-unchanged"></span> byte-identical between v1 and v2</span>
+</div>
+
+<h2>Side-by-side: what gets served per arm</h2>
+
+<div class="diff-grid">
+
+  <!-- LEFT: v1 -->
+  <div class="pane">
+    <div class="pane-head v1">
+      <span><strong>v1 — current</strong> · 80% of installs</span>
+      <span class="tag">caveman@d7649816</span>
+    </div>
+    <div class="pane-body"><span class="frontmatter">---
+name: caveman</span>
+<span class="changed-remove">description: Use when you want Claude Code (or Codex/Gemini/Cursor/30+ agents) to cut ~75% of output tokens by replying in fragment/telegraphic style — full technical accuracy, smaller mouth.</span><span class="frontmatter">
+source: https://github.com/JuliusBrussee/caveman/blob/main/README.md
+category: tool
+audience: general
+---</span>
+
+<span class="heading">## When to use</span>
+
+- Cutting Claude Code output-token spend without sacrificing technical accuracy on coding work
+- Compressing CLAUDE.md / memory files with /caveman-compress to save ~46% input tokens every session
+- Tighter PR comments and Conventional Commit messages via /caveman-review and /caveman-commit
+<span class="changed-remove">- Wrapping any MCP server with caveman-shrink to compress tool descriptions before they reach the model</span>
+
+<span class="heading">## Key concepts</span>
+
+<span class="heading">### talk like caveman</span>
+
+<span class="changed-remove">Skill instructs the agent to drop filler words, hedging, and pleasantries — keep
+substance in telegraphic fragments. Same fix, ~75% fewer output tokens, 100%
+technical accuracy. Brain still big, mouth small. Benchmarks across 10 coding
+prompts show 65% average output reduction (range 22–87%).</span>
+
+<span class="unchanged-tag">### four grunt levels … six more keyConcepts unchanged …</span>
+
+<span class="heading">## API reference</span>
+
+<span class="unchanged-tag">[ 6 install / sub-skill blocks, byte-identical between v1 and v2 ]</span>
+
+<span class="heading">## Gotchas</span>
+
+- Output tokens only — thinking/reasoning tokens are untouched. Caveman makes the mouth smaller, not the brain.
+- Code, URLs, and file paths are byte-preserved by /caveman-compress — but only when the input is structured. Mixed prose may shift terminology.
+- Statusline shows lifetime tokens saved. Disable with CAVEMAN_STATUSLINE_SAVINGS=0 if you find it noisy.
+- Auto-activate is built-in for Claude Code / Codex / Gemini. Other agents need `--with-init` (always-on rules) or `/caveman` per session.
+- Levels persist until session end or explicit `normal mode` — don't expect a one-shot caveman reply unless you set `lite` and switch back manually.
+- `/caveman-stats` reads the Claude Code session log. If the log location is non-standard, stats will undercount; check INSTALL.md for the path override.
+- When wrapping an MCP server with caveman-shrink, verify tools still execute end-to-end — compressed descriptions occasionally trip strict tool routers.
+- Skill is opinionated about voice (fragments + caveman-speak). If you need verbose explanations for a teammate, run `normal mode` for that turn rather than fighting the skill.
+
+<span class="frontmatter">---
+Generated by SkillMake from … on 2026-04-12T…
+Verify against source before relying on details.</span></div>
+  </div>
+
+  <!-- RIGHT: v2 -->
+  <div class="pane">
+    <div class="pane-head v2">
+      <span><strong>v2 — candidate</strong> · 20% of installs</span>
+      <span class="tag">caveman@a1b2c3d4</span>
+    </div>
+    <div class="pane-body"><span class="frontmatter">---
+name: caveman</span>
+<span class="changed-add">description: Use when cutting Claude Code or Codex output tokens by ~75% via telegraphic replies, without losing technical accuracy.</span><span class="frontmatter">
+source: https://github.com/JuliusBrussee/caveman/blob/main/README.md
+category: tool
+audience: general
+---</span>
+
+<span class="heading">## When to use</span>
+
+- Cutting Claude Code output-token spend without sacrificing technical accuracy on coding work
+- Compressing CLAUDE.md / memory files with /caveman-compress to save ~46% input tokens every session
+- Tighter PR comments and Conventional Commit messages via /caveman-review and /caveman-commit
+<span class="changed-add">- Cutting MCP tool-description tax by wrapping the server with caveman-shrink before the model sees it</span>
+
+<span class="heading">## Key concepts</span>
+
+<span class="heading">### talk like caveman</span>
+
+<span class="changed-add">Drop filler, hedging, and pleasantries — substance in telegraphic fragments.
+~75% fewer output tokens, 100% technical accuracy. Benchmarks: 65% average
+output reduction across 10 coding prompts (range 22–87%).</span>
+
+<span class="unchanged-tag">### four grunt levels … six more keyConcepts unchanged …</span>
+
+<span class="heading">## API reference</span>
+
+<span class="unchanged-tag">[ 6 install / sub-skill blocks, byte-identical between v1 and v2 ]</span>
+
+<span class="heading">## Gotchas</span>
+
+- Output tokens only — thinking/reasoning tokens are untouched. Caveman makes the mouth smaller, not the brain.
+- Code, URLs, and file paths are byte-preserved by /caveman-compress — but only when the input is structured. Mixed prose may shift terminology.
+- Statusline shows lifetime tokens saved. Disable with CAVEMAN_STATUSLINE_SAVINGS=0 if you find it noisy.
+- Auto-activate is built-in for Claude Code / Codex / Gemini. Other agents need `--with-init` (always-on rules) or `/caveman` per session.
+- Levels persist until session end or explicit `normal mode` — don't expect a one-shot caveman reply unless you set `lite` and switch back manually.
+- `/caveman-stats` reads the Claude Code session log. If the log location is non-standard, stats will undercount; check INSTALL.md for the path override.
+- When wrapping an MCP server with caveman-shrink, verify tools still execute end-to-end — compressed descriptions occasionally trip strict tool routers.
+- Skill is opinionated about voice (fragments + caveman-speak). If you need verbose explanations for a teammate, run `normal mode` for that turn rather than fighting the skill.
+<span class="changed-add">- When pairing with a teammate via screenshare, switch to `normal mode` first — fragmented output is hard to read aloud.</span>
+
+<span class="frontmatter">---
+Generated by SkillMake from … on 2026-05-27T…
+Verify against source before relying on details.</span></div>
+  </div>
+
+</div>
+
+<h2>How the split happens at request time</h2>
+
+<div class="ab-explain">
+
+  <p>
+    Same URL, different bytes. The install route hashes <code>(cf-connecting-ip + skill-name)</code> deterministically, so a given visitor always lands in the same arm — no flicker on refresh.
+  </p>
+
+  <div class="split">
+    <div class="arm v1">
+      <div class="arm-label">arm A — current</div>
+      <div class="pct v1">80%</div>
+      <div style="font-size:12px;color:var(--fg-muted);font-family:ui-monospace,monospace">
+        GET /i/caveman <br>
+        → 200 OK<br>
+        → x-content-hash: <strong>d7649816</strong><br>
+        → install_hit blob2 = caveman<strong>@d7649816</strong>
+      </div>
+    </div>
+    <div class="arm v2">
+      <div class="arm-label">arm B — candidate</div>
+      <div class="pct v2">20%</div>
+      <div style="font-size:12px;color:var(--fg-muted);font-family:ui-monospace,monospace">
+        GET /i/caveman <br>
+        → 200 OK<br>
+        → x-content-hash: <strong>a1b2c3d4</strong><br>
+        → install_hit blob2 = caveman<strong>@a1b2c3d4</strong>
+      </div>
+    </div>
+  </div>
+
+  <p>
+    Both arms share the same <code>marketplace_view</code> denominator (the
+    detail page isn't A/B'd — only the SKILL.md served by <code>/i/&lt;name&gt;</code>
+    is). After ≥200 installs per arm, Welch's t-test on the two conversion
+    ratios decides promote, retire, or wait.
+  </p>
+
+  <p>
+    Cache headers flip to <code>private, no-store</code> while a candidate is
+    live so Cloudflare's edge doesn't accidentally serve the same arm to both
+    buckets. The 5-minute <code>max-age</code> restores automatically when the
+    candidate promotes or retires.
+  </p>
+
+</div>
+
+<h2>What the user sees in the marketplace</h2>
+
+<p>
+  The agent installing the skill via <code>curl</code> never knows it was
+  A/B-ed — same URL, same response shape, same headers (plus the new
+  <code>x-content-hash</code>). The marketplace UI on
+  <code>skillmake.xyz</code> shows one canonical card per skill; the candidate
+  is invisible to the public list. The only place "v2" surfaces is in the
+  <strong>admin Versions tab</strong> (Phase 2 UI) and in
+  <strong>Grafana's "Active A/B candidates" panel</strong>.
+</p>
+
+<footer>
+  caveman seed: <code>scripts/seeds/caveman.json</code><br>
+  this page: <code>public/skillopt-diff-example-2026-05-27.html</code> →
+  <a href="https://skillmake.xyz/skillopt-diff-example-2026-05-27.html">skillmake.xyz/skillopt-diff-example-2026-05-27.html</a> after next deploy<br>
+  plan: <code>~/.claude/plans/gradient-descent-for-skill-md-mossy-gray.md</code>
+</footer>
+
+</body>
+</html>

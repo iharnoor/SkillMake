@@ -39,6 +39,13 @@ export interface MarketplaceEntry {
   /** Fraction of /i/<name> traffic routed to this version (0..1). Only
    *  meaningful when versionStatus === "candidate". */
   abTrafficShare?: number;
+  /** Most recent optimizer-cron pass over this skill (ISO timestamp).
+   *  Carried on the family's current entry so the cron can rate-limit
+   *  itself to one pass per 28 days per skill. */
+  lastOptimizedAt?: string;
+  /** Set when the entry was created by the autonomous optimizer (not a
+   *  curator). Useful for telemetry + audit + filtering. */
+  optimizerSource?: "cron" | "admin-manual" | "curator";
 }
 
 interface IndexShape {
@@ -463,6 +470,7 @@ export async function saveSkillVersion(
     model: string;
     sourceUrl?: string;
     abTrafficShare?: number;
+    optimizerSource?: "cron" | "admin-manual" | "curator";
   }
 ): Promise<MarketplaceEntry> {
   const s = await store();
@@ -485,11 +493,81 @@ export async function saveSkillVersion(
     abTrafficShare: input.abTrafficShare ?? 0.2,
     stars: parent.stars,
     starsUpdatedAt: parent.starsUpdatedAt,
+    optimizerSource: input.optimizerSource,
   };
   await s.put(entry);
   await s.appendFamilyHistory(input.skill.name, id);
   await s.putFamilyPointer(input.skill.name, "candidate", id);
   return entry;
+}
+
+/**
+ * Autonomous SkillOpt direct-promote: append a new version AND make it the
+ * current in one shot, retiring the previous current. Skips the A/B candidate
+ * phase — used when the static gate is the only safety check and the curator
+ * has opted into autonomous edits.
+ *
+ * Atomicity is best-effort (KV doesn't expose multi-key transactions). If a
+ * write fails mid-way, the ensureFamilyIndexed migration on next read will
+ * still pick up a consistent state by reading the family pointers first.
+ */
+export async function saveAndPromoteVersion(
+  parent: MarketplaceEntry,
+  edits: SkillEdit[],
+  input: {
+    markdown: string;
+    skill: Skill;
+    model: string;
+    sourceUrl?: string;
+    optimizerSource: "cron" | "admin-manual" | "curator";
+  }
+): Promise<{ promoted: MarketplaceEntry; retired: MarketplaceEntry }> {
+  const s = await store();
+  const contentHash = sha256Hex(input.markdown).slice(0, 16);
+  const id = `${input.skill.name}-${contentHash.slice(0, 8)}`;
+  const versions = await s.getFamilyHistory(input.skill.name);
+
+  const promoted: MarketplaceEntry = {
+    id,
+    contentHash,
+    createdAt: new Date().toISOString(),
+    status: "approved",
+    skill: input.skill,
+    sourceUrl: input.sourceUrl ?? parent.sourceUrl,
+    markdown: input.markdown,
+    model: input.model,
+    versionId: versions.length + 1,
+    versionStatus: "current",
+    parentContentHash: parent.contentHash,
+    edits,
+    stars: parent.stars,
+    starsUpdatedAt: parent.starsUpdatedAt,
+    lastOptimizedAt: new Date().toISOString(),
+    optimizerSource: input.optimizerSource,
+  };
+  const retired: MarketplaceEntry = { ...parent, versionStatus: "retired" };
+
+  await s.put(promoted);
+  await s.put(retired);
+  await s.appendFamilyHistory(input.skill.name, id);
+  await s.putFamilyPointer(input.skill.name, "current", id);
+  // Clear any stale candidate pointer (shouldn't exist in autonomous mode, but
+  // be defensive — a curator might have queued an A/B candidate before the
+  // autonomous cron preempted them).
+  await s.deleteFamilyPointer(input.skill.name, "candidate");
+  return { promoted, retired };
+}
+
+/** Stamp the family's current entry with a fresh lastOptimizedAt so the cron
+ *  can rate-limit its own passes. Useful when the optimizer ran but had
+ *  nothing to propose (no edits passed the static gate). */
+export async function touchLastOptimizedAt(name: string): Promise<void> {
+  const s = await store();
+  const ptrId = await s.getFamilyPointer(name, "current");
+  if (!ptrId) return;
+  const entry = await s.get(ptrId);
+  if (!entry) return;
+  await s.put({ ...entry, lastOptimizedAt: new Date().toISOString() });
 }
 
 /**

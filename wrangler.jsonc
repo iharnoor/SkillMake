@@ -42,12 +42,25 @@
     }
   ],
 
+  // SkillOpt autonomous optimizer route: /api/cron/optimize-skills. Iterates
+  // approved skills (max 8 per call), pulls 14d telemetry from Analytics
+  // Engine, asks Sonnet for 4-8 bounded edits, runs the static gate, and
+  // direct-promotes accepted candidates. Gated by SKILLOPT_AUTONOMOUS=true.
+  //
+  // OpenNext does not currently bridge Cloudflare scheduled triggers to a
+  // Next.js route. Until that lands, trigger weekly via either:
+  //   1. GitHub Actions cron hitting the URL with admin auth, or
+  //   2. Cloudflare Workflows / external scheduler.
+  // The admin one-shot /api/admin/skills/<id>/optimize works today.
+
   // Secrets are set out-of-band (CLI or Workers Builds dashboard):
   //   wrangler secret put ANTHROPIC_API_KEY
   //   wrangler secret put HYDRADB_API_KEY
   //   wrangler secret put HYDRADB_TENANT_ID
   //   wrangler secret put ADMIN_TOKEN     # gates /admin/*; rotating it logs every curator out
   //   wrangler secret put GITHUB_TOKEN    # optional; raises ★ stars rate limit 60→5000/hr
+  //   wrangler secret put CLOUDFLARE_ANALYTICS_API_TOKEN  # required for SkillOpt cron telemetry reads
+  //   wrangler secret put SKILLOPT_AUTONOMOUS=true        # flips the cron on
   // Install volume is read out of Analytics Engine directly from the
   // Cloudflare dashboard rather than rendered on the site (see
   // docs/analytics-queries.md).
