@@ -1,0 +1,88 @@
+{
+  "sourceUrl": "https://github.com/microsoft/markitdown",
+  "skill": {
+    "name": "markitdown",
+    "description": "Use when converting files, Office documents, media, web content, or archives into Markdown for LLM and text-analysis pipelines.",
+    "whenToUse": [
+      "Converting PDF, PowerPoint, Word, Excel, HTML, CSV, JSON, XML, EPub, ZIP, image, audio, or YouTube inputs into Markdown",
+      "Preparing document contents for an LLM while preserving useful structure such as headings, lists, tables, and links",
+      "Choosing optional MarkItDown dependencies, plugins, or Azure-backed converters for higher-quality extraction",
+      "Embedding file-to-Markdown conversion in Python code with a tighter input boundary than a general-purpose CLI call"
+    ],
+    "keyConcepts": [
+      {
+        "term": "LLM-oriented Markdown",
+        "explanation": "MarkItDown optimizes converted output for downstream LLM and text-analysis workflows, not high-fidelity human-facing document reproduction."
+      },
+      {
+        "term": "Format extras",
+        "explanation": "Install only the optional dependency groups needed for the target formats, such as pdf, docx, pptx, xlsx, xls, outlook, az-doc-intel, az-content-understanding, audio-transcription, or youtube-transcription."
+      },
+      {
+        "term": "Plugins",
+        "explanation": "Third-party plugins are disabled by default. List installed plugins before use, then explicitly enable plugins only when the task needs them."
+      },
+      {
+        "term": "Azure converters",
+        "explanation": "Azure Document Intelligence and Azure Content Understanding can improve extraction for scanned documents, complex tables, audio, video, and structured fields, but each routed conversion may call a billable Azure API."
+      },
+      {
+        "term": "Narrow conversion APIs",
+        "explanation": "The broad convert() API can handle local files, remote URIs, and streams. Prefer convert_local(), convert_stream(), or convert_response() when the input source is known."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "pip install 'markitdown[all]'",
+        "purpose": "Install MarkItDown with all optional converters enabled.",
+        "example": "python -m venv .venv\nsource .venv/bin/activate\npip install 'markitdown[all]'"
+      },
+      {
+        "signature": "pip install 'markitdown[pdf, docx, pptx]'",
+        "purpose": "Install only the optional dependencies required for selected file formats.",
+        "example": "pip install 'markitdown[pdf, docx, pptx]'"
+      },
+      {
+        "signature": "markitdown path-to-file.pdf -o document.md",
+        "purpose": "Convert a local file to Markdown from the command line.",
+        "example": "markitdown path-to-file.pdf > document.md\nmarkitdown path-to-file.pdf -o document.md\ncat path-to-file.pdf | markitdown"
+      },
+      {
+        "signature": "markitdown --list-plugins",
+        "purpose": "Inspect and enable installed third-party MarkItDown plugins.",
+        "example": "markitdown --list-plugins\nmarkitdown --use-plugins path-to-file.pdf"
+      },
+      {
+        "signature": "markitdown path-to-file.pdf -d -e \"<document_intelligence_endpoint>\"",
+        "purpose": "Use Azure Document Intelligence for conversion when layout or OCR quality matters.",
+        "example": "markitdown path-to-file.pdf -o document.md -d -e \"<document_intelligence_endpoint>\""
+      },
+      {
+        "signature": "markitdown path-to-file.pdf --use-cu --cu-endpoint \"<content_understanding_endpoint>\"",
+        "purpose": "Use Azure Content Understanding for multimodal conversion or structured extraction.",
+        "example": "markitdown path-to-file.pdf --use-cu --cu-endpoint \"<content_understanding_endpoint>\""
+      },
+      {
+        "signature": "MarkItDown(enable_plugins=False).convert(\"test.xlsx\")",
+        "purpose": "Convert content from Python code and read the Markdown text.",
+        "example": "from markitdown import MarkItDown\n\nmd = MarkItDown(enable_plugins=False)\nresult = md.convert(\"test.xlsx\")\nprint(result.text_content)"
+      },
+      {
+        "signature": "MarkItDown(llm_client=client, llm_model=\"gpt-4o\").convert(\"example.jpg\")",
+        "purpose": "Use an LLM client for image descriptions in supported converters.",
+        "example": "from markitdown import MarkItDown\nfrom openai import OpenAI\n\nclient = OpenAI()\nmd = MarkItDown(llm_client=client, llm_model=\"gpt-4o\", llm_prompt=\"optional custom prompt\")\nresult = md.convert(\"example.jpg\")\nprint(result.text_content)"
+      }
+    ],
+    "gotchas": [
+      "MarkItDown performs I/O with the privileges of the current process, so validate untrusted paths, URIs, and streams before conversion.",
+      "Use the narrowest conversion API that fits the task; avoid broad convert() calls in hosted or server-side paths when only local files or streams are allowed.",
+      "Plugins are disabled by default and should be explicitly enabled only after confirming the installed plugin set.",
+      "Azure Document Intelligence and Content Understanding require configured Azure endpoints and may create billable API calls.",
+      "The output is intended for LLM and text-analysis consumption, so do not treat it as a high-fidelity replacement for document rendering."
+    ],
+    "category": "tool",
+    "audience": "ai",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/microsoft/markitdown"
+  }
+}
