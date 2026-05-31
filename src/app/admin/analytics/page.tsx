@@ -114,7 +114,7 @@ export default async function AdminAnalyticsPage() {
           <Panel title="Daily unique visitors" subtitle="14d">
             <SparkBars points={data.series.uniquesByDay} />
           </Panel>
-          <Panel title="Audience demand" subtitle="approved skills, 28d">
+          <Panel title="Audience demand" subtitle="added skills, 28d">
             <HorizontalBars bars={data.bars.audienceDemand} compact emptyLabel="No catalog events yet" />
           </Panel>
         </section>

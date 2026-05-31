@@ -57,7 +57,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
     if (result.status === "promoted" && result.promoted) {
       const promoted = result.promoted;
       after(() =>
-        track("skill_promoted", {
+        track("skill_version_promoted", {
           slug: promoted.skill.name,
           audience: promoted.skill.audience,
           category: promoted.skill.category,

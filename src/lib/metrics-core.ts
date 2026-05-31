@@ -2,8 +2,8 @@ export type MetricEvent =
   | "install_hit"
   | "marketplace_view"
   | "home_view"
-  | "submit_started"
-  | "submit_completed"
+  | "skill_submission_started"
+  | "skill_submitted"
   | "convert_success"
   | "convert_error"
   | "tricks_view"
@@ -13,9 +13,9 @@ export type MetricEvent =
   | "github_click"
   | "page_dwell"
   | "scroll_depth"
-  | "skill_approved"
-  | "skill_rejected"
-  | "skill_promoted"
+  | "skill_added"
+  | "skill_submission_rejected"
+  | "skill_version_promoted"
   | "api_error";
 
 export interface MetricContext {
@@ -38,9 +38,9 @@ export function buildMetricDataPoint(
     ctx.uaCat,
     ctx.visitor,
   ];
-  // Catalog-mutation events (skill_approved/rejected/promoted) carry the
+  // Catalog lifecycle events carry the
   // skill's audience + category so dashboards can slice "MCPs added" vs
-  // "other approved skills" without re-joining against storage.
+  // other added skills without re-joining against storage.
   if (opts.audience != null || opts.category != null) {
     blobs.push(opts.audience ?? "", opts.category ?? "");
   }

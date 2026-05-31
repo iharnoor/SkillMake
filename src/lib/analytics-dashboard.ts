@@ -144,8 +144,8 @@ export async function getAnalyticsDashboardData(): Promise<AnalyticsDashboardRes
       query(`SELECT blob3 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'install_hit' AND ${DAY_14} GROUP BY label ORDER BY value DESC LIMIT 12`),
       query(`SELECT blob2 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'page_dwell' AND ${DAY_14} GROUP BY label ORDER BY value DESC`),
       query(`SELECT blob2 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'scroll_depth' AND ${DAY_14} GROUP BY label ORDER BY value DESC`),
-      query(`SELECT index1 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 IN ('home_view','marketplace_view','install_hit','submit_started','submit_completed','search_submitted') AND ${DAY_14} GROUP BY label ORDER BY value DESC`),
-      query(`SELECT blob7 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'skill_approved' AND blob7 != '' AND ${DAY_28} GROUP BY label ORDER BY value DESC LIMIT 10`),
+      query(`SELECT index1 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 IN ('home_view','marketplace_view','install_hit','skill_submission_started','skill_submitted','search_submitted') AND ${DAY_14} GROUP BY label ORDER BY value DESC`),
+      query(`SELECT blob7 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'skill_added' AND blob7 != '' AND ${DAY_28} GROUP BY label ORDER BY value DESC LIMIT 10`),
       query(`SELECT index1 AS event, blob2 AS slug, double2 AS status, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE index1 IN ('api_error','convert_error') AND ${DAY_14} GROUP BY event, slug, status ORDER BY hits DESC LIMIT 12`),
       query(`SELECT index1 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE timestamp >= NOW() - INTERVAL '24' HOUR GROUP BY label ORDER BY value DESC LIMIT 12`),
     ]);

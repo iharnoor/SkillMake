@@ -17,7 +17,7 @@ export interface TrackOpts {
   headers?: Headers;
   /** HTTP status for ops events (`api_error`, `convert_error`). Stored in double2. */
   status?: number;
-  /** Skill audience — set on catalog events (skill_approved/rejected/promoted). Stored in blob7. */
+  /** Skill audience — set on catalog lifecycle events. Stored in blob7. */
   audience?: string;
   /** Skill category — set on catalog events. Stored in blob8. Use to slice MCPs vs other skills. */
   category?: string;
@@ -35,7 +35,7 @@ export interface TrackOpts {
  *   blob4  = referer host (empty if direct)
  *   blob5  = UA category (curl | browser | bot | other)
  *   blob6  = daily visitor id — sha256(ip+ua+day) first 8 bytes hex; for uniques
- *   blob7  = skill audience — catalog events only (skill_approved/rejected/promoted)
+ *   blob7  = skill audience — catalog lifecycle events only
  *   blob8  = skill category — catalog events only; filter by 'mcp' for MCP-only counts
  *   double1 = 1 (count)
  *   double2 = HTTP status (ops events only, when set)

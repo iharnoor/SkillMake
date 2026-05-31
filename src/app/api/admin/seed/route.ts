@@ -1,10 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { z } from "zod";
 import { isAdmin } from "@/lib/admin-guard";
 import { saveSkill, setSkillStars } from "@/lib/storage";
 import { SkillSchema, renderSkillMarkdown } from "@/lib/skill-schema";
 import { fetchRepoStars } from "@/lib/github";
 import { indexSkill } from "@/lib/vector";
+import { track } from "@/lib/metrics";
 
 export const runtime = "nodejs";
 
@@ -53,6 +54,14 @@ export async function POST(req: Request) {
     model,
     status: "approved",
   });
+  after(() =>
+    track("skill_added", {
+      slug: entry.skill.name,
+      audience: entry.skill.audience,
+      category: entry.skill.category,
+      headers: req.headers,
+    })
+  );
 
   // Index + star fetch are best-effort; same rationale as in /approve.
   let indexed = false;

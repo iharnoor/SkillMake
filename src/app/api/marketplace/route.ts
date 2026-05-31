@@ -96,7 +96,7 @@ export async function POST(req: Request) {
     // HydraDB indexing happens at approval time, not here, so the search index never includes unreviewed skills.
     const entry = await saveSkill({ skill, sourceUrl, markdown, model });
     after(() =>
-      track("submit_completed", { slug: entry.skill.name, headers: req.headers })
+      track("skill_submitted", { slug: entry.skill.name, headers: req.headers })
     );
     return NextResponse.json({
       id: entry.id,
