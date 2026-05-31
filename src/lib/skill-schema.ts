@@ -45,7 +45,7 @@ export function parseGithubRepo(url: string): { owner: string; repo: string } | 
   }
 }
 
-export const AUDIENCES = ["creators", "engineers", "devops", "ai", "design", "marketing", "general"] as const;
+export const AUDIENCES = ["creators", "engineers", "devops", "ai", "design", "marketing", "creative", "general"] as const;
 export type Audience = (typeof AUDIENCES)[number];
 
 /**
@@ -155,7 +155,7 @@ export const SkillSchema = z.object({
     .array(z.string().min(8).max(280))
     .describe("Up to ~8 non-obvious pitfalls explicitly stated in the docs. Empty array if none found."),
   category: z
-    .enum(["framework", "library", "api", "platform", "tool", "language", "concept", "job-search", "other"])
+    .enum(["framework", "library", "api", "platform", "tool", "language", "concept", "job-search", "prompt-pack", "other"])
     .describe("High-level category for marketplace browsing."),
   audience: z
     .enum(AUDIENCES)

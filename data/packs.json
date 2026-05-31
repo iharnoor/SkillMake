@@ -1,0 +1,688 @@
+{
+  "generatedAt": "2026-05-30",
+  "packs": [
+    {
+      "slug": "nano-banana",
+      "title": "Nano Banana Prompt Pack",
+      "tagline": "Steal the grammar, not just the picture.",
+      "description": "Battle-tested prompts for Google's Nano Banana (Gemini) image and video model — portraits, product shots, food, FPV motion clips, and image edits. Each one is copy-paste ready; swap the bracketed slots for your own subject.",
+      "audience": "creative",
+      "category": "image-gen",
+      "source": "nanobananaprompt.org",
+      "sourceUrl": "https://nanobananaprompt.org/prompts/",
+      "accent": "#ffd23f",
+      "prompts": [
+        {
+          "id": "golden-hour-street-editorial",
+          "title": "Golden Hour Street Editorial",
+          "category": "Fashion",
+          "model": "Nano Banana Pro",
+          "prompt": "{\n  \"prompt_metadata\": {\n    \"title\": \"Urban Golden Hour Fashion Editorial\",\n    \"model\": \"Nano Banana Pro on Gemini\"\n  },\n  \"scene\": \"A woman walking a sunlit downtown crosswalk during golden hour, long shadows raking across the asphalt\",\n  \"subject\": {\n    \"wardrobe\": \"tailored camel trench over a slip dress, pointed heels\",\n    \"pose\": \"mid-stride, hair caught in motion, glancing off-camera\"\n  },\n  \"camera\": {\n    \"lens\": \"85mm\",\n    \"aperture\": \"f/1.8\",\n    \"angle\": \"low three-quarter\"\n  },\n  \"light\": \"warm backlit rim light, lens flare, soft bounce on the face\",\n  \"grade\": \"filmic, golden highlights, deep teal shadows\",\n  \"aspect_ratio\": \"4:5\"\n}",
+          "tip": "JSON-structured prompts give Nano Banana Pro the most control over camera and grade."
+        },
+        {
+          "id": "honeybee-fpv",
+          "title": "Honeybee POV (FPV)",
+          "category": "Video",
+          "model": "Nano Banana Pro",
+          "prompt": "Honeybee POV. Ultra-tight fisheye FPV lens. Strong forward parallax at insect scale. Single uncut take. Fast zigzag entry weaving between tall summer wildflowers, then a hard hover-and-bank as the bee lands on a single backlit dandelion. Pollen drifts through warm shafts of morning light. Audio: rapid wingbeat hum, distant meadow ambience. 8-second loop, photoreal, shallow macro depth of field.",
+          "tip": "\"Single uncut take\" + a named POV is the backbone of every viral Nano Banana motion clip."
+        },
+        {
+          "id": "architect-scale-model-dish",
+          "title": "Architect's Scale-Model Dish",
+          "category": "Food",
+          "model": "Nano Banana",
+          "prompt": "[DISH] as a hyper-detailed architect's scale model. Every ingredient in miniature — but built to make you hungry, not just impressed. Tiny garnish trees, sauce poured like a glassy lake, steam rising in scale. Studio softbox lighting on a clean concrete plinth, shallow tilt-shift depth of field so it reads as a real maquette. Macro, 100mm, crisp focus on the centerpiece.",
+          "tip": "Swap [DISH] for anything — 'ramen', 'a cheeseburger', 'biryani'."
+        },
+        {
+          "id": "consistency-3x3-grid",
+          "title": "3x3 Character-Consistency Grid",
+          "category": "Portrait",
+          "model": "Nano Banana Pro",
+          "prompt": "{\n  \"task\": \"Create a 3x3 photo grid of the SAME woman, consistent face and outfit across all nine frames\",\n  \"subject\": \"an extremely attractive woman exploring Portugal\",\n  \"variation\": \"each cell a different candid moment — Lisbon tram, pastel azulejo wall, sunset at Belém, a café table, cobbled alley\",\n  \"style\": \"natural smartphone photography, slightly overexposed, authentic vacation energy\",\n  \"consistency\": \"identical facial features, hair, and outfit in every frame\",\n  \"aspect_ratio\": \"1:1\"\n}",
+          "tip": "The 3x3 grid + 'same person' instruction is the core trick for character consistency."
+        },
+        {
+          "id": "macro-food-splash",
+          "title": "Macro Food Splash",
+          "category": "Product",
+          "model": "Nano Banana Pro",
+          "prompt": "{\n  \"scene_type\": \"macro food splash photography\",\n  \"subject\": {\n    \"object\": \"strawberry\",\n    \"color\": \"golden yellow\",\n    \"surface\": \"glossy, dewy\"\n  },\n  \"action\": \"the strawberry dropping into liquid, a crown of splash droplets frozen mid-air\",\n  \"lighting\": \"hard backlight catching every droplet, dark moody background\",\n  \"camera\": {\n    \"shutter\": \"1/8000s\",\n    \"lens\": \"100mm macro\",\n    \"aperture\": \"f/8\"\n  },\n  \"render\": \"8K, hyper-real, commercial beverage advertising\"\n}",
+          "tip": "High shutter values in the prompt sell the 'frozen splash' look."
+        },
+        {
+          "id": "midnight-fastback-chase",
+          "title": "Midnight Fastback Chase",
+          "category": "Video",
+          "model": "Nano Banana Pro",
+          "prompt": "Midnight blue fastback blasts straight at 200 km/h then banks hard left around a parked delivery truck, body tilting aggressively, tires smoking. Chase camera locked low and tight behind the rear bumper, heavy motion blur on the road, sparks as it clips the curb. Overcast industrial backdrop, wet asphalt reflections. Single continuous take, cinematic, photoreal, 8 seconds.",
+          "tip": "Name the exact camera rig ('locked low behind the rear bumper') for stable motion."
+        },
+        {
+          "id": "make-character-realistic",
+          "title": "Make This Character Realistic",
+          "category": "Image editing",
+          "model": "Nano Banana",
+          "prompt": "Make this character realistic while keeping the original design and pose. Preserve the exact silhouette, outfit, colors, and proportions — only translate the rendering into photographic realism: real skin texture, fabric weave, natural studio lighting, and accurate shadows. Do not redesign anything.",
+          "tip": "Upload a drawing or 3D render as the reference image, then run this as an edit."
+        },
+        {
+          "id": "8k-seated-portrait",
+          "title": "8K Seated Studio Portrait",
+          "category": "Portrait",
+          "model": "Nano Banana Pro",
+          "prompt": "{\n  \"type\": \"portrait\",\n  \"resolution\": \"8K\",\n  \"aspect_ratio\": \"3:4\",\n  \"composition\": {\n    \"framing\": \"full body seated portrait\",\n    \"camera_angle\": \"eye level, slight three-quarter\"\n  },\n  \"subject\": {\n    \"pose\": \"seated on a vintage leather chair, hands relaxed, calm confident gaze\"\n  },\n  \"lighting\": \"single softbox key, gentle falloff, cinematic Rembrandt shadow\",\n  \"background\": \"muted charcoal studio seamless\",\n  \"detail\": \"sharp catchlights, realistic skin pores, natural color grade\"\n}"
+        },
+        {
+          "id": "post-apocalyptic-chase",
+          "title": "Post-Apocalyptic Vehicle Chase",
+          "category": "Video",
+          "model": "Nano Banana Pro",
+          "prompt": "First-person perspective inside a rugged post-apocalyptic vehicle chasing a heavily armored enemy car speeding ahead through a cracked desert highway. Dust plumes, debris, and heat haze. Cracked windshield framing the shot, dashboard rattling, hands gripping a worn steering wheel. Harsh midday sun, gritty color grade. Continuous handheld FPV, photoreal, high tension, 8 seconds."
+        }
+      ]
+    },
+    {
+      "slug": "ai-video",
+      "title": "AI Video Prompt Pack",
+      "tagline": "Six layers — format, subject, action, environment, camera, light.",
+      "description": "Copy-paste motion prompts for Sora 2, Veo 3.1, Kling 3.0, and Runway — cinematic shots, UGC ad hooks, product reveals, food cuts, and aerials. Each names aspect ratio, duration, and camera move so the model fills nothing in at random.",
+      "audience": "creative",
+      "category": "video-gen",
+      "source": "lordofthewix.com",
+      "sourceUrl": "https://www.lordofthewix.com/post/image-video-prompt-library-2026-120-copy-paste-prompt-for-ai-image-video-runway-veo-sora-style",
+      "accent": "#5b8cff",
+      "prompts": [
+        {
+          "id": "a-slow-motion-pour-of-sparkling-water",
+          "title": "A slow-motion pour of sparkling water into",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 7 seconds. A slow-motion pour of sparkling water into a glass with ice, crisp bubbles, realistic refraction, soft studio backlight, clean background, smooth camera push-in."
+        },
+        {
+          "id": "split-screen-transformation-messy-desk-to-perfectly",
+          "title": "Split-screen transformation: messy desk to perfectly organiz",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 6 seconds. Split-screen transformation: messy desk to perfectly organized desk, fast but smooth transition, clean lighting, modern minimal style."
+        },
+        {
+          "id": "11-square-6-seconds-a-soda",
+          "title": "1:1 square, 6 seconds. A soda can",
+          "category": "Cinematic",
+          "model": "Sora 2 · Veo 3.1 · Kling 3.0",
+          "prompt": "1:1 square, 6 seconds. A soda can rotating on a turntable, softbox highlights, clean reflections, perfectly consistent logo, premium commercial style, loopable."
+        },
+        {
+          "id": "close-up-of-chocolate-breaking-apart-crisp",
+          "title": "Close-up of chocolate breaking apart, crisp snap",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 8 seconds. Close-up of chocolate breaking apart, crisp snap, detailed crumbs, warm cinematic lighting, macro lens feel, slow camera drift."
+        },
+        {
+          "id": "outfit-reveal-quick-cuts-of-jacket",
+          "title": "Outfit reveal: quick cuts of jacket zipper",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 7 seconds. Outfit reveal: quick cuts of jacket zipper, shoes stepping, sunglasses tilt, stylish street lighting, punchy energy, no text."
+        },
+        {
+          "id": "a-person-holds-a-product-and",
+          "title": "A person holds a product and talks",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 10 seconds. A person holds a product and talks excitedly to camera in a bright kitchen, handheld phone feel, natural light, authentic casual UGC style."
+        },
+        {
+          "id": "hands-unbox-a-premium-gadget-on",
+          "title": "Hands unbox a premium gadget on a",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 9 seconds. Hands unbox a premium gadget on a wooden desk, clean top-down shot, crisp packaging sounds implied, smooth pacing, product centered."
+        },
+        {
+          "id": "close-up-of-applying-skincare-cream-to",
+          "title": "Close-up of applying skincare cream to hand",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 8 seconds. Close-up of applying skincare cream to hand, texture visible, soft daylight, shallow depth of field, clean and trustworthy."
+        },
+        {
+          "id": "a-fast-3-step-routine-using-the",
+          "title": "A fast 3-step routine using the product",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 12 seconds. A fast 3-step routine using the product, simple cuts, clear actions, natural lighting, friendly casual vibe."
+        },
+        {
+          "id": "start-with-surprise-facial-reaction-quick",
+          "title": "Start with surprise facial reaction, quick zoom",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 8 seconds. Start with surprise facial reaction, quick zoom, then show product result, clean indoor lighting, social media style."
+        },
+        {
+          "id": "video-6-seconds-loopable-a-gentle",
+          "title": "Video 6 seconds loopable: a gentle floating",
+          "category": "Product",
+          "model": "Sora 2 · Veo 3.1 · Kling 3.0",
+          "prompt": "Video 6 seconds loopable: a gentle floating motion of a product box, soft shadow moves naturally, seamless loop, clean studio background."
+        },
+        {
+          "id": "a-lone-figure-walking-through-a",
+          "title": "A lone figure walking through a neon-lit",
+          "category": "Cinematic",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. A lone figure walking through a neon-lit street in the rain, reflections on wet pavement, slow dolly-in, cinematic lighting, realistic rain motion, subtle film grain."
+        },
+        {
+          "id": "camera-glides-through-a-foggy-pine",
+          "title": "Camera glides through a foggy pine forest",
+          "category": "Travel / Aerial",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. Camera glides through a foggy pine forest at dawn, sun rays piercing mist, smooth steadycam, soft shadows, atmospheric cinematic look."
+        },
+        {
+          "id": "inside-a-retro-diner-at-night",
+          "title": "Inside a retro diner at night, warm",
+          "category": "Food",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 10 seconds. Inside a retro diner at night, warm tungsten lights, slow pan across booths, steam from coffee, realistic reflections on chrome, cinematic tone."
+        },
+        {
+          "id": "inside-a-car-at-night-dashboard",
+          "title": "Inside a car at night, dashboard lights",
+          "category": "Cinematic",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. Inside a car at night, dashboard lights glow, rain hits windshield, shallow depth of field, slow push-in toward driver’s eyes, realistic motion blur."
+        },
+        {
+          "id": "aerial-shot-above-waves-crashing-on",
+          "title": "Aerial shot above waves crashing on cliffs",
+          "category": "Travel / Aerial",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. Aerial shot above waves crashing on cliffs, smooth drone movement, golden hour lighting, realistic sea spray, cinematic color grading."
+        },
+        {
+          "id": "close-up-performer-with-glitter-floating-in",
+          "title": "Close-up performer with glitter floating in air",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "9:16, 7 seconds. Close-up performer with glitter floating in air, stage lights creating bokeh, slow motion, gentle handheld sway, dreamy cinematic style."
+        },
+        {
+          "id": "a-cyclist-racing-through-a-narrow",
+          "title": "A cyclist racing through a narrow alley",
+          "category": "Cinematic",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. A cyclist racing through a narrow alley, handheld camera feel, dynamic motion blur, realistic shadows, intense pacing, cinematic."
+        },
+        {
+          "id": "a-futuristic-corridor-with-flickering-lights",
+          "title": "A futuristic corridor with flickering lights, slow",
+          "category": "Cinematic",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. A futuristic corridor with flickering lights, slow tracking shot, volumetric haze, reflective metal surfaces, cinematic sci-fi."
+        },
+        {
+          "id": "a-cowboy-silhouette-on-a-ridge",
+          "title": "A cowboy silhouette on a ridge at",
+          "category": "Cinematic",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. A cowboy silhouette on a ridge at sunset, wind blowing dust, slow zoom, warm rim light, wide shot, film look."
+        },
+        {
+          "id": "underwater-scene-rays-of-light-floating",
+          "title": "Underwater scene: rays of light, floating particles",
+          "category": "Cinematic",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. Underwater scene: rays of light, floating particles, a diver swims slowly, smooth camera follow, realistic caustics."
+        },
+        {
+          "id": "macro-shot-of-a-wok-flame",
+          "title": "Macro shot of a wok flame rising",
+          "category": "Food",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 6 seconds. Macro shot of a wok flame rising as vegetables toss, steam, heat shimmer, close-up, cinematic food film style."
+        },
+        {
+          "id": "a-quiet-library-with-dust-motes",
+          "title": "A quiet library with dust motes in",
+          "category": "Cinematic",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. A quiet library with dust motes in sunlight, slow dolly past bookshelves, shallow depth of field, gentle ambience."
+        },
+        {
+          "id": "cinematic-timelapse-of-traffic-light-trails",
+          "title": "Cinematic timelapse of traffic light trails, slow",
+          "category": "Cinematic",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. Cinematic timelapse of traffic light trails, slow camera tilt upward to skyline, crisp reflections, moody night."
+        },
+        {
+          "id": "close-up-of-raindrops-sliding-down-a",
+          "title": "Close-up of raindrops sliding down a window",
+          "category": "Cinematic",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. Close-up of raindrops sliding down a window, lightning flashes outside, interior candlelight, rack focus between drops and background."
+        },
+        {
+          "id": "a-person-walks-through-a-hallway",
+          "title": "A person walks through a hallway that",
+          "category": "Cinematic",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. A person walks through a hallway that subtly morphs into clouds, surreal but coherent, smooth camera motion, soft glow."
+        },
+        {
+          "id": "documentary-style-handheld-shot-following-a-chef",
+          "title": "Documentary-style handheld shot following a chef in",
+          "category": "Cinematic",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 10 seconds. Documentary-style handheld shot following a chef in a busy kitchen, natural motion, realistic lighting, candid feel."
+        },
+        {
+          "id": "macro-slow-pan-across-a-luxury",
+          "title": "Macro slow pan across a luxury watch",
+          "category": "Cinematic",
+          "model": "Sora 2 · Veo 3.1 · Kling 3.0",
+          "prompt": "1:1, 6 seconds. Macro slow pan across a luxury watch face, crisp engravings, controlled reflections, premium commercial cinematic hybrid."
+        },
+        {
+          "id": "a-character-looks-into-a-mirror",
+          "title": "A character looks into a mirror; reflection",
+          "category": "Character",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. A character looks into a mirror; reflection moves slightly delayed, subtle surreal effect, consistent face, cinematic lighting."
+        },
+        {
+          "id": "snow-falling-under-streetlamp-slow-push-in",
+          "title": "Snow falling under streetlamp, slow push-in, warm",
+          "category": "Cinematic",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. Snow falling under streetlamp, slow push-in, warm light halo, footprints in snow, realistic flakes, film look."
+        },
+        {
+          "id": "continuous-one-take-shot-moving-through-a",
+          "title": "Continuous one-take shot moving through a small",
+          "category": "Cinematic",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 10 seconds. Continuous one-take shot moving through a small apartment: kitchen to living room to window, consistent lighting, smooth gimbal."
+        },
+        {
+          "id": "dark-cave-flashlight-beam-reveals-an",
+          "title": "Dark cave, flashlight beam reveals an ancient",
+          "category": "Cinematic",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. Dark cave, flashlight beam reveals an ancient statue creature, dust falls, slow reveal, suspenseful cinematic lighting."
+        },
+        {
+          "id": "slow-motion-athlete-chalking-hands-dramatic-side",
+          "title": "Slow-motion athlete chalking hands, dramatic side light",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "9:16, 8 seconds. Slow-motion athlete chalking hands, dramatic side light, close-ups, quick cut rhythm, trailer feel."
+        },
+        {
+          "id": "a-retro-skate-video-at-sunset",
+          "title": "A retro skate video at sunset, VHS",
+          "category": "Cinematic",
+          "model": "Sora 2 · Veo 3.1 · Kling 3.0",
+          "prompt": "4:3, 8 seconds. A retro skate video at sunset, VHS texture, slight lens distortion, handheld energy, nostalgic look."
+        },
+        {
+          "id": "futuristic-street-with-holographic-signs-rain",
+          "title": "Futuristic street with holographic signs, rain, fast",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "9:16, 7 seconds. Futuristic street with holographic signs, rain, fast push-in, vibrant neon reflections, high energy."
+        },
+        {
+          "id": "long-empty-hallway-flickering-fluorescent-lights",
+          "title": "Long empty hallway, flickering fluorescent lights, slow",
+          "category": "Cinematic",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. Long empty hallway, flickering fluorescent lights, slow creeping camera forward, shadows shift subtly, tense horror mood."
+        },
+        {
+          "id": "start-with-extreme-close-up-of-surprised",
+          "title": "Start with extreme close-up of surprised face",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 6 seconds. Start with extreme close-up of surprised face, quick zoom out reveals funny situation, bright lighting, snappy pacing."
+        },
+        {
+          "id": "a-messy-drawer-becomes-perfectly-organized",
+          "title": "A messy drawer becomes perfectly organized, quick",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 8 seconds. A messy drawer becomes perfectly organized, quick satisfying transitions, clean top-down view, crisp detail."
+        },
+        {
+          "id": "beforeafter-hair-transformation-smooth-morph-studio",
+          "title": "Before/after hair transformation, smooth morph, studio light",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 8 seconds. Before/after hair transformation, smooth morph, studio lighting, consistent identity, trendy social style."
+        },
+        {
+          "id": "quick-cuts-of-making-a-smoothie",
+          "title": "Quick cuts of making a smoothie: fruit",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 8 seconds. Quick cuts of making a smoothie: fruit drop, blender swirl, pour, final close-up, bright kitchen lighting."
+        },
+        {
+          "id": "close-up-foam-soap-swirling-in-slow",
+          "title": "Close-up foam soap swirling in slow motion",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 7 seconds. Close-up foam soap swirling in slow motion, macro lens feel, soft light, satisfying texture."
+        },
+        {
+          "id": "a-tiny-city-built-on-a",
+          "title": "A tiny city built on a desk",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 8 seconds. A tiny city built on a desk, small cars moving, camera fly-through, playful, crisp detail."
+        },
+        {
+          "id": "a-cat-wearing-tiny-sunglasses-turns",
+          "title": "A cat wearing tiny sunglasses turns to",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 6 seconds. A cat wearing tiny sunglasses turns to camera, comedic pause, bright living room, lighthearted."
+        },
+        {
+          "id": "clean-animated-background-with-subtle-motion",
+          "title": "Clean animated background with subtle motion, modern",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 10 seconds. Clean animated background with subtle motion, modern shapes, text-safe area for captions, friendly educational vibe."
+        },
+        {
+          "id": "person-snaps-fingers-and-outfit-changes",
+          "title": "Person snaps fingers and outfit changes each",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 8 seconds. Person snaps fingers and outfit changes each snap, clean transitions, studio background, consistent face."
+        },
+        {
+          "id": "a-rapid-montage-airplane-window-beach",
+          "title": "A rapid montage: airplane window, beach wave",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 8 seconds. A rapid montage: airplane window, beach wave, street market, sunset, smooth transitions, vibrant but natural."
+        },
+        {
+          "id": "pov-hands-using-a-gadget-realistic",
+          "title": "POV hands using a gadget, realistic hand",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 8 seconds. POV hands using a gadget, realistic hand motion, natural daylight, casual authentic feel."
+        },
+        {
+          "id": "slow-motion-lifting-weights-sweat-highlights",
+          "title": "Slow motion lifting weights, sweat highlights, dramatic",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 7 seconds. Slow motion lifting weights, sweat highlights, dramatic side lighting, motivational energy."
+        },
+        {
+          "id": "overhead-cooking-shot-with-large-empty",
+          "title": "Overhead cooking shot with large empty space",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 8 seconds. Overhead cooking shot with large empty space at top for step text, clean counter, bright light."
+        },
+        {
+          "id": "a-silhouette-dancing-in-neon-outline",
+          "title": "A silhouette dancing in neon outline style",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 8 seconds. A silhouette dancing in neon outline style, simple background, loopable motion."
+        },
+        {
+          "id": "close-up-eyeliner-application-crisp-details-soft",
+          "title": "Close-up eyeliner application, crisp details, soft ring",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 7 seconds. Close-up eyeliner application, crisp details, soft ring light reflection, beauty influencer vibe."
+        },
+        {
+          "id": "colored-ink-drops-swirling-in-clear",
+          "title": "Colored ink drops swirling in clear water",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 6 seconds. Colored ink drops swirling in clear water, macro, slow motion, smooth camera."
+        },
+        {
+          "id": "neon-lit-gamer-desk-rgb-glow-rapid",
+          "title": "Neon-lit gamer desk, RGB glow, rapid close-ups",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 8 seconds. Neon-lit gamer desk, RGB glow, rapid close-ups of keys, mouse, screen reflection, energetic cuts."
+        },
+        {
+          "id": "minimal-animated-gradient-background-gentle-motion",
+          "title": "Minimal animated gradient background, gentle motion, space",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 6 seconds. Minimal animated gradient background, gentle motion, space for bold quote, modern aesthetic."
+        },
+        {
+          "id": "a-room-transforms-into-a-beach",
+          "title": "A room transforms into a beach as",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 8 seconds. A room transforms into a beach as camera moves forward, seamless portal effect, smooth motion."
+        },
+        {
+          "id": "a-character-mid-action-freezes-while-background",
+          "title": "A character mid-action freezes while background keeps",
+          "category": "Social / UGC",
+          "model": "Sora 2 · Kling 3.0",
+          "prompt": "Vertical 9:16, 6 seconds. A character mid-action freezes while background keeps moving, comedic effect, clean lighting."
+        },
+        {
+          "id": "three-shot-sequence-1-character-opens-diner",
+          "title": "Three-shot sequence: (1) character opens diner door",
+          "category": "Food",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 10 seconds. Three-shot sequence: (1) character opens diner door, (2) sits by window with coffee, (3) leaves into rain. Maintain same face, outfit, scarf color, and lighting continuity."
+        },
+        {
+          "id": "start-from-a-still-frame-of",
+          "title": "Start from a still frame of the",
+          "category": "Character",
+          "model": "Veo 3.1 · Runway Gen-4.5",
+          "prompt": "16:9, 8 seconds. Start from a still frame of the character standing under a streetlamp. Animate gentle breathing, scarf fluttering, subtle camera push-in. Keep face identical."
+        }
+      ]
+    },
+    {
+      "slug": "agent-rules",
+      "title": "Agent Writing-Style Rules",
+      "tagline": "Make agent output read like a senior engineer wrote it.",
+      "description": "Drop-in writing rules for coding agents — the directives that kill passive voice, vague nouns, throat-clearing, and other AI tells. Paste any rule into your AGENTS.md, CLAUDE.md, or Cursor rules. Sourced from agent-style.",
+      "audience": "engineers",
+      "category": "prompt-pack",
+      "source": "github.com/yzhao062/agent-style",
+      "sourceUrl": "https://github.com/yzhao062/agent-style",
+      "accent": "#a8ff60",
+      "prompts": [
+        {
+          "id": "rule-01",
+          "title": "RULE-01: Do Not Assume the Reader Shares Your Tacit Knowledge (Resist th",
+          "category": "Audience and Reader State",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Do not use technical terms or acronyms that have not been established for the reader's background level. Do not launch into mechanics before naming the purpose. Do not write a multi-paragraph argument without a one-sentence map first. Before writing, name the intended reader for this artifact: adjacent-field graduate student for research papers, junior engineer for API docs, on-call engineer for runbooks, cross-panel reviewer for proposals, release reader for changelogs, or another concrete reader. If that reader would pause to infer what a term means, define it or rewrite around it.",
+          "tip": "e.g. GOOD: Our method trains a representation to separate similar from dissimilar image pairs (contrastive learning), with InfoNCE as the loss and a slowly-updating moment"
+        },
+        {
+          "id": "rule-02",
+          "title": "RULE-02: Do Not Use Passive Voice When the Agent Matters",
+          "category": "Voice and Directness",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Do not write \"X was done by Y\" when \"Y did X\" fits. Active voice names the agent, shortens the sentence, and makes the verb carry the action. When the agent is genuinely unknown or irrelevant (scientific attribution, observation of phenomena, general truths), passive is correct; use it deliberately, not by default. Before each passive construction, ask: is the agent known and worth naming? If yes, rewrite active.",
+          "tip": "e.g. GOOD: We ran the experiments on eight NVIDIA A100 GPUs."
+        },
+        {
+          "id": "rule-03",
+          "title": "RULE-03: Do Not Use Abstract or General Language When a Concrete, Specif",
+          "category": "Word Choice",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Do not use abstract nouns when concrete ones exist. \"The system has performance issues\" says nothing; \"the checkout endpoint p95 latency rose from 120ms to 450ms at 14:00 UTC\" names what, when, and how much. Replace category words (\"factors\", \"aspects\", \"considerations\", \"issues\", \"elements\") with the specific items they refer to. If you reach for a category word, ask: what exactly? If the answer takes longer than one clause to give, the sentence was hiding the work.",
+          "tip": "e.g. GOOD: The model improves F1 by 3.2 points (0.812 to 0.844) on FEVER and cuts hallucination rate from 11.3% to 6.8% on TruthfulQA."
+        },
+        {
+          "id": "rule-04",
+          "title": "RULE-04: Do Not Include Needless Words",
+          "category": "Word Choice",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Do not stretch phrases. \"In order to\" is \"to\"; \"due to the fact that\" is \"because\"; \"at this point in time\" is \"now\"; \"it is important to note that\" is (delete and state the fact); \"may potentially\" and \"could possibly\" are redundant hedges (use \"may\" or \"could\", not both). Every filler phrase signals to the reader that substance is about to arrive; delete the phrase and let the substance arrive directly.",
+          "tip": "e.g. GOOD: We reduced the learning rate to prevent divergence."
+        },
+        {
+          "id": "rule-05",
+          "title": "RULE-05: Do Not Use Dying Metaphors or Prefabricated Phrases",
+          "category": "Word Choice",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Do not use metaphors, similes, or phrases you have seen often in print. When a phrase feels off-the-shelf — ready-made framing for work-in-general rather than for this work — either restate in plain technical terms with specific numbers or a specific mechanism, or delete the sentence. If the sentence is paraphrasing what other people write about work like yours rather than stating what is true about yours, it is a dying metaphor and should go.",
+          "tip": "e.g. GOOD: This work reduces harmful-completion rate on HarmBench from 14.1% to 3.2% without degrading MMLU accuracy."
+        },
+        {
+          "id": "rule-06",
+          "title": "RULE-06: Do Not Use Avoidable Jargon Where an Everyday English Word Exis",
+          "category": "Word Choice",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Do not use \"leverage\" where \"use\" fits. Do not use \"utilize\" where \"use\" fits. Do not use \"methodology\" where \"method\" fits. Do not use \"functionality\" where \"function\" or \"feature\" fits. Reserve the longer word for when it carries information the shorter word does not. Technical jargon with distinct meaning (\"backpropagation\", \"quantization\", \"deserialization\") is fine and often necessary. Corporate-speak jargon (\"leverage\", \"utilize\", \"operationalize\") is substitutable by shorter everyday words without loss of meaning.",
+          "tip": "e.g. GOOD: We use transformers for cross-lingual transfer."
+        },
+        {
+          "id": "rule-07",
+          "title": "RULE-07: Use Affirmative Form for Affirmative Claims (\"Trivial\" Instead ",
+          "category": "Claims and Calibration",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Replace \"not important\" with \"trivial\"; \"did not remember\" with \"forgot\"; \"did not pay attention to\" with \"ignored\"; \"is not often\" with \"rarely\"; \"is not large\" with \"small\"; \"does not succeed\" with \"fails\". Prefer one affirmative word over two negating words. When the sentence genuinely negates something (the proposition is true only in the negative), a single \"not\" is fine and necessary. The rule targets two-word negations that have a one-word affirmative equivalent. The operational test: can I replace \"not X\" with a single positive word that names the state directly? If yes, do so.",
+          "tip": "e.g. GOOD: The variance was small."
+        },
+        {
+          "id": "rule-08",
+          "title": "RULE-08: Do Not Linguistically Overstate or Understate Claims Relative t",
+          "category": "Claims and Calibration",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Do not overclaim (saying \"proves X\" when the evidence is \"suggests X\"). Do not underclaim via reflexive weasel (saying \"it might be worth considering\" when you mean \"we should do X\"). Calibrate verbs to evidence: experimental results \"suggest\" or \"show\"; theoretical derivations \"imply\" or \"prove\"; user reports \"indicate\" (pending verification); benchmarks \"measure\". Use \"best\" only when you have compared against the strongest alternative; use \"only\" only when you have ruled out alternatives. When the evidence is uncertain, say so in one clause; do not weaken the main verb beyond what the evidence supports.",
+          "tip": "e.g. GOOD: Our method reduces harmful-completion rate on HarmBench from 14.1% to 3.2% without degrading MMLU accuracy. (Generalization to other alignment benchmarks is fut"
+        },
+        {
+          "id": "rule-09",
+          "title": "RULE-09: Express Coordinate Ideas in Similar Form (Parallel Structure)",
+          "category": "Sentence Structure",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Write coordinate ideas in the same grammatical form. In a list of three items, if item 1 is a noun phrase, items 2 and 3 are also noun phrases; if item 1 is a verb-initial clause, items 2 and 3 are also verb-initial clauses. The rule applies to bullet lists, parallel predicates (\"we measure X, improve Y, and validate Z\"), and compound sentences connected by \"and\" / \"or\" / \"but\". Mismatched forms force the reader to reparse each item against a new expected structure.",
+          "tip": "e.g. GOOD: The pipeline cleans the data, extracts features, and trains the model."
+        },
+        {
+          "id": "rule-10",
+          "title": "RULE-10: Keep Related Words Together",
+          "category": "Sentence Structure",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Keep subject close to verb, verb close to object, and modifier close to modified. When a long parenthetical or relative clause must appear between subject and verb, move the clause to the end of the sentence or split into two sentences. The operational test: count words between subject and verb; if the gap exceeds 8, split. Readers hold the subject in working memory until the verb arrives; every intervening clause costs memory slots and increases misparsing risk.",
+          "tip": "e.g. GOOD: The model achieves 87.2% accuracy. It was pre-trained on a mixed corpus of English Wikipedia, Common Crawl, and a 400-million-token scientific dataset the autho"
+        },
+        {
+          "id": "rule-11",
+          "title": "RULE-11: Place New or Important Information in the Stress Position at th",
+          "category": "Sentence Structure",
+          "model": "AGENTS.md · any agent",
+          "prompt": "End sentences with the information you want the reader to remember. The beginning of a sentence (topic position) connects to what came before; the end (stress position) is where new or important information lands with maximum emphasis. If the key fact is in the middle, move it to the end or rebalance. The rule applies especially to result sentences in papers, conclusions in design docs, and root-cause lines in postmortems.",
+          "tip": "e.g. GOOD: On the SQuAD 2.0 test set, the new architecture improves F1 by 3.2 points over the previous best model."
+        },
+        {
+          "id": "rule-12",
+          "title": "RULE-12: Break Long Sentences; Vary Length (Split Sentences over 30 Word",
+          "category": "Sentence Structure",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Split any sentence over 30 words into two or more sentences. Vary sentence length across a paragraph: a paragraph of five 25-word sentences reads less well than the same content in sentences of 8, 18, 22, 14, 30 words. Short sentences land points; long sentences carry qualification and detail. A paragraph that does only one of these reads as monotone. When a long sentence is unavoidable (single logical unit that resists splitting), make the previous and following sentences short to balance.",
+          "tip": "e.g. GOOD: We evaluate our model on five standard benchmarks: NLI, reading comprehension, and factual-recall. In-distribution accuracy uses held-out splits of the training"
+        },
+        {
+          "id": "rule-a",
+          "title": "RULE-A: Do Not Convert Prose into Bullet Points Unless the Content Is a ",
+          "category": "Observed LLM Patterns",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Keep prose in paragraphs when ideas connect by cause-and-effect, argument, or narrative. Use bullets only when items are genuinely parallel enumerations (API endpoints, config options, checklist steps). The test: if a reader reads only the first few words of each bullet, does the shape recover meaning? For a genuine list, yes (each bullet names a thing); for fragmented prose, no (bullets are sentence shards with connective tissue stripped). Do not force 3-item lists when 2 items or a sentence fit; LLMs over-produce \"first, second, third\" triads where 2 items would be natural. Resist the pattern.",
+          "tip": "severity: medium"
+        },
+        {
+          "id": "rule-b",
+          "title": "RULE-B: Do Not Use Em or En Dashes as Casual Sentence Punctuation",
+          "category": "Observed LLM Patterns",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Do not use em dashes or en dashes as casual sentence punctuation. Prefer commas for appositives, semicolons for linked independent clauses, colons for expansions, and parentheses for asides. En dashes remain correct in numeric ranges (`1-3`, `2020-2026`), paired names (\"the Stein-Strömberg theorem\"), and bibliographic page ranges. Normal hyphens in compound words and technical terms (`command-line`, `co-PI`, `zero-shot`) are not dashes and should not be flagged.",
+          "tip": "e.g. GOOD: The model converges quickly, typically within 5000 training steps, on most datasets."
+        },
+        {
+          "id": "rule-c",
+          "title": "RULE-C: Do Not Start Consecutive Sentences with the Same Word or Phrase",
+          "category": "Observed LLM Patterns",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Do not open two or more consecutive sentences with the same word. The pattern signals a drafting template that the generation process locked into (often `This ... This ... This ...`, `The ... The ... The ...`, or `We ... We ... We ...`). Vary the opener: topic-fronted versus subject-fronted versus connective. Pronoun subjects (`It`, `We`, `They`) are the most common offenders in LLM output because the model samples the next sentence conditional on the topic and re-picks the most fluent subject.",
+          "tip": "e.g. GOOD: The method uses a contrastive loss with 10% dropout, converging in 5000 steps."
+        },
+        {
+          "id": "rule-d",
+          "title": "RULE-D: Do Not Overuse Transition Words (\"Additionally\", \"Furthermore\", ",
+          "category": "Observed LLM Patterns",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Do not open sentences with \"Additionally\", \"Furthermore\", \"Moreover\", \"In addition\", \"What's more\", or \"Notably\" unless the sentence genuinely builds on the preceding clause in a way that a period or `And` would not convey. In most cases, a period ends the prior sentence and the next sentence makes the connection by content alone. Reserve explicit transitions for the rare case where the logical move (addition, contrast, concession) needs to be flagged for the reader.",
+          "tip": "e.g. GOOD: The model outperforms BM25 on MS MARCO and DPR on Natural Questions, and reaches state-of-the-art on BEIR."
+        },
+        {
+          "id": "rule-e",
+          "title": "RULE-E: Do Not Close Every Paragraph with a Summary Sentence",
+          "category": "Observed LLM Patterns",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Do not end every paragraph with a sentence that restates the paragraph's point (\"In summary, ...\", \"Thus, the contribution is ...\", \"Overall, this means ...\", \"In conclusion, ...\"). Summary closers are correct for the final paragraph of a piece, or for a long section that the reader will skim rather than read sequentially. For body paragraphs, trust the content to land its own point; a closer that restates the same claim in different words is noise. The test: if the closer sentence is deleted, does the paragraph still make its point? If yes, delete the closer.",
+          "tip": "e.g. GOOD: We trained the model on 50k query-passage pairs and evaluated on five benchmarks. The model reaches 0.79 recall@10 on our held-out set."
+        },
+        {
+          "id": "rule-f",
+          "title": "RULE-F: Use Consistent Terms; Do Not Redefine Abbreviations Mid-Document",
+          "category": "Observed LLM Patterns",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Once you introduce a term or abbreviation, keep using it. Do not alternate \"large language model\", \"LLM\", \"language model\", \"LM\", \"neural language model\", \"foundation model\" as synonyms for the same thing. Do not redefine an abbreviation: if `LLM` was defined as `large language model` in the introduction, do not expand it again in section 3. For the reader, a consistent term signals \"this is the same concept I saw earlier\"; varied terms signal \"I should check whether this is something new.\"",
+          "tip": "e.g. GOOD: introduces \"large language models (LLMs)\" in §1, then writes in §3: \"LLMs achieve...\""
+        },
+        {
+          "id": "rule-g",
+          "title": "RULE-G: Use Title Case for Section and Subsection Headings",
+          "category": "Observed LLM Patterns",
+          "model": "AGENTS.md · any agent",
+          "prompt": "Capitalize the first word, the last word, and all major words (nouns, verbs, adjectives, adverbs, pronouns) in section and subsection headings. Lowercase articles (`a`, `an`, `the`), coordinating conjunctions (`and`, `but`, `or`, `nor`), and short prepositions (`of`, `in`, `on`, `to`, `for`, `by`, `at`, `with`). This applies in Markdown (H1 through H6), LaTeX (`\\section`, `\\subsection`, `\\subsubsection`), reStructuredText, and similar structural-heading surfaces. Does not apply to sentence-style titles (question-form headings or full-sentence article titles where sentence case is intended).",
+          "tip": "e.g. GOOD: ## Experimental Results and Analysis"
+        },
+        {
+          "id": "rule-h",
+          "title": "RULE-H: Support Factual Claims with Citation or Concrete Evidence; Do No",
+          "category": "Observed LLM Patterns",
+          "model": "AGENTS.md · any agent",
+          "prompt": "When a sentence asserts a factual claim that warrants attribution (empirical result, published method, community consensus, comparative benchmark, historical fact), provide a verifiable citation, or name the specific source (a paper by author and year, a benchmark, a dataset, an observed experiment). Do not write handwavy attributions (\"prior work shows\", \"it is well known that\", \"recent studies suggest\", \"many researchers believe\") without naming the specific work. When the claim is the author's own observation, state the concrete evidence (number, dataset, experiment, condition). Never invent a citation; if the cited paper cannot be verified, remove the claim, soften it to the author's own observation, or mark `[UNVERIFIED]` and flag for review.",
+          "tip": "e.g. GOOD: Khattab and Zaharia 2020 (ColBERT) report MS MARCO passage-ranking MRR@10 of 0.360 for ColBERT versus 0.187 for BM25-Anserini, using contextualized late interac"
+        },
+        {
+          "id": "rule-i",
+          "title": "RULE-I: Prefer Full Forms over Contractions in Technical Prose",
+          "category": "Observed LLM Patterns",
+          "model": "AGENTS.md · any agent",
+          "prompt": "In formal technical prose (research papers, grant proposals, API specifications, technical documentation), prefer \"it is\" over \"it's\", \"does not\" over \"doesn't\", \"cannot\" over \"can't\", \"will not\" over \"won't\", \"I am\" over \"I'm\", \"you are\" over \"you're\". Contractions are acceptable in informal registers (blog posts, release notes, commit messages, casual documentation), but even there, be deliberate: a contraction sets a register, and if the surrounding prose is formal, the contraction reads as a tonal break. The operational test: if the surrounding sentences use full forms, the contraction stands out; if the surrounding sentences use contractions, the full form stands out. Pick the register and hold it within the document.",
+          "tip": "e.g. GOOD: The model does not converge when the learning rate is too high.` (The \"it is worth noting that\" phrase is itself filler and should also be cut per RULE-04.)"
+        }
+      ]
+    }
+  ]
+}

@@ -22,6 +22,7 @@ type SearchCategory =
   | "language"
   | "concept"
   | "job-search"
+  | "prompt-pack"
   | "other";
 
 interface BaseResult {
