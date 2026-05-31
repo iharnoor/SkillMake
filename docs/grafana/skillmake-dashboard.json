@@ -2256,7 +2256,7 @@
     },
     {
       "id": 32,
-      "title": "Catalog growth — approved / rejected / promoted per day (28d)",
+      "title": "Catalog lifecycle — added / rejected / version promoted per day (28d)",
       "type": "barchart",
       "gridPos": {
         "x": 0,
@@ -2293,7 +2293,7 @@
             ],
             "body_type": "raw",
             "body_content_type": "text/plain",
-            "data": "SELECT toStartOfDay(timestamp) AS day, index1 AS event, sum(_sample_interval) AS count FROM skillmake_metrics WHERE index1 IN ('skill_approved','skill_rejected','skill_promoted') AND timestamp >= NOW() - INTERVAL '28' DAY GROUP BY day, event ORDER BY day\nFORMAT JSON"
+            "data": "SELECT toStartOfDay(timestamp) AS day, index1 AS event, sum(_sample_interval) AS count FROM skillmake_metrics WHERE index1 IN ('skill_added','skill_submission_rejected','skill_version_promoted') AND timestamp >= NOW() - INTERVAL '28' DAY GROUP BY day, event ORDER BY day\nFORMAT JSON"
           },
           "root_selector": "data",
           "columns": [
@@ -2354,7 +2354,7 @@
             ],
             "body_type": "raw",
             "body_content_type": "text/plain",
-            "data": "SELECT toStartOfWeek(timestamp) AS week, sum(_sample_interval) AS mcps_added FROM skillmake_metrics WHERE index1 = 'skill_approved' AND blob8 = 'mcp' AND timestamp >= NOW() - INTERVAL '84' DAY GROUP BY week ORDER BY week\nFORMAT JSON"
+            "data": "SELECT toStartOfWeek(timestamp) AS week, sum(_sample_interval) AS mcps_added FROM skillmake_metrics WHERE index1 = 'skill_added' AND blob8 = 'mcp' AND timestamp >= NOW() - INTERVAL '84' DAY GROUP BY week ORDER BY week\nFORMAT JSON"
           },
           "root_selector": "data",
           "columns": [
@@ -2374,7 +2374,7 @@
     },
     {
       "id": 34,
-      "title": "Skills approved by audience (28d)",
+      "title": "Skills added by audience (28d)",
       "type": "piechart",
       "gridPos": {
         "x": 0,
@@ -2410,7 +2410,7 @@
             ],
             "body_type": "raw",
             "body_content_type": "text/plain",
-            "data": "SELECT blob7 AS audience, sum(_sample_interval) AS approved FROM skillmake_metrics WHERE index1 = 'skill_approved' AND blob7 != '' AND timestamp >= NOW() - INTERVAL '28' DAY GROUP BY audience ORDER BY approved DESC\nFORMAT JSON"
+            "data": "SELECT blob7 AS audience, sum(_sample_interval) AS added FROM skillmake_metrics WHERE index1 = 'skill_added' AND blob7 != '' AND timestamp >= NOW() - INTERVAL '28' DAY GROUP BY audience ORDER BY added DESC\nFORMAT JSON"
           },
           "root_selector": "data",
           "columns": [
@@ -2420,8 +2420,8 @@
               "type": "string"
             },
             {
-              "selector": "approved",
-              "text": "approved",
+              "selector": "added",
+              "text": "added",
               "type": "number"
             }
           ]
@@ -2430,7 +2430,7 @@
     },
     {
       "id": 35,
-      "title": "Submission → approval funnel (28d)",
+      "title": "Skill submission → add funnel (28d)",
       "type": "stat",
       "gridPos": {
         "x": 8,
@@ -2468,7 +2468,7 @@
             ],
             "body_type": "raw",
             "body_content_type": "text/plain",
-            "data": "SELECT sum(if(index1 = 'submit_completed', _sample_interval, 0)) AS submitted, sum(if(index1 = 'skill_approved', _sample_interval, 0)) AS approved, sum(if(index1 = 'skill_rejected', _sample_interval, 0)) AS rejected, sum(if(index1 = 'skill_promoted', _sample_interval, 0)) AS promoted FROM skillmake_metrics WHERE index1 IN ('submit_completed','skill_approved','skill_rejected','skill_promoted') AND timestamp >= NOW() - INTERVAL '28' DAY\nFORMAT JSON"
+            "data": "SELECT sum(if(index1 = 'skill_submitted', _sample_interval, 0)) AS submitted, sum(if(index1 = 'skill_added', _sample_interval, 0)) AS added, sum(if(index1 = 'skill_submission_rejected', _sample_interval, 0)) AS rejected, sum(if(index1 = 'skill_version_promoted', _sample_interval, 0)) AS version_promoted FROM skillmake_metrics WHERE index1 IN ('skill_submitted','skill_added','skill_submission_rejected','skill_version_promoted') AND timestamp >= NOW() - INTERVAL '28' DAY\nFORMAT JSON"
           },
           "root_selector": "data",
           "columns": [
@@ -2478,8 +2478,8 @@
               "type": "number"
             },
             {
-              "selector": "approved",
-              "text": "approved",
+              "selector": "added",
+              "text": "added",
               "type": "number"
             },
             {
@@ -2488,8 +2488,8 @@
               "type": "number"
             },
             {
-              "selector": "promoted",
-              "text": "promoted",
+              "selector": "version_promoted",
+              "text": "version_promoted",
               "type": "number"
             }
           ]

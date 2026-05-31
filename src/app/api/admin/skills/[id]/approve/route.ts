@@ -17,7 +17,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
   if (!approved) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   after(() =>
-    track("skill_approved", {
+    track("skill_added", {
       slug: approved.skill.name,
       audience: approved.skill.audience,
       category: approved.skill.category,

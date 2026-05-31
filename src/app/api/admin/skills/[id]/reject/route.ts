@@ -14,7 +14,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
   const updated = await setSkillStatus(id, "rejected");
   if (!updated) return NextResponse.json({ error: "Not found" }, { status: 404 });
   after(() =>
-    track("skill_rejected", {
+    track("skill_submission_rejected", {
       slug: updated.skill.name,
       audience: updated.skill.audience,
       category: updated.skill.category,

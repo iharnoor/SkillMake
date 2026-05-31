@@ -42,7 +42,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
     );
   }
   after(() =>
-    track("skill_promoted", {
+    track("skill_version_promoted", {
       slug: result.promoted.skill.name,
       audience: result.promoted.skill.audience,
       category: result.promoted.skill.category,

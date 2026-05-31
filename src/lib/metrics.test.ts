@@ -32,7 +32,7 @@ test("buildMetricDataPoint writes standard product event shape", () => {
 
 test("buildMetricDataPoint appends audience + category for catalog events", () => {
   const point = buildMetricDataPoint(
-    "skill_approved",
+    "skill_added",
     { slug: "firecrawl-mcp", audience: "claude-code", category: "mcp" },
     {
       country: "US",
@@ -42,7 +42,7 @@ test("buildMetricDataPoint appends audience + category for catalog events", () =
     }
   );
   assert.deepEqual(point.blobs, [
-    "skill_approved",
+    "skill_added",
     "firecrawl-mcp",
     "US",
     "",

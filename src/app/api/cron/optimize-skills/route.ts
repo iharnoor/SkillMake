@@ -119,7 +119,7 @@ async function handle(req: Request): Promise<Response> {
           }));
           // Cron-driven promotion lands in the same catalog-growth funnel as
           // the manual /promote endpoint — counted together in dashboards.
-          await track("skill_promoted", {
+          await track("skill_version_promoted", {
             slug: entry.skill.name,
             audience: entry.skill.audience,
             category: entry.skill.category,

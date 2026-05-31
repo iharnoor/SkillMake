@@ -31,13 +31,15 @@ SQL
 
 | Column     | Meaning                                                  |
 |------------|----------------------------------------------------------|
-| `index1`   | event name (`install_hit`, `home_view`, `marketplace_view`, `tricks_view`, `powerhouse_view`, `submit_started`, `submit_completed`, `convert_success`, `convert_error`, `search_submitted`, `github_click`, `page_dwell`, `scroll_depth`, `api_error`) |
+| `index1`   | event name (`install_hit`, `home_view`, `marketplace_view`, `tricks_view`, `powerhouse_view`, `skill_submission_started`, `skill_submitted`, `skill_added`, `skill_submission_rejected`, `skill_version_promoted`, `convert_success`, `convert_error`, `search_submitted`, `github_click`, `page_dwell`, `scroll_depth`, `api_error`) |
 | `blob1`    | event name (mirrors `index1`)                            |
 | `blob2`    | skill slug (or `slug@hash8` for `install_hit` rows since SkillOpt Phase 1b), bucket, route fragment, or hashed search query — depends on event |
 | `blob3`    | country (`cf-ipcountry`, `??` if unknown)                |
 | `blob4`    | referer host (empty for direct hits)                     |
 | `blob5`    | UA category (`curl` / `browser` / `bot` / `other`)       |
 | `blob6`    | daily visitor id (sha256(ip+ua+day) → 8 bytes)           |
+| `blob7`    | skill audience (`skill_added`, `skill_submission_rejected`, `skill_version_promoted` only) |
+| `blob8`    | skill category (`skill_added`, `skill_submission_rejected`, `skill_version_promoted` only) |
 | `double1`  | always `1`                                               |
 | `double2`  | HTTP status (`api_error`, `convert_error` only)          |
 
@@ -416,7 +418,7 @@ SELECT
   index1 AS step,
   sum(_sample_interval) AS hits
 FROM skillmake_metrics
-WHERE index1 IN ('submit_started', 'convert_success', 'convert_error', 'submit_completed')
+WHERE index1 IN ('skill_submission_started', 'convert_success', 'convert_error', 'skill_submitted')
   AND timestamp >= NOW() - INTERVAL '30' DAY
 GROUP BY step
 ORDER BY hits DESC
