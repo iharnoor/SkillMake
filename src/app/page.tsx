@@ -44,6 +44,11 @@ const ASCII = String.raw` ____  _    _ _ _                 _
 
 const FEATURED_LINKS = [
   {
+    href: "/packs",
+    label: "Prompt Packs",
+    description: "Copy-paste prompt grammar for Nano Banana and other generative models.",
+  },
+  {
     href: "/mcps",
     label: "MCPs",
     description: "Agent-callable tools for browsers, APIs, SaaS, and custom workflows.",
