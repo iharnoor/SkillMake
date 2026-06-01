@@ -1,0 +1,76 @@
+{
+  "sourceUrl": "https://github.com/songguoxs/seedance-prompt-skill",
+  "skill": {
+    "name": "seedance-prompt-skill",
+    "description": "Use when building ready-to-paste video prompts for ByteDance's Seedance 2.0 (即梦) — turns a one-line brief into cinematic, multi-shot Chinese prompts with camera language, timing, and @-referenced assets.",
+    "whenToUse": [
+      "Turning a short creative brief (\"a wuxia fight\", \"a milk-tea ad\", \"a 30s suspense short\") into a complete Seedance 2.0 video prompt",
+      "Writing multi-modal prompts that reference uploaded images, videos, and audio via the @图片1 / @视频1 / @音频1 system",
+      "Controlling 4-15s shots with timestamp-based shot lists, camera moves, dialogue, and sound design",
+      "Producing videos longer than 15s by chaining segments with Seedance's video-extension (视频延长) feature",
+      "Maintaining character, product, or scene consistency across shots using first/last-frame reference images"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Prompt formula",
+        "explanation": "The base text-to-video pattern is (主体描述) + (动作序列) + (环境/光影) + (镜头语言) + (风格关键词) — subject, action sequence, environment/lighting, camera language, then style keywords."
+      },
+      {
+        "term": "@reference system",
+        "explanation": "Uploaded assets are cited inline with official names: @图片1–@图片9 for images, @视频1–@视频3 for video, @音频1–@音频3 for audio. Each reference must state its purpose, e.g. @图片1为首帧 (as first frame) or 参考@视频1的运镜 (reference its camera work). Up to 12 files total."
+      },
+      {
+        "term": "Timestamp shot list",
+        "explanation": "For 13-15s narrative clips, split the prompt into timed beats (0-3秒 / 4-8秒 / 9-12秒 / 13-15秒), each with its own shot description and camera language — the most-used advanced technique."
+      },
+      {
+        "term": "Video extension for >15s",
+        "explanation": "Single generations cap at 15s. For longer pieces, generate segment 1 (≤15s), then feed it back as @视频1 and \"将@视频1延长Xs\" with a matching hand-off frame between segments. Extension length = the duration of the new portion only."
+      },
+      {
+        "term": "Natural-language Chinese, no negative prompts",
+        "explanation": "Seedance 2.0 prefers fluent, grammatical Chinese describing a scene to a director — not keyword tags. All prompts (video and image-gen) are written in Chinese. Unwanted elements are stated in a 禁止 (forbidden) block at the end rather than via --no negatives."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Install: copy .claude/skills/seedance into your project",
+        "purpose": "Drop the SKILL.md skill into a Claude Code / Cursor / Cline project so the agent activates on Seedance, 即梦, 视频提示词, or video-prompt requests.",
+        "example": "git clone https://github.com/songguoxs/seedance-prompt-skill\ncp -r seedance-prompt-skill/.claude/skills/seedance .claude/skills/"
+      },
+      {
+        "signature": "Text-to-video: (主体) + (动作序列) + (环境/光影) + (镜头语言) + (风格)",
+        "purpose": "Generate a base prompt with no reference assets.",
+        "example": "镜头跟随黑衣男子快速逃亡，后面一群人在追，镜头转为侧面跟拍，人物惊慌撞倒路边的水果摊爬起来继续逃，人群慌乱的声音。"
+      },
+      {
+        "signature": "Consistency: [角色]@图片N + [动作/剧情] + [场景]@图片N + [运镜/光影]",
+        "purpose": "Keep a character, product, or scene consistent by anchoring it to reference images.",
+        "example": "男人@图片1下班后疲惫地走在走廊，脚步变缓，停在家门口，脸部特写深呼吸调整情绪，特写翻找钥匙插入门锁，进门后小女儿和宠物狗欢快迎接拥抱，室内温馨，全程自然对话"
+      },
+      {
+        "signature": "Timestamp shot list: 0-3秒:[...] 4-8秒:[...] 9-12秒:[...] 13-15秒:[...]",
+        "purpose": "Precisely control each beat of a 13-15s narrative clip.",
+        "example": "15秒仙侠高燃战斗，金红暖色调，0-3秒：低角度特写主角紧握雷纹巨剑，剑刃赤红电光爆闪；4-8秒：环绕摇镜快切旋身挥剑迸射红色冲击波；9-12秒：仰拍拉远慢放跃起劈向魔兵群；13-15秒：缓推特写落地收剑，余波微动。"
+      },
+      {
+        "signature": "Extend >15s: 将@视频1延长Xs + [新增内容的时间戳分镜]",
+        "purpose": "Chain segments past the 15s cap, each picking up from the prior segment's final frame.",
+        "example": "将@视频1延长15秒。0-5秒：接上段剑修持剑画面，暗影魔兽飞扑而来，剑修纵身迎敌；6-10秒：空中激战剑气纵横，魔兽斩成灰烬；11-15秒：落地收剑，金色粒子飘散，镜头缓推特写侧脸，音效渐弱。"
+      }
+    ],
+    "gotchas": [
+      "Photoreal human faces in uploaded images/videos are auto-blocked by the platform — do not use real-face reference material.",
+      "Seedance does not support negative prompts; declare unwanted elements (字幕/LOGO/水印) in a 禁止 block at the end instead.",
+      "Write all prompts in fluent Chinese — Seedance 2.0 is tuned for natural-language Chinese, not English keyword tags.",
+      "Use the official @ names (@图片1, @视频1, @音频1), never @img1/@video1, and label what each reference is for so images, video, and characters don't get mixed up.",
+      "When extending a video, the chosen generation length is the NEW portion only (extend by 5s → set length to 5s), and each segment needs an explicit hand-off frame to the next.",
+      "Distinguish 参考 (reference style/motion) from 编辑 (edit the source asset) — they trigger different behaviors.",
+      "Single generation caps at 15s; anything longer must be split into chained extension segments."
+    ],
+    "category": "tool",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/songguoxs/seedance-prompt-skill"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "sourceUrl": "https://github.com/songguoxs/seedance-prompt-skill",
+  "skill": {
+    "name": "video-prompt-builder",
+    "description": "Use when turning a creative brief into a paste-ready Seedance 2.0 video prompt — pairs a shot-by-shot effects breakdown with the @-reference multimodal system, timestamp shot lists, and >15s extension chaining.",
+    "whenToUse": [
+      "Turning a one-line brief (\"trail-shoe brand film, golden hour, ~15s\") into a complete shot-by-shot Seedance 2.0 prompt",
+      "Planning a video as a four-part breakdown: shot timeline, master effects inventory, effects density map, and energy arc",
+      "Writing multimodal prompts that reference uploaded images, video, and audio via the @图片1 / @视频1 / @音频1 system",
+      "Producing videos longer than 15s by chaining segments with Seedance's video-extension (视频延长) feature",
+      "Calibrating effect density and signature moments to a target duration and aspect ratio"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Paste-ready prompt + breakdown",
+        "explanation": "Every output leads with a single block the user pastes into 即梦/Seedance, then explains the craft via a four-section effects breakdown so the choices are legible and tunable."
+      },
+      {
+        "term": "Prompt formula",
+        "explanation": "The base pattern is (主体) + (动作序列) + (环境/光影) + (镜头语言) + (风格) — subject, action sequence, environment/lighting, camera language, then style keywords. For 13-15s clips, write it as a timestamp shot list."
+      },
+      {
+        "term": "Four-section breakdown",
+        "explanation": "Shot-by-shot effects timeline (1-4s blocks with stacked effects + transition logic), master effects inventory (name · count · shots), effects density map (HIGH/MEDIUM/LOW per ~3-6s), and a three-act energy arc."
+      },
+      {
+        "term": "@reference system",
+        "explanation": "Cite assets inline with official names @图片1-9 / @视频1-3 / @音频1-3, each stating its purpose (首帧, 运镜, BGM). Distinguish 参考 (borrow a style/motion) from 编辑 (modify the source). ≤12 files total."
+      },
+      {
+        "term": "Creative principles",
+        "explanation": "Contrast drives impact (alternate density), every video needs one signature hero effect, transitions are shots not throwaway cuts, specificity beats vagueness, and the energy must resolve intentionally."
+      },
+      {
+        "term": "Extension for >15s",
+        "explanation": "Single pass caps at 15s. Generate segment 1, feed it back as @视频1, then 将@视频1延长Xs with a matching hand-off frame between segments. Extension length is the new portion only."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Text-to-video: (主体) + (动作序列) + (环境/光影) + (镜头语言) + (风格)",
+        "purpose": "Base text-only prompt with no reference assets.",
+        "example": "镜头跟随黑衣男子快速逃亡，后面一群人在追，镜头转为侧面跟拍，人物惊慌撞倒路边的水果摊爬起来继续逃，人群慌乱的声音。"
+      },
+      {
+        "signature": "Shot block: SHOT N (timestamp) — name • EFFECT • visual • camera • timing • transition",
+        "purpose": "The unit of the shot-by-shot timeline — name stacked effects precisely and state how each shot exits into the next.",
+        "example": "SHOT 7 (00:07-00:08) — Multi-Exposure Clone\n• EFFECT: composited time-slice / stroboscopic clone\n• 8+ instances of the runner along the track, ghosting from ~30% to full opacity\n• Static background plate, runner composited at multiple time positions\n• This is the SIGNATURE VISUAL EFFECT"
+      },
+      {
+        "signature": "Timestamp shot list (13-15s): 0-3秒:[...] 4-8秒:[...] 9-12秒:[...] 13-15秒:[...]",
+        "purpose": "Precisely control each beat of a 13-15s narrative clip.",
+        "example": "15秒仙侠高燃战斗，金红暖色调，0-3秒：低角度特写紧握雷纹巨剑，剑刃赤红电光爆闪；4-8秒：环绕摇镜快切旋身挥剑迸射红色冲击波；9-12秒：仰拍拉远慢放跃起劈向魔兵群；13-15秒：缓推特写落地收剑，余波微动。"
+      },
+      {
+        "signature": "Extend >15s: 将@视频1延长Xs + [新增内容的时间戳分镜]",
+        "purpose": "Chain segments past the 15s cap, each picking up from the prior segment's final frame.",
+        "example": "将@视频1延长15秒。0-5秒：接上段剑修持剑画面，暗影魔兽飞扑而来，剑修纵身迎敌；6-10秒：空中激战剑气纵横，魔兽斩成灰烬；11-15秒：落地收剑，金色粒子飘散，镜头缓推特写侧脸，音效渐弱。"
+      }
+    ],
+    "gotchas": [
+      "Lead with the paste-ready prompt, then the breakdown — never ship only the analysis.",
+      "Seedance does not support negative prompts; declare unwanted elements (字幕/LOGO/水印) in a closing 禁止 block.",
+      "Photoreal human faces in uploaded images/video are auto-blocked by the platform.",
+      "Use official @ names (@图片1, never @img1) and label what each reference is for so images, video, and characters don't get mixed up.",
+      "When extending, the generation length is the NEW portion only (extend 5s → length 5s), and each segment needs an explicit hand-off frame.",
+      "Single generation caps at 15s; describe the visual result, not the editing-software step ('frame scales inward rapidly', not 'keyframe a scale effect').",
+      "No hype language in the breakdown — write like a director's shot notes; default prompt language to Chinese for the native 即梦 platform."
+    ],
+    "category": "tool",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/songguoxs/seedance-prompt-skill"
+  }
+}
