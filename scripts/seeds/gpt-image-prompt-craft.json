@@ -1,0 +1,75 @@
+{
+  "sourceUrl": "https://github.com/wuyoscar/GPT-Image2-Skill",
+  "skill": {
+    "name": "gpt-image-prompt-craft",
+    "description": "Use when turning a rough image idea into a production-grade GPT Image 2 prompt — applies craft rules (exact text in quotes, canvas-first layout, JSON render schemas, material/lighting controls) and a 162-prompt gallery.",
+    "whenToUse": [
+      "Enhancing a weak or vague image prompt into a precise, render-ready spec for GPT Image 2 / gpt-image-2",
+      "Generating posters, typography, dense Chinese text, UI mockups, infographics, or research/data figures that need exact labels and layout",
+      "Writing JSON/config-style prompts for premium product or food renders with material, lighting, and motion subsystems",
+      "Editing or inpainting reference images while preserving identity, layout, text, and brand invariants",
+      "Routing to a matching pattern from the 162-prompt Reference Gallery before writing a prompt from scratch"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Canvas-first structure",
+        "explanation": "State aspect ratio and layout before the subject. If structure matters, describe it first — otherwise the model spends its detail budget on the object and improvises the layout."
+      },
+      {
+        "term": "Exact text in quotes",
+        "explanation": "GPT Image 2 renders typography well only when literal copy is explicit. Wrap every displayed string in \"…\", keep user Chinese verbatim, separate blocks with /, and mark whether text must be crisp/legible vs decorative."
+      },
+      {
+        "term": "JSON render schema",
+        "explanation": "For complex multi-system renders (product hero, food, motion), use a structured config prompt with GLOBAL_SETTINGS / ENVIRONMENT / CORE_ASSETS / MOTION / OUTPUT slots and render_flags — concrete visual constraints, not vague praise."
+      },
+      {
+        "term": "Material / lighting / palette are separate controls",
+        "explanation": "Don't compress into 'premium'. Split into concrete materials (brushed steel, condensation), lighting (softbox, rim light, side light), and a bounded palette (muted teal/rust/bone)."
+      },
+      {
+        "term": "Scene density beats adjectives",
+        "explanation": "Name 5-12 concrete nouns plus 2-4 material/lighting constraints instead of stacking empty adjectives like 'stunning' or 'high quality'. Capture context (RAW iPhone photo, 28mm lens feel) unlocks photorealism."
+      },
+      {
+        "term": "Edit invariants",
+        "explanation": "For images.edit, name the transformation first and explicitly preserve identity/layout/text/position. Identify multi-references by index and role ('Image 1: product, Image 2: style') and repeat invariants each iteration."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "gpt-image -p \"PROMPT\" [-f OUT] [-i REF...] [-m MASK] [--size --quality]",
+        "purpose": "Run generation via the packaged CLI. No -i = text-to-image; one+ -i = reference edit; -i plus -m = inpaint with mask. Reads OPENAI_API_KEY; high quality for final assets, low/medium for drafts.",
+        "example": "# text-to-image\ngpt-image -p \"Design a 3:4 vertical poster…\" --size portrait --quality high\n# reference edit\ngpt-image -p \"change only the season to winter; keep position\" -i scene.png\n# inpaint\ngpt-image -p \"remove the logo\" -i poster.png -m mask.png"
+      },
+      {
+        "signature": "Exact text: wrap every displayed string in quotes",
+        "purpose": "Make typography reliable by stating literal copy instead of describing it.",
+        "example": "Weak:  Create a tea poster with the brand name and promo copy.\nStrong: Design a 3:4 vertical poster. Accurately display the exact Chinese copy: \"山川茶事\" / \"冷泡系列\" / \"中杯 16 元\" / \"大杯 19 元\". Crisp, legible, no garbled characters."
+      },
+      {
+        "signature": "JSON render config schema (premium product/food)",
+        "purpose": "Structured config prompt for outputs with many interacting systems — environment, materials, lighting, motion, render goals.",
+        "example": "/* PRODUCT_RENDER_CONFIG: Hero\n   AESTHETIC: Premium Commercial Photography */\n{\n  \"GLOBAL_SETTINGS\": { \"aspect_ratio\": \"2:3 vertical\", \"style\": \"hyper-realistic commercial photography\", \"render_flags\": [\"8K_UHD\", \"sharp_foreground\", \"editorial_finish\"] },\n  \"ENVIRONMENT\": { \"background\": \"warm gradient studio\", \"lighting\": \"directional softbox, glossy highlights\", \"atmosphere\": [\"floating particles\", \"cinematic bokeh\"] },\n  \"CORE_ASSETS\": { \"primary_subject\": \"hero product\", \"materials\": [\"brushed metal\", \"condensation\"], \"composition\": \"diagonal zero-gravity arrangement\" },\n  \"OUTPUT\": { \"mood\": \"premium, editorial\", \"avoid\": [\"cheap banner\", \"plastic CGI\", \"fake brand logos\"] }\n}"
+      },
+      {
+        "signature": "Edit prompt: name the change + preserve invariants",
+        "purpose": "Surgical edits that transform one thing while explicitly keeping the rest readable and in place.",
+        "example": "Make it a winter evening with heavy snowfall, snow dusted on the board and pieces, breath vapor, cold blue-grey lighting — chess position still clearly readable, pieces in the original positions."
+      }
+    ],
+    "gotchas": [
+      "Requires OPENAI_API_KEY and the gpt-image CLI (Python 3.11+, uv/uvx); successful API calls bill the user's OpenAI account.",
+      "Don't reimplement image-gen code for normal requests — call the packaged gpt-image CLI or scripts/generate.py.",
+      "Search the bundled gallery/craft references before writing from scratch; load the smallest useful slice, never all category files.",
+      "Use high quality for final assets, Chinese text, posters, diagrams, and UI; low/medium for drafts and broad exploration.",
+      "Real-person likeness edits often fail at the API moderation layer — surface the API error verbatim rather than working around it.",
+      "Keep negation/avoid-lines short and targeted; too many negatives dominate the prompt.",
+      "Pick one dominant capture frame for photorealism — conflicting camera specs degrade the result."
+    ],
+    "category": "tool",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/wuyoscar/GPT-Image2-Skill"
+  }
+}
