@@ -1,6 +1,6 @@
 import { NextResponse, after } from "next/server";
 import { z } from "zod";
-import { listSkills, getApprovedSkill } from "@/lib/storage";
+import { listSkills } from "@/lib/storage";
 import { searchSkills } from "@/lib/vector";
 import type { Audience } from "@/lib/skill-schema";
 import { track, hashSearchQuery } from "@/lib/metrics";
@@ -36,6 +36,23 @@ interface BaseResult {
 }
 type SearchResult = BaseResult & { mode: "semantic" | "fallback" };
 
+function toResult(
+  e: Awaited<ReturnType<typeof listSkills>>[number],
+  score: number,
+  mode: SearchResult["mode"]
+): SearchResult {
+  return {
+    id: e.id,
+    name: e.skill.name,
+    description: e.skill.description,
+    category: e.skill.category,
+    audience: e.skill.audience,
+    videoUrls: e.skill.videoUrls,
+    score,
+    mode,
+  };
+}
+
 export async function POST(req: Request) {
   let body: unknown;
   try {
@@ -59,34 +76,23 @@ export async function POST(req: Request) {
   );
 
   try {
-    const hits = await searchSkills(query, max);
+    const [all, hits] = await Promise.all([listSkills(), searchSkills(query, max)]);
     if (hits) {
-      const detailed: (SearchResult | null)[] = await Promise.all(
-        hits.map(async (h): Promise<SearchResult | null> => {
-          // getApprovedSkill ensures rejected/pending skills never leak via search,
-          // even if HydraDB still has stale records for them.
-          const e = await getApprovedSkill(h.id);
-          if (!e) return null;
-          return {
-            id: e.id,
-            name: e.skill.name,
-            description: e.skill.description,
-            category: e.skill.category,
-            audience: e.skill.audience,
-            videoUrls: e.skill.videoUrls,
-            score: h.score,
-            mode: "semantic",
-          };
-        })
-      );
+      const approvedById = new Map(all.map((e) => [e.id, e]));
       return NextResponse.json({
         mode: "semantic",
-        results: detailed.filter((r): r is SearchResult => r !== null),
+        results: hits
+          .map((h) => {
+            // Approved list ensures rejected/pending skills never leak via search,
+            // even if HydraDB still has stale records for them.
+            const e = approvedById.get(h.id);
+            return e ? toResult(e, h.score, "semantic") : null;
+          })
+          .filter((r): r is SearchResult => r !== null),
       });
     }
 
     // Fallback: substring scan over already-approved-only list.
-    const all = await listSkills();
     const q = query.toLowerCase();
     const scored = all
       .map((e) => {
@@ -98,16 +104,7 @@ export async function POST(req: Request) {
       .slice(0, max);
     return NextResponse.json({
       mode: "fallback",
-      results: scored.map((x) => ({
-        id: x.e.id,
-        name: x.e.skill.name,
-        description: x.e.skill.description,
-        category: x.e.skill.category,
-        audience: x.e.skill.audience,
-        videoUrls: x.e.skill.videoUrls,
-        score: x.score,
-        mode: "fallback" as const,
-      })),
+      results: scored.map((x) => toResult(x.e, x.score, "fallback")),
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Search failed.";

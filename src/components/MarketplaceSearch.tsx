@@ -1,67 +1,49 @@
-export function MarketplaceSearch() {
+interface SearchEntry {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  audience: string;
+  href: string;
+}
+
+export function MarketplaceSearch({ entries }: { entries: SearchEntry[] }) {
   return (
     <div id="marketplace-search" data-search-root>
-      <div className="input-shell rounded-lg flex items-center gap-2 p-1 mb-3">
-        <span className="mono text-[color:var(--fg-dim)] text-xs pl-3">⌕</span>
+      <div className="input-shell rounded-md flex items-center gap-2 px-3 py-2">
+        <span className="mono text-[color:var(--fg-dim)] text-xs">⌕</span>
         <input
           name="q"
           type="search"
           autoComplete="off"
-          placeholder='Search by job: "turn transcript into article"'
-          className="flex-1 bg-transparent outline-none text-[14px] mono py-2.5 pr-2 placeholder:text-[color:var(--fg-dim)]"
+          placeholder="Search skills"
+          className="flex-1 bg-transparent outline-none text-[13px] mono py-1 placeholder:text-[color:var(--fg-dim)]"
         />
-        <button
-          type="button"
-          data-clear
-          hidden
-          className="text-xs text-[color:var(--fg-dim)] hover:text-[color:var(--fg)] px-3"
-        >
-          clear
-        </button>
       </div>
 
-      <div data-chips className="mb-4 flex flex-wrap gap-2">
-        {[
-          "turn transcript into article",
-          "review PR",
-          "generate HTML",
-          "research last 72 hours",
-        ].map((chip) => (
-          <button
-            key={chip}
-            type="button"
-            data-chip={chip}
-            className="mono text-[11px] rounded-full border border-[color:var(--border)] px-3 py-1.5 text-[color:var(--fg-muted)] hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] transition"
-          >
-            {chip}
-          </button>
-        ))}
-      </div>
-
-      <div data-status className="mb-3 flex items-center gap-2 text-[11px] mono text-[color:var(--fg-dim)]" hidden />
-      <div data-results className="mb-6 space-y-2" />
-      <MarketplaceSearchScript />
+      <div data-status className="mt-2 text-[11px] mono text-[color:var(--fg-dim)]" hidden />
+      <div data-results className="mt-2" />
+      <MarketplaceSearchScript entries={entries} />
     </div>
   );
 }
 
-function MarketplaceSearchScript() {
+function MarketplaceSearchScript({ entries }: { entries: SearchEntry[] }) {
+  const serializedEntries = JSON.stringify(entries).replace(/</g, "\\u003c");
+
   return (
     <script
       type="module"
       dangerouslySetInnerHTML={{
         __html: String.raw`
 (() => {
+  const entries = ${serializedEntries};
   const root = document.querySelector("[data-search-root]");
   if (!root) return;
 
   const input = root.querySelector("input[name='q']");
-  const clear = root.querySelector("[data-clear]");
-  const chips = root.querySelector("[data-chips]");
   const status = root.querySelector("[data-status]");
   const results = root.querySelector("[data-results]");
-  let timer = 0;
-  let ctrl = null;
 
   const esc = (value) => String(value).replace(/[&<>"']/g, (ch) => ({
     "&": "&amp;",
@@ -71,44 +53,63 @@ function MarketplaceSearchScript() {
     "'": "&#39;"
   })[ch]);
 
-  const scoreColor = (score) => {
-    if (score >= 0.85) return ["var(--accent)", "#0b0d10"];
-    if (score >= 0.65) return ["color-mix(in oklab, var(--accent) 60%, var(--surface))", "#0b0d10"];
-    if (score >= 0.45) return ["color-mix(in oklab, var(--accent) 25%, var(--surface))", "var(--fg)"];
-    return ["var(--bg-elevated)", "var(--fg)"];
-  };
-
   const renderStatus = (html) => {
     status.hidden = !html;
     status.innerHTML = html || "";
   };
 
+  const renderPayload = (data) => {
+    const count = data.results.length;
+    renderStatus(count ? count + ' match' + (count === 1 ? '' : 'es') : 'No matches');
+    renderResults(data.results);
+  };
+
+  const localSearch = (query) => {
+    const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+    if (!terms.length) return [];
+
+    return entries
+      .map((item) => {
+        const name = item.name.toLowerCase();
+        const category = item.category.toLowerCase();
+        const audience = item.audience.toLowerCase();
+        const description = item.description.toLowerCase();
+        const haystack = name + " " + category + " " + audience + " " + description;
+        if (!terms.every((term) => haystack.includes(term))) return null;
+
+        let score = 0;
+        for (const term of terms) {
+          if (name === term) score += 8;
+          else if (name.startsWith(term)) score += 6;
+          else if (name.includes(term)) score += 4;
+          if (category.includes(term) || audience.includes(term)) score += 2;
+          if (description.includes(term)) score += 1;
+        }
+        return { ...item, score };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name))
+      .slice(0, 10);
+  };
+
   const renderResults = (items) => {
     if (!items.length) {
-      results.innerHTML = '<div class="card p-6 text-center text-sm text-[color:var(--fg-muted)]">No matches. Try different words - semantic search understands synonyms.</div>';
+      results.innerHTML = "";
       return;
     }
     results.innerHTML = items.map((item) => {
-      const [bg, color] = scoreColor(item.score);
-      return '<a href="/marketplace/' + encodeURIComponent(item.id) + '" class="card p-4 flex items-start gap-4 hover:border-[color:var(--accent)] transition group">' +
-        '<div class="mono text-[10px] tracking-wider px-2 py-1 rounded-md self-start mt-0.5" style="background:' + bg + ';color:' + color + '">' + esc(Number(item.score).toFixed(2)) + '</div>' +
-        '<div class="flex-1 min-w-0">' +
-        '<div class="flex items-center gap-2 flex-wrap">' +
-        '<span class="mono text-[14px] font-semibold">' + esc(item.name) + '</span>' +
-        '<span class="tag">' + esc(item.category) + '</span>' +
+      return '<a href="' + esc(item.href) + '" class="grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-2 border-b border-[color:var(--border)] hover:text-[color:var(--accent)] transition">' +
+        '<div class="min-w-0">' +
+        '<div class="mono text-[13px] truncate">' + esc(item.name) + '</div>' +
+        '<div class="text-[12px] text-[color:var(--fg-muted)] line-clamp-1 mt-0.5">' + esc(item.description) + '</div>' +
         '</div>' +
-        '<div class="text-[13px] text-[color:var(--fg-muted)] line-clamp-2 mt-1">' + esc(item.description) + '</div>' +
-        '</div>' +
+        '<div class="mono text-[10px] text-[color:var(--fg-dim)] self-start mt-0.5">' + esc(item.category) + '</div>' +
         '</a>';
     }).join("");
   };
 
   const search = () => {
     const q = input.value.trim();
-    clear.hidden = !q;
-    chips.hidden = !!q;
-    window.clearTimeout(timer);
-    if (ctrl) ctrl.abort();
 
     if (!q) {
       renderStatus("");
@@ -116,46 +117,10 @@ function MarketplaceSearchScript() {
       return;
     }
 
-    ctrl = new AbortController();
-    renderStatus('<span class="flex items-center gap-1.5"><span class="dot pulse-dot"></span> searching...</span>');
-    timer = window.setTimeout(async () => {
-      try {
-        const res = await fetch("/api/search", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ query: q }),
-          signal: ctrl.signal
-        });
-        const data = await res.json();
-        const mode = data.mode === "semantic" ? "HydraDB · semantic" : "fallback · substring";
-        const tag = data.mode === "semantic" ? "tag tag-accent" : "tag";
-        const count = data.results.length;
-        renderStatus('<span class="' + tag + '">' + mode + '</span><span>' + count + ' result' + (count === 1 ? '' : 's') + '</span>');
-        renderResults(data.results);
-      } catch (error) {
-        if (error.name !== "AbortError") {
-          renderStatus('<span class="tag">fallback · substring</span><span>0 results</span>');
-          renderResults([]);
-        }
-      }
-    }, 220);
+    renderPayload({ results: localSearch(q) });
   };
 
   input.addEventListener("input", search);
-  clear.addEventListener("click", () => {
-    input.value = "";
-    input.focus();
-    search();
-  });
-  chips.addEventListener("click", (event) => {
-    const chip = event.target instanceof Element
-      ? event.target.closest("[data-chip]")
-      : null;
-    if (!chip) return;
-    input.value = chip.dataset.chip;
-    input.focus();
-    search();
-  });
 })();
 `,
       }}

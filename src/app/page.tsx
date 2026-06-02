@@ -267,7 +267,16 @@ export default async function Home({
       </div>
 
       <div className="mt-4">
-        <MarketplaceSearch />
+        <MarketplaceSearch
+          entries={entries.map((entry) => ({
+            id: entry.id,
+            name: entry.name,
+            description: entry.description,
+            category: entry.category,
+            audience: entry.audience,
+            href: entry.href,
+          }))}
+        />
       </div>
 
       {entries.length === 0 ? (
