@@ -1,0 +1,60 @@
+{
+  "sourceUrl": "https://github.com/AgriciDaniel/banana-claude",
+  "skill": {
+    "name": "banana-claude",
+    "description": "Use when generating or editing images with Gemini Nano Banana models — acts as a Creative Director that interprets intent and builds an optimized prompt via a 5-component formula, never passing raw text to the API.",
+    "whenToUse": [
+      "Generating an image from an idea where the raw request needs to be interpreted and enhanced before hitting the API",
+      "Editing or doing multi-turn creative sessions with character/style consistency via the Nano Banana MCP",
+      "Selecting a domain lens (cinema, product, portrait, editorial, UI, logo, landscape, infographic) to shape prompt emphasis",
+      "Applying brand/style presets and tracking generation cost across batch variations",
+      "Producing photorealistic ads or commercial product renders that need real camera/brand anchors"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Creative Director pipeline",
+        "explanation": "Never pass the user's raw text to gemini_generate_image. Always analyze intent, pick a domain mode, construct an optimized prompt, select model + imageSize, then generate — confirming with the user when the request is ambiguous."
+      },
+      {
+        "term": "5-Component Formula",
+        "explanation": "Build every prompt as Subject → Action → Location/Context → Composition → Style (incl. lighting). Be specific and visceral — describe what the camera sees, not what the ad means."
+      },
+      {
+        "term": "Domain modes",
+        "explanation": "Choose an expertise lens (Cinema, Product, Portrait, Editorial, UI/Web, Logo, Landscape, Abstract, Infographic); each shifts prompt emphasis — e.g. Cinema → camera/lens/film stock, Product → materials/studio lighting/clean BG."
+      },
+      {
+        "term": "Concrete anchors over hype",
+        "explanation": "Name real cameras ('Sony A7R IV'), real brands for styling, micro-details ('sweat droplets on collarbones'), and prestige context ('Vanity Fair editorial'). Never use banned words like '8K' or 'masterpiece' — set imageSize instead."
+      },
+      {
+        "term": "Safety + retry loop",
+        "explanation": "On IMAGE_SAFETY apply a safety rephrase and retry (max 3, with user approval); on 429 back off; on 400 FAILED_PRECONDITION inform about billing and stop. Never report success until a valid image file path exists."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/banana [generate|edit|chat|inspire|batch|preset|cost] <idea or path>",
+        "purpose": "Interactive Creative Director commands — generate with full prompt engineering, edit, run consistent multi-turn sessions, browse ideas, or batch N variations.",
+        "example": "/banana generate a cozy coffee shop hero image for a blog\n/banana edit ./hero.png make it golden hour, keep the layout\n/banana batch minimalist logo for a fintech app 3"
+      },
+      {
+        "signature": "5-Component photorealistic/ad template",
+        "purpose": "Structure a photorealistic or advertising prompt with camera, lighting, and prestige context.",
+        "example": "[Subject: age + appearance + expression], wearing [outfit with brand/texture], [action verb] in [specific location + time]. [Micro-detail about skin/hair/sweat]. Captured with [camera model], [focal length] lens at [f-stop], [lighting]. [Prestige context: \"Vanity Fair editorial\"]."
+      }
+    ],
+    "gotchas": [
+      "Read references/gemini-models.md and references/prompt-engineering.md before constructing any prompt — not optional, even for simple requests.",
+      "Never pass the user's raw text straight to the API; always interpret and rebuild it with the 5-component formula.",
+      "Banned keywords ('8K', 'masterpiece', 'ultra-realistic', 'high resolution') hurt output — control fidelity with the imageSize param instead.",
+      "Describe the scene, not the concept — write what the camera sees, never 'a dark-themed ad showing…'.",
+      "Requires the @ycse/nanobanana-mcp server and a Gemini API key; generations are billable and may hit IMAGE_SAFETY moderation.",
+      "Ask clarifying questions for vague requests (use case, style, brand) before generating."
+    ],
+    "category": "tool",
+    "audience": "creators",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/AgriciDaniel/banana-claude"
+  }
+}

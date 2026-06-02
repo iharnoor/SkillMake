@@ -1,0 +1,60 @@
+{
+  "sourceUrl": "https://github.com/nidhinjs/prompt-master",
+  "skill": {
+    "name": "prompt-master",
+    "description": "Use when writing, fixing, improving, or adapting a prompt for a specific AI tool — extracts intent across 9 dimensions, routes to per-model best practices, and outputs one paste-ready prompt with zero wasted tokens.",
+    "whenToUse": [
+      "Turning a rough idea into a single production-ready prompt for a named tool (Claude, GPT, Gemini, Midjourney, image/video AI, coding agents)",
+      "Fixing or improving an underperforming prompt that wastes tokens or drifts off-format",
+      "Adapting one prompt across different models that need different prompting styles",
+      "Choosing the right technique (role assignment, few-shot, grounding, chain-of-thought) for the target model",
+      "Avoiding model-specific anti-patterns, e.g. not adding chain-of-thought to reasoning-native models"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Confirm the target tool first",
+        "explanation": "Never output a prompt without knowing which AI system receives it — different models need different prompting. Ask if ambiguous, but never more than 3 clarifying questions before producing a prompt."
+      },
+      {
+        "term": "9-dimension intent extraction",
+        "explanation": "Silently extract Task, Target tool, Output format, Constraints, Input, Context, Audience, Success criteria, and Examples. Missing critical dimensions (task/tool/format are always critical) trigger clarifying questions."
+      },
+      {
+        "term": "Per-model tool routing",
+        "explanation": "Route to model-specific guidance: Claude follows literally and over-engineers (add 'only what's asked'); reasoning models (o3, Qwen3-thinking) want short prompts with NO chain-of-thought; open-weight models need flat, explicit structure."
+      },
+      {
+        "term": "Prefer simple techniques",
+        "explanation": "Favor role assignment, few-shot, grounding anchors, and chain-of-thought over complex meta-frameworks (Mixture of Experts, Tree/Graph of Thought) which carry higher fabrication risk in single-prompt contexts."
+      },
+      {
+        "term": "Locked output format",
+        "explanation": "Output one copyable prompt block, then a one-line '🎯 Target / 💡 what was optimized', and a short setup note only if genuinely needed. No framework names, no unrequested explanation, build prompts one at a time."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Output: copyable prompt block + 🎯 Target + 💡 what was optimized",
+        "purpose": "The fixed deliverable shape — a paste-ready prompt and a single line of rationale, with fillable placeholders only where relevant.",
+        "example": "<prompt ready to paste>\n🎯 Target: Claude Opus 4.x  💡 Added explicit output format + 'only what's asked' guard to stop over-engineering.\nPlaceholders where useful: [TONE], [AUDIENCE], [BRAND VOICE], [PRODUCT NAME]"
+      },
+      {
+        "signature": "Model routing cheatsheet",
+        "purpose": "Tailor the prompt to the receiving model's strengths and failure modes.",
+        "example": "Claude 4.x: explicit + literal; XML tags for multi-section; add 'don't refactor beyond what's asked'.\no3/o4-mini/Qwen3-thinking: short clean instructions, NO CoT, <200-word system prompts.\nGemini: format locks + 'cite only certain sources'.\nLocal (Ollama/Llama/Mistral): flat structure, ask which model is running."
+      }
+    ],
+    "gotchas": [
+      "Do not output a prompt without first confirming the target tool — ask if ambiguous.",
+      "Do not add chain-of-thought or 'think step by step' to reasoning-native models (o3, o4-mini, DeepSeek-R1, Qwen3 thinking) — it degrades output.",
+      "Avoid Mixture of Experts, Tree of Thought, and Graph of Thought in single-prompt contexts unless explicitly requested — higher fabrication risk.",
+      "Do not ask more than 3 clarifying questions before producing a prompt.",
+      "Do not pad the output with explanations the user didn't request, and never show framework names in the output.",
+      "Only activates for explicit prompt-engineering requests — not general conversation, coding, or document writing."
+    ],
+    "category": "tool",
+    "audience": "general",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/nidhinjs/prompt-master"
+  }
+}
