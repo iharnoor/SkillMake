@@ -1,0 +1,81 @@
+{
+  "sourceUrl": "https://github.com/iharnoor/skillit/blob/main/scripts/seeds/apple-ui-shape-morph-video.json",
+  "skill": {
+    "name": "apple-ui-shape-morph-video",
+    "description": "Use when building short Apple-style UI motion videos where one rounded panel morphs size, position, radius, color, and content across beats.",
+    "whenToUse": [
+      "Creating Apple-style UI-driven motion videos in HyperFrames, Remotion, After Effects, or HTML/GSAP",
+      "Turning a short script into 3-5 visual states carried by one morphing rounded rectangle, pill, or panel",
+      "Animating a main UI surface through size, position, corner radius, fill color, and contained content changes",
+      "Debugging morph videos where radius distortion, clipped text, weak first frames, or static-looking states make the motion feel less premium"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Visual states",
+        "explanation": "Convert the script into 3-5 states with one dominant concept per state, such as TIME, 1000x, WORK, pressure, or final action. Supporting copy stays short and subordinate."
+      },
+      {
+        "term": "Main morphing surface",
+        "explanation": "Use one rounded rectangle, pill, card, or panel as the object that carries the story. Its own geometry changes across beats, rather than swapping unrelated panels."
+      },
+      {
+        "term": "Geometry morph",
+        "explanation": "Animate width, height, position, border radius, and fill color or their equivalent shape-layer properties. Avoid non-uniform layer scale for the primary morph because it distorts corner radius."
+      },
+      {
+        "term": "Element roles",
+        "explanation": "Map every element to a role: morph for the main panel, swap for labels inside it, move/scale for grouped supporting UI, fade for state-only elements, and meter for progress or competitive pressure."
+      },
+      {
+        "term": "First beat morph",
+        "explanation": "The first visible beat should morph too. Start from a small tile, dot, or pill, then morph into the first readable state before revealing large text."
+      },
+      {
+        "term": "Frame-verified artifact",
+        "explanation": "After rendering, extract representative frames near transitions and the final hold to check for blank frames, clipped text, low contrast, weak first frames, and static-looking states."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Read references/morphing-rules.md for full implementations",
+        "purpose": "Load the reference when building a full video, translating the pattern to After Effects or Remotion, or debugging radius and text clipping problems."
+      },
+      {
+        "signature": ".morph-card geometry tween",
+        "purpose": "In HyperFrames or HTML/GSAP, animate one absolute-positioned morph card with property tweens for geometry and radius.",
+        "example": "gsap.set(\".morph-card\", {\n  left: 432,\n  top: 604,\n  width: 216,\n  height: 216,\n  borderRadius: 108\n});\n\ntl.to(\".morph-card\", {\n  left: 162,\n  top: 422,\n  width: 756,\n  height: 756,\n  borderRadius: 168,\n  duration: 0.48,\n  ease: \"expo.inOut\"\n}, 0.08);"
+      },
+      {
+        "signature": "window.__timelines[\"main\"]",
+        "purpose": "Register a paused GSAP timeline so HyperFrames renders the morph sequence deterministically.",
+        "example": "window.__timelines = window.__timelines || {};\nwindow.__timelines[\"main\"] = gsap.timeline({ paused: true });"
+      },
+      {
+        "signature": "Rectangle Path: Size, Position, Roundness, Fill Color",
+        "purpose": "In After Effects, build the morph with a shape layer and keyframe the rectangle path properties rather than scaling a layer."
+      },
+      {
+        "signature": "Opening morph timing",
+        "purpose": "Use a fast opening morph before large text appears so the first sampled frames show real motion instead of a completed static card.",
+        "example": "0.0-0.7s: dot/tile/pill morphs into state 1\n0.7-2.8s: first text lands\n3.0-4.2s: morph to pressure state\n6.8-7.8s: morph to final action state\n8.6-10.2s: final statement lands\n11.4-12.0s: fade out"
+      },
+      {
+        "signature": "npm run check && npm run render",
+        "purpose": "Run the local project checker and render command, then inspect 3-5 representative frames before delivery."
+      }
+    ],
+    "gotchas": [
+      "Do not fake the primary morph with non-uniform scale; it stretches the corner radius and reads as resizing instead of UI morphing.",
+      "Use overflow: hidden on the morph card for contained UI content.",
+      "Delay inner text until the panel is large enough to contain it without clipping.",
+      "Keep every state focused on one dominant read; supporting labels should not compete with the morphing surface.",
+      "Use expo.inOut for geometry morphs and expo.out or power3.out for text reveals.",
+      "Check contrast on visible text, not only validator output for hidden or offscreen layers.",
+      "If validation samples hidden text during a morph, shorten the opening morph or delay text animation.",
+      "Confirm the first frame is not just a completed static card before final delivery."
+    ],
+    "category": "tool",
+    "audience": "creators",
+    "videoUrls": []
+  }
+}
