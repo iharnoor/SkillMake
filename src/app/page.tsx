@@ -2,6 +2,7 @@ import Link from "next/link";
 import { after } from "next/server";
 import { headers } from "next/headers";
 import { listSkills, type MarketplaceEntry } from "@/lib/storage";
+import { listPacks } from "@/lib/packs";
 import { MarketplaceSearch } from "@/components/MarketplaceSearch";
 import { AUDIENCES, type Audience } from "@/lib/skill-schema";
 import { formatStars } from "@/lib/github";
@@ -268,14 +269,17 @@ export default async function Home({
 
       <div className="mt-4">
         <MarketplaceSearch
-          entries={entries.map((entry) => ({
-            id: entry.id,
-            name: entry.name,
-            description: entry.description,
-            category: entry.category,
-            audience: entry.audience,
-            href: entry.href,
-          }))}
+          entries={[
+            ...entries.map((entry) => ({
+              id: entry.id,
+              name: entry.name,
+              description: entry.description,
+              category: entry.category,
+              audience: entry.audience,
+              href: entry.href,
+            })),
+            ...packSearchEntries(),
+          ]}
         />
       </div>
 
@@ -489,6 +493,43 @@ function buildDisplayEntries(entries: (MarketplaceEntry | DisplayEntry)[]): Disp
     }
     return entry;
   });
+}
+
+interface SearchEntry {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  audience: string;
+  href: string;
+}
+
+// Packs live in a separate static file and are invisible to the marketplace
+// search index. Surface both the pack and each individual prompt here so a
+// query like "excalidraw" or "famous" resolves to the right /packs anchor.
+function packSearchEntries(): SearchEntry[] {
+  const out: SearchEntry[] = [];
+  for (const pack of listPacks()) {
+    out.push({
+      id: `pack-${pack.slug}`,
+      name: pack.title,
+      description: pack.tagline || pack.description,
+      category: "pack",
+      audience: pack.audience,
+      href: `/packs/${pack.slug}`,
+    });
+    for (const prompt of pack.prompts) {
+      out.push({
+        id: `pack-${pack.slug}-${prompt.id}`,
+        name: prompt.title,
+        description: prompt.tip || `${prompt.category} prompt from ${pack.title}.`,
+        category: prompt.category,
+        audience: pack.audience,
+        href: `/packs/${pack.slug}#${prompt.id}`,
+      });
+    }
+  }
+  return out;
 }
 
 function syntheticEntry(name: string, description: string, category: string): DisplayEntry {
