@@ -12,6 +12,8 @@ export type MetricEvent =
   | "powerhouse_view"
   | "search_submitted"
   | "github_click"
+  | "prompt_copy"
+  | "prompt_source_click"
   | "page_dwell"
   | "scroll_depth"
   | "skill_added"

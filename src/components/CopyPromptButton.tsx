@@ -1,17 +1,29 @@
 "use client";
 
 import { useState } from "react";
+import { trackPromptCopy } from "@/components/Telemetry";
 
 /**
  * Copy a prompt's full text to the clipboard with transient "copied" feedback.
  * Mirrors the InstallCommand copy affordance so packs feel native to the app.
+ * `trackSlug` ("packSlug:promptId") fires a prompt_copy metric so we can see
+ * which prompts actually get used.
  */
-export function CopyPromptButton({ text, label = "copy prompt" }: { text: string; label?: string }) {
+export function CopyPromptButton({
+  text,
+  label = "copy prompt",
+  trackSlug,
+}: {
+  text: string;
+  label?: string;
+  trackSlug?: string;
+}) {
   const [copied, setCopied] = useState(false);
   return (
     <button
       type="button"
       onClick={async () => {
+        if (trackSlug) trackPromptCopy(trackSlug);
         try {
           await navigator.clipboard.writeText(text);
           setCopied(true);

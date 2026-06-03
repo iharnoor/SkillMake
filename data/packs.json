@@ -3,9 +3,9 @@
   "packs": [
     {
       "slug": "famous-prompts",
-      "title": "Prompts from Famous People",
-      "tagline": "The exact prompts the people building this stuff use themselves.",
-      "description": "Real prompts shared by the people shipping frontier AI — Anthropic researchers, founders, and power users. Copy-paste ready, with attribution and a note on why each one works. New drops added as they surface.",
+      "title": "Builder Prompt Radar",
+      "tagline": "What the people building frontier AI actually use — freshest first.",
+      "description": "A running radar of prompts going viral among the people who build AI — researchers, founders, and power users. Each one is attributed and linked to its original source, newest on top. Copy-paste ready, provenance you can verify.",
       "audience": "general",
       "category": "prompt-pack",
       "source": "Curated from X / Twitter",

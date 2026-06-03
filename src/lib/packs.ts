@@ -21,6 +21,13 @@ export interface PromptItem {
   category: string;
   /** Which model the prompt is tuned for, e.g. "Nano Banana Pro". */
   model?: string;
+  /** Human attribution, e.g. "Suzanne · Anthropic". Renders the provenance line
+   *  on the card. Optional — absent entries render with no provenance line. */
+  author?: string;
+  /** ISO date (YYYY-MM-DD) the prompt was added/surfaced. Drives the recency
+   *  sort and the "new" badge. Optional — undated entries sort after dated ones
+   *  (keeping file order) and never count as new. */
+  addedAt?: string;
   /** The full, copy-paste-ready prompt text (may be multi-line JSON). For very
    *  long source material (e.g. leaked system prompts) this is a curated
    *  excerpt and `sourceUrl` points at the complete file. */
@@ -70,6 +77,16 @@ export function listPacks(): PromptPack[] {
 export function getPack(slug: string): PromptPack | null {
   return data.packs.find((p) => p.slug === slug) ?? null;
 }
+
+// Pure, data-free helpers live in packs-util.ts so they're unit-testable under
+// node's type-stripper (which can't resolve this module's JSON import).
+export {
+  NEW_WINDOW_DAYS,
+  isNew,
+  relativeTime,
+  sortPromptsByRecency,
+  packLastUpdated,
+} from "./packs-util";
 
 /** Distinct category chips in a pack, in first-seen order. */
 export function packCategories(pack: PromptPack): string[] {

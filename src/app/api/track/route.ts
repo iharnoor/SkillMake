@@ -5,12 +5,24 @@ import { isTrustedTrackRequest } from "@/lib/observability";
 export const runtime = "nodejs";
 
 const Body = z.object({
-  event: z.enum(["github_click", "page_dwell", "scroll_depth"]),
+  event: z.enum([
+    "github_click",
+    "prompt_copy",
+    "prompt_source_click",
+    "page_dwell",
+    "scroll_depth",
+  ]),
   slug: z.string().max(64).optional(),
 });
 
+// Prompt-event slugs are "packSlug:promptId" (e.g. "famous-prompts:cole-medin-excalidraw"),
+// so the rule allows a colon on top of the github_click charset.
+const PROMPT_SLUG = /^[a-z0-9][a-z0-9._:/-]{0,63}$/;
+
 const SLUG_RULES: Record<z.infer<typeof Body>["event"], RegExp> = {
   github_click: /^[a-z0-9][a-z0-9._/-]{0,63}$/,
+  prompt_copy: PROMPT_SLUG,
+  prompt_source_click: PROMPT_SLUG,
   page_dwell: /^(0-5s|5-15s|15-30s|30-60s|60-300s|300s\+)$/,
   scroll_depth: /^(0|25|50|75|100)$/,
 };

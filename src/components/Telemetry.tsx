@@ -112,3 +112,15 @@ export function trackGithubClick(slug: string) {
   if (!slug) return;
   beacon({ event: "github_click", slug: slug.toLowerCase().slice(0, 64) });
 }
+
+/** Per-prompt events. `slug` is "packSlug:promptId" so dashboards can see which
+ *  prompts get copied / clicked through to source — the curation signal. */
+export function trackPromptCopy(slug: string) {
+  if (!slug) return;
+  beacon({ event: "prompt_copy", slug: slug.toLowerCase().slice(0, 64) });
+}
+
+export function trackPromptSourceClick(slug: string) {
+  if (!slug) return;
+  beacon({ event: "prompt_source_click", slug: slug.toLowerCase().slice(0, 64) });
+}
