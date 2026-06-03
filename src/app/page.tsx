@@ -244,6 +244,13 @@ export default async function Home({
               </Link>
             );
           })}
+          <Link
+            href="/packs"
+            prefetch={false}
+            className="text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
+          >
+            packs
+          </Link>
           {AUDIENCES.filter((a) => a !== "general" && !LIVE_AUDIENCES.includes(a)).map((a) => (
             <span
               key={a}
