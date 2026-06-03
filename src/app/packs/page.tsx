@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 const PACK_ICON: Record<string, string> = {
+  "famous-prompts": "⭐",
   "nano-banana": "🍌",
   "ai-video": "🎬",
   "agent-rules": "✍️",
