@@ -31,12 +31,7 @@
 **Context:** Surfaced in /plan-ceo-review (2026-06-03), Finding 1. Schema was scoped to date+author; this completes it. Consider running `/plan-design-review` for the card layout before building.
 **Effort:** S
 
-### Backfill provenance on the 2 flagship entries
-**Priority:** P2
-**What:** Add `author` + `addedAt` to the Suzanne and Cole entries in `data/packs.json` once those fields exist.
-**Why:** Without backfill, the two showcase prompts render with no provenance line, so the entries meant to prove "real builders use this" look the least-sourced. Undercuts the trust pitch the whole vertical rests on.
-**Context:** Surfaced in /plan-design-review (2026-06-03), Pass 2. Deferred by user decision (D4) — schema ships first, backfill follows. Suzanne: author "Suzanne · Anthropic", source already present (x.com/trq212). Cole: author "Cole Medin", source already present.
-**Effort:** S
-**Depends on:** the `author` + `addedAt` schema fields landing.
-
 ## Completed
+
+### Backfill provenance on the 2 flagship entries
+**Completed:** 2026-06-03. Added `author` + `addedAt` (2026-06-01) to the Suzanne and Cole entries so the radar card UI (provenance line, [new] badge, recency sort, updated stamp) is actually visible. Reversed the earlier defer once the live cards showed no change.
