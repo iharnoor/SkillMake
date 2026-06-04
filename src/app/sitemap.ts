@@ -16,7 +16,7 @@ const STATIC_ROUTES: MetadataRoute.Sitemap = [
     priority: 0.8,
   },
   {
-    url: `${SITE_URL}/tricks`,
+    url: `${SITE_URL}/budget`,
     changeFrequency: "weekly",
     priority: 0.8,
   },

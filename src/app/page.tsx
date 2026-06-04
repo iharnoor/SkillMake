@@ -17,7 +17,7 @@ const LIVE_CATEGORIES = [
   { slug: "job-search", label: "job search" },
 ] as const;
 const COLLECTION_FILTERS = [
-  { slug: "tricks", label: "tricks" },
+  { slug: "budget", label: "budget" },
   { slug: "mcps", label: "mcps" },
   { slug: "productivity", label: "productivity" },
 ] as const;
@@ -56,8 +56,8 @@ const FEATURED_LINKS = [
     description: "Agent-callable tools for browsers, APIs, SaaS, and custom workflows.",
   },
   {
-    href: "/tricks",
-    label: "Tricks",
+    href: "/budget",
+    label: "Budget",
     description: "Spend less, keep context cleaner, and keep agent sessions pointed.",
   },
   {
@@ -478,6 +478,12 @@ function collectionEntries(slug: CollectionSlug, entries: MarketplaceEntry[]): (
   return [
     syntheticFromSkill(byName, "caveman", "Use fewer output tokens without losing technical content.", "tool"),
     syntheticFromSkill(byName, "free-claude-code", "Route Claude Code through free or cheaper model providers.", "tool"),
+    skillEntry(
+      "claude-code-router",
+      "claude-code-router",
+      "Put OpenRouter in front of Claude Code — one key, 300+ models, route easy turns to a backend at 2–5% of Sonnet's price.",
+      "https://github.com/musistudio/claude-code-router"
+    ),
     syntheticEntry("fan out subagents", "Run independent investigations in parallel subagents so the parent context stays clean.", "technique"),
     syntheticEntry("/goal", "Write explicit success criteria, non-goals, and the riskiest unknown before a session drifts.", "technique"),
     syntheticEntry("ask-expert-mcp", "Let a cheap model escalate to a stronger one only when stuck — pay frontier prices for the hard 5%, not the easy 95%.", "technique"),

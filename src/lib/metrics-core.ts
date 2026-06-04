@@ -6,7 +6,7 @@ export type MetricEvent =
   | "skill_submitted"
   | "convert_success"
   | "convert_error"
-  | "tricks_view"
+  | "budget_view"
   | "mcps_view"
   | "packs_view"
   | "powerhouse_view"

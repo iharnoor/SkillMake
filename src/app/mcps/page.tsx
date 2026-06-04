@@ -205,7 +205,7 @@ function CollectionHeader({
   description,
   countLabel,
 }: {
-  active: "tricks" | "mcps";
+  active: "budget" | "mcps";
   eyebrow: string;
   title: string;
   description: string;
@@ -241,14 +241,14 @@ function CollectionHeader({
             all
           </Link>
           <Link
-            href="/tricks"
+            href="/budget"
             className={
-              active === "tricks"
+              active === "budget"
                 ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
                 : "text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
             }
           >
-            tricks
+            budget
           </Link>
           <Link
             href="/mcps"
