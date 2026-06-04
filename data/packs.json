@@ -55,7 +55,9 @@
           "category": "Fashion",
           "model": "Nano Banana Pro",
           "prompt": "{\n  \"prompt_metadata\": {\n    \"title\": \"Urban Golden Hour Fashion Editorial\",\n    \"model\": \"Nano Banana Pro on Gemini\"\n  },\n  \"scene\": \"A woman walking a sunlit downtown crosswalk during golden hour, long shadows raking across the asphalt\",\n  \"subject\": {\n    \"wardrobe\": \"tailored camel trench over a slip dress, pointed heels\",\n    \"pose\": \"mid-stride, hair caught in motion, glancing off-camera\"\n  },\n  \"camera\": {\n    \"lens\": \"85mm\",\n    \"aperture\": \"f/1.8\",\n    \"angle\": \"low three-quarter\"\n  },\n  \"light\": \"warm backlit rim light, lens flare, soft bounce on the face\",\n  \"grade\": \"filmic, golden highlights, deep teal shadows\",\n  \"aspect_ratio\": \"4:5\"\n}",
-          "tip": "JSON-structured prompts give Nano Banana Pro the most control over camera and grade."
+          "tip": "JSON-structured prompts give Nano Banana Pro the most control over camera and grade.",
+          "sourceUrl": "https://nanobananaprompt.org/prompts/",
+          "sourceLabel": "see example ↗"
         },
         {
           "id": "honeybee-fpv",
@@ -63,7 +65,9 @@
           "category": "Video",
           "model": "Nano Banana Pro",
           "prompt": "Honeybee POV. Ultra-tight fisheye FPV lens. Strong forward parallax at insect scale. Single uncut take. Fast zigzag entry weaving between tall summer wildflowers, then a hard hover-and-bank as the bee lands on a single backlit dandelion. Pollen drifts through warm shafts of morning light. Audio: rapid wingbeat hum, distant meadow ambience. 8-second loop, photoreal, shallow macro depth of field.",
-          "tip": "\"Single uncut take\" + a named POV is the backbone of every viral Nano Banana motion clip."
+          "tip": "\"Single uncut take\" + a named POV is the backbone of every viral Nano Banana motion clip.",
+          "sourceUrl": "https://nanobananaprompt.org/prompts/",
+          "sourceLabel": "see example ↗"
         },
         {
           "id": "architect-scale-model-dish",
@@ -71,7 +75,9 @@
           "category": "Food",
           "model": "Nano Banana",
           "prompt": "[DISH] as a hyper-detailed architect's scale model. Every ingredient in miniature — but built to make you hungry, not just impressed. Tiny garnish trees, sauce poured like a glassy lake, steam rising in scale. Studio softbox lighting on a clean concrete plinth, shallow tilt-shift depth of field so it reads as a real maquette. Macro, 100mm, crisp focus on the centerpiece.",
-          "tip": "Swap [DISH] for anything — 'ramen', 'a cheeseburger', 'biryani'."
+          "tip": "Swap [DISH] for anything — 'ramen', 'a cheeseburger', 'biryani'.",
+          "sourceUrl": "https://nanobananaprompt.org/prompts/",
+          "sourceLabel": "see example ↗"
         },
         {
           "id": "consistency-3x3-grid",
@@ -79,7 +85,9 @@
           "category": "Portrait",
           "model": "Nano Banana Pro",
           "prompt": "{\n  \"task\": \"Create a 3x3 photo grid of the SAME woman, consistent face and outfit across all nine frames\",\n  \"subject\": \"an extremely attractive woman exploring Portugal\",\n  \"variation\": \"each cell a different candid moment — Lisbon tram, pastel azulejo wall, sunset at Belém, a café table, cobbled alley\",\n  \"style\": \"natural smartphone photography, slightly overexposed, authentic vacation energy\",\n  \"consistency\": \"identical facial features, hair, and outfit in every frame\",\n  \"aspect_ratio\": \"1:1\"\n}",
-          "tip": "The 3x3 grid + 'same person' instruction is the core trick for character consistency."
+          "tip": "The 3x3 grid + 'same person' instruction is the core trick for character consistency.",
+          "sourceUrl": "https://nanobananaprompt.org/prompts/",
+          "sourceLabel": "see example ↗"
         },
         {
           "id": "macro-food-splash",
@@ -87,7 +95,9 @@
           "category": "Product",
           "model": "Nano Banana Pro",
           "prompt": "{\n  \"scene_type\": \"macro food splash photography\",\n  \"subject\": {\n    \"object\": \"strawberry\",\n    \"color\": \"golden yellow\",\n    \"surface\": \"glossy, dewy\"\n  },\n  \"action\": \"the strawberry dropping into liquid, a crown of splash droplets frozen mid-air\",\n  \"lighting\": \"hard backlight catching every droplet, dark moody background\",\n  \"camera\": {\n    \"shutter\": \"1/8000s\",\n    \"lens\": \"100mm macro\",\n    \"aperture\": \"f/8\"\n  },\n  \"render\": \"8K, hyper-real, commercial beverage advertising\"\n}",
-          "tip": "High shutter values in the prompt sell the 'frozen splash' look."
+          "tip": "High shutter values in the prompt sell the 'frozen splash' look.",
+          "sourceUrl": "https://nanobananaprompt.org/prompts/",
+          "sourceLabel": "see example ↗"
         },
         {
           "id": "midnight-fastback-chase",
@@ -95,7 +105,9 @@
           "category": "Video",
           "model": "Nano Banana Pro",
           "prompt": "Midnight blue fastback blasts straight at 200 km/h then banks hard left around a parked delivery truck, body tilting aggressively, tires smoking. Chase camera locked low and tight behind the rear bumper, heavy motion blur on the road, sparks as it clips the curb. Overcast industrial backdrop, wet asphalt reflections. Single continuous take, cinematic, photoreal, 8 seconds.",
-          "tip": "Name the exact camera rig ('locked low behind the rear bumper') for stable motion."
+          "tip": "Name the exact camera rig ('locked low behind the rear bumper') for stable motion.",
+          "sourceUrl": "https://nanobananaprompt.org/prompts/",
+          "sourceLabel": "see example ↗"
         },
         {
           "id": "make-character-realistic",
@@ -103,21 +115,27 @@
           "category": "Image editing",
           "model": "Nano Banana",
           "prompt": "Make this character realistic while keeping the original design and pose. Preserve the exact silhouette, outfit, colors, and proportions — only translate the rendering into photographic realism: real skin texture, fabric weave, natural studio lighting, and accurate shadows. Do not redesign anything.",
-          "tip": "Upload a drawing or 3D render as the reference image, then run this as an edit."
+          "tip": "Upload a drawing or 3D render as the reference image, then run this as an edit.",
+          "sourceUrl": "https://nanobananaprompt.org/prompts/",
+          "sourceLabel": "see example ↗"
         },
         {
           "id": "8k-seated-portrait",
           "title": "8K Seated Studio Portrait",
           "category": "Portrait",
           "model": "Nano Banana Pro",
-          "prompt": "{\n  \"type\": \"portrait\",\n  \"resolution\": \"8K\",\n  \"aspect_ratio\": \"3:4\",\n  \"composition\": {\n    \"framing\": \"full body seated portrait\",\n    \"camera_angle\": \"eye level, slight three-quarter\"\n  },\n  \"subject\": {\n    \"pose\": \"seated on a vintage leather chair, hands relaxed, calm confident gaze\"\n  },\n  \"lighting\": \"single softbox key, gentle falloff, cinematic Rembrandt shadow\",\n  \"background\": \"muted charcoal studio seamless\",\n  \"detail\": \"sharp catchlights, realistic skin pores, natural color grade\"\n}"
+          "prompt": "{\n  \"type\": \"portrait\",\n  \"resolution\": \"8K\",\n  \"aspect_ratio\": \"3:4\",\n  \"composition\": {\n    \"framing\": \"full body seated portrait\",\n    \"camera_angle\": \"eye level, slight three-quarter\"\n  },\n  \"subject\": {\n    \"pose\": \"seated on a vintage leather chair, hands relaxed, calm confident gaze\"\n  },\n  \"lighting\": \"single softbox key, gentle falloff, cinematic Rembrandt shadow\",\n  \"background\": \"muted charcoal studio seamless\",\n  \"detail\": \"sharp catchlights, realistic skin pores, natural color grade\"\n}",
+          "sourceUrl": "https://nanobananaprompt.org/prompts/",
+          "sourceLabel": "see example ↗"
         },
         {
           "id": "post-apocalyptic-chase",
           "title": "Post-Apocalyptic Vehicle Chase",
           "category": "Video",
           "model": "Nano Banana Pro",
-          "prompt": "First-person perspective inside a rugged post-apocalyptic vehicle chasing a heavily armored enemy car speeding ahead through a cracked desert highway. Dust plumes, debris, and heat haze. Cracked windshield framing the shot, dashboard rattling, hands gripping a worn steering wheel. Harsh midday sun, gritty color grade. Continuous handheld FPV, photoreal, high tension, 8 seconds."
+          "prompt": "First-person perspective inside a rugged post-apocalyptic vehicle chasing a heavily armored enemy car speeding ahead through a cracked desert highway. Dust plumes, debris, and heat haze. Cracked windshield framing the shot, dashboard rattling, hands gripping a worn steering wheel. Harsh midday sun, gritty color grade. Continuous handheld FPV, photoreal, high tension, 8 seconds.",
+          "sourceUrl": "https://nanobananaprompt.org/prompts/",
+          "sourceLabel": "see example ↗"
         }
       ]
     },
