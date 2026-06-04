@@ -19,6 +19,7 @@ const LIVE_CATEGORIES = [
 const COLLECTION_FILTERS = [
   { slug: "tricks", label: "tricks" },
   { slug: "mcps", label: "mcps" },
+  { slug: "productivity", label: "productivity" },
 ] as const;
 
 type CollectionSlug = (typeof COLLECTION_FILTERS)[number]["slug"];
@@ -443,6 +444,37 @@ function collectionEntries(slug: CollectionSlug, entries: MarketplaceEntry[]): (
     ];
   }
 
+  if (slug === "productivity") {
+    // Agent skills that compress real knowledge-work. Excalidraw leads; each
+    // links to its source repo. No fabricated stars.
+    return [
+      skillEntry(
+        "excalidraw-diagram",
+        "excalidraw diagram",
+        "Turn any system or idea into a clean, shareable Excalidraw diagram — rendered and self-corrected in a loop, not a placeholder you'd redraw.",
+        "https://github.com/coleam00/excalidraw-diagram-skill"
+      ),
+      skillEntry(
+        "anthropic-document-skills",
+        "document skills (pdf · docx · pptx · xlsx)",
+        "Read, fill, and generate PDFs, Word docs, slide decks, and spreadsheets — the most universal knowledge-work bottleneck, handled by the agent.",
+        "https://github.com/anthropics/skills"
+      ),
+      skillEntry(
+        "skill-creator",
+        "skill creator",
+        "The skill that builds skills. Turn a workflow you repeat into a reusable agent skill instead of re-explaining it every session.",
+        "https://github.com/anthropics/skills"
+      ),
+      skillEntry(
+        "awesome-claude-skills",
+        "awesome claude skills",
+        "The curated index of the best agent skills (8.7k★) — where the next must-have comes from.",
+        "https://github.com/ComposioHQ/awesome-claude-skills"
+      ),
+    ];
+  }
+
   return [
     syntheticFromSkill(byName, "caveman", "Use fewer output tokens without losing technical content.", "tool"),
     syntheticFromSkill(byName, "free-claude-code", "Route Claude Code through free or cheaper model providers.", "tool"),
@@ -459,6 +491,27 @@ function syntheticFromSkill(
   category: string
 ): MarketplaceEntry | DisplayEntry {
   return byName.get(name) ?? syntheticEntry(name, description, category);
+}
+
+// External agent-skill entry — links straight to the skill's source repo. No
+// fabricated star counts (unlike famousMcpEntry, whose numbers are curated).
+function skillEntry(
+  id: string,
+  name: string,
+  description: string,
+  repoUrl: string
+): DisplayEntry {
+  return {
+    id,
+    name,
+    description,
+    audience: "ai",
+    category: "tool",
+    source: hostFromUrl(repoUrl),
+    href: repoUrl,
+    repoUrl,
+    videoCount: 0,
+  };
 }
 
 function famousMcpEntry(
