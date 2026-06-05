@@ -455,6 +455,12 @@ function collectionEntries(slug: CollectionSlug, entries: MarketplaceEntry[]): (
         "https://github.com/coleam00/excalidraw-diagram-skill"
       ),
       skillEntry(
+        "html-everything",
+        "html everything",
+        "Turn any blob — Markdown, JSON, plain text, or a doc URL — into one self-contained editorial HTML page with clickable links. No deps, no API keys.",
+        "https://github.com/iharnoor/html-everything"
+      ),
+      skillEntry(
         "anthropic-document-skills",
         "document skills (pdf · docx · pptx · xlsx)",
         "Read, fill, and generate PDFs, Word docs, slide decks, and spreadsheets — the most universal knowledge-work bottleneck, handled by the agent.",
