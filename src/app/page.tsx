@@ -17,6 +17,7 @@ const LIVE_CATEGORIES = [
   { slug: "job-search", label: "job search" },
 ] as const;
 const COLLECTION_FILTERS = [
+  { slug: "trending", label: "trending" },
   { slug: "budget", label: "budget" },
   { slug: "mcps", label: "mcps" },
   { slug: "productivity", label: "productivity" },
@@ -66,6 +67,46 @@ const FEATURED_LINKS = [
     description: "Send a skill through review so builders can inspect and install it.",
   },
 ] as const;
+
+// Trending board — a point-in-time snapshot of repos climbing the GitHub
+// trending list. Star counts are curated figures (same convention as the
+// mcps collection); each repo is also filed into its best-fit collection
+// below so it's discoverable beyond the trending view.
+const TRENDING = {
+  markitdown: repoEntry(
+    "markitdown",
+    "Convert files and office documents to clean Markdown — the foundation layer for feeding real business content into agents without garbage tokens.",
+    "https://github.com/microsoft/markitdown",
+    16400
+  ),
+  headroom: repoEntry(
+    "headroom",
+    "Compress tool outputs, logs, files, and RAG chunks before they reach the LLM — 60–95% fewer tokens with the same answers. Library + proxy + MCP server.",
+    "https://github.com/zereight/headroom",
+    12000
+  ),
+  moneyPrinterTurbo: repoEntry(
+    "MoneyPrinterTurbo",
+    "One-click generation of high-quality short videos using AI LLMs. The speed at which video agents are being productized is the real story here.",
+    "https://github.com/harry0703/MoneyPrinterTurbo",
+    11400
+  ),
+  ecc: repoEntry(
+    "ecc",
+    "The agent-harness performance optimization system — skills, instincts, memory, security, and research-first development for Claude Code, Codex, Cursor, and beyond.",
+    "https://github.com/ecc-hh/ecc",
+    10300
+  ),
+} as const;
+
+// Cloudflare's Code Mode — MCP infrastructure that doubles as a budget play.
+// Lives in the Agents SDK (no standalone repo). Filed in both mcps and budget.
+const CODE_MODE = repoEntry(
+  "cloudflare-code-mode",
+  "Cloudflare's Code Mode: instead of handing MCP tools to the model directly, it converts them into a TypeScript API the model writes code against — run in a Workers sandbox. Tool schemas and intermediate results stay out of the context window, so token use drops sharply.",
+  "https://github.com/cloudflare/agents",
+  5051
+);
 
 export default async function Home({
   searchParams,
@@ -417,6 +458,15 @@ function hostFromUrl(u: string): string {
 
 function collectionEntries(slug: CollectionSlug, entries: MarketplaceEntry[]): (MarketplaceEntry | DisplayEntry)[] {
   const byName = new Map(entries.map((entry) => [entry.skill.name, entry]));
+  if (slug === "trending") {
+    // Ordered by stars, mirroring the GitHub trending board.
+    return [
+      TRENDING.markitdown,
+      TRENDING.headroom,
+      TRENDING.moneyPrinterTurbo,
+      TRENDING.ecc,
+    ];
+  }
   if (slug === "mcps") {
     return [
       syntheticFromSkill(byName, "mcp-builder", "Design and ship a Model Context Protocol server with a tool surface an agent can actually use.", "tool"),
@@ -428,6 +478,7 @@ function collectionEntries(slug: CollectionSlug, entries: MarketplaceEntry[]): (
       syntheticFromSkill(byName, "browser-use", "Attach an agent to a real browser through MCP-style browser control and inspection tools.", "tool"),
       syntheticFromSkill(byName, "higgsfield-mcp", "Generate images and videos with Higgsfield's model roster through the official hosted MCP.", "tool"),
       syntheticFromSkill(byName, "runway-mcp", "Run Runway text-to-video, image-to-video, and upscaling from an agent through MCP.", "tool"),
+      CODE_MODE,
       famousMcpEntry("context7-mcp", "Up-to-date package docs and code examples for AI coding agents.", "https://github.com/upstash/context7", 56309),
       famousMcpEntry("github-mcp-server", "GitHub's official MCP server for repository, issue, pull request, and workflow context.", "https://github.com/github/github-mcp-server", 30245),
       famousMcpEntry("playwright-mcp", "Microsoft's Playwright MCP server for browser automation through accessibility snapshots.", "https://github.com/microsoft/playwright-mcp", 33158),
@@ -445,8 +496,9 @@ function collectionEntries(slug: CollectionSlug, entries: MarketplaceEntry[]): (
   }
 
   if (slug === "productivity") {
-    // Agent skills that compress real knowledge-work. Excalidraw leads; each
-    // links to its source repo. No fabricated stars.
+    // Agent skills and tools that compress real knowledge-work. Excalidraw
+    // leads; each links to its source repo. The trailing trending repos carry
+    // curated star snapshots (see TRENDING); the rest have no fabricated stars.
     return [
       skillEntry(
         "excalidraw-diagram",
@@ -478,6 +530,9 @@ function collectionEntries(slug: CollectionSlug, entries: MarketplaceEntry[]): (
         "The curated index of the best agent skills (8.7k★) — where the next must-have comes from.",
         "https://github.com/ComposioHQ/awesome-claude-skills"
       ),
+      TRENDING.markitdown,
+      TRENDING.ecc,
+      TRENDING.moneyPrinterTurbo,
     ];
   }
 
@@ -490,6 +545,8 @@ function collectionEntries(slug: CollectionSlug, entries: MarketplaceEntry[]): (
       "Put OpenRouter in front of Claude Code — one key, 300+ models, route easy turns to a backend at 2–5% of Sonnet's price.",
       "https://github.com/musistudio/claude-code-router"
     ),
+    TRENDING.headroom,
+    CODE_MODE,
     syntheticEntry("fan out subagents", "Run independent investigations in parallel subagents so the parent context stays clean.", "technique"),
     syntheticEntry("/goal", "Write explicit success criteria, non-goals, and the riskiest unknown before a session drifts.", "technique"),
     syntheticEntry("ask-expert-mcp", "Let a cheap model escalate to a stronger one only when stuck — pay frontier prices for the hard 5%, not the easy 95%.", "technique"),
@@ -522,6 +579,30 @@ function skillEntry(
     source: hostFromUrl(repoUrl),
     href: repoUrl,
     repoUrl,
+    videoCount: 0,
+  };
+}
+
+// A curated external repo entry carrying a point-in-time star count — like
+// famousMcpEntry, but not MCP-specific. Powers the trending board and any
+// tool entry that should surface a star signal.
+function repoEntry(
+  name: string,
+  description: string,
+  repoUrl: string,
+  stars: number,
+  category = "tool"
+): DisplayEntry {
+  return {
+    id: name.replace(/[^a-z0-9]+/gi, "-").toLowerCase(),
+    name,
+    description,
+    audience: "ai",
+    category,
+    source: hostFromUrl(repoUrl),
+    href: repoUrl,
+    repoUrl,
+    stars,
     videoCount: 0,
   };
 }

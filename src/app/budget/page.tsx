@@ -22,15 +22,19 @@ interface CollectionEntry {
 }
 
 const ROUTER_REPO = "https://github.com/musistudio/claude-code-router";
+const HEADROOM_REPO = "https://github.com/zereight/headroom";
+const CODE_MODE_REPO = "https://github.com/cloudflare/agents";
 
 export default async function BudgetPage() {
   const h = await headers();
   after(() => track("budget_view", { headers: h }));
 
-  const [caveman, fcc, routerStars] = await Promise.all([
+  const [caveman, fcc, routerStars, headroomStars, codeModeStars] = await Promise.all([
     findApprovedByName("caveman"),
     findApprovedByName("free-claude-code"),
     fetchRepoStars(ROUTER_REPO),
+    fetchRepoStars(HEADROOM_REPO),
+    fetchRepoStars(CODE_MODE_REPO),
   ]);
 
   const entries: CollectionEntry[] = [
@@ -54,6 +58,28 @@ export default async function BudgetPage() {
       href: ROUTER_REPO,
       repoUrl: ROUTER_REPO,
       stars: routerStars,
+    },
+    {
+      name: "headroom",
+      description:
+        "Compress tool outputs, logs, files, and RAG chunks before they reach the LLM — 60–95% fewer tokens with the same answers. Ships as a library, a proxy, and an MCP server.",
+      audience: "general",
+      category: "tool",
+      source: "github.com/zereight",
+      href: HEADROOM_REPO,
+      repoUrl: HEADROOM_REPO,
+      stars: headroomStars ?? 12000,
+    },
+    {
+      name: "code mode",
+      description:
+        "Cloudflare's Code Mode: instead of handing MCP tools to the model directly, it converts them into a TypeScript API the model writes code against — run in a Workers sandbox. Tool schemas and intermediate results stay out of the context window, so token use drops sharply.",
+      audience: "general",
+      category: "tool",
+      source: "github.com/cloudflare",
+      href: CODE_MODE_REPO,
+      repoUrl: CODE_MODE_REPO,
+      stars: codeModeStars ?? 5051,
     },
     {
       name: "fan out subagents",
@@ -90,7 +116,7 @@ export default async function BudgetPage() {
         active="budget"
         eyebrow="Budget"
         title="Save money. Same agent."
-        description="Six practical ways to drop agent cost or context waste. Three are installable tools; three are pure technique."
+        description="Eight practical ways to drop agent cost or context waste. Five are installable tools; three are pure technique."
         countLabel={`${entries.length} ways to save`}
       />
       <CollectionTable entries={entries} />
@@ -122,6 +148,22 @@ export default async function BudgetPage() {
           </a>{" "}
           change the model bill — the latter routing through OpenRouter to the
           cheapest capable model,{" "}
+          <a
+            href="#headroom"
+            className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+          >
+            headroom
+          </a>{" "}
+          strips 60–95% of the tokens out of context before they ever reach the
+          model,{" "}
+          <a
+            href="#code-mode"
+            className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+          >
+            code mode
+          </a>{" "}
+          keeps MCP tool schemas and intermediate results in a sandbox instead of
+          the context window,{" "}
           <a
             href="#fan-out-subagents"
             className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"
