@@ -1,0 +1,75 @@
+{
+  "sourceUrl": "https://github.com/garrytan/gstack/blob/main/qa/SKILL.md",
+  "skill": {
+    "name": "gstack-qa",
+    "description": "Use when an agent needs to browser-test a web app, document bugs with screenshots, fix source issues one at a time, and re-verify each fix.",
+    "whenToUse": [
+      "The user says qa, quality check, test the app, find bugs, or test and fix",
+      "A web feature is ready and needs browser-based verification before shipping",
+      "You need a structured QA report with screenshots, console checks, health score, and deferred issues",
+      "You want fixes committed atomically, with each bug re-tested after the source change",
+      "A branch has no explicit URL and should be tested through diff-aware affected pages and routes"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Test-fix-verify loop",
+        "explanation": "The skill first explores the app like a user, documents reproducible issues with evidence, then fixes eligible bugs in severity order. Each fix gets re-tested before moving on so the report distinguishes verified fixes from best-effort or deferred work."
+      },
+      {
+        "term": "Diff-aware mode",
+        "explanation": "When no URL is given on a feature branch, the skill analyzes the branch diff and commit history to infer affected routes, pages, APIs, or adjacent user flows. If no route is obvious, it still opens the app and runs a quick smoke test rather than skipping browser QA."
+      },
+      {
+        "term": "Evidence-first bug reports",
+        "explanation": "Every issue needs a screenshot and reproducible steps. Interactive bugs require before and after evidence plus a DOM change snapshot, while static visual or content bugs need an annotated screenshot that shows the problem."
+      },
+      {
+        "term": "Tiered fix scope",
+        "explanation": "Quick fixes only critical and high severity issues, Standard also fixes medium severity issues, and Exhaustive includes low or cosmetic issues. Bugs outside source control, third-party widgets, and infrastructure problems are deferred regardless of tier."
+      },
+      {
+        "term": "Clean tree and atomic commits",
+        "explanation": "The workflow requires a clean working tree before QA starts so each bug fix can land as its own commit. This preserves the user's current work and makes later reverts or review much easier."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/qa [target-url] [--quick|--exhaustive] [--regression baseline.json] [scope/auth options]",
+        "purpose": "Run browser QA against a URL or, when omitted on a feature branch, enter diff-aware mode and test affected routes.",
+        "example": "/qa http://localhost:3000 --quick\n/qa https://preview.example.com Focus on the billing page\n/qa --regression .gstack/qa-reports/baseline.json"
+      },
+      {
+        "signature": "Tier selection",
+        "purpose": "Control how deeply the skill explores and which severities it fixes.",
+        "example": "Quick: homepage plus top navigation targets; fix critical and high only\nStandard: default; document 5-10 issues; fix critical, high, and medium\nExhaustive: include low severity and cosmetic issues"
+      },
+      {
+        "signature": "Report output",
+        "purpose": "Persist QA evidence locally and into project-scoped gstack artifacts for future sessions.",
+        "example": ".gstack/qa-reports/\n├── qa-report-{domain}-{YYYY-MM-DD}.md\n├── baseline.json\n└── screenshots/\n    ├── initial.png\n    ├── issue-001-step-1.png\n    └── issue-001-after.png"
+      },
+      {
+        "signature": "Fix commit format",
+        "purpose": "Keep each source fix independently reviewable and revertable.",
+        "example": "git add <only-related-files>\ngit commit -m \"fix(qa): ISSUE-001 - submit button handles empty email\""
+      },
+      {
+        "signature": "Health score rubric",
+        "purpose": "Score the app before and after fixes using weighted categories for console, links, visual, functional, UX, performance, content, and accessibility.",
+        "example": "score = sum(category_score * weight)\nFunctional: 20%\nConsole: 15%\nAccessibility: 15%\nUX: 15%\nLinks: 10%\nVisual: 10%\nPerformance: 10%\nContent: 5%"
+      }
+    ],
+    "gotchas": [
+      "Do not use this as a passive checklist. It is an operational skill that opens a browser, clicks through flows, fixes source bugs, and verifies changes.",
+      "A local filesystem path cannot be used as SkillMake sourceUrl; seed entries need a real URL such as the canonical GitHub SKILL.md path.",
+      "The gstack version depends on its browse binary and setup flow, so consuming agents need the gstack toolchain available before running the full workflow.",
+      "The skill intentionally stops on a dirty working tree because mixing pre-existing work with QA fix commits makes evidence and rollback unreliable.",
+      "Do not modify unrelated files while fixing QA findings; locate the source for each issue and apply the smallest related change.",
+      "Every documented issue needs screenshot evidence. Vague bugs without repro steps or screenshots should not make it into the report."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/garrytan/gstack"
+  }
+}

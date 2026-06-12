@@ -37,6 +37,9 @@ yarn-error.log*
 # local marketplace storage (swap to Postgres for production)
 /data/skills.json
 
+# scratch screenshots / local artifacts
+/tmp/
+
 # vercel
 .vercel
 

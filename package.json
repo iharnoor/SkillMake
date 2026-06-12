@@ -16,12 +16,15 @@
     "@hydra_db/node": "^0.1.2",
     "@mozilla/readability": "^0.6.0",
     "@next/third-parties": "^16.2.4",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
     "ai": "^6.0.168",
     "isomorphic-dompurify": "^3.10.0",
     "linkedom": "^0.18.12",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "three": "^0.184.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
@@ -31,6 +34,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.184.1",
     "tailwindcss": "^4",
     "typescript": "^5",
     "wrangler": "^4.90.0"

@@ -738,6 +738,199 @@
           "tip": "e.g. GOOD: The model does not converge when the learning rate is too high.` (The \"it is worth noting that\" phrase is itself filler and should also be cut per RULE-04.)"
         }
       ]
+    },
+    {
+      "slug": "wealth-plan",
+      "title": "Salary → Wealth Plan",
+      "tagline": "Paste your paycheck. Get a plan.",
+      "description": "Fifteen copy-paste prompts that turn one paycheck into a full financial plan — allocation, debt payoff, investing, income expansion, and tax. Drop your real numbers into the bracketed slots and run them against Claude (or any capable model). Treat the output as a starting point, not licensed financial advice.",
+      "audience": "general",
+      "category": "prompt-pack",
+      "source": "via @ajitcodes on X",
+      "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+      "accent": "#34d399",
+      "prompts": [
+        {
+          "id": "salary-allocation-strategist",
+          "title": "Salary Allocation Strategist",
+          "category": "Budgeting",
+          "model": "Claude",
+          "prompt": "Act as a personal finance strategist. My monthly salary is [SALARY], fixed expenses are [EXPENSES], current savings are [SAVINGS], and my financial goal is [GOAL]. Create a smart allocation plan for spending, saving, and investing.",
+          "tip": "Fill every bracket with real numbers — the more concrete the inputs, the less generic the split.",
+          "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+          "sourceLabel": "via @ajitcodes on X",
+          "author": "Ajit Kumar",
+          "addedAt": "2026-06-12"
+        },
+        {
+          "id": "money-flow-analyzer",
+          "title": "Money Flow Analyzer",
+          "category": "Budgeting",
+          "model": "Claude",
+          "prompt": "My monthly income is [SALARY] and my expenses are [EXPENSE LIST]. Analyze how my money flows each month and suggest a more efficient structure that increases my savings rate.",
+          "tip": "List expenses line by line so the model can name the specific leaks, not just totals.",
+          "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+          "sourceLabel": "via @ajitcodes on X",
+          "author": "Ajit Kumar",
+          "addedAt": "2026-06-12"
+        },
+        {
+          "id": "wealth-growth-blueprint",
+          "title": "Wealth Growth Blueprint",
+          "category": "Wealth Building",
+          "model": "Claude",
+          "prompt": "My income is [SALARY], I can invest [MONTHLY INVESTMENT] per month, and my current net worth is [NET WORTH]. Build a realistic 5-year plan to significantly grow my net worth.",
+          "tip": "Ask it to show the year-by-year compounding math so the targets are checkable, not vibes.",
+          "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+          "sourceLabel": "via @ajitcodes on X",
+          "author": "Ajit Kumar",
+          "addedAt": "2026-06-12"
+        },
+        {
+          "id": "debt-elimination-strategy",
+          "title": "Debt Elimination Strategy",
+          "category": "Debt",
+          "model": "Claude",
+          "prompt": "I earn [SALARY] per month and have debts totaling [DEBT AMOUNT] with interest rates of [INTEREST RATES]. Create the fastest and most efficient strategy to eliminate this debt.",
+          "tip": "Give each debt's balance and rate separately so it can compare avalanche vs snowball for your case.",
+          "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+          "sourceLabel": "via @ajitcodes on X",
+          "author": "Ajit Kumar",
+          "addedAt": "2026-06-12"
+        },
+        {
+          "id": "paycheck-to-investing-system",
+          "title": "Paycheck-to-Investing System",
+          "category": "Investing",
+          "model": "Claude",
+          "prompt": "My monthly salary is [SALARY], and I want to invest [AMOUNT] each month. My risk tolerance is [LOW / MEDIUM / HIGH]. Suggest a simple long-term investment strategy.",
+          "tip": "Set risk tolerance honestly — it's the single input that most changes the recommendation.",
+          "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+          "sourceLabel": "via @ajitcodes on X",
+          "author": "Ajit Kumar",
+          "addedAt": "2026-06-12"
+        },
+        {
+          "id": "financial-freedom-timeline",
+          "title": "Financial Freedom Timeline",
+          "category": "Wealth Building",
+          "model": "Claude",
+          "prompt": "My monthly income is [SALARY], expenses are [EXPENSES], and monthly investments are [INVESTMENTS]. Estimate how long it will take to reach financial independence and what adjustments could accelerate it.",
+          "tip": "Follow up with \"what if I cut expenses 10%?\" to see how each lever moves the date.",
+          "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+          "sourceLabel": "via @ajitcodes on X",
+          "author": "Ajit Kumar",
+          "addedAt": "2026-06-12"
+        },
+        {
+          "id": "lifestyle-upgrade-planner",
+          "title": "Lifestyle Upgrade Planner",
+          "category": "Budgeting",
+          "model": "Claude",
+          "prompt": "I earn [SALARY] and want to improve my lifestyle while still building wealth. Suggest how I can upgrade spending responsibly without slowing my financial progress.",
+          "tip": "Name the specific upgrade you're eyeing (rent, car, travel) for a sharper trade-off analysis.",
+          "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+          "sourceLabel": "via @ajitcodes on X",
+          "author": "Ajit Kumar",
+          "addedAt": "2026-06-12"
+        },
+        {
+          "id": "income-expansion-planner",
+          "title": "Income Expansion Planner",
+          "category": "Income",
+          "model": "Claude",
+          "prompt": "My current income is [SALARY]. Based on my skills [SKILLS], available time [HOURS], and market demand, suggest 3 realistic ways to increase my income in the next 90 days with clear action steps.",
+          "tip": "The 90-day window forces concrete first steps instead of someday-maybe ideas.",
+          "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+          "sourceLabel": "via @ajitcodes on X",
+          "author": "Ajit Kumar",
+          "addedAt": "2026-06-12"
+        },
+        {
+          "id": "skill-to-income-converter",
+          "title": "Skill to Income Converter",
+          "category": "Income",
+          "model": "Claude",
+          "prompt": "I know [SKILLS]. Show me how to turn these into income streams. Include freelancing, digital products, and scalable options with expected earning potential.",
+          "tip": "Push for earning ranges and time-to-first-dollar on each option so you can rank them.",
+          "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+          "sourceLabel": "via @ajitcodes on X",
+          "author": "Ajit Kumar",
+          "addedAt": "2026-06-12"
+        },
+        {
+          "id": "side-hustle-validator",
+          "title": "Side Hustle Validator",
+          "category": "Income",
+          "model": "Claude",
+          "prompt": "Give me 5 side hustle ideas based on my profile [SKILLS + INTERESTS]. For each, validate demand, startup effort, time to first income, and scalability.",
+          "tip": "Have it score each idea on those four axes so the comparison is at a glance.",
+          "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+          "sourceLabel": "via @ajitcodes on X",
+          "author": "Ajit Kumar",
+          "addedAt": "2026-06-12"
+        },
+        {
+          "id": "expense-optimization-engine",
+          "title": "Expense Optimization Engine",
+          "category": "Budgeting",
+          "model": "Claude",
+          "prompt": "Here is my monthly spending [BREAKDOWN]. Identify waste, hidden leaks, and subscriptions I can cut. Show me how to reduce expenses by at least 20% without hurting my lifestyle.",
+          "tip": "Paste an actual statement export as the breakdown for line-item callouts.",
+          "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+          "sourceLabel": "via @ajitcodes on X",
+          "author": "Ajit Kumar",
+          "addedAt": "2026-06-12"
+        },
+        {
+          "id": "investment-portfolio-builder",
+          "title": "Investment Portfolio Builder",
+          "category": "Investing",
+          "model": "Claude",
+          "prompt": "I can invest [AMOUNT] monthly. Build a diversified portfolio including equity, debt, and alternative assets. Include allocation percentages and expected long term returns.",
+          "tip": "Add your country and time horizon — allocation and tax-advantaged accounts vary by both.",
+          "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+          "sourceLabel": "via @ajitcodes on X",
+          "author": "Ajit Kumar",
+          "addedAt": "2026-06-12"
+        },
+        {
+          "id": "10x-net-worth-simulator",
+          "title": "10x Net Worth Simulator",
+          "category": "Wealth Building",
+          "model": "Claude",
+          "prompt": "My current net worth is [NET WORTH], income is [SALARY], and investments are [MONTHLY]. Simulate different scenarios to 10x my net worth faster and compare outcomes.",
+          "tip": "Ask for an optimistic / base / conservative case so you're not anchored on the best one.",
+          "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+          "sourceLabel": "via @ajitcodes on X",
+          "author": "Ajit Kumar",
+          "addedAt": "2026-06-12"
+        },
+        {
+          "id": "tax-optimization-planner",
+          "title": "Tax Optimization Planner",
+          "category": "Tax",
+          "model": "Claude",
+          "prompt": "My annual income is [INCOME]. Suggest legal ways to reduce taxes, optimize deductions, and increase post tax savings.",
+          "tip": "State your country/region — tax rules don't generalize. Verify anything material with a professional.",
+          "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+          "sourceLabel": "via @ajitcodes on X",
+          "author": "Ajit Kumar",
+          "addedAt": "2026-06-12"
+        },
+        {
+          "id": "emergency-fund-architect",
+          "title": "Emergency Fund Architect",
+          "category": "Budgeting",
+          "model": "Claude",
+          "prompt": "My monthly expenses are [EXPENSES]. Build a step by step plan to create a fully funded emergency fund and where to store it for liquidity and safety.",
+          "tip": "Ask it to size the fund in months of expenses and name account types, not brands.",
+          "sourceUrl": "https://x.com/ajitcodes/status/2064657449693720968",
+          "sourceLabel": "via @ajitcodes on X",
+          "author": "Ajit Kumar",
+          "addedAt": "2026-06-12"
+        }
+      ]
     }
   ]
 }

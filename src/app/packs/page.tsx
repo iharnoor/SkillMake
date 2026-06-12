@@ -18,6 +18,7 @@ const PACK_ICON: Record<string, string> = {
   "nano-banana": "🍌",
   "ai-video": "🎬",
   "agent-rules": "✍️",
+  "wealth-plan": "💰",
 };
 
 export default async function PacksIndexPage() {
