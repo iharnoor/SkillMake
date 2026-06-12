@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAnalyticsDashboardData, type Bar, type Point } from "@/lib/analytics-dashboard";
 import { LogoutButton } from "@/components/admin/LogoutButton";
+import { LiveRefresh } from "@/components/admin/LiveRefresh";
 
 export const dynamic = "force-dynamic";
 
@@ -36,8 +37,9 @@ export default async function AdminAnalyticsPage() {
         <AdminAnalyticsHeader generatedAt={data.generatedAt} />
 
         <section className="grid sm:grid-cols-2 xl:grid-cols-4 gap-3 mb-3">
-          <Kpi label="Total installs" value={data.totals.installs} tone="hot" />
-          <Kpi label="Unique visitors" value={data.totals.uniqueVisitors} tone="warm" />
+          <Kpi label="Total installs (all time)" value={data.totals.installsAllTime} tone="hot" />
+          <Kpi label="Installs (14d)" value={data.totals.installs} tone="hot" />
+          <Kpi label="Unique visitors (14d)" value={data.totals.uniqueVisitors} tone="warm" />
           <Kpi label="Total events" value={data.totals.events} tone="hot" />
           <Kpi label="API errors" value={data.totals.apiErrors} tone={data.totals.apiErrors > 0 ? "danger" : "good"} />
           <Kpi label="Agent installs" value={data.totals.agentInstalls} tone="warm" />
@@ -165,7 +167,7 @@ function AdminAnalyticsHeader({ generatedAt }: { generatedAt?: string }) {
         </div>
         <h1 className="text-3xl font-semibold tracking-tight">SkillMake telemetry.</h1>
         <p className="text-sm text-[color:var(--fg-muted)] mt-2">
-          Same source as Grafana, tuned for the admin surface.
+          Live from Cloudflare Analytics Engine — the system of record for installs.
           {generatedAt ? (
             <span className="mono text-[11px] text-[color:var(--fg-dim)] ml-2">
               refreshed {new Date(generatedAt).toLocaleTimeString()}
@@ -173,7 +175,8 @@ function AdminAnalyticsHeader({ generatedAt }: { generatedAt?: string }) {
           ) : null}
         </p>
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center">
+        {generatedAt ? <LiveRefresh /> : null}
         <Link href="/admin" className="btn-ghost rounded-md px-3 py-2 text-sm">
           Queue
         </Link>

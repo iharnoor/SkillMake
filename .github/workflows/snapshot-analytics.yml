@@ -1,0 +1,35 @@
+name: snapshot-analytics
+
+# Persists each completed day's install count into KV before Cloudflare
+# Analytics Engine's ~90d retention drops it, so the all-time install total on
+# /admin/analytics survives. OpenNext can't bridge native Cloudflare scheduled
+# triggers to a Next.js route, so we drive the cron from here (same approach as
+# /api/cron/optimize-skills).
+#
+# Requires repo secret ADMIN_TOKEN (same value as the deployed Worker's
+# ADMIN_TOKEN). The route is idempotent and self-healing, so an occasional
+# missed run is harmless — the next run backfills.
+
+on:
+  schedule:
+    - cron: "10 0 * * *" # daily, 00:10 UTC (after the day rolls over)
+  workflow_dispatch: {} # allow manual runs from the Actions tab
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger install-history snapshot
+        run: |
+          set -euo pipefail
+          response="$(curl -fsS -X POST \
+            -H "Authorization: Bearer ${ADMIN_TOKEN}" \
+            -w '\n%{http_code}' \
+            https://skillmake.xyz/api/cron/snapshot-analytics)"
+          body="$(printf '%s' "$response" | sed '$d')"
+          code="$(printf '%s' "$response" | tail -n1)"
+          echo "HTTP $code"
+          echo "$body"
+          test "$code" = "200"
+        env:
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
