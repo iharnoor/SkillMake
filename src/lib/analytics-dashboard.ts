@@ -1,4 +1,5 @@
 import { getEnv } from "./env";
+import { getDurableInstallTotal } from "./install-history";
 
 type Row = Record<string, unknown>;
 
@@ -7,6 +8,7 @@ export interface AnalyticsDashboardData {
   generatedAt: string;
   totals: {
     installs: number;
+    installsAllTime: number;
     uniqueVisitors: number;
     events: number;
     apiErrors: number;
@@ -122,6 +124,7 @@ export async function getAnalyticsDashboardData(): Promise<AnalyticsDashboardRes
       audienceDemand,
       errorRows,
       recentEventMix,
+      durableInstall,
     ] = await Promise.all([
       query(`SELECT sum(_sample_interval) AS n FROM skillmake_metrics WHERE index1 = 'install_hit' AND ${DAY_14}`),
       query(`SELECT count(DISTINCT blob6) AS n FROM skillmake_metrics WHERE ${DAY_14}`),
@@ -148,6 +151,7 @@ export async function getAnalyticsDashboardData(): Promise<AnalyticsDashboardRes
       query(`SELECT blob7 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE index1 = 'skill_added' AND blob7 != '' AND ${DAY_28} GROUP BY label ORDER BY value DESC LIMIT 10`),
       query(`SELECT index1 AS event, blob2 AS slug, double2 AS status, sum(_sample_interval) AS hits FROM skillmake_metrics WHERE index1 IN ('api_error','convert_error') AND ${DAY_14} GROUP BY event, slug, status ORDER BY hits DESC LIMIT 12`),
       query(`SELECT index1 AS label, sum(_sample_interval) AS value FROM skillmake_metrics WHERE timestamp >= NOW() - INTERVAL '24' HOUR GROUP BY label ORDER BY value DESC LIMIT 12`),
+      getDurableInstallTotal(),
     ]);
 
     const inst = scalar(installs);
@@ -157,6 +161,7 @@ export async function getAnalyticsDashboardData(): Promise<AnalyticsDashboardRes
       generatedAt: new Date().toISOString(),
       totals: {
         installs: inst,
+        installsAllTime: durableInstall.lifetime,
         uniqueVisitors: scalar(uniques),
         events: scalar(events),
         apiErrors: scalar(errors),
