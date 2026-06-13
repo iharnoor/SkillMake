@@ -20,8 +20,12 @@ const env = Object.fromEntries(
     })
 );
 
-const accountId = env.CLOUDFLARE_ACCOUNT_ID || "f9d7efb12a2713ce5af52d882165c543";
+const accountId = env.CLOUDFLARE_ACCOUNT_ID;
 const token = env.CLOUDFLARE_ANALYTICS_API_TOKEN;
+if (!accountId) {
+  console.error(JSON.stringify({ ok: false, error: "CLOUDFLARE_ACCOUNT_ID missing in .env" }));
+  process.exit(1);
+}
 if (!token) {
   console.error(JSON.stringify({ ok: false, error: "CLOUDFLARE_ANALYTICS_API_TOKEN missing in .env" }));
   process.exit(1);
