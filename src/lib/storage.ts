@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import type { Skill } from "./skill-schema";
 import type { SkillEdit } from "./skill-edit";
 import { getEnv } from "./env";
+import { logApiWarn } from "./observability";
 
 export type EntryStatus = "pending" | "approved" | "rejected";
 
@@ -55,8 +56,15 @@ interface IndexShape {
 // Single-key snapshot of the entire approved+pending+rejected catalog.
 // Reading the snapshot costs 1 KV get instead of 1+N (one per entry), and
 // CF caches it at the edge for SNAPSHOT_CACHE_TTL seconds, so a hot region
-// usually serves list() with zero KV operations. Writes invalidate by
-// deleting the key; the next list() lazily rebuilds it.
+// usually serves list() with zero KV operations.
+//
+// Writes keep the snapshot CURRENT by patching it in place (see
+// writeSnapshotEntry). They must never delete-and-rebuild-on-read: KV is
+// eventually consistent, so a deleted snapshot is observed as absent by many
+// colos at once, and — because every catalog page is force-dynamic — each
+// concurrent render independently rebuilt + re-put the snapshot. That write
+// amplification is what blew the daily KV put limit. Reads must stay pure
+// gets; only writers ever put the snapshot.
 const SNAPSHOT_KEY = "index:snapshot:v1";
 const SNAPSHOT_CACHE_TTL = 3600; // edge-cache for 1h
 
@@ -161,8 +169,15 @@ class KvStore {
         SNAPSHOT_KEY,
         JSON.stringify({ v: 1, entries: valid, builtAt: new Date().toISOString() } satisfies SnapshotShape)
       );
-    } catch {
-      // Best-effort cache write; serving the response matters more.
+    } catch (e) {
+      // Best-effort cache write; serving the response matters more. Log it,
+      // though — a persistently failing snapshot put means every read falls
+      // back here and re-attempts the put, silently turning reads into writes.
+      logApiWarn({
+        route: "kv/snapshot",
+        code: "snapshot_rebuild_put_failed",
+        message: e instanceof Error ? e.message : String(e),
+      });
     }
     return valid
       .map(normalize)
@@ -184,13 +199,52 @@ class KvStore {
   async put(entry: MarketplaceEntry): Promise<void> {
     await this.kv.put(`skill:${entry.id}`, JSON.stringify(entry));
     const idx = (await this.kv.get<IndexShape>("index:all", "json")) ?? { ids: [] };
-    if (!idx.ids.includes(entry.id)) idx.ids.push(entry.id);
-    await this.kv.put("index:all", JSON.stringify(idx));
-    // Invalidate the snapshot so the next list() picks up the change.
+    // Only re-put the index when the id is genuinely new. Status flips, star
+    // refreshes, and version stamps re-put the same id repeatedly — skipping
+    // an unchanged index write saves one KV put on every such update.
+    if (!idx.ids.includes(entry.id)) {
+      idx.ids.push(entry.id);
+      await this.kv.put("index:all", JSON.stringify(idx));
+    }
+    // Keep the snapshot current in place. NEVER delete-then-rebuild-on-read:
+    // see the SNAPSHOT_KEY note above for why that amplified into thousands of
+    // KV puts. A write does a fixed, bounded number of puts; reads do none.
+    await this.writeSnapshotEntry(entry);
+  }
+
+  /**
+   * Patch the cached snapshot to reflect a single just-written entry. Replaces
+   * any existing row with the same id (status flip, star refresh, promotion)
+   * and appends new ones. Uses the entry we already hold rather than re-reading
+   * every skill key, so it costs one get + one put regardless of catalog size.
+   * Falls back to a full rebuild only when no usable snapshot exists yet.
+   */
+  private async writeSnapshotEntry(entry: MarketplaceEntry): Promise<void> {
+    let snap: SnapshotShape | null = null;
     try {
-      await this.kv.delete(SNAPSHOT_KEY);
+      snap = await this.kv.get<SnapshotShape>(SNAPSHOT_KEY, "json");
     } catch {
-      // If invalidation fails, the edge cache TTL will eventually rebuild.
+      snap = null;
+    }
+    if (!snap || snap.v !== 1 || !Array.isArray(snap.entries)) {
+      // No usable snapshot yet (first write ever, or corruption). Build it
+      // once from the per-id keys; subsequent writes patch in place.
+      await this.rebuildSnapshot();
+      return;
+    }
+    const entries = snap.entries.filter((e) => e.id !== entry.id);
+    entries.push(entry);
+    try {
+      await this.kv.put(
+        SNAPSHOT_KEY,
+        JSON.stringify({ v: 1, entries, builtAt: new Date().toISOString() } satisfies SnapshotShape)
+      );
+    } catch (e) {
+      logApiWarn({
+        route: "kv/snapshot",
+        code: "snapshot_patch_put_failed",
+        message: e instanceof Error ? e.message : String(e),
+      });
     }
   }
 
