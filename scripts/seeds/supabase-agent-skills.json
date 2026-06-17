@@ -61,6 +61,7 @@
     ],
     "category": "platform",
     "audience": "engineers",
+    "trust": "official",
     "videoUrls": [],
     "repoUrl": "https://github.com/supabase/agent-skills"
   }

@@ -1,0 +1,75 @@
+{
+  "sourceUrl": "https://bun.sh/docs",
+  "skill": {
+    "name": "bun",
+    "description": "Use when you want a fast all-in-one JavaScript runtime, package manager, bundler, and test runner to replace Node.js plus npm.",
+    "whenToUse": [
+      "Installing dependencies quickly with bun install as a drop-in for npm/yarn/pnpm",
+      "Running scripts, TypeScript, or JSX directly without a separate build step",
+      "Running unit tests with the built-in Jest-compatible bun test runner",
+      "Bundling or transpiling code with bun build for the browser or server"
+    ],
+    "keyConcepts": [
+      {
+        "term": "All-in-one toolkit",
+        "explanation": "A single binary that is a runtime, package manager, test runner, and bundler. It targets Node.js API compatibility while running TypeScript and JSX natively without extra tooling."
+      },
+      {
+        "term": "JavaScriptCore engine",
+        "explanation": "Bun is built on Apple's JavaScriptCore (WebKit) and written in Zig, rather than V8. This is a key difference from Node.js and Deno and contributes to its fast startup and install times."
+      },
+      {
+        "term": "bunfig.toml",
+        "explanation": "Bun's optional configuration file. It controls install behavior (registry, lockfile, cache), test settings, runtime flags, and more. Bun also reads .npmrc and package.json for some settings."
+      },
+      {
+        "term": "bun.lock",
+        "explanation": "Bun's lockfile. Newer Bun versions use a human-readable text bun.lock by default; older versions wrote a binary bun.lockb. It records the exact resolved dependency tree."
+      },
+      {
+        "term": "Native package manager",
+        "explanation": "bun install reads package.json and resolves dependencies into node_modules using a global cache and hardlinks/copies, making repeat installs very fast. Compatible with the npm registry."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "bun install",
+        "purpose": "Install all dependencies from package.json, writing node_modules and updating bun.lock.",
+        "example": "bun install\nbun add zod\nbun add -d typescript\nbun remove zod"
+      },
+      {
+        "signature": "bun run <script|file>",
+        "purpose": "Run a package.json script or execute a JS/TS file directly with the Bun runtime.",
+        "example": "bun run dev\nbun run ./src/index.ts\nbun index.tsx"
+      },
+      {
+        "signature": "bun test",
+        "purpose": "Run the built-in Jest-compatible test runner over *.test.ts and *.spec.ts files.",
+        "example": "import { test, expect } from \"bun:test\";\n\ntest(\"adds numbers\", () => {\n  expect(2 + 2).toBe(4);\n});\n\n// then: bun test --watch"
+      },
+      {
+        "signature": "bun build <entry> --outdir <dir>",
+        "purpose": "Bundle and transpile JavaScript/TypeScript for the browser or as a runnable executable.",
+        "example": "bun build ./src/index.ts --outdir ./dist --target browser\nbun build ./cli.ts --compile --outfile mycli"
+      },
+      {
+        "signature": "bunx <package>",
+        "purpose": "Auto-install and run a package binary without adding it to dependencies (like npx).",
+        "example": "bunx cowsay \"hello\""
+      }
+    ],
+    "gotchas": [
+      "Bun uses JavaScriptCore, not V8, so a small number of V8-specific or native Node addons may behave differently or not load",
+      "Node.js API compatibility is high but not 100% — check the docs before assuming a built-in Node module works identically",
+      "Older lockfiles were binary bun.lockb; newer Bun emits text bun.lock — be consistent across a team to avoid churn",
+      "bun run <script> runs package.json scripts, but bare bun <file> runs a file with the runtime; do not confuse the two",
+      "On Windows, support arrived later than macOS/Linux; verify behavior of platform-specific scripts",
+      "bunfig.toml settings can be overridden by .npmrc and CLI flags, so check precedence when installs misbehave"
+    ],
+    "category": "other",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/oven-sh/bun",
+    "trust": "verified"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "sourceUrl": "https://tanstack.com/query/latest/docs/framework/react/overview",
+  "skill": {
+    "name": "tanstack-query",
+    "description": "Use when managing server state in a frontend app: fetching, caching, background refetching, and synchronizing async data without writing manual loading logic.",
+    "whenToUse": [
+      "Fetching and caching server data in React, Vue, Svelte, Solid, or Angular apps",
+      "Eliminating manual loading/error/refetch boilerplate around async data",
+      "Keeping UI in sync with the server via background refetch and cache invalidation",
+      "Implementing optimistic updates, pagination, or infinite scroll over a query cache"
+    ],
+    "keyConcepts": [
+      {"term": "Query keys", "explanation": "An array that uniquely identifies cached data, e.g. ['todos', id]. The key drives caching, refetching, and invalidation; changing any part triggers a new fetch."},
+      {"term": "staleTime vs gcTime", "explanation": "staleTime is how long data is considered fresh (no auto-refetch); gcTime (formerly cacheTime) is how long inactive/unused data stays in cache before garbage collection. Default staleTime is 0, gcTime is 5 minutes."},
+      {"term": "QueryClient and provider", "explanation": "A single QueryClient holds the cache. Wrap the app in QueryClientProvider so hooks can access it. Defaults can be set via defaultOptions."},
+      {"term": "Mutations", "explanation": "useMutation handles create/update/delete. Pair onSuccess/onSettled with queryClient.invalidateQueries to refetch affected data, or perform optimistic updates with onMutate."},
+      {"term": "Invalidation", "explanation": "queryClient.invalidateQueries({ queryKey }) marks matching queries stale and refetches active ones, the canonical way to reflect server changes after a mutation."},
+      {"term": "Status flags", "explanation": "Queries expose status (pending/error/success) plus fetchStatus (fetching/idle), isPending, isError, isFetching, and data. isFetching is true on background refetches even when data exists."}
+    ],
+    "apiReference": [
+      {"signature": "new QueryClient(options) + <QueryClientProvider client={...}>", "purpose": "Create the cache and provide it to the component tree.", "example": "import { QueryClient, QueryClientProvider } from '@tanstack/react-query';\nconst queryClient = new QueryClient({\n  defaultOptions: { queries: { staleTime: 60_000 } },\n});\nexport function App() {\n  return (\n    <QueryClientProvider client={queryClient}>\n      <Todos />\n    </QueryClientProvider>\n  );\n}"},
+      {"signature": "useQuery({ queryKey, queryFn, ...options })", "purpose": "Read async data; returns data, error, isPending, isError, refetch, and more.", "example": "import { useQuery } from '@tanstack/react-query';\nfunction Todos() {\n  const { data, isPending, isError } = useQuery({\n    queryKey: ['todos'],\n    queryFn: () => fetch('/api/todos').then((r) => r.json()),\n  });\n  if (isPending) return <p>Loading</p>;\n  if (isError) return <p>Error</p>;\n  return <ul>{data.map((t) => <li key={t.id}>{t.title}</li>)}</ul>;\n}"},
+      {"signature": "useMutation({ mutationFn, onSuccess, onMutate })", "purpose": "Perform writes and react to their lifecycle; call mutate/mutateAsync to trigger.", "example": "import { useMutation, useQueryClient } from '@tanstack/react-query';\nfunction AddTodo() {\n  const qc = useQueryClient();\n  const m = useMutation({\n    mutationFn: (title) => fetch('/api/todos', { method: 'POST', body: title }),\n    onSuccess: () => qc.invalidateQueries({ queryKey: ['todos'] }),\n  });\n  return <button onClick={() => m.mutate('new')}>Add</button>;\n}"},
+      {"signature": "useInfiniteQuery({ queryKey, queryFn, getNextPageParam, initialPageParam })", "purpose": "Cursor/page based infinite loading; exposes fetchNextPage and hasNextPage.", "example": "const q = useInfiniteQuery({\n  queryKey: ['feed'],\n  queryFn: ({ pageParam }) => fetchPage(pageParam),\n  initialPageParam: 0,\n  getNextPageParam: (last) => last.nextCursor,\n});"},
+      {"signature": "queryClient.invalidateQueries({ queryKey })", "purpose": "Mark matching queries stale and refetch active ones.", "example": "queryClient.invalidateQueries({ queryKey: ['todos'] });"},
+      {"signature": "queryClient.setQueryData(queryKey, updater)", "purpose": "Write data directly into the cache, e.g. for optimistic updates.", "example": "queryClient.setQueryData(['todos'], (old) => [...old, newTodo]);"},
+      {"signature": "queryClient.prefetchQuery({ queryKey, queryFn })", "purpose": "Warm the cache before a component renders, e.g. on hover or server-side.", "example": "await queryClient.prefetchQuery({ queryKey: ['todo', id], queryFn: () => getTodo(id) });"},
+      {"signature": "useQueryClient()", "purpose": "Access the QueryClient from within components to invalidate, set, or prefetch.", "example": "const queryClient = useQueryClient();"}
+    ],
+    "gotchas": [
+      "Default staleTime is 0, so queries refetch on mount, window focus, and reconnect; raise staleTime to reduce refetches.",
+      "queryFn must throw/reject on failure for isError to trigger; fetch() does not reject on HTTP 4xx/5xx, so check response.ok.",
+      "Object query keys are matched structurally and order-sensitively; key serialization is deterministic so put stable values in.",
+      "cacheTime was renamed gcTime in v5; v5 also replaced isLoading semantics with isPending for the no-data state.",
+      "isFetching is true during background refetches even when data is present; use isPending for the initial no-data load.",
+      "Optimistic updates via onMutate need a rollback in onError and a final reconcile in onSettled (invalidate or refetch).",
+      "Each useQuery call with the same key shares one cache entry; do not expect independent per-component fetches.",
+      "In React 18 strict mode and SSR, create the QueryClient inside a stable ref/useState, not on every render."
+    ],
+    "category": "library",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/TanStack/query",
+    "trust": "verified"
+  }
+}

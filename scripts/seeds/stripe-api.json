@@ -1,0 +1,46 @@
+{
+  "sourceUrl": "https://docs.stripe.com/api",
+  "skill": {
+    "name": "stripe-api",
+    "description": "Use when integrating Stripe payments in Node.js — creating PaymentIntents, Checkout Sessions, subscriptions, and verifying webhook signatures.",
+    "whenToUse": [
+      "Accepting one-time card payments via PaymentIntents or Checkout",
+      "Building subscriptions, customers, and recurring billing",
+      "Verifying and handling Stripe webhook events securely",
+      "Issuing refunds or managing products, prices, and invoices"
+    ],
+    "keyConcepts": [
+      {"term": "PaymentIntent", "explanation": "Tracks the lifecycle of a single payment, including SCA/3DS. You create it server-side, then confirm it client-side with the returned client_secret."},
+      {"term": "Checkout Session", "explanation": "A Stripe-hosted (or embedded) payment page. Create a Session server-side and redirect the customer; Stripe handles the UI and SCA."},
+      {"term": "Customer + Subscription", "explanation": "A Customer stores payment methods and billing info; a Subscription attaches recurring Prices to a Customer and generates Invoices automatically."},
+      {"term": "Idempotency keys", "explanation": "Pass an idempotencyKey on POST requests so retries don't create duplicate charges; Stripe returns the original result for 24 hours."},
+      {"term": "Webhook signature verification", "explanation": "Stripe signs each webhook with your endpoint secret; verify with stripe.webhooks.constructEvent using the RAW request body and the Stripe-Signature header."},
+      {"term": "Expandable objects & amounts", "explanation": "Many fields are IDs that can be expanded via `expand`; amounts are in the currency's smallest unit (e.g. cents for USD)."}
+    ],
+    "apiReference": [
+      {"signature": "const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)", "purpose": "Initialize the Node SDK with your secret key.", "example": "import Stripe from 'stripe';\nconst stripe = new Stripe(process.env.STRIPE_SECRET_KEY);"},
+      {"signature": "stripe.paymentIntents.create(params, options?)", "purpose": "Create a PaymentIntent for an amount/currency; returns a client_secret to confirm on the client.", "example": "const pi = await stripe.paymentIntents.create({\n  amount: 1999,\n  currency: 'usd',\n  automatic_payment_methods: { enabled: true },\n}, { idempotencyKey: 'order_123' });\n// send pi.client_secret to the browser"},
+      {"signature": "stripe.checkout.sessions.create(params)", "purpose": "Create a hosted Checkout Session and redirect the customer to session.url.", "example": "const session = await stripe.checkout.sessions.create({\n  mode: 'payment',\n  line_items: [{ price: 'price_123', quantity: 1 }],\n  success_url: 'https://app.com/success?session_id={CHECKOUT_SESSION_ID}',\n  cancel_url: 'https://app.com/cancel',\n});"},
+      {"signature": "stripe.customers.create(params) / stripe.subscriptions.create(params)", "purpose": "Create a Customer and a recurring Subscription tied to one or more Prices.", "example": "const customer = await stripe.customers.create({ email: 'a@b.com' });\nconst sub = await stripe.subscriptions.create({\n  customer: customer.id,\n  items: [{ price: 'price_monthly' }],\n});"},
+      {"signature": "stripe.refunds.create({ payment_intent })", "purpose": "Refund a captured payment fully or partially.", "example": "await stripe.refunds.create({ payment_intent: 'pi_123', amount: 500 });"},
+      {"signature": "stripe.webhooks.constructEvent(rawBody, sigHeader, endpointSecret)", "purpose": "Verify and parse an incoming webhook; throws if the signature is invalid.", "example": "let event;\ntry {\n  event = stripe.webhooks.constructEvent(req.rawBody, req.headers['stripe-signature'], process.env.STRIPE_WEBHOOK_SECRET);\n} catch (err) {\n  return res.status(400).send(`Webhook Error: ${err.message}`);\n}\nif (event.type === 'payment_intent.succeeded') { /* ... */ }"},
+      {"signature": "stripe.prices.create / stripe.products.create / stripe.invoices.create", "purpose": "Define the catalog (Products and recurring/one-time Prices) and create Invoices for billing.", "example": "const product = await stripe.products.create({ name: 'Pro plan' });\nconst price = await stripe.prices.create({\n  product: product.id,\n  unit_amount: 1500,\n  currency: 'usd',\n  recurring: { interval: 'month' },\n});"},
+      {"signature": "stripe.<resource>.list(params) with auto-pagination", "purpose": "List resources; use .autoPagingEach() / for-await to iterate beyond a single page.", "example": "for await (const customer of stripe.customers.list({ limit: 100 })) {\n  console.log(customer.id);\n}"}
+    ],
+    "gotchas": [
+      "Webhook verification needs the RAW request body — body-parsing middleware (express.json()) breaks the signature; use express.raw() on the route.",
+      "Amounts are in the smallest currency unit (cents), and zero-decimal currencies like JPY are NOT multiplied by 100.",
+      "Never use your secret key in client code; the client only ever sees the publishable key and a PaymentIntent client_secret.",
+      "Webhooks can arrive out of order and more than once — make handlers idempotent and treat events as the source of truth, not the redirect.",
+      "Always pass idempotency keys on payment-creating POSTs so network retries don't double-charge customers.",
+      "Test mode and live mode use separate keys, objects, and webhook secrets — IDs are not interchangeable across modes.",
+      "Pin the API version (Stripe-Version) explicitly; relying on the account default can cause silent behavior changes on upgrades.",
+      "Confirming a PaymentIntent succeeds asynchronously for some payment methods — rely on the webhook, not the create() response, for fulfillment."
+    ],
+    "category": "api",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/stripe/stripe-node",
+    "trust": "verified"
+  }
+}

@@ -65,6 +65,7 @@
     ],
     "category": "tool",
     "audience": "engineers",
+    "trust": "verified",
     "videoUrls": [],
     "repoUrl": "https://github.com/steipete/agent-scripts"
   }

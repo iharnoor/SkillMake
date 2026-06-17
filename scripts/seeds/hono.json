@@ -1,0 +1,47 @@
+{
+  "sourceUrl": "https://hono.dev/docs/",
+  "skill": {
+    "name": "hono",
+    "description": "Use when building fast, lightweight web APIs or edge apps on Cloudflare Workers, Deno, Bun, or Node with a tiny router and Web Standards.",
+    "whenToUse": [
+      "Building HTTP APIs or routers on Cloudflare Workers, Deno, Bun, or Node",
+      "You need a small, zero-dependency framework built on Web Standard Request/Response",
+      "Adding typed middleware, validation, or RPC-style typed clients to a service",
+      "Serving edge functions with first-class TypeScript support"
+    ],
+    "keyConcepts": [
+      {"term": "Hono app instance", "explanation": "The core object created with `new Hono()`. You register routes and middleware on it, then export it as the runtime's fetch handler."},
+      {"term": "Context (c)", "explanation": "The single argument handlers receive. Wraps the request/response and exposes helpers like c.req, c.json(), c.text(), c.env, and c.var for shared state."},
+      {"term": "Middleware", "explanation": "Functions registered with app.use() that run before/after handlers; they call `await next()` to continue the chain. Built-ins include cors, logger, jwt, basicAuth."},
+      {"term": "RPC / typed client", "explanation": "Hono can infer route types so the `hc<AppType>()` client gives end-to-end type safety between server and client without code generation."},
+      {"term": "Validator", "explanation": "Use validator() or @hono/zod-validator to validate body/query/param/header; validated data is read back with c.req.valid('json')."},
+      {"term": "Adapters", "explanation": "Per-runtime entry points (hono/cloudflare-workers, hono/bun, @hono/node-server, hono/deno) adapt the app to each platform's server API."}
+    ],
+    "apiReference": [
+      {"signature": "const app = new Hono<{ Bindings: Env }>()", "purpose": "Create an app; the generic carries Cloudflare Bindings and Variables types for c.env and c.var.", "example": "import { Hono } from 'hono'\n\ntype Bindings = { DB: D1Database }\nconst app = new Hono<{ Bindings: Bindings }>()\n\nexport default app"},
+      {"signature": "app.get(path, ...handlers) / app.post / app.put / app.delete / app.all", "purpose": "Register a route for an HTTP method. Path supports params (:id), wildcards (*), and regex.", "example": "app.get('/users/:id', (c) => {\n  const id = c.req.param('id')\n  return c.json({ id })\n})"},
+      {"signature": "c.json(object, status?, headers?)", "purpose": "Return a JSON response with optional status code and headers.", "example": "app.post('/users', async (c) => {\n  const body = await c.req.json()\n  return c.json({ created: body }, 201)\n})"},
+      {"signature": "c.text(str) / c.html(str) / c.redirect(url, status?) / c.body(data)", "purpose": "Return plain text, HTML, a redirect, or a raw body response.", "example": "app.get('/', (c) => c.text('Hello Hono!'))"},
+      {"signature": "app.use(path?, middleware)", "purpose": "Mount middleware globally or on a path prefix; middleware calls await next().", "example": "import { cors } from 'hono/cors'\nimport { logger } from 'hono/logger'\n\napp.use(logger())\napp.use('/api/*', cors({ origin: 'https://example.com' }))"},
+      {"signature": "app.route(basePath, subApp)", "purpose": "Mount a sub-application under a base path to compose larger apps.", "example": "const api = new Hono()\napi.get('/ping', (c) => c.text('pong'))\napp.route('/api', api)"},
+      {"signature": "zValidator(target, schema)", "purpose": "Validate request data against a Zod schema; read validated data with c.req.valid(target).", "example": "import { zValidator } from '@hono/zod-validator'\nimport { z } from 'zod'\n\napp.post('/u', zValidator('json', z.object({ name: z.string() })), (c) => {\n  const { name } = c.req.valid('json')\n  return c.json({ name })\n})"},
+      {"signature": "hc<typeof app>(baseUrl)", "purpose": "Create a type-safe RPC client inferred from the server app type.", "example": "import { hc } from 'hono/client'\nconst client = hc<typeof app>('http://localhost:8787')\nconst res = await client.api.ping.$get()"},
+      {"signature": "c.env / c.var / c.set(key, val) / c.get(key)", "purpose": "Access runtime bindings (c.env), shared request-scoped values set by middleware (c.var / c.get / c.set).", "example": "app.use(async (c, next) => { c.set('user', { id: 1 }); await next() })\napp.get('/me', (c) => c.json(c.get('user')))"}
+    ],
+    "gotchas": [
+      "On Node you must use @hono/node-server's serve(); `export default app` only works on Workers/Bun/Deno.",
+      "c.req.json()/text()/parseBody() return promises and consume the body once — read it a single time.",
+      "Middleware must await next() (and not return early) or downstream handlers and post-processing won't run.",
+      "Route order matters: more specific routes should be registered before wildcards/catch-alls.",
+      "On Cloudflare Workers, c.env holds bindings — process.env is not available; type it via the Bindings generic.",
+      "For RPC type inference to work you must export the app type and avoid breaking it into untyped fragments.",
+      "c.executionCtx.waitUntil() is required for background work on Workers; raw promises get cancelled after response.",
+      "The default RegExpRouter is fast but some patterns fall back to other routers; avoid overly dynamic regex on hot paths."
+    ],
+    "category": "framework",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/honojs/hono",
+    "trust": "verified"
+  }
+}

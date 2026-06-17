@@ -1,0 +1,41 @@
+{
+  "sourceUrl": "https://supabase.com/docs",
+  "skill": {
+    "name": "supabase",
+    "description": "Use when building a backend on Supabase: Postgres database, auth, storage, realtime, and edge functions accessed via the JS client or CLI.",
+    "whenToUse": [
+      "Adding Postgres-backed auth, storage, or realtime to a web or mobile app",
+      "Managing schema, migrations, and local dev with the Supabase CLI",
+      "Querying or mutating data through supabase-js with row level security",
+      "Deploying Edge Functions for server-side logic"
+    ],
+    "keyConcepts": [
+      {"term": "Row Level Security (RLS)", "explanation": "Postgres policies enforced per-row. Disabled by default on new tables; the anon and authenticated roles can read/write everything until you enable RLS and add policies."},
+      {"term": "anon vs service_role key", "explanation": "The anon key is safe to ship in clients and is constrained by RLS; the service_role key bypasses RLS entirely and must only be used server-side."},
+      {"term": "supabase-js client", "explanation": "Isomorphic JS SDK wrapping PostgREST (db), GoTrue (auth), Storage, and Realtime under one createClient instance."},
+      {"term": "Migrations", "explanation": "SQL files in supabase/migrations applied in timestamp order. Created with `supabase migration new` and pushed to remote with `supabase db push`."},
+      {"term": "Local stack", "explanation": "`supabase start` runs the full stack (Postgres, Studio, Auth, Storage) in Docker for offline development that mirrors production."},
+      {"term": "Edge Functions", "explanation": "Deno-based serverless functions deployed to the edge, used for webhooks, custom auth logic, and server-only secrets."}
+    ],
+    "apiReference": [
+      {"signature": "createClient(supabaseUrl, supabaseKey, options?)", "purpose": "Instantiate the JS client used for db, auth, storage, and realtime.", "example": "import { createClient } from '@supabase/supabase-js'\nconst supabase = createClient(\n  process.env.NEXT_PUBLIC_SUPABASE_URL,\n  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY\n)"},
+      {"signature": "supabase.from(table).select(columns).eq(col, val)", "purpose": "Query rows via PostgREST with filters, ordering, and joins.", "example": "const { data, error } = await supabase\n  .from('profiles')\n  .select('id, username')\n  .eq('id', userId)\n  .single()"},
+      {"signature": "supabase.auth.signInWithPassword({ email, password })", "purpose": "Authenticate a user and persist the session.", "example": "const { data, error } = await supabase.auth.signInWithPassword({\n  email: 'a@b.com',\n  password: 'secret'\n})"},
+      {"signature": "supabase init  /  supabase start  /  supabase db push", "purpose": "CLI: scaffold project config, run the local Docker stack, and apply migrations to the linked remote.", "example": "supabase init\nsupabase start\nsupabase migration new create_profiles\nsupabase db push"}
+    ],
+    "gotchas": [
+      "New tables have RLS disabled, so the anon key can read/write all rows until you enable RLS and write policies.",
+      "Never expose the service_role key in client code; it bypasses every RLS policy.",
+      "supabase-js returns { data, error } and does not throw on query errors; you must check error explicitly.",
+      "`.single()` errors if zero or more than one row matches; use `.maybeSingle()` when zero is valid.",
+      "`supabase db push` only applies new migration files, not ad-hoc Studio changes; capture schema edits with `supabase db diff`.",
+      "Local `supabase start` requires Docker running and uses fixed default ports that can collide with other services.",
+      "Email confirmations are on by default, so newly signed-up users have no session until they confirm."
+    ],
+    "category": "platform",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/supabase/supabase",
+    "trust": "verified"
+  }
+}

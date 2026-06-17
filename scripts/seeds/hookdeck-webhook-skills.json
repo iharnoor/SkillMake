@@ -69,6 +69,7 @@
     ],
     "category": "api",
     "audience": "engineers",
+    "trust": "verified",
     "videoUrls": [],
     "repoUrl": "https://github.com/hookdeck/webhook-skills"
   }

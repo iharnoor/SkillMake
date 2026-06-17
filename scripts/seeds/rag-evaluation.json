@@ -1,0 +1,78 @@
+{
+  "sourceUrl": "https://docs.ragas.io",
+  "skill": {
+    "name": "rag-evaluation",
+    "description": "Use when measuring the quality of a retrieval-augmented generation pipeline with metrics for retrieval relevance and answer faithfulness.",
+    "whenToUse": [
+      "Diagnosing whether RAG failures come from retrieval or from generation",
+      "Detecting hallucinations by scoring answer faithfulness against retrieved context",
+      "Tuning retriever and chunking settings using context precision and recall",
+      "Building an offline eval set to compare RAG configurations before shipping"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Faithfulness",
+        "explanation": "Measures how factually grounded the generated answer is in the retrieved context. Claims in the answer that are not supported by the context lower the score, surfacing hallucinations."
+      },
+      {
+        "term": "Context precision",
+        "explanation": "Measures how much of the retrieved context is actually relevant and well-ranked. Low precision means the retriever pulls in noisy or off-topic chunks that crowd out useful ones."
+      },
+      {
+        "term": "Context recall",
+        "explanation": "Measures whether the retrieved context contains all the information needed to answer, usually judged against a ground-truth answer. Low recall means relevant chunks were missed."
+      },
+      {
+        "term": "Answer relevancy",
+        "explanation": "Measures how directly the answer addresses the user's question, penalizing incomplete or padded responses. It is about relevance to the query, not factual grounding."
+      },
+      {
+        "term": "LLM-as-judge",
+        "explanation": "Many RAG metrics use an LLM to grade outputs (e.g., decomposing answers into claims and verifying each against context). It scales evaluation but inherits the judge model's bias and variance."
+      },
+      {
+        "term": "Retrieval vs generation split",
+        "explanation": "Context precision/recall isolate the retriever; faithfulness and answer relevancy isolate the generator. Splitting metrics this way tells you which stage to fix."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Step 1 — Build an eval dataset",
+        "purpose": "Collect representative questions, retrieved contexts, generated answers, and ideally ground-truth references.",
+        "example": "Each sample: { question, retrieved_contexts, answer, ground_truth }"
+      },
+      {
+        "signature": "Step 2 — Pick metrics per stage",
+        "purpose": "Choose retrieval metrics (context precision/recall) and generation metrics (faithfulness, answer relevancy).",
+        "example": "Retriever issues -> context precision/recall; hallucinations -> faithfulness"
+      },
+      {
+        "signature": "Step 3 — Run LLM-as-judge scoring",
+        "purpose": "Score each sample, typically by decomposing answers into atomic claims and checking each against context.",
+        "example": "faithfulness = supported_claims / total_claims"
+      },
+      {
+        "signature": "Step 4 — Aggregate and threshold",
+        "purpose": "Average per-sample scores, set passing thresholds, and gate releases or compare configurations.",
+        "example": "Fail build if mean faithfulness < 0.85"
+      },
+      {
+        "signature": "Step 5 — Iterate on the weak stage",
+        "purpose": "If retrieval metrics are low, tune chunking/embeddings/top-k; if generation metrics are low, tune the prompt or model.",
+        "example": "Low recall -> larger top-k or better chunking; low faithfulness -> stricter grounding prompt"
+      }
+    ],
+    "gotchas": [
+      "LLM-as-judge scores are noisy and model-dependent; fix the judge model and prompt, and re-run to gauge variance",
+      "Context recall usually needs ground-truth references, which are expensive to author — budget for annotation",
+      "A high answer relevancy with low faithfulness means a fluent but hallucinated answer; track both together",
+      "Averaging hides failures; inspect low-scoring samples individually, not just the aggregate",
+      "Don't optimize a single metric in isolation — improving recall by raising top-k can hurt precision",
+      "Judge models can favor verbose or stylistically similar answers, biasing scores; calibrate against human labels"
+    ],
+    "category": "concept",
+    "audience": "ai",
+    "videoUrls": [],
+    "trust": "community"
+  }
+}

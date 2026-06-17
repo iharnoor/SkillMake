@@ -9,6 +9,7 @@ import { AutoplayVideo } from "@/components/AutoplayVideo";
 import { resolveVideoEmbed } from "@/lib/skill-schema";
 import { GithubIcon } from "@/components/GithubIcon";
 import { GithubLink } from "@/components/OutboundLink";
+import { TrustBadge } from "@/components/TrustBadge";
 import { formatStars } from "@/lib/github";
 import { track } from "@/lib/metrics";
 
@@ -37,6 +38,7 @@ export default async function SkillDetailPage({ params }: { params: Promise<{ id
       <div className="mt-6 flex items-center gap-2 flex-wrap">
         <span className="tag tag-accent">{entry.skill.audience}</span>
         <span className="tag">{entry.skill.category}</span>
+        <TrustBadge tier={entry.skill.trust} showCommunity />
         <span className="tag mono">sha:{entry.contentHash}</span>
         <span className="tag mono">{entry.model}</span>
       </div>

@@ -1,0 +1,79 @@
+{
+  "sourceUrl": "https://www.linkedin.com/help/linkedin/answer/a564064",
+  "skill": {
+    "name": "linkedin-optimization",
+    "description": "Use when optimizing a LinkedIn profile so recruiters can find you in search and so the headline and about section convert views into messages.",
+    "whenToUse": [
+      "Rewriting a LinkedIn headline to be keyword-rich and value-focused",
+      "Improving recruiter discoverability through keywords and a complete profile",
+      "Crafting an About section that reads as a story, not a list of duties",
+      "Auditing a profile for the gaps that hurt search ranking and trust"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Headline beyond job title",
+        "explanation": "The headline is your most-seen field and is searchable. Combine your role with a value proposition and key skills (e.g., role + specialty + outcome) rather than only your current title."
+      },
+      {
+        "term": "Recruiter search and keywords",
+        "explanation": "Recruiters filter by keywords across headline, About, skills, and experience. Placing the terms they search for, in natural language, raises how often you appear in results."
+      },
+      {
+        "term": "About section as narrative",
+        "explanation": "The About summary should open with a hook, convey what you do and the value you deliver, and weave in keywords. First-person and specific beats a generic third-person bio."
+      },
+      {
+        "term": "Profile completeness",
+        "explanation": "A complete profile (photo, headline, experience, skills, education) ranks and converts better. LinkedIn favors fuller profiles, and recruiters trust them more."
+      },
+      {
+        "term": "Skills and endorsements",
+        "explanation": "Listed skills are searchable filters and feed the algorithm. Pin the most relevant skills to your target role and gather endorsements/recommendations for credibility."
+      },
+      {
+        "term": "Custom URL and visibility",
+        "explanation": "A clean custom public URL looks professional on resumes, and setting profile visibility / Open to Work appropriately controls who can find and approach you."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Step 1 — Define target keywords",
+        "purpose": "Pull the recurring titles, skills, and tools from roles you want, to use across your profile.",
+        "example": "Scan 5 target job posts; list the 10 most repeated keywords"
+      },
+      {
+        "signature": "Step 2 — Rewrite the headline",
+        "purpose": "Combine role, specialty, and value/outcome with searchable keywords within the character limit.",
+        "example": "'Data Analyst | SQL & Python | turning messy data into revenue decisions'"
+      },
+      {
+        "signature": "Step 3 — Write the About section",
+        "purpose": "Open with a hook, state what you do and the impact, and embed keywords naturally over a few short paragraphs.",
+        "example": "Para 1: hook + what you do. Para 2: proof/metrics. Para 3: what you're seeking + call to action."
+      },
+      {
+        "signature": "Step 4 — Fill experience, skills, media",
+        "purpose": "Use achievement bullets in roles, pin top relevant skills, and add a quality photo and banner.",
+        "example": "Pin top 3 skills to your goal role; add metrics to each recent role's bullets"
+      },
+      {
+        "signature": "Step 5 — Set URL and discoverability",
+        "purpose": "Claim a custom public URL, review visibility settings, and enable recruiter-facing signals if job hunting.",
+        "example": "Set linkedin.com/in/yourname; enable 'Open to Work' (recruiters-only if discreet)"
+      }
+    ],
+    "gotchas": [
+      "Leaving the headline as just your job title wastes your most-searched and most-seen field",
+      "Keyword stuffing reads as spam to humans; weave terms into natural sentences instead",
+      "A missing or low-quality photo sharply reduces profile views and trust",
+      "An empty About section is a major gap; recruiters often skim it right after the headline",
+      "Generic third-person bios feel templated — write in first person with specifics and numbers",
+      "Forgetting to set the custom public URL leaves an ugly numeric link on your resume and emails",
+      "If using 'Open to Work', choose recruiters-only visibility if you don't want your employer to see it"
+    ],
+    "category": "job-search",
+    "audience": "general",
+    "videoUrls": [],
+    "trust": "community"
+  }
+}

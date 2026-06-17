@@ -1,0 +1,75 @@
+{
+  "sourceUrl": "https://biomejs.dev",
+  "skill": {
+    "name": "biome",
+    "description": "Use when you want one fast Rust-based tool to format and lint JavaScript, TypeScript, JSX, JSON, and CSS, replacing Prettier and ESLint.",
+    "whenToUse": [
+      "Formatting and linting a JS/TS project from a single tool and config file",
+      "Replacing a separate Prettier plus ESLint setup to cut config and install size",
+      "Running format-and-lint checks in CI with a single biome ci command",
+      "Adding auto-fix on save or as a pre-commit step for consistent style"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Unified formatter and linter",
+        "explanation": "Biome combines formatting (Prettier-like) and linting (ESLint-like) in one toolchain, written in Rust for speed. It aims for high Prettier formatting compatibility out of the box."
+      },
+      {
+        "term": "biome.json",
+        "explanation": "The single configuration file at the project root. It has sections like formatter, linter, javascript, json, and files to control rules, indentation, line width, and ignored paths."
+      },
+      {
+        "term": "Rule groups and recommended set",
+        "explanation": "Lint rules are organized into groups such as correctness, suspicious, style, and complexity. A recommended set is enabled by default; rules can be toggled to error/warn/off in biome.json."
+      },
+      {
+        "term": "Safe vs unsafe fixes",
+        "explanation": "biome check --write applies safe automatic fixes; --write --unsafe also applies fixes that may change behavior or intent and should be reviewed."
+      },
+      {
+        "term": "Single binary, no plugins",
+        "explanation": "Biome ships as one binary with batteries included, so most projects need no plugin ecosystem. This reduces dependency footprint compared to ESLint's plugin model."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "biome check [path]",
+        "purpose": "Run formatter, linter, and import sorting checks together and report issues without modifying files.",
+        "example": "npx @biomejs/biome check ./src\nnpx @biomejs/biome check --write ./src"
+      },
+      {
+        "signature": "biome format --write [path]",
+        "purpose": "Format files in place; omit --write to print or only report formatting differences.",
+        "example": "npx @biomejs/biome format --write ./src\nnpx @biomejs/biome format ./src"
+      },
+      {
+        "signature": "biome lint [path]",
+        "purpose": "Run only the linter and report rule violations; add --write to apply safe fixes.",
+        "example": "npx @biomejs/biome lint ./src\nnpx @biomejs/biome lint --write ./src"
+      },
+      {
+        "signature": "biome ci [path]",
+        "purpose": "Run formatting and linting in a non-writing CI mode that fails on any issue.",
+        "example": "npx @biomejs/biome ci ./src"
+      },
+      {
+        "signature": "biome init",
+        "purpose": "Generate a starter biome.json config file in the current directory.",
+        "example": "npx @biomejs/biome init\n# creates biome.json:\n# {\n#   \"formatter\": { \"enabled\": true, \"indentStyle\": \"tab\" },\n#   \"linter\": { \"enabled\": true, \"rules\": { \"recommended\": true } }\n# }"
+      }
+    ],
+    "gotchas": [
+      "biome check is read-only by default; you must pass --write to actually apply changes",
+      "--write --unsafe can change code behavior; review the diff before committing unsafe fixes",
+      "Prettier compatibility is very high but not exact; expect a few formatting differences when migrating",
+      "Language support is focused on JS/TS/JSX, JSON(C), and CSS — coverage for other languages is still expanding",
+      "If results seem to ignore files, check the files.includes/ignore settings and .gitignore handling in biome.json",
+      "Editor extensions need the Biome binary or version matching biome.json; mismatched versions can format differently"
+    ],
+    "category": "other",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/biomejs/biome",
+    "trust": "verified"
+  }
+}

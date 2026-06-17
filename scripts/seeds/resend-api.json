@@ -1,0 +1,46 @@
+{
+  "sourceUrl": "https://resend.com/docs",
+  "skill": {
+    "name": "resend-api",
+    "description": "Use when sending transactional or batch emails from Node.js with Resend — including React email templates, attachments, and audiences.",
+    "whenToUse": [
+      "Sending transactional emails (receipts, password resets, notifications) from a backend",
+      "Rendering email templates with React via react-email",
+      "Sending batch emails or managing contacts and audiences",
+      "Verifying sending domains and handling email webhooks"
+    ],
+    "keyConcepts": [
+      {"term": "Resend client", "explanation": "Instantiated with `new Resend(apiKey)`. All operations hang off this client: resend.emails, resend.batch, resend.domains, resend.audiences, resend.contacts."},
+      {"term": "from address & verified domains", "explanation": "The `from` address must use a domain you've verified in Resend (DKIM/SPF). Unverified domains can only send from the onboarding@resend.dev test sender."},
+      {"term": "React email templates", "explanation": "Pass a React component to the `react` field; Resend renders it to HTML server-side. Works with the react-email component library."},
+      {"term": "Batch sending", "explanation": "resend.batch.send() accepts an array of up to 100 email objects in one call, each delivered independently."},
+      {"term": "Idempotency", "explanation": "Pass an idempotencyKey in the request options to prevent duplicate sends on retries within the idempotency window."},
+      {"term": "Webhooks", "explanation": "Resend posts events (email.sent, email.delivered, email.bounced, email.complained, email.opened, email.clicked) signed via Svix headers for verification."}
+    ],
+    "apiReference": [
+      {"signature": "const resend = new Resend(process.env.RESEND_API_KEY)", "purpose": "Create the Resend SDK client with your API key.", "example": "import { Resend } from 'resend';\nconst resend = new Resend(process.env.RESEND_API_KEY);"},
+      {"signature": "resend.emails.send({ from, to, subject, html | text | react, ... })", "purpose": "Send a single email; returns { data: { id }, error }.", "example": "const { data, error } = await resend.emails.send({\n  from: 'Acme <onboarding@acme.com>',\n  to: ['user@example.com'],\n  subject: 'Welcome',\n  html: '<strong>Hello!</strong>',\n});\nif (error) console.error(error);"},
+      {"signature": "resend.emails.send({ react: <Component /> })", "purpose": "Render a React component to HTML for the email body.", "example": "import { WelcomeEmail } from './emails/welcome';\nawait resend.emails.send({\n  from: 'Acme <hi@acme.com>',\n  to: 'user@example.com',\n  subject: 'Welcome',\n  react: WelcomeEmail({ name: 'Ada' }),\n});"},
+      {"signature": "send with cc, bcc, reply_to, attachments, headers, tags", "purpose": "Add CC/BCC recipients, reply-to, file attachments, custom headers, and metadata tags.", "example": "await resend.emails.send({\n  from: 'Acme <hi@acme.com>',\n  to: 'user@example.com',\n  subject: 'Invoice',\n  html: '<p>See attached</p>',\n  attachments: [{ filename: 'invoice.pdf', content: pdfBuffer }],\n  reply_to: 'support@acme.com',\n  tags: [{ name: 'category', value: 'invoice' }],\n});"},
+      {"signature": "resend.batch.send([ email1, email2, ... ])", "purpose": "Send up to 100 emails in a single request.", "example": "await resend.batch.send([\n  { from: 'a@acme.com', to: 'x@e.com', subject: 'Hi', html: '<p>1</p>' },\n  { from: 'a@acme.com', to: 'y@e.com', subject: 'Hi', html: '<p>2</p>' },\n]);"},
+      {"signature": "resend.emails.send(payload, { idempotencyKey })", "purpose": "Pass options to make a send idempotent across retries.", "example": "await resend.emails.send(\n  { from: 'a@acme.com', to: 'x@e.com', subject: 'Hi', html: '<p>Hi</p>' },\n  { idempotencyKey: 'welcome/user_123' }\n);"},
+      {"signature": "resend.domains.create/list/verify, resend.audiences, resend.contacts", "purpose": "Manage sending domains, marketing audiences, and their contacts via the SDK.", "example": "await resend.domains.create({ name: 'acme.com' });\nawait resend.contacts.create({ email: 'user@e.com', audienceId: 'aud_123' });"},
+      {"signature": "resend.emails.get(id) / resend.emails.update / resend.emails.cancel", "purpose": "Retrieve a sent email's status, update a scheduled email, or cancel a scheduled send.", "example": "const { data } = await resend.emails.get('email_id');\nawait resend.emails.cancel('email_id');"}
+    ],
+    "gotchas": [
+      "The `from` domain must be verified in Resend; otherwise sends fail unless you use onboarding@resend.dev for testing.",
+      "The SDK does not throw on API errors — always check the returned `error` field alongside `data`.",
+      "Free/test API keys can only send to your own verified email address until a domain is verified.",
+      "Batch send is capped at 100 emails per request, and batch does not support attachments or scheduled_at.",
+      "Verify webhooks using the Svix signature headers (svix-id, svix-timestamp, svix-signature); don't trust unsigned payloads.",
+      "Attachment content should be a Buffer or base64 string; very large attachments hit per-message size limits.",
+      "Scheduling uses scheduled_at with an ISO 8601 or natural-language time; past times send immediately.",
+      "Rate limits apply per account (default ~2 requests/sec); handle 429 responses with backoff."
+    ],
+    "category": "api",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/resend/resend-node",
+    "trust": "verified"
+  }
+}

@@ -70,6 +70,7 @@
     ],
     "category": "tool",
     "audience": "devops",
+    "trust": "official",
     "videoUrls": [],
     "repoUrl": "https://github.com/anthropics/claude-code-action"
   }

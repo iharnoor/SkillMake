@@ -126,6 +126,31 @@ body {
   background: var(--info-soft);
 }
 
+/* Trust tiers. Green stays reserved for install identity, blue for info, so the
+   tiers borrow contrast/amber instead: official = inverted high-contrast fill,
+   verified = neutral-strong outline, experimental = warn, community = quiet. */
+.tag-official {
+  color: var(--bg);
+  background: var(--fg);
+  border-color: var(--fg);
+}
+
+.tag-verified {
+  color: var(--fg);
+  border-color: var(--fg-muted);
+  background: var(--surface);
+}
+
+.tag-experimental {
+  color: var(--warn);
+  border-color: color-mix(in oklab, var(--warn) 40%, var(--border));
+  background: color-mix(in oklab, var(--warn) 12%, transparent);
+}
+
+.tag-community {
+  color: var(--fg-dim);
+}
+
 .dot {
   width: 6px;
   height: 6px;

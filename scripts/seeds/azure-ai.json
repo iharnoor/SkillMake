@@ -52,6 +52,7 @@
     ],
     "category": "platform",
     "audience": "devops",
+    "trust": "official",
     "videoUrls": [],
     "repoUrl": "https://github.com/microsoft/azure-skills"
   }

@@ -48,6 +48,7 @@
     ],
     "category": "tool",
     "audience": "ai",
+    "trust": "verified",
     "videoUrls": [],
     "repoUrl": "https://github.com/firecrawl/firecrawl-mcp-server"
   }

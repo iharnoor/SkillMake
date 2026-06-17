@@ -79,6 +79,7 @@
     ],
     "category": "library",
     "audience": "engineers",
+    "trust": "verified",
     "videoUrls": [],
     "repoUrl": "https://github.com/better-auth/better-auth"
   }

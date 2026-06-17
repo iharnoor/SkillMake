@@ -79,6 +79,7 @@
     ],
     "category": "library",
     "audience": "engineers",
+    "trust": "official",
     "videoUrls": [],
     "repoUrl": "https://github.com/shadcn-ui/ui"
   }

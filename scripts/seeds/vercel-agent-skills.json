@@ -65,6 +65,7 @@
     ],
     "category": "platform",
     "audience": "devops",
+    "trust": "verified",
     "videoUrls": [],
     "repoUrl": "https://github.com/vercel-labs/agent-skills"
   }
