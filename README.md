@@ -25,6 +25,7 @@
 | LLM | Anthropic via the [`ai`](https://www.npmjs.com/package/ai) SDK (skill distillation + optimization) |
 | Vector search | **HydraDB** ([`@hydra_db/node`](https://www.npmjs.com/package/@hydra_db/node)) |
 | Storage | Cloudflare KV (`MARKETPLACE_KV`) |
+| Product analytics | PostHog Cloud, mirrored from the same `track()` chokepoint as Analytics Engine |
 | Runtime / deploy | Cloudflare Workers via [OpenNext](https://opennext.js.org/cloudflare) (`@opennextjs/cloudflare` + `wrangler`) |
 
 ## How we're using HydraDB
@@ -78,10 +79,12 @@ All are optional for local browsing — the app degrades gracefully. Set what yo
 | `SKILLMAKE_MODEL` | Override the default Claude model id. |
 | `ADMIN_TOKEN` | Gates the `/admin` routes. |
 | `GITHUB_TOKEN` | Higher rate limits when fetching skill source from GitHub. |
+| `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | PostHog browser SDK. `NEXT_PUBLIC_*` values are inlined at build time. |
+| `POSTHOG_API_KEY`, `POSTHOG_HOST` | PostHog server-side event mirror. Uses the same public `phc_` project key. |
 | `GOOGLE_ANALYTICS_MEASUREMENT_ID`, `GOOGLE_ANALYTICS_API_SECRET` | GA4 server-side events. |
-| `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_ANALYTICS_API_TOKEN` | Analytics dashboard. |
+| `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_ANALYTICS_API_TOKEN` | Analytics Engine admin queries and long-running install snapshots. |
 
-In production these come from the Cloudflare Workers binding; locally they come from `process.env` (use `.dev.vars` or `.env.local`). KV (`MARKETPLACE_KV`) and the metrics binding (`METRICS`) are configured in [`wrangler.jsonc`](wrangler.jsonc).
+In production these come from the Cloudflare Workers binding or build environment; locally they come from `process.env` (use `.dev.vars`, `.env`, or `.env.local`). KV (`MARKETPLACE_KV`) and the metrics binding (`METRICS`) are configured in [`wrangler.jsonc`](wrangler.jsonc). PostHog is the product analytics UI; Cloudflare Analytics Engine remains the server-side install/system-of-record backend.
 
 ### Scripts
 
@@ -104,7 +107,7 @@ src/
 data/
   packs.json      # source of truth for Prompt Packs
 scripts/seeds/    # seed corpus used when KV is empty
-docs/             # seo-setup.md, analytics-queries.md, grafana/
+docs/             # analytics-posthog.md, analytics-queries.md, seo-setup.md
 ```
 
 ## Deployment

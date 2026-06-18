@@ -33,8 +33,8 @@
   ],
 
   // Custom server-side events (install hits, marketplace views, etc.) for
-  // measuring who actually uses skillmake. Queryable via the Workers
-  // Analytics Engine SQL API and visible in the Cloudflare dashboard.
+  // measuring who actually uses skillmake. This stays as the durable
+  // install/system-of-record backend while PostHog owns product analytics UI.
   "analytics_engine_datasets": [
     {
       "binding": "METRICS",
@@ -65,9 +65,9 @@
   //   wrangler secret put POSTHOG_API_KEY                 # optional; mirrors server metrics into PostHog Cloud
   //                                                       # (the public phc_ project key; see docs/analytics-posthog.md)
   //   wrangler secret put SKILLOPT_AUTONOMOUS=true        # flips the cron on
-  // Install volume is read out of Analytics Engine directly from the
-  // Cloudflare dashboard rather than rendered on the site (see
-  // docs/analytics-queries.md).
+  // Install volume is read out of Analytics Engine for snapshots and admin
+  // queries. Product funnels, journeys, replay, and ad-hoc dashboarding live in
+  // PostHog (see docs/analytics-posthog.md).
   //
   // The browser SDK reads NEXT_PUBLIC_POSTHOG_KEY / NEXT_PUBLIC_POSTHOG_HOST.
   // These are inlined at BUILD time (Next.js NEXT_PUBLIC_*), so set them in the

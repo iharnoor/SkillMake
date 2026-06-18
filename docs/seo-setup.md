@@ -63,7 +63,7 @@ NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
 
 This must be present when the app is built, because `NEXT_PUBLIC_*` values are exposed to browser code by Next.js at build time.
 
-To mirror server-side events that currently feed Grafana into GA4 too, create a
+To mirror server-side product analytics events into GA4 too, create a
 Measurement Protocol API secret in Google Analytics under Admin -> Data streams
 -> your web stream -> Measurement Protocol API secrets, then set:
 

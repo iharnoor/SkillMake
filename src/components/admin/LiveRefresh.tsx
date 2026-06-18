@@ -9,7 +9,8 @@ const INTERVAL_MS = 30_000;
  * Live wallboard refresh. Re-runs the (force-dynamic) analytics server component
  * on an interval via router.refresh(), so the page re-queries Cloudflare Analytics
  * Engine without a full reload. Pauses while the tab is hidden to avoid burning
- * API calls on an unwatched board. Replaces the live view we used to get from Grafana.
+ * API calls on an unwatched board. PostHog now owns product analytics exploration;
+ * this admin wallboard stays focused on install/system-of-record checks.
  */
 export function LiveRefresh() {
   const router = useRouter();

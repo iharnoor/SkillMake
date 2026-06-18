@@ -457,8 +457,9 @@ ORDER BY errors DESC
 LIMIT 50
 ```
 
-## Where to look in the Cloudflare dashboard
+## Where to look now
 
+- **PostHog**: product analytics UI for funnels, retention, journeys, replay, and ad-hoc questions. See `docs/analytics-posthog.md`.
 - **Workers Analytics** (free, built-in, no SQL): Workers & Pages → `skillmake` → Metrics → request volume, errors, CPU, latency. Good for ops, not for product.
-- **Analytics Engine SQL** (paid plan): Workers & Pages → Analytics Engine. This is where the queries above run, and where to build dashboards.
+- **Analytics Engine SQL** (paid plan): Workers & Pages → Analytics Engine. This is the install/system-of-record backend and the source for admin snapshots.
 - **Logs**: Workers & Pages → `skillmake` → Logs → live tail. For retention beyond ~24h, enable **Logpush** to R2 from the dashboard (Account → Logs → Logpush).
