@@ -43,6 +43,7 @@
     ],
     "category": "concept",
     "audience": "creators",
+    "trust": "verified",
     "videoUrls": [],
     "repoUrl": "https://github.com/elevenlabs/elevenlabs-js"
   }

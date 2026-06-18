@@ -69,6 +69,7 @@
     ],
     "category": "library",
     "audience": "engineers",
+    "trust": "verified",
     "videoUrls": [],
     "repoUrl": "https://github.com/inngest/inngest-js"
   }

@@ -64,11 +64,15 @@ export async function POST(req: Request) {
   }
   const { sourceUrl, model, generatedAt, force, videoUrls, audience, repoUrl } = parsed.data;
   // Overlay creator-supplied attachments onto the model-generated skill.
+  // trust is curator-only: public submissions always land as "community"
+  // regardless of what the payload claims. Curators grant higher tiers via the
+  // admin seed/edit path.
   const skill = {
     ...parsed.data.skill,
     videoUrls: videoUrls ?? parsed.data.skill.videoUrls,
     audience: audience ?? parsed.data.skill.audience,
     repoUrl: repoUrl ?? parsed.data.skill.repoUrl,
+    trust: "community" as const,
   };
 
   if (!force) {

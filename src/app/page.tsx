@@ -4,7 +4,8 @@ import { headers } from "next/headers";
 import { listSkills, type MarketplaceEntry } from "@/lib/storage";
 import { listPacks } from "@/lib/packs";
 import { MarketplaceSearch } from "@/components/MarketplaceSearch";
-import { AUDIENCES, type Audience } from "@/lib/skill-schema";
+import { TrustBadge } from "@/components/TrustBadge";
+import { AUDIENCES, type Audience, type TrustTier } from "@/lib/skill-schema";
 import { formatStars } from "@/lib/github";
 import { GithubIcon } from "@/components/GithubIcon";
 import { GithubLink } from "@/components/OutboundLink";
@@ -34,6 +35,7 @@ interface DisplayEntry {
   description: string;
   audience: string;
   category: string;
+  trust: TrustTier;
   source: string;
   href: string;
   repoUrl?: string;
@@ -328,6 +330,7 @@ export default async function Home({
               description: entry.description,
               category: entry.category,
               audience: entry.audience,
+              trust: entry.trust,
               href: entry.href,
             })),
             ...packSearchEntries(),
@@ -387,6 +390,7 @@ export default async function Home({
                   <span className="mono text-[10px] text-[color:var(--fg-dim)] uppercase tracking-wider">
                     {e.category}
                   </span>
+                  <TrustBadge tier={e.trust} />
                 </div>
                 <div className="text-[12px] text-[color:var(--fg-muted)] line-clamp-1 mt-0.5">
                   {e.description}
@@ -533,6 +537,26 @@ function collectionEntries(slug: CollectionSlug, entries: MarketplaceEntry[]): (
         "The curated index of the best agent skills (8.7k★) — where the next must-have comes from.",
         "https://github.com/ComposioHQ/awesome-claude-skills"
       ),
+      // Real star counts pulled from the GitHub API (2026-06-16), not curated
+      // figures — refresh if they drift.
+      repoEntry(
+        "awesome-agent-skills",
+        "A cross-agent index of 1000+ skills from official dev teams and the community — works with Claude Code, Codex, Gemini CLI, and Cursor, so it's not locked to one harness.",
+        "https://github.com/VoltAgent/awesome-agent-skills",
+        25560
+      ),
+      repoEntry(
+        "last30days",
+        "Point an agent at any topic and get a grounded, cited brief from what Reddit, X, YouTube, HN, and Polymarket actually said in the last 30 days — ranked by real engagement, not editors.",
+        "https://github.com/mvanhorn/last30days-skill",
+        43484
+      ),
+      repoEntry(
+        "open-notebook",
+        "A private, self-hostable NotebookLM: drop in PDFs, web pages, YouTube, and audio, then chat, search, and generate podcasts — sources stay on your own infrastructure, any model.",
+        "https://github.com/lfnovo/open-notebook",
+        31117
+      ),
       TRENDING.markitdown,
       TRENDING.ecc,
       TRENDING.moneyPrinterTurbo,
@@ -579,6 +603,7 @@ function skillEntry(
     description,
     audience: "ai",
     category: "tool",
+    trust: "verified",
     source: hostFromUrl(repoUrl),
     href: repoUrl,
     repoUrl,
@@ -602,6 +627,7 @@ function repoEntry(
     description,
     audience: "ai",
     category,
+    trust: "verified",
     source: hostFromUrl(repoUrl),
     href: repoUrl,
     repoUrl,
@@ -622,6 +648,7 @@ function famousMcpEntry(
     description,
     audience: "ai",
     category: "tool",
+    trust: "verified",
     source: hostFromUrl(repoUrl),
     href: repoUrl,
     repoUrl,
@@ -639,6 +666,7 @@ function buildDisplayEntries(entries: (MarketplaceEntry | DisplayEntry)[]): Disp
         description: entry.skill.description,
         audience: entry.skill.audience,
         category: entry.skill.category,
+        trust: entry.skill.trust,
         source: hostFromUrl(entry.sourceUrl),
         href: `/marketplace/${entry.id}`,
         repoUrl: entry.skill.repoUrl,
@@ -657,6 +685,7 @@ interface SearchEntry {
   description: string;
   category: string;
   audience: string;
+  trust: TrustTier;
   href: string;
 }
 
@@ -672,6 +701,7 @@ function packSearchEntries(): SearchEntry[] {
       description: pack.tagline || pack.description,
       category: "pack",
       audience: pack.audience,
+      trust: "verified",
       href: `/packs/${pack.slug}`,
     });
     for (const prompt of pack.prompts) {
@@ -681,6 +711,7 @@ function packSearchEntries(): SearchEntry[] {
         description: prompt.tip || `${prompt.category} prompt from ${pack.title}.`,
         category: prompt.category,
         audience: pack.audience,
+        trust: "verified",
         href: `/packs/${pack.slug}#${prompt.id}`,
       });
     }
@@ -696,6 +727,7 @@ function syntheticEntry(name: string, description: string, category: string): Di
     description,
     audience: "general",
     category,
+    trust: "community",
     source: "workflow",
     href: `#${id}`,
     videoCount: 0,

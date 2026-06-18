@@ -43,6 +43,7 @@
     ],
     "category": "tool",
     "audience": "creators",
+    "trust": "official",
     "videoUrls": [],
     "repoUrl": "https://github.com/vercel/satori"
   }

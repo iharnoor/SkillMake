@@ -1,0 +1,74 @@
+{
+  "sourceUrl": "https://www.themuse.com/advice/how-to-tailor-your-resume-to-a-specific-job-description",
+  "skill": {
+    "name": "resume-tailoring",
+    "description": "Use when adapting a resume to a specific job description to pass ATS keyword screens and earn a recruiter's attention.",
+    "whenToUse": [
+      "Customizing a base resume for a particular job posting before applying",
+      "Matching resume keywords to a job description for ATS compatibility",
+      "Rewriting flat duty statements into quantified, results-driven bullets",
+      "Reordering or trimming experience to lead with the most relevant work"
+    ],
+    "keyConcepts": [
+      {
+        "term": "ATS keyword matching",
+        "explanation": "Applicant tracking systems rank resumes by how well they match the job description's terms. Mirror the posting's exact skills, tools, and titles (within reason) so the resume surfaces in searches."
+      },
+      {
+        "term": "Tailoring vs one-size-fits-all",
+        "explanation": "A generic resume rarely matches any single posting well. Tailoring means adjusting the summary, skills, and bullet emphasis per role so the most relevant qualifications appear first."
+      },
+      {
+        "term": "Quantified bullets",
+        "explanation": "Strong bullets pair an action verb with a measurable outcome (percent, dollars, time, scale). Numbers make impact concrete and credible versus vague responsibility lists."
+      },
+      {
+        "term": "Keyword mirroring (not stuffing)",
+        "explanation": "Use the posting's terminology where it is genuinely true of your experience. Over-stuffing irrelevant keywords backfires with recruiters and can read as dishonest."
+      },
+      {
+        "term": "Relevance ordering",
+        "explanation": "Recruiters skim top-to-bottom in seconds. Put the experience, skills, and achievements most aligned to the target role near the top of each section."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Step 1 — Extract requirements",
+        "purpose": "Read the job description and list required skills, tools, qualifications, and repeated keywords.",
+        "example": "Highlight must-haves vs nice-to-haves and note exact phrasing of titles/tools"
+      },
+      {
+        "signature": "Step 2 — Map to your experience",
+        "purpose": "Match each requirement to a concrete project or achievement you can honestly claim.",
+        "example": "Requirement: 'led cross-functional teams' -> bullet about coordinating 3 teams on launch X"
+      },
+      {
+        "signature": "Step 3 — Rewrite bullets with metrics",
+        "purpose": "Convert duties into action-verb + result bullets with numbers wherever possible.",
+        "example": "Before: 'Responsible for sales.' After: 'Grew regional sales 28% YoY ($1.2M) in 4 quarters.'"
+      },
+      {
+        "signature": "Step 4 — Align keywords and headers",
+        "purpose": "Mirror the posting's terms in your summary and skills, and use standard ATS-friendly section headers.",
+        "example": "Use 'Work Experience', 'Skills', 'Education'; avoid tables/graphics that ATS can't parse"
+      },
+      {
+        "signature": "Step 5 — Reorder and trim",
+        "purpose": "Lead with the most relevant roles and bullets; cut content that doesn't support this job.",
+        "example": "Move the most relevant role's bullets to the top; drop unrelated older roles to one line"
+      }
+    ],
+    "gotchas": [
+      "Never invent skills or metrics to match keywords — fabrication surfaces in interviews and reference checks",
+      "Avoid tables, columns, text boxes, and images; many ATS parsers mangle them and drop your content",
+      "Match the posting's exact term ('Customer Success' vs 'Account Management') rather than a synonym for ATS hits",
+      "Keyword stuffing hurts once a human reads it; keep keywords inside truthful, specific bullets",
+      "Tailor every application; reusing one resume for many roles dilutes relevance for all of them",
+      "Save and submit as the requested format (usually PDF or .docx) so formatting and parsing stay intact"
+    ],
+    "category": "job-search",
+    "audience": "general",
+    "videoUrls": [],
+    "trust": "community"
+  }
+}

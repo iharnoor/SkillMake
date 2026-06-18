@@ -52,6 +52,7 @@
     ],
     "category": "platform",
     "audience": "devops",
+    "trust": "verified",
     "videoUrls": [],
     "repoUrl": "https://github.com/steipete/agent-scripts"
   }

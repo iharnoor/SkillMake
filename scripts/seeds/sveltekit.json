@@ -1,0 +1,47 @@
+{
+  "sourceUrl": "https://svelte.dev/docs/kit",
+  "skill": {
+    "name": "sveltekit",
+    "description": "Use when building full-stack Svelte apps with filesystem routing, server load functions, form actions, and adapter-based deployment.",
+    "whenToUse": [
+      "Building a full-stack web app with Svelte and server-side rendering",
+      "You need filesystem-based routing with layouts and nested routes",
+      "Loading data on the server and progressively enhancing forms with actions",
+      "Deploying to Node, Cloudflare, Vercel, or static hosting via adapters"
+    ],
+    "keyConcepts": [
+      {"term": "Filesystem routing", "explanation": "Routes live under src/routes; each directory is a URL segment. +page.svelte renders UI, +layout.svelte wraps children, and [param] folders capture dynamic segments."},
+      {"term": "load functions", "explanation": "Exported `load` in +page.js/+layout.js (universal) or +page.server.js/+layout.server.js (server-only) fetch data; their return value is exposed to the page as the `data` prop."},
+      {"term": "Form actions", "explanation": "Named or default `actions` exported from +page.server.js handle POST submissions; use:enhance progressively enhances <form> without full reloads."},
+      {"term": "Endpoints (+server.js)", "explanation": "Files exporting GET/POST/etc. handlers create standalone API routes returning Response or json() objects."},
+      {"term": "Adapters", "explanation": "adapter-auto, adapter-node, adapter-cloudflare, adapter-vercel, and adapter-static compile the app for a specific deployment target, set in svelte.config.js."},
+      {"term": "$app modules", "explanation": "Runtime helpers: $app/navigation (goto, invalidate), $app/stores or $app/state (page, navigating), and $env modules for static/dynamic env vars."}
+    ],
+    "apiReference": [
+      {"signature": "src/routes/+page.svelte", "purpose": "The page component for a route; receives load data via the `data` prop.", "example": "<script>\n  let { data } = $props();\n</script>\n\n<h1>{data.title}</h1>"},
+      {"signature": "export function load({ params, fetch, url }): +page.js / +layout.js", "purpose": "Universal load runs on server then client; good for public data and fetch.", "example": "export async function load({ params, fetch }) {\n  const res = await fetch(`/api/post/${params.id}`);\n  return { post: await res.json() };\n}"},
+      {"signature": "export function load({ params, locals, cookies }): +page.server.js", "purpose": "Server-only load; can access databases, secrets, locals, and cookies. Must return serializable data.", "example": "export async function load({ locals }) {\n  return { user: locals.user };\n}"},
+      {"signature": "export const actions = { default: async ({ request, cookies }) => {} }", "purpose": "Handle form POSTs in +page.server.js; return data or fail()/redirect().", "example": "import { fail, redirect } from '@sveltejs/kit';\n\nexport const actions = {\n  login: async ({ request, cookies }) => {\n    const data = await request.formData();\n    const email = data.get('email');\n    if (!email) return fail(400, { missing: true });\n    cookies.set('session', 'abc', { path: '/' });\n    throw redirect(303, '/dashboard');\n  }\n};"},
+      {"signature": "export function GET/POST/PUT/DELETE({ request, url }): +server.js", "purpose": "Define API route handlers; return a Response or use json() from @sveltejs/kit.", "example": "import { json } from '@sveltejs/kit';\n\nexport function GET({ url }) {\n  return json({ q: url.searchParams.get('q') });\n}"},
+      {"signature": "import { error, redirect, fail, json } from '@sveltejs/kit'", "purpose": "Control-flow and response helpers used inside load, actions, and endpoints.", "example": "import { error } from '@sveltejs/kit';\nexport function load({ params }) {\n  if (!params.id) throw error(404, 'Not found');\n}"},
+      {"signature": "use:enhance from '$app/forms'", "purpose": "Progressively enhance a form so submissions are handled with fetch instead of full reload.", "example": "<script>\n  import { enhance } from '$app/forms';\n</script>\n\n<form method=\"POST\" action=\"?/login\" use:enhance>\n  <input name=\"email\" />\n</form>"},
+      {"signature": "goto(url) / invalidate(url) / invalidateAll() from '$app/navigation'", "purpose": "Programmatic navigation and re-running of load functions whose dependencies changed.", "example": "import { goto, invalidateAll } from '$app/navigation';\nawait goto('/dashboard');\nawait invalidateAll();"},
+      {"signature": "+layout.server.js / +error.svelte / +page.js exports (prerender, ssr, csr)", "purpose": "Page options control rendering: export const prerender = true / ssr = false / csr = false.", "example": "export const prerender = true;\nexport const ssr = false;"}
+    ],
+    "gotchas": [
+      "Server load (+page.server.js) cannot return non-serializable values like functions or class instances — they must be devalue-serializable.",
+      "redirect() and error() must be thrown (or returned in newer versions); calling without throwing does nothing in older code paths.",
+      "Use the special `fetch` from the load event, not global fetch, so cookies/relative URLs and request dedup work during SSR.",
+      "Environment variables: use $env/static/private and $env/dynamic/private for secrets — never import them into client-side code.",
+      "load functions re-run only when their tracked dependencies (params, url, fetched urls) change; use depends()/invalidate() to force reruns.",
+      "Form actions live only in +page.server.js, not +server.js; pointing a <form action> at an endpoint won't trigger actions.",
+      "adapter-auto guesses the platform on supported CI hosts; for local node deploys install and configure adapter-node explicitly.",
+      "Setting ssr = false turns a route into an SPA — load still runs but only on the client, so server-only data must move elsewhere."
+    ],
+    "category": "framework",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/sveltejs/kit",
+    "trust": "verified"
+  }
+}

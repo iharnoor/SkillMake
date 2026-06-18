@@ -49,6 +49,16 @@ export const AUDIENCES = ["creators", "engineers", "devops", "ai", "design", "ma
 export type Audience = (typeof AUDIENCES)[number];
 
 /**
+ * Trust tier — curator-assigned signal of how much to trust a catalog entry.
+ * Ordered most→least trusted. `community` is the default for anything we
+ * haven't reviewed; public submissions are clamped to it (only curators may
+ * grant `verified`/`official`). Kept OUT of renderSkillMarkdown on purpose so
+ * changing a tier never perturbs an entry's contentHash.
+ */
+export const TRUST_TIERS = ["official", "verified", "community", "experimental"] as const;
+export type TrustTier = (typeof TRUST_TIERS)[number];
+
+/**
  * SkillOpt protected sections — section ids that bounded edits cannot modify.
  * Wrapped in `<!-- @protected:<id> -->...<!-- /@protected:<id> -->` markers
  * during render so the validator can enforce byte-identity at the markdown
@@ -162,6 +172,12 @@ export const SkillSchema = z.object({
     .default("creators")
     .describe(
       "Who this skill is primarily for. We launched with 'creators'; other audiences are added as the marketplace expands."
+    ),
+  trust: z
+    .enum(TRUST_TIERS)
+    .default("community")
+    .describe(
+      "Curator-assigned trust tier: 'official' = maintained by the tool's own vendor; 'verified' = curator-reviewed, reputable source; 'community' = default, unreviewed; 'experimental' = new/unproven. Public submissions are clamped to 'community'."
     ),
   videoUrls: z
     .array(VideoUrl)

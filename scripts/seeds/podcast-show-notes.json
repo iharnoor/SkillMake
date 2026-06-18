@@ -43,6 +43,7 @@
     ],
     "category": "concept",
     "audience": "creators",
+    "trust": "official",
     "videoUrls": [],
     "repoUrl": "https://github.com/openai/whisper"
   }

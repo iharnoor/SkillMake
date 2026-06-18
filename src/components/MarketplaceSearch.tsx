@@ -4,6 +4,7 @@ interface SearchEntry {
   description: string;
   category: string;
   audience: string;
+  trust: string;
   href: string;
 }
 
@@ -73,8 +74,9 @@ function MarketplaceSearchScript({ entries }: { entries: SearchEntry[] }) {
         const name = item.name.toLowerCase();
         const category = item.category.toLowerCase();
         const audience = item.audience.toLowerCase();
+        const trust = String(item.trust || "").toLowerCase();
         const description = item.description.toLowerCase();
-        const haystack = name + " " + category + " " + audience + " " + description;
+        const haystack = name + " " + category + " " + audience + " " + trust + " " + description;
         if (!terms.every((term) => haystack.includes(term))) return null;
 
         let score = 0;
@@ -82,7 +84,7 @@ function MarketplaceSearchScript({ entries }: { entries: SearchEntry[] }) {
           if (name === term) score += 8;
           else if (name.startsWith(term)) score += 6;
           else if (name.includes(term)) score += 4;
-          if (category.includes(term) || audience.includes(term)) score += 2;
+          if (category.includes(term) || audience.includes(term) || trust.includes(term)) score += 2;
           if (description.includes(term)) score += 1;
         }
         return { ...item, score };
@@ -97,13 +99,20 @@ function MarketplaceSearchScript({ entries }: { entries: SearchEntry[] }) {
       results.innerHTML = "";
       return;
     }
+    const trustMark = (tier) => {
+      const t = { official: "✓ official", verified: "◆ verified", experimental: "⚠ experimental" }[tier];
+      return t ? '<span class="mono text-[10px] text-[color:var(--fg-muted)] uppercase tracking-wider">' + t + '</span>' : "";
+    };
     results.innerHTML = items.map((item) => {
       return '<a href="' + esc(item.href) + '" class="grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-2 border-b border-[color:var(--border)] hover:text-[color:var(--accent)] transition">' +
         '<div class="min-w-0">' +
         '<div class="mono text-[13px] truncate">' + esc(item.name) + '</div>' +
         '<div class="text-[12px] text-[color:var(--fg-muted)] line-clamp-1 mt-0.5">' + esc(item.description) + '</div>' +
         '</div>' +
-        '<div class="mono text-[10px] text-[color:var(--fg-dim)] self-start mt-0.5">' + esc(item.category) + '</div>' +
+        '<div class="flex flex-col items-end gap-0.5 self-start mt-0.5">' +
+        '<span class="mono text-[10px] text-[color:var(--fg-dim)]">' + esc(item.category) + '</span>' +
+        trustMark(item.trust) +
+        '</div>' +
         '</a>';
     }).join("");
   };

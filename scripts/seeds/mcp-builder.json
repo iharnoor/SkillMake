@@ -52,6 +52,7 @@
     ],
     "category": "tool",
     "audience": "ai",
+    "trust": "official",
     "videoUrls": [],
     "repoUrl": "https://github.com/anthropics/skills"
   }

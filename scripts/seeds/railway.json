@@ -1,0 +1,40 @@
+{
+  "sourceUrl": "https://docs.railway.com",
+  "skill": {
+    "name": "railway",
+    "description": "Use when deploying and operating apps on Railway: linking projects, pushing code with the CLI, managing services, variables, and environments.",
+    "whenToUse": [
+      "Deploying an app or service to Railway from the command line",
+      "Linking a local repo to a Railway project and environment",
+      "Managing environment variables and secrets across environments",
+      "Inspecting logs and running commands against a deployed service"
+    ],
+    "keyConcepts": [
+      {"term": "Project / Service / Environment", "explanation": "A project groups services (a deployable app, db, etc.); each project has environments like production and staging that hold separate variables and deployments."},
+      {"term": "railway link", "explanation": "Associates the current directory with a specific project, environment, and service so subsequent CLI commands target the right resources."},
+      {"term": "railway up", "explanation": "Uploads the current directory and triggers a build+deploy, using Nixpacks or a Dockerfile if present."},
+      {"term": "Variables", "explanation": "Per-environment env vars injected at runtime; reference other services' values with shared/reference variables instead of hardcoding."},
+      {"term": "Nixpacks", "explanation": "Railway's default builder that auto-detects the language and builds an image without a Dockerfile."},
+      {"term": "railway run", "explanation": "Runs a local command with the linked environment's variables injected, useful for migrations and one-off scripts."}
+    ],
+    "apiReference": [
+      {"signature": "railway login", "purpose": "Authenticate the CLI against your Railway account via browser.", "example": "railway login"},
+      {"signature": "railway link", "purpose": "Link the current directory to a project, environment, and service interactively.", "example": "railway link"},
+      {"signature": "railway up [--detach]", "purpose": "Build and deploy the current directory to the linked service.", "example": "railway up --detach"},
+      {"signature": "railway variables --set KEY=value", "purpose": "Set environment variables on the linked service/environment.", "example": "railway variables --set \"NODE_ENV=production\"\nrailway run npm run migrate\nrailway logs"}
+    ],
+    "gotchas": [
+      "You must `railway link` before `railway up`, `run`, or `variables`, or commands fail with no linked project.",
+      "`railway up` deploys the current directory contents, not your latest git commit, so uncommitted local changes get shipped.",
+      "Variables are scoped per environment; setting them in staging does not affect production.",
+      "Without a Dockerfile, Nixpacks guesses the build; an unexpected runtime or start command usually means you need a railway.json or explicit start command.",
+      "`railway run` injects remote variables locally, so be careful running destructive commands against production data.",
+      "The legacy `railway` (Node) CLI and the newer Rust CLI differ in some flags; match commands to your installed version."
+    ],
+    "category": "platform",
+    "audience": "devops",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/railwayapp/cli",
+    "trust": "verified"
+  }
+}

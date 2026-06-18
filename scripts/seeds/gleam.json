@@ -1,0 +1,47 @@
+{
+  "sourceUrl": "https://gleam.run/documentation/",
+  "skill": {
+    "name": "gleam",
+    "description": "Use when building type-safe, concurrent applications on the Erlang BEAM or compiling to JavaScript with a friendly functional language.",
+    "whenToUse": [
+      "Writing fault-tolerant, concurrent backends on the BEAM with static types",
+      "Targeting both Erlang and JavaScript from one statically typed codebase",
+      "Interoperating with existing Erlang/Elixir/OTP libraries from typed code",
+      "Wanting an ML-style type system with no nulls and exhaustive pattern matching"
+    ],
+    "keyConcepts": [
+      {"term": "BEAM target", "explanation": "Gleam compiles to Erlang by default, running on the BEAM VM with OTP supervision, lightweight processes, and message passing. It can also compile to JavaScript with --target javascript."},
+      {"term": "Result and Option", "explanation": "Gleam has no null and no exceptions for normal flow. Fallible operations return Result(value, error) and optional values use Option(a) (Some/None). The use expression and try-style chaining handle them ergonomically."},
+      {"term": "Pattern matching with case", "explanation": "case expressions destructure values and must be exhaustive; the compiler errors if a variant is unhandled. This makes adding a custom type variant surface every place needing an update."},
+      {"term": "Pipe operator |>", "explanation": "x |> f(y) calls f(x, y), threading a value through a sequence of functions for readable left-to-right data transformations."},
+      {"term": "use expression", "explanation": "use desugars callback-passing functions into flat code, replacing nested closures. Common for Result chaining: use value <- result.try(operation)."},
+      {"term": "Custom types", "explanation": "Algebraic data types declared with pub type Name { Variant(fields) }. They model records and tagged unions; labelled fields enable named arguments at the call site."}
+    ],
+    "apiReference": [
+      {"signature": "gleam new <name>", "purpose": "Scaffold a new Gleam project with gleam.toml, src/, and test/ directories.", "example": "gleam new my_app\ncd my_app"},
+      {"signature": "gleam run", "purpose": "Compile and run the project's main function (the module matching the project name).", "example": "gleam run"},
+      {"signature": "gleam test", "purpose": "Compile and run tests; the default test runner is gleeunit.", "example": "gleam test"},
+      {"signature": "gleam build", "purpose": "Type-check and compile the project to the configured target without running it.", "example": "gleam build --target javascript"},
+      {"signature": "gleam add <package>", "purpose": "Add a Hex dependency and update gleam.toml and the lockfile.", "example": "gleam add gleam_http gleam_json"},
+      {"signature": "gleam format", "purpose": "Format all source files using the canonical Gleam formatter.", "example": "gleam format"},
+      {"signature": "gleam deps download", "purpose": "Fetch dependencies declared in gleam.toml without building.", "example": "gleam deps download"},
+      {"signature": "pub fn main() { ... }", "purpose": "Program entry point; functions and types must be marked pub to be visible outside the module.", "example": "import gleam/io\nimport gleam/list\n\npub fn main() {\n  [1, 2, 3]\n  |> list.map(fn(x) { x * 2 })\n  |> list.fold(0, fn(acc, x) { acc + x })\n  |> io.debug\n}"},
+      {"signature": "case subject { pattern -> expr }", "purpose": "Exhaustive pattern matching expression that returns a value.", "example": "case result {\n  Ok(value) -> value\n  Error(_) -> 0\n}"}
+    ],
+    "gotchas": [
+      "There is no null and no implicit conversions; mixing Int and Float requires explicit conversion (int.to_float).",
+      "case expressions must be exhaustive or the compiler refuses to build.",
+      "Int uses + and Float uses +.; using the wrong operator for the type is a type error.",
+      "All values are immutable; there is no mutation, so update records with the .. spread syntax in a new value.",
+      "External Erlang/JS code must be declared with @external and is unchecked at the boundary, so wrap FFI carefully.",
+      "Functions and types are private by default; forgetting pub makes them invisible to other modules and tests.",
+      "JavaScript and Erlang targets differ in available stdlib and integer semantics; test the target you ship.",
+      "Labelled arguments are positional unless you use the label name; reordering positional args silently changes meaning."
+    ],
+    "category": "language",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/gleam-lang/gleam",
+    "trust": "verified"
+  }
+}

@@ -47,6 +47,7 @@
     ],
     "category": "tool",
     "audience": "engineers",
+    "trust": "verified",
     "videoUrls": [],
     "repoUrl": "https://github.com/vercel-labs/agent-browser"
   }

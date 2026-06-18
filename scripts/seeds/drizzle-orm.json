@@ -1,0 +1,47 @@
+{
+  "sourceUrl": "https://orm.drizzle.team/docs/overview",
+  "skill": {
+    "name": "drizzle-orm",
+    "description": "Use when you want a typesafe SQL-like TypeScript ORM with schema-in-code, zero codegen at runtime, and SQL-driver-agnostic queries.",
+    "whenToUse": [
+      "Building TypeScript apps needing end-to-end inferred types from a SQL schema",
+      "Wanting a thin SQL-flavored query builder rather than a heavy active-record ORM",
+      "Managing schema migrations with drizzle-kit against Postgres, MySQL, or SQLite",
+      "Running on serverless/edge runtimes where a lightweight driver matters"
+    ],
+    "keyConcepts": [
+      {"term": "Schema in TypeScript", "explanation": "Tables are declared with pgTable/mysqlTable/sqliteTable and column helpers. The schema is plain TS, so types are inferred directly; no separate schema language or runtime codegen."},
+      {"term": "drizzle() instance", "explanation": "You create a db client by passing a driver connection (and optionally the schema) to drizzle(). The dialect-specific import (drizzle-orm/node-postgres, /mysql2, /better-sqlite3, etc.) selects behavior."},
+      {"term": "Query builder vs Relational Queries", "explanation": "Two APIs: the SQL-like builder (db.select().from().where()) mirrors SQL, while the Relational Queries API (db.query.users.findMany({ with: { posts: true } })) fetches nested relations declaratively."},
+      {"term": "drizzle-kit", "explanation": "The CLI for migrations. generate diffs the schema to SQL files, migrate applies them, and push syncs the schema directly to the DB for prototyping."},
+      {"term": "Operators and sql template", "explanation": "Conditions use imported operators (eq, and, or, gt, inArray, like). The sql`` template tag escapes parameters and lets you drop to raw SQL safely."},
+      {"term": "Type inference", "explanation": "table.$inferSelect and table.$inferInsert (or InferSelectModel/InferInsertModel) derive row and insert types from the schema, keeping app types in sync automatically."}
+    ],
+    "apiReference": [
+      {"signature": "drizzle(client, { schema })", "purpose": "Create the typed database instance from a driver connection and optional schema for relational queries.", "example": "import { drizzle } from 'drizzle-orm/node-postgres';\nimport { Pool } from 'pg';\nimport * as schema from './schema';\n\nconst pool = new Pool({ connectionString: process.env.DATABASE_URL });\nexport const db = drizzle(pool, { schema });"},
+      {"signature": "pgTable(name, columns)", "purpose": "Define a Postgres table; column builders like serial, text, integer, timestamp set types and constraints.", "example": "import { pgTable, serial, text, integer } from 'drizzle-orm/pg-core';\n\nexport const users = pgTable('users', {\n  id: serial('id').primaryKey(),\n  name: text('name').notNull(),\n  age: integer('age'),\n});"},
+      {"signature": "db.select().from(table).where(cond)", "purpose": "SQL-style read query; chain orderBy, limit, leftJoin, etc.", "example": "import { eq, and } from 'drizzle-orm';\nconst rows = await db.select().from(users).where(and(eq(users.name, 'Ada'))).limit(10);"},
+      {"signature": "db.insert(table).values(data).returning()", "purpose": "Insert one or many rows; returning() returns inserted columns (Postgres/SQLite).", "example": "const [row] = await db.insert(users).values({ name: 'Ada', age: 36 }).returning();"},
+      {"signature": "db.update(table).set(data).where(cond)", "purpose": "Update matching rows with new values.", "example": "await db.update(users).set({ age: 37 }).where(eq(users.id, 1));"},
+      {"signature": "db.delete(table).where(cond)", "purpose": "Delete matching rows.", "example": "await db.delete(users).where(eq(users.id, 1));"},
+      {"signature": "db.query.users.findMany({ with })", "purpose": "Relational Queries API to fetch rows with nested relations in one call.", "example": "const data = await db.query.users.findMany({\n  where: (u, { eq }) => eq(u.active, true),\n  with: { posts: true },\n});"},
+      {"signature": "defineConfig({ schema, out, dialect, dbCredentials })", "purpose": "drizzle.config.ts used by drizzle-kit to locate schema and target the database.", "example": "import { defineConfig } from 'drizzle-kit';\nexport default defineConfig({\n  schema: './src/schema.ts',\n  out: './drizzle',\n  dialect: 'postgresql',\n  dbCredentials: { url: process.env.DATABASE_URL! },\n});"},
+      {"signature": "drizzle-kit generate | migrate | push | studio", "purpose": "CLI: generate SQL migrations, apply them, push schema directly, or open Drizzle Studio.", "example": "npx drizzle-kit generate\nnpx drizzle-kit migrate\nnpx drizzle-kit push"}
+    ],
+    "gotchas": [
+      "drizzle-kit push is for prototyping; it can drop data on destructive diffs, so use generate+migrate in production.",
+      "You must pass { schema } to drizzle() to use the db.query relational API; otherwise db.query is undefined.",
+      "Dialect imports differ (pg-core vs mysql-core vs sqlite-core); mixing column helpers across dialects fails.",
+      "returning() is unsupported by MySQL; use insertId or a follow-up select there.",
+      "Relations must be declared with the relations() helper for the relational queries API to resolve with: joins.",
+      "Connection pooling on serverless can exhaust DB connections; use a serverless-aware driver (neon-http, postgres.js) or a pooler.",
+      "Order of operators matters: where() takes one expression, so combine with and()/or() rather than chaining where().",
+      "Migrations run in the order of generated files; editing applied migration SQL by hand can desync the journal."
+    ],
+    "category": "library",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/drizzle-team/drizzle-orm",
+    "trust": "verified"
+  }
+}

@@ -69,6 +69,7 @@
     ],
     "category": "tool",
     "audience": "engineers",
+    "trust": "official",
     "videoUrls": [],
     "repoUrl": "https://github.com/anthropics/skills"
   }

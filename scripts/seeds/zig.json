@@ -1,0 +1,46 @@
+{
+  "sourceUrl": "https://ziglang.org/documentation/master/",
+  "skill": {
+    "name": "zig",
+    "description": "Use when writing low-level systems code that needs C interop, manual memory control, and compile-time metaprogramming without hidden control flow.",
+    "whenToUse": [
+      "Building systems software, embedded firmware, or game engines needing manual memory control",
+      "Cross-compiling C/C++ projects where Zig acts as a drop-in C compiler and build system",
+      "Replacing C while keeping a tiny runtime and no hidden allocations",
+      "Generating code at compile time with comptime instead of macros or codegen"
+    ],
+    "keyConcepts": [
+      {"term": "comptime", "explanation": "Code marked comptime runs during compilation; used for generics, type reflection, and constant folding. Types are first-class comptime values, so generic functions take a type parameter."},
+      {"term": "Allocators", "explanation": "Zig has no global allocator. Functions that allocate take a std.mem.Allocator parameter, making allocation explicit. Common ones: GeneralPurposeAllocator, ArenaAllocator, std.heap.page_allocator, FixedBufferAllocator."},
+      {"term": "Error unions", "explanation": "Functions return error unions like !T. Use try to propagate, catch to handle, and errdefer to clean up on the error path. Errors are values from an inferred or named error set."},
+      {"term": "Optionals", "explanation": "?T represents a maybe-null value. Unwrap with if (opt) |val| {} or orelse. No null pointers exist unless a type is explicitly optional, eliminating most null dereferences."},
+      {"term": "defer / errdefer", "explanation": "defer runs a statement at scope exit; errdefer runs only when the scope returns an error. Together they give deterministic resource cleanup without RAII."},
+      {"term": "build.zig", "explanation": "The build system is itself a Zig program. A build function receives a *std.Build and declares artifacts, steps, modules, and dependencies declaratively."}
+    ],
+    "apiReference": [
+      {"signature": "zig build", "purpose": "Run the build graph defined in build.zig, producing the declared artifacts.", "example": "zig build\nzig build run\nzig build test"},
+      {"signature": "zig build-exe <file.zig>", "purpose": "Compile a single source file directly into an executable without a build.zig.", "example": "zig build-exe src/main.zig -O ReleaseFast"},
+      {"signature": "zig run <file.zig>", "purpose": "Compile and immediately run a source file, like a script.", "example": "zig run hello.zig"},
+      {"signature": "zig test <file.zig>", "purpose": "Compile and run all test {} blocks in the given file.", "example": "zig test src/lib.zig"},
+      {"signature": "zig build-exe -target <arch-os-abi>", "purpose": "Cross-compile to another target triple; Zig ships libc headers for many targets.", "example": "zig build-exe main.zig -target aarch64-linux-musl"},
+      {"signature": "zig cc / zig c++", "purpose": "Use Zig as a drop-in C/C++ cross-compiler that wraps clang and bundles headers.", "example": "zig cc -o app app.c -target x86_64-windows-gnu"},
+      {"signature": "const std = @import(\"std\");", "purpose": "Import the standard library; @import is a builtin that returns a module's root struct.", "example": "const std = @import(\"std\");\npub fn main() !void {\n    var gpa = std.heap.GeneralPurposeAllocator(.{}){};\n    const allocator = gpa.allocator();\n    defer _ = gpa.deinit();\n    const list = try allocator.alloc(u8, 16);\n    defer allocator.free(list);\n    std.debug.print(\"len={d}\\n\", .{list.len});\n}"},
+      {"signature": "test \"name\" { ... }", "purpose": "Declare a unit test block; assert with std.testing.expect and expectEqual.", "example": "test \"adds\" {\n    try std.testing.expectEqual(@as(i32, 3), add(1, 2));\n}"}
+    ],
+    "gotchas": [
+      "There is no default allocator; any std API that allocates requires you to pass an Allocator explicitly.",
+      "comptime-known integer literals are arbitrary precision; coerce with @as or @intCast before runtime use.",
+      "Unused variables and unused function parameters are compile errors; discard with _ = x;.",
+      "defer captures the statement, not values at defer time; the expression evaluates at scope exit.",
+      "Release builds (ReleaseFast/ReleaseSmall) disable safety checks like bounds and overflow; only Debug and ReleaseSafe keep them.",
+      "The language is pre-1.0; std and build.zig APIs change between minor versions, so pin your Zig toolchain.",
+      "Integer overflow traps in safe builds; use wrapping operators like +% or saturating +| when you want wraparound.",
+      "Slices ([]T) carry a length and are distinct from many-item pointers ([*]T); converting requires explicit syntax."
+    ],
+    "category": "language",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/ziglang/zig",
+    "trust": "verified"
+  }
+}

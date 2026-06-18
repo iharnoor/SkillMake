@@ -1,0 +1,40 @@
+{
+  "sourceUrl": "https://github.com/BurntSushi/ripgrep",
+  "skill": {
+    "name": "ripgrep",
+    "description": "Use when searching code fast with ripgrep (rg): recursive regex search that respects .gitignore, with type filters, case control, and globs.",
+    "whenToUse": [
+      "Searching a large codebase for a string or regex quickly",
+      "Filtering matches by file type or glob pattern",
+      "Listing files that contain (or omit) a pattern",
+      "Replacing slow grep -r pipelines in scripts and editors"
+    ],
+    "keyConcepts": [
+      {"term": "gitignore awareness", "explanation": "rg skips files matched by .gitignore, .ignore, and hidden files by default, which is why results differ from grep -r."},
+      {"term": "Type filters", "explanation": "`--type` / `-t` restricts search to a language (e.g. py, js); `rg --type-list` shows all defined types."},
+      {"term": "Smart case", "explanation": "Pass `-S` for smart case: case-insensitive when the pattern is all lowercase, case-sensitive otherwise; `-i` forces insensitive."},
+      {"term": "Globs", "explanation": "`-g` includes/excludes paths by glob, e.g. `-g '*.rs'` or `-g '!test/**'` to negate."},
+      {"term": "Default regex engine", "explanation": "rg uses Rust's linear-time regex (no backreferences); pass `-P` for the PCRE2 engine when you need lookaround or backrefs."},
+      {"term": "Fixed strings", "explanation": "`-F` treats the pattern literally so regex metacharacters are matched as-is."}
+    ],
+    "apiReference": [
+      {"signature": "rg PATTERN [PATH]", "purpose": "Recursively search for a regex pattern from PATH (default cwd).", "example": "rg 'TODO' src/"},
+      {"signature": "rg -i / -S PATTERN", "purpose": "Case-insensitive (-i) or smart-case (-S) matching.", "example": "rg -i 'createclient'"},
+      {"signature": "rg --type py PATTERN  (alias rg -t py)", "purpose": "Limit search to files of a given type.", "example": "rg --type py 'def main'"},
+      {"signature": "rg -l / -c / -g GLOB / -w", "purpose": "List matching files (-l), count per file (-c), glob filter (-g), whole-word (-w).", "example": "rg -l 'import requests' --type py\nrg -w 'id' -g '!**/dist/**'\nrg -P '(?<=foo)bar'"}
+    ],
+    "gotchas": [
+      "rg ignores files listed in .gitignore and hidden files by default; use -u, -uu, or -uuu to relax (the last also searches binary files).",
+      "The default regex engine rejects backreferences and lookaround; use -P for PCRE2 if it was compiled in.",
+      "Patterns starting with - are parsed as flags; use -e PATTERN or put -- before the pattern.",
+      "rg searches recursively by default, so `rg foo` with no path covers the whole tree, unlike grep.",
+      "-t/--type needs a known type name; for ad-hoc extensions use -g '*.ext' instead.",
+      "Output is colorized and grouped for TTYs but flat when piped, which can surprise scripts parsing output."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/BurntSushi/ripgrep",
+    "trust": "verified"
+  }
+}

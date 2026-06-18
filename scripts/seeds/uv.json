@@ -1,0 +1,40 @@
+{
+  "sourceUrl": "https://docs.astral.sh/uv/",
+  "skill": {
+    "name": "uv",
+    "description": "Use when managing Python projects with uv: fast virtualenvs, dependency resolution, lockfiles, and a pip-compatible interface from Astral.",
+    "whenToUse": [
+      "Creating and managing Python virtual environments quickly",
+      "Installing and locking project dependencies via pyproject.toml",
+      "Replacing pip, pip-tools, and venv with one fast tool",
+      "Pinning and switching Python interpreter versions per project"
+    ],
+    "keyConcepts": [
+      {"term": "Project vs pip interface", "explanation": "uv has a project workflow (uv add/sync/lock around pyproject.toml) and a low-level pip-compatible interface (uv pip install/compile) for existing workflows."},
+      {"term": "uv.lock", "explanation": "A universal, cross-platform lockfile uv generates and respects to make installs reproducible; managed automatically by uv sync/add."},
+      {"term": "Managed Python", "explanation": "uv can download and manage standalone CPython builds, so `uv python install 3.12` provisions interpreters without system Python."},
+      {"term": ".venv auto-discovery", "explanation": "Project commands create and use a .venv in the project root automatically; uv run executes inside it without manual activation."},
+      {"term": "uv pip compile", "explanation": "Compiles requirements.in into a fully pinned requirements.txt, a drop-in faster pip-tools replacement."},
+      {"term": "Global cache", "explanation": "uv hard-links/copies from a shared cache for fast, deduplicated installs across projects."}
+    ],
+    "apiReference": [
+      {"signature": "uv venv [PATH] [--python X.Y]", "purpose": "Create a virtual environment, optionally pinning the interpreter version.", "example": "uv venv --python 3.12\nsource .venv/bin/activate"},
+      {"signature": "uv pip install PACKAGE", "purpose": "pip-compatible install into the active or project environment.", "example": "uv pip install 'requests>=2.31'\nuv pip install -r requirements.txt"},
+      {"signature": "uv add / uv sync / uv lock", "purpose": "Project workflow: add a dependency to pyproject.toml, sync the env to the lockfile, and regenerate the lock.", "example": "uv init myapp\ncd myapp\nuv add fastapi\nuv sync"},
+      {"signature": "uv run COMMAND", "purpose": "Run a command inside the project environment, syncing first if needed.", "example": "uv run python main.py\nuv run pytest"}
+    ],
+    "gotchas": [
+      "`uv pip install` does not modify pyproject.toml or uv.lock; use `uv add` for project dependencies you want tracked.",
+      "uv pip operates on the active/discovered environment, not the global system Python, so activate or use --python deliberately.",
+      "uv sync prunes packages not in the lockfile by default, removing anything you installed manually with uv pip.",
+      "uv run auto-syncs the environment, so it may install/uninstall packages before running your command.",
+      "uv venv does not auto-activate; you still must source the activate script or rely on uv run.",
+      "Managed Python interpreters are separate from system Python; mixing them can cause confusing version mismatches."
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/astral-sh/uv",
+    "trust": "verified"
+  }
+}
