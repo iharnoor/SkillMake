@@ -2,7 +2,7 @@
   "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/to-issues/SKILL.md",
   "skill": {
     "name": "mp-to-issues",
-    "description": "Use when breaking a plan, spec, or PRD into independently-grabbable tracker issues \u2014 vertical tracer-bullet slices that cut through every layer end-to-end, each one demoable on its own.",
+    "description": "Use when breaking a plan, spec, or PRD into independently-grabbable tracker issues — vertical tracer-bullet slices that cut through every layer end-to-end, each one demoable on its own.",
     "whenToUse": [
       "Converting a PRD or design doc into implementation tickets ready for AFK agents",
       "Splitting a large feature into thin slices a single contributor (human or agent) can finish in one sitting",
@@ -12,11 +12,11 @@
     "keyConcepts": [
       {
         "term": "vertical tracer-bullet slice",
-        "explanation": "Each issue is a thin vertical slice that cuts through ALL integration layers \u2014 schema, API, UI, tests \u2014 end-to-end. Not a horizontal slice of one layer. A completed slice is demoable or verifiable on its own. Prefer many thin slices over few thick ones."
+        "explanation": "Each issue is a thin vertical slice that cuts through ALL integration layers — schema, API, UI, tests — end-to-end. Not a horizontal slice of one layer. A completed slice is demoable or verifiable on its own. Prefer many thin slices over few thick ones."
       },
       {
         "term": "HITL vs AFK",
-        "explanation": "Slices are tagged HITL (human-in-the-loop \u2014 requires architectural decision, design review, or external access) or AFK (agent-mergeable without human interaction). Prefer AFK over HITL where possible \u2014 that's where the leverage is."
+        "explanation": "Slices are tagged HITL (human-in-the-loop — requires architectural decision, design review, or external access) or AFK (agent-mergeable without human interaction). Prefer AFK over HITL where possible — that's where the leverage is."
       },
       {
         "term": "quiz the user before publishing",
@@ -24,7 +24,7 @@
       },
       {
         "term": "publish in dependency order",
-        "explanation": "Publish issues in dependency order \u2014 blockers first \u2014 so you can reference real issue IDs in the 'Blocked by' field of downstream slices. Skipping this leaves dangling references."
+        "explanation": "Publish issues in dependency order — blockers first — so you can reference real issue IDs in the 'Blocked by' field of downstream slices. Skipping this leaves dangling references."
       },
       {
         "term": "respect domain glossary",
@@ -32,7 +32,7 @@
       },
       {
         "term": "no file paths or code in issues",
-        "explanation": "Issue bodies describe end-to-end behavior, not layer-by-layer implementation. Avoid specific file paths or code snippets \u2014 they go stale fast. Exception: a prototype-derived state machine / reducer / schema / type shape can be inlined when it encodes a decision more precisely than prose. Trim to decision-rich parts, not a working demo."
+        "explanation": "Issue bodies describe end-to-end behavior, not layer-by-layer implementation. Avoid specific file paths or code snippets — they go stale fast. Exception: a prototype-derived state machine / reducer / schema / type shape can be inlined when it encodes a decision more precisely than prose. Trim to decision-rich parts, not a working demo."
       },
       {
         "term": "do NOT modify the parent issue",
@@ -53,20 +53,20 @@
       {
         "signature": "Issue body template",
         "purpose": "Use this template verbatim for every published issue. Apply the ready-for-agent triage label unless instructed otherwise.",
-        "example": "## Parent\n\nA reference to the parent issue (omit if no parent).\n\n## What to build\n\nA concise description of this vertical slice. Describe the end-to-end behavior, not layer-by-layer implementation. Avoid file paths or code snippets \u2014 they go stale. Inline a prototype-derived snippet only when it encodes a decision more precisely than prose.\n\n## Acceptance criteria\n\n- [ ] Criterion 1\n- [ ] Criterion 2\n- [ ] Criterion 3\n\n## Blocked by\n\n- A reference to the blocking ticket (if any)\n\nOr \"None - can start immediately\" if no blockers."
+        "example": "## Parent\n\nA reference to the parent issue (omit if no parent).\n\n## What to build\n\nA concise description of this vertical slice. Describe the end-to-end behavior, not layer-by-layer implementation. Avoid file paths or code snippets — they go stale. Inline a prototype-derived snippet only when it encodes a decision more precisely than prose.\n\n## Acceptance criteria\n\n- [ ] Criterion 1\n- [ ] Criterion 2\n- [ ] Criterion 3\n\n## Blocked by\n\n- A reference to the blocking ticket (if any)\n\nOr \"None - can start immediately\" if no blockers."
       }
     ],
     "gotchas": [
       "Each slice must cut through EVERY layer. A schema-only or UI-only ticket is a horizontal slice and can't be demoed standalone.",
-      "Prefer AFK over HITL where possible \u2014 HITL slices block on humans and don't parallelise.",
+      "Prefer AFK over HITL where possible — HITL slices block on humans and don't parallelise.",
       "Publish in dependency order so 'Blocked by' fields can reference real issue IDs, not 'TBD'.",
-      "Use the project's CONTEXT.md vocabulary in titles and descriptions \u2014 don't invent new terminology.",
-      "Avoid specific file paths or code snippets in issue bodies \u2014 they rot fast.",
+      "Use the project's CONTEXT.md vocabulary in titles and descriptions — don't invent new terminology.",
+      "Avoid specific file paths or code snippets in issue bodies — they rot fast.",
       "Exception: inline a prototype-derived state machine / schema / type shape when it encodes a decision more precisely than prose, trimmed to the decision-rich parts.",
-      "Do NOT close or modify the parent issue when splitting it into slices \u2014 the parent stays as the tracking thread.",
-      "Quiz the user on granularity, dependencies, and HITL/AFK tags BEFORE publishing \u2014 once the issues are live they're expensive to restructure."
+      "Do NOT close or modify the parent issue when splitting it into slices — the parent stays as the tracking thread.",
+      "Quiz the user on granularity, dependencies, and HITL/AFK tags BEFORE publishing — once the issues are live they're expensive to restructure."
     ],
-    "category": "concept",
+    "category": "pm",
     "audience": "engineers",
     "videoUrls": [],
     "repoUrl": "https://github.com/mattpocock/skills"

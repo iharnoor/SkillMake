@@ -41,7 +41,7 @@
       "Single column on mobile, 2–3 column work grid on tablet, 3+ on desktop. Don't try to fit 4 columns on a phone.",
       "Keep case studies under 1500 words; readers skim. Use pull-quotes and headings every 200–300 words."
     ],
-    "category": "concept",
+    "category": "design",
     "audience": "creators",
     "videoUrls": [],
     "repoUrl": "https://github.com/withastro/astro"

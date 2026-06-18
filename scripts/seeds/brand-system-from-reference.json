@@ -41,7 +41,7 @@
       "OKLCH ramps look better than HSL for accent shades, but Safari <16 lacks support — emit a sRGB fallback.",
       "Token names that describe role (accent / danger / muted) survive rebrands; names that describe color (red / blue) don't."
     ],
-    "category": "concept",
+    "category": "design",
     "audience": "creators",
     "videoUrls": []
   }

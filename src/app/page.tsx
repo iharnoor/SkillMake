@@ -14,6 +14,9 @@ export const dynamic = "force-dynamic";
 
 const LIVE_AUDIENCES: Audience[] = ["creators", "engineers", "devops", "marketing", "design", "ai"];
 const LIVE_CATEGORIES = [
+  { slug: "security", label: "security" },
+  { slug: "design", label: "design" },
+  { slug: "pm", label: "PMs" },
   { slug: "job-search", label: "job search" },
 ] as const;
 const COLLECTION_FILTERS = [

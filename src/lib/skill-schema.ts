@@ -155,7 +155,7 @@ export const SkillSchema = z.object({
     .array(z.string().min(8).max(280))
     .describe("Up to ~8 non-obvious pitfalls explicitly stated in the docs. Empty array if none found."),
   category: z
-    .enum(["framework", "library", "api", "platform", "tool", "language", "concept", "job-search", "prompt-pack", "other"])
+    .enum(["framework", "library", "api", "platform", "tool", "language", "concept", "security", "design", "pm", "job-search", "prompt-pack", "other"])
     .describe("High-level category for marketplace browsing."),
   audience: z
     .enum(AUDIENCES)

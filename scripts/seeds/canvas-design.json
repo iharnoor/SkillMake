@@ -45,7 +45,7 @@
       "Static formats only — for animated, dynamic, or interactive output, route to a different skill",
       "User-provided constraints are seeds, not handcuffs; the philosophy should respect them but still take creative direction"
     ],
-    "category": "tool",
+    "category": "design",
     "audience": "design",
     "videoUrls": [],
     "repoUrl": "https://github.com/anthropics/skills"

@@ -59,7 +59,7 @@
       "A pass from this checklist does not replace product QA or browser verification for the actual flow",
       "Some findings need product context, especially autofocus, destructive action handling, and URL-state depth"
     ],
-    "category": "tool",
+    "category": "design",
     "audience": "engineers",
     "videoUrls": [],
     "repoUrl": "https://github.com/vercel-labs/agent-skills"
