@@ -62,10 +62,16 @@
   //   wrangler secret put CLOUDFLARE_ANALYTICS_API_TOKEN  # required for SkillOpt cron telemetry reads
   //                                                       # and /admin/analytics
   //   wrangler secret put GOOGLE_ANALYTICS_API_SECRET     # optional; mirrors server metrics into GA4
+  //   wrangler secret put POSTHOG_API_KEY                 # optional; mirrors server metrics into PostHog Cloud
+  //                                                       # (the public phc_ project key; see docs/analytics-posthog.md)
   //   wrangler secret put SKILLOPT_AUTONOMOUS=true        # flips the cron on
   // Install volume is read out of Analytics Engine directly from the
   // Cloudflare dashboard rather than rendered on the site (see
   // docs/analytics-queries.md).
+  //
+  // The browser SDK reads NEXT_PUBLIC_POSTHOG_KEY / NEXT_PUBLIC_POSTHOG_HOST.
+  // These are inlined at BUILD time (Next.js NEXT_PUBLIC_*), so set them in the
+  // build environment (.env / Workers Builds env), not as runtime vars here.
   "vars": {
     "CLOUDFLARE_ACCOUNT_ID": "f9d7efb12a2713ce5af52d882165c543"
   }

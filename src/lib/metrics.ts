@@ -1,7 +1,11 @@
 import { getEnv } from "./env";
 import {
   buildMetricDataPoint,
+  buildPostHogProperties,
   metricContextFromHeaders,
+  normalizePostHogHost,
+  phDistinctId,
+  POSTHOG_CLIENT_EVENTS,
   type MetricContext,
   type MetricEvent,
 } from "./metrics-core";
@@ -45,10 +49,38 @@ export async function track(event: MetricEvent, opts: TrackOpts = {}): Promise<v
     const env = await getEnv();
     const ctx = await metricContextFromHeaders(opts.headers);
     env.METRICS?.writeDataPoint(buildMetricDataPoint(event, opts, ctx));
-    await mirrorGoogleAnalyticsEvent(env, event, opts, ctx);
+    await Promise.all([
+      mirrorGoogleAnalyticsEvent(env, event, opts, ctx),
+      mirrorPostHogEvent(env, event, opts, ctx),
+    ]);
   } catch {
     // metric writes must never break the response
   }
+}
+
+async function mirrorPostHogEvent(
+  env: Awaited<ReturnType<typeof getEnv>>,
+  event: MetricEvent,
+  opts: TrackOpts,
+  ctx: MetricContext
+): Promise<void> {
+  if (!env.POSTHOG_API_KEY) return;
+  if (POSTHOG_CLIENT_EVENTS.has(event)) return;
+
+  const { id, fromCookie } = phDistinctId(opts.headers, ctx);
+  const properties = buildPostHogProperties(opts, ctx, fromCookie);
+  const host = normalizePostHogHost(env.POSTHOG_HOST ?? "https://us.i.posthog.com");
+
+  await fetch(`${host}/capture/`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      api_key: env.POSTHOG_API_KEY,
+      event,
+      distinct_id: id,
+      properties,
+    }),
+  }).catch(() => {});
 }
 
 async function mirrorGoogleAnalyticsEvent(

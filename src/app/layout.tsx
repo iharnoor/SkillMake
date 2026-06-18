@@ -8,6 +8,8 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 const googleSiteVerification = process.env.GOOGLE_SITE_VERIFICATION;
+const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://us.i.posthog.com";
 
 export const metadata: Metadata = {
   title: "SkillMake — a curated marketplace of agent-installable skills, for creators",
@@ -101,6 +103,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </footer>
         <TelemetryScript />
         {googleAnalyticsId ? <GoogleAnalyticsScript gaId={googleAnalyticsId} /> : null}
+        {posthogKey ? <PostHogScript phKey={posthogKey} host={posthogHost} /> : null}
       </body>
     </html>
   );
@@ -117,6 +120,7 @@ function TelemetryScript() {
     try {
       const data = JSON.stringify(payload);
       googleAnalyticsEvent(payload);
+      posthogEvent(payload);
       if (navigator.sendBeacon) {
         navigator.sendBeacon("/api/track", new Blob([data], { type: "application/json" }));
         return;
@@ -138,6 +142,17 @@ function TelemetryScript() {
         return;
       }
       window.skillmakeGaQueue.push(payload);
+    } catch {}
+  };
+  const posthogEvent = (payload) => {
+    try {
+      if (!payload?.event) return;
+      window.skillmakePhQueue = window.skillmakePhQueue || [];
+      if (typeof window.skillmakePosthogEvent === "function") {
+        window.skillmakePosthogEvent(payload);
+        return;
+      }
+      window.skillmakePhQueue.push(payload);
     } catch {}
   };
   const dwellBucket = (seconds) => seconds < 5 ? "0-5s" : seconds < 15 ? "5-15s" : seconds < 30 ? "15-30s" : seconds < 60 ? "30-60s" : seconds < 300 ? "60-300s" : "300s+";
@@ -219,6 +234,51 @@ function GoogleAnalyticsScript({ gaId }: { gaId: string }) {
         window.skillmakeGaEvent(payload);
       }
       window.skillmakeGaQueue = [];
+    };
+    document.head.appendChild(script);
+  };
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(start, { timeout: 3000 });
+  } else {
+    addEventListener("load", () => setTimeout(start, 1500), { once: true });
+  }
+})();
+`,
+      }}
+    />
+  );
+}
+
+function PostHogScript({ phKey, host }: { phKey: string; host: string }) {
+  return (
+    <script
+      type="module"
+      dangerouslySetInnerHTML={{
+        __html: `
+(() => {
+  const key = ${JSON.stringify(phKey)};
+  const host = ${JSON.stringify(host)};
+  const start = () => {
+    // array.js IS the full posthog-js library; loading it directly (then calling
+    // posthog.init) mirrors how GoogleAnalyticsScript loads gtag.
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = host.replace(/\\/$/, "") + "/static/array.js";
+    script.onload = () => {
+      if (!window.posthog?.init) return;
+      // defaults '2025-05-24' enables history-based $pageview capture (needed for
+      // the App Router's client-side navigations) plus modern autocapture defaults.
+      window.posthog.init(key, { api_host: host, defaults: "2025-05-24" });
+      window.skillmakePosthogEvent = (payload) => {
+        if (!payload?.event) return;
+        const props = {};
+        if (payload.slug) props.skill_slug = payload.slug;
+        window.posthog.capture(payload.event, props);
+      };
+      for (const payload of window.skillmakePhQueue || []) {
+        window.skillmakePosthogEvent(payload);
+      }
+      window.skillmakePhQueue = [];
     };
     document.head.appendChild(script);
   };
