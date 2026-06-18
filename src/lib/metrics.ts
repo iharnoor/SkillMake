@@ -71,9 +71,12 @@ async function mirrorPostHogEvent(
   const properties = buildPostHogProperties(opts, ctx, fromCookie);
   const host = normalizePostHogHost(env.POSTHOG_HOST ?? "https://us.i.posthog.com");
 
+  // Bounded so a slow/unresponsive PostHog endpoint can't keep the track()
+  // invocation (dispatched via after()) alive indefinitely.
   await fetch(`${host}/capture/`, {
     method: "POST",
     headers: { "content-type": "application/json" },
+    signal: AbortSignal.timeout(5000),
     body: JSON.stringify({
       api_key: env.POSTHOG_API_KEY,
       event,
@@ -109,6 +112,7 @@ async function mirrorGoogleAnalyticsEvent(
   await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json" },
+    signal: AbortSignal.timeout(5000),
     body: JSON.stringify({
       client_id: ctx.visitor,
       events: [{ name: event, params }],

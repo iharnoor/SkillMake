@@ -256,8 +256,8 @@ function PostHogScript({ phKey, host }: { phKey: string; host: string }) {
       dangerouslySetInnerHTML={{
         __html: `
 (() => {
-  const key = ${JSON.stringify(phKey)};
-  const host = ${JSON.stringify(host)};
+  const key = ${JSON.stringify(phKey).replace(/</g, "\\u003c")};
+  const host = ${JSON.stringify(host).replace(/</g, "\\u003c")};
   const start = () => {
     // array.js IS the full posthog-js library; loading it directly (then calling
     // posthog.init) mirrors how GoogleAnalyticsScript loads gtag.
