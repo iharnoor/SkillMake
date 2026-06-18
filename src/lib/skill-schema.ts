@@ -45,7 +45,7 @@ export function parseGithubRepo(url: string): { owner: string; repo: string } | 
   }
 }
 
-export const AUDIENCES = ["creators", "engineers", "devops", "ai", "design", "marketing", "creative", "general"] as const;
+export const AUDIENCES = ["creators", "engineers", "devops", "design", "marketing", "creative", "general"] as const;
 export type Audience = (typeof AUDIENCES)[number];
 
 /**
@@ -57,6 +57,19 @@ export type Audience = (typeof AUDIENCES)[number];
  */
 export const TRUST_TIERS = ["official", "verified", "community", "experimental"] as const;
 export type TrustTier = (typeof TRUST_TIERS)[number];
+
+/**
+ * Single source of truth for how each tier is shown (symbol + label). Consumed
+ * by the TrustBadge component and serialized into the marketplace search script
+ * so the two surfaces can't drift. Tier-specific styling/copy that only the
+ * badge needs (CSS class, tooltip) lives in TrustBadge.
+ */
+export const TRUST_PRESENTATION: Record<TrustTier, { symbol: string; label: string }> = {
+  official: { symbol: "✓", label: "Official" },
+  verified: { symbol: "◆", label: "Verified" },
+  community: { symbol: "○", label: "Community" },
+  experimental: { symbol: "⚠", label: "Experimental" },
+};
 
 /**
  * SkillOpt protected sections — section ids that bounded edits cannot modify.

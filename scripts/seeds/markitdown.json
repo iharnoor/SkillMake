@@ -81,7 +81,7 @@
       "The output is intended for LLM and text-analysis consumption, so do not treat it as a high-fidelity replacement for document rendering."
     ],
     "category": "tool",
-    "audience": "ai",
+    "audience": "engineers",
     "trust": "official",
     "videoUrls": [],
     "repoUrl": "https://github.com/microsoft/markitdown"

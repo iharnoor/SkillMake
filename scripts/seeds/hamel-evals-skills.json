@@ -74,7 +74,7 @@
       "A judge that agrees with humans on training traces may still be biased on the production distribution — validate on held-out data drawn from real traffic"
     ],
     "category": "concept",
-    "audience": "ai",
+    "audience": "engineers",
     "trust": "verified",
     "videoUrls": [],
     "repoUrl": "https://github.com/hamelsmu/evals-skills"

@@ -188,7 +188,7 @@ function famousRow(
   return {
     name,
     description,
-    audience: "ai",
+    audience: "engineers",
     category: "tool",
     source: hostFromUrl(repoUrl),
     href: repoUrl,

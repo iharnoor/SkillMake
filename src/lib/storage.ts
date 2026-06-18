@@ -83,7 +83,10 @@ function normalize(entry: MarketplaceEntry): MarketplaceEntry {
   const normalizedSkill = {
     ...skill,
     videoUrls: skill.videoUrls ?? [],
-    audience: skill.audience ?? "creators",
+    // "ai" was retired as an audience (everything here is AI) — legacy entries
+    // written with it are remapped to engineers on read.
+    audience: (skill.audience as string) === "ai" ? "engineers" : (skill.audience ?? "creators"),
+    trust: skill.trust ?? "community",
   };
   // SkillOpt: any entry without an explicit versionStatus is the only version
   // of its family and behaves as the current.

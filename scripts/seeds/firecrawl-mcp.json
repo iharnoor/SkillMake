@@ -47,7 +47,7 @@
       "Respect robots, terms, and rate limits for the target site; Firecrawl access does not make scraping appropriate everywhere"
     ],
     "category": "tool",
-    "audience": "ai",
+    "audience": "engineers",
     "trust": "verified",
     "videoUrls": [],
     "repoUrl": "https://github.com/firecrawl/firecrawl-mcp-server"

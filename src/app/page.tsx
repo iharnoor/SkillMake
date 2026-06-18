@@ -13,7 +13,7 @@ import { track } from "@/lib/metrics";
 
 export const dynamic = "force-dynamic";
 
-const LIVE_AUDIENCES: Audience[] = ["creators", "engineers", "devops", "marketing", "design", "ai"];
+const LIVE_AUDIENCES: Audience[] = ["creators", "engineers", "devops", "marketing", "design"];
 const LIVE_CATEGORIES = [
   { slug: "security", label: "security" },
   { slug: "design", label: "design" },
@@ -94,7 +94,9 @@ const TRENDING = {
     "MoneyPrinterTurbo",
     "One-click generation of high-quality short videos using AI LLMs. The speed at which video agents are being productized is the real story here.",
     "https://github.com/harry0703/MoneyPrinterTurbo",
-    11400
+    11400,
+    "tool",
+    "creators"
   ),
   ecc: repoEntry(
     "ecc",
@@ -601,7 +603,7 @@ function skillEntry(
     id,
     name,
     description,
-    audience: "ai",
+    audience: "engineers",
     category: "tool",
     trust: "verified",
     source: hostFromUrl(repoUrl),
@@ -619,13 +621,14 @@ function repoEntry(
   description: string,
   repoUrl: string,
   stars: number,
-  category = "tool"
+  category = "tool",
+  audience = "engineers"
 ): DisplayEntry {
   return {
     id: name.replace(/[^a-z0-9]+/gi, "-").toLowerCase(),
     name,
     description,
-    audience: "ai",
+    audience,
     category,
     trust: "verified",
     source: hostFromUrl(repoUrl),
@@ -646,7 +649,7 @@ function famousMcpEntry(
     id: name,
     name,
     description,
-    audience: "ai",
+    audience: "engineers",
     category: "tool",
     trust: "verified",
     source: hostFromUrl(repoUrl),

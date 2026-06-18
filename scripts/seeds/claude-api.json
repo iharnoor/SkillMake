@@ -46,7 +46,7 @@
       "Managed Agents and the raw Messages API have different rate-limit and feature surfaces; pick one per app and stick with it"
     ],
     "category": "api",
-    "audience": "ai",
+    "audience": "engineers",
     "trust": "official",
     "videoUrls": [],
     "repoUrl": "https://github.com/anthropics/skills"

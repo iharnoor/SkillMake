@@ -71,7 +71,7 @@
       "Judge models can favor verbose or stylistically similar answers, biasing scores; calibrate against human labels"
     ],
     "category": "concept",
-    "audience": "ai",
+    "audience": "engineers",
     "videoUrls": [],
     "trust": "community"
   }

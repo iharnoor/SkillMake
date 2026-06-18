@@ -48,7 +48,7 @@
       "Workspace context (private vs shared) affects which characters and past generations are visible — set it explicitly when running in a team environment"
     ],
     "category": "tool",
-    "audience": "ai",
+    "audience": "creators",
     "videoUrls": []
   }
 }

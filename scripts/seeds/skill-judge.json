@@ -46,7 +46,7 @@
       "Some legitimate niche skills score lower because their patterns are unique; treat the judge as a discussion partner, not a gate"
     ],
     "category": "tool",
-    "audience": "ai",
+    "audience": "engineers",
     "trust": "verified",
     "videoUrls": [],
     "repoUrl": "https://github.com/softaworks/agent-toolkit"

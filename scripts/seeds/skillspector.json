@@ -70,7 +70,7 @@
       "Use SARIF output to wire results into GitHub code scanning rather than parsing terminal text"
     ],
     "category": "security",
-    "audience": "ai",
+    "audience": "engineers",
     "trust": "official",
     "videoUrls": [],
     "repoUrl": "https://github.com/NVIDIA/SkillSpector"

@@ -48,7 +48,7 @@
       "Image-to-video input images must be accessible URLs or base64-encoded data — local file paths will not work"
     ],
     "category": "tool",
-    "audience": "ai",
+    "audience": "creators",
     "trust": "verified",
     "videoUrls": [],
     "repoUrl": "https://github.com/runwayml/runway-api-mcp-server"

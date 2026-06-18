@@ -51,7 +51,7 @@
       "MCP server names collide across registries; pick a unique, descriptive name early or you'll be renaming later"
     ],
     "category": "tool",
-    "audience": "ai",
+    "audience": "engineers",
     "trust": "official",
     "videoUrls": [],
     "repoUrl": "https://github.com/anthropics/skills"
