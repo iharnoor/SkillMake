@@ -415,9 +415,7 @@ export default async function Home({
                 )}
               </div>
               <div className="flex flex-wrap justify-start sm:justify-end gap-1.5 self-start">
-                <Signal hot href={e.href.startsWith("http") ? e.href : `/i/${e.name}`}>
-                  {e.href.startsWith("http") ? "open" : "install"}
-                </Signal>
+                <Signal hot href={`/i/${installSlug(e.name)}`}>install</Signal>
                 {e.videoCount > 0 && <Signal>{e.videoCount} video</Signal>}
                 {e.stars != null && <Signal>★ {formatStars(e.stars)}</Signal>}
               </div>
@@ -455,6 +453,13 @@ function Signal({
     );
   }
   return <span className={className}>{children}</span>;
+}
+
+// Install shortcut resolves by skill name (see /i/[name]). Stored skills already
+// carry slug-style names, so this is a no-op for them; collection display names
+// like "html everything" get normalized to their seeded slug ("html-everything").
+function installSlug(name: string): string {
+  return name.replace(/^\//, "").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
 }
 
 function hostFromUrl(u: string): string {

@@ -1,10 +1,12 @@
+import { TRUST_PRESENTATION, type TrustTier } from "@/lib/skill-schema";
+
 interface SearchEntry {
   id: string;
   name: string;
   description: string;
   category: string;
   audience: string;
-  trust: string;
+  trust: TrustTier;
   href: string;
 }
 
@@ -31,6 +33,7 @@ export function MarketplaceSearch({ entries }: { entries: SearchEntry[] }) {
 
 function MarketplaceSearchScript({ entries }: { entries: SearchEntry[] }) {
   const serializedEntries = JSON.stringify(entries).replace(/</g, "\\u003c");
+  const serializedTrust = JSON.stringify(TRUST_PRESENTATION).replace(/</g, "\\u003c");
 
   return (
     <script
@@ -39,6 +42,7 @@ function MarketplaceSearchScript({ entries }: { entries: SearchEntry[] }) {
         __html: String.raw`
 (() => {
   const entries = ${serializedEntries};
+  const TRUST = ${serializedTrust};
   const root = document.querySelector("[data-search-root]");
   if (!root) return;
 
@@ -100,8 +104,10 @@ function MarketplaceSearchScript({ entries }: { entries: SearchEntry[] }) {
       return;
     }
     const trustMark = (tier) => {
-      const t = { official: "✓ official", verified: "◆ verified", experimental: "⚠ experimental" }[tier];
-      return t ? '<span class="mono text-[10px] text-[color:var(--fg-muted)] uppercase tracking-wider">' + t + '</span>' : "";
+      // Mirror TrustBadge: community is the quiet default and verified is no
+      // longer surfaced, so search omits both.
+      const t = tier && tier !== "community" && tier !== "verified" ? TRUST[tier] : null;
+      return t ? '<span class="mono text-[10px] text-[color:var(--fg-muted)] uppercase tracking-wider">' + esc(t.symbol + " " + t.label) + '</span>' : "";
     };
     results.innerHTML = items.map((item) => {
       return '<a href="' + esc(item.href) + '" class="grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-2 border-b border-[color:var(--border)] hover:text-[color:var(--accent)] transition">' +

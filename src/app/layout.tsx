@@ -214,7 +214,7 @@ function GoogleAnalyticsScript({ gaId }: { gaId: string }) {
       dangerouslySetInnerHTML={{
         __html: `
 (() => {
-  const gaId = ${JSON.stringify(gaId)};
+  const gaId = ${JSON.stringify(gaId).replace(/</g, "\\u003c")};
   const start = () => {
     window.dataLayer = window.dataLayer || [];
     window.gtag = function gtag(){ dataLayer.push(arguments); };
