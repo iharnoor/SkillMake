@@ -41,8 +41,10 @@ export function TrustBadge({
   showCommunity?: boolean;
   className?: string;
 }) {
-  if (tier === "community" && !showCommunity) return null;
-  const t = TIERS[tier];
+  // Entries persisted before the trust field existed have no tier; treat a
+  // missing/unknown value as the quiet community default rather than crashing.
+  const t = TIERS[tier as TrustTier] ?? TIERS.community;
+  if (t === TIERS.community && !showCommunity) return null;
   return (
     <span className={`tag ${t.className} ${className}`.trim()} title={t.title}>
       <span aria-hidden>{t.symbol}</span>
