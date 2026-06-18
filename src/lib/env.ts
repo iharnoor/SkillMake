@@ -17,6 +17,10 @@ interface EnvShape {
   CLOUDFLARE_ANALYTICS_API_TOKEN?: string;
   GOOGLE_ANALYTICS_MEASUREMENT_ID?: string;
   GOOGLE_ANALYTICS_API_SECRET?: string;
+  /** PostHog project API key (phc_...). Same key the browser SDK uses. */
+  POSTHOG_API_KEY?: string;
+  /** PostHog ingest host, e.g. https://us.i.posthog.com (or eu.i.posthog.com). */
+  POSTHOG_HOST?: string;
   SKILLOPT_AUTONOMOUS?: string;
   MARKETPLACE_KV?: KVNamespace;
   METRICS?: AnalyticsEngineDataset;
@@ -54,6 +58,15 @@ export async function getEnv(): Promise<EnvShape> {
       proc.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID,
     GOOGLE_ANALYTICS_API_SECRET:
       cf.env?.GOOGLE_ANALYTICS_API_SECRET ?? proc.GOOGLE_ANALYTICS_API_SECRET,
+    // The PostHog project key is public (phc_...), so it can fall back to the
+    // NEXT_PUBLIC_ var the browser SDK uses — server capture reuses the same key.
+    POSTHOG_API_KEY:
+      cf.env?.POSTHOG_API_KEY ?? proc.POSTHOG_API_KEY ?? proc.NEXT_PUBLIC_POSTHOG_KEY,
+    POSTHOG_HOST:
+      cf.env?.POSTHOG_HOST ??
+      proc.POSTHOG_HOST ??
+      proc.NEXT_PUBLIC_POSTHOG_HOST ??
+      "https://us.i.posthog.com",
     SKILLOPT_AUTONOMOUS: cf.env?.SKILLOPT_AUTONOMOUS ?? proc.SKILLOPT_AUTONOMOUS,
     MARKETPLACE_KV: cf.env?.MARKETPLACE_KV,
     METRICS: cf.env?.METRICS,

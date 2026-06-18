@@ -79,6 +79,77 @@ export async function metricContextFromHeaders(h?: Headers): Promise<MetricConte
   return { country, refererHost, uaCat, visitor };
 }
 
+/**
+ * Events captured client-side by posthog-js (autocapture + explicit
+ * `posthog.capture`) — skipped in the server mirror to avoid double-counting.
+ * They all originate from `/api/track`, where the browser SDK already records
+ * them against the real cookie-based person.
+ */
+export const POSTHOG_CLIENT_EVENTS: ReadonlySet<MetricEvent> = new Set<MetricEvent>([
+  "github_click",
+  "prompt_copy",
+  "prompt_source_click",
+  "page_dwell",
+  "scroll_depth",
+]);
+
+/**
+ * Resolve the PostHog distinct_id for a server event:
+ *  - Browser request: reuse the id from the `ph_<key>_posthog` cookie that
+ *    posthog-js sets, so server events stitch onto the same person as the
+ *    client pageviews (enables funnels + per-user journeys).
+ *  - No cookie (agents/CLI/direct): fall back to the daily visitor hash.
+ * Returns `{ id, fromCookie }` so callers can decide whether to create a
+ * person profile.
+ */
+export function phDistinctId(
+  headers: Headers | undefined,
+  ctx: MetricContext
+): { id: string; fromCookie: boolean } {
+  const cookie = headers?.get("cookie");
+  if (cookie) {
+    const match = cookie.match(/ph_[^=]+_posthog=([^;]+)/);
+    if (match) {
+      try {
+        const parsed = JSON.parse(decodeURIComponent(match[1])) as { distinct_id?: string };
+        if (parsed.distinct_id) return { id: parsed.distinct_id, fromCookie: true };
+      } catch {
+        // malformed cookie — fall through to visitor hash
+      }
+    }
+  }
+  return { id: ctx.visitor, fromCookie: false };
+}
+
+/**
+ * Shape the PostHog `properties` bag for a server event. Agents/CLI (no browser
+ * person) get `$process_person_profile:false` so high-volume install_hit traffic
+ * stays as cheap events-only rows and doesn't explode the person table.
+ */
+export function buildPostHogProperties(
+  opts: { slug?: string; status?: number; audience?: string; category?: string },
+  ctx: MetricContext,
+  fromCookie: boolean
+): Record<string, string | number | boolean> {
+  const properties: Record<string, string | number | boolean> = {
+    country: ctx.country,
+    referer_host: ctx.refererHost,
+    ua_category: ctx.uaCat,
+    $lib: "skillmake-server",
+  };
+  if (opts.slug) properties.skill_slug = opts.slug;
+  if (opts.status != null) properties.http_status = opts.status;
+  if (opts.audience) properties.skill_audience = opts.audience;
+  if (opts.category) properties.skill_category = opts.category;
+  if (!fromCookie) properties.$process_person_profile = false;
+  return properties;
+}
+
+/** Trim a trailing slash so `${host}/capture/` never doubles up. */
+export function normalizePostHogHost(host: string): string {
+  return host.replace(/\/$/, "");
+}
+
 /** Hash search queries before storing — avoids PII in Analytics Engine. */
 export async function hashSearchQuery(query: string): Promise<string> {
   const normalized = query.toLowerCase().trim().slice(0, 500);

@@ -61,7 +61,7 @@
       "When the stack is shadcn/ui the skill defers to the MCP — without MCP access it falls back to recalled APIs which may be stale.",
       "Animation and interaction-state heuristics assume a pointer device; mobile-first builds need an explicit gesture/touch pass."
     ],
-    "category": "tool",
+    "category": "design",
     "audience": "creators",
     "trust": "verified",
     "videoUrls": [],

@@ -50,7 +50,7 @@
       "Hardware acceleration breaks when transforms are nested inside elements with overflow:hidden ancestors; refactor the layout",
       "If the user wants 'a SaaS landing page,' the dials matter more than the prompt; calibrate before generating"
     ],
-    "category": "concept",
+    "category": "design",
     "audience": "design",
     "trust": "verified",
     "videoUrls": [],

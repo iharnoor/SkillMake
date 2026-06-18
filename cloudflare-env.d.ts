@@ -11,5 +11,7 @@ interface CloudflareEnv {
   GITHUB_TOKEN?: string;
   CLOUDFLARE_ACCOUNT_ID?: string;
   CLOUDFLARE_ANALYTICS_API_TOKEN?: string;
+  POSTHOG_API_KEY?: string;
+  POSTHOG_HOST?: string;
   SKILLOPT_AUTONOMOUS?: string;
 }

@@ -49,7 +49,7 @@
       "Ephemeral sandboxes lose state on destroy, so persist artifacts to object storage before exit",
       "SSH agent forwarding is disabled by default; use deploy keys or signed certificates for git access"
     ],
-    "category": "concept",
+    "category": "security",
     "audience": "engineers",
     "trust": "verified",
     "videoUrls": [],

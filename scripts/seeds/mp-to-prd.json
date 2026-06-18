@@ -2,7 +2,7 @@
   "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/to-prd/SKILL.md",
   "skill": {
     "name": "mp-to-prd",
-    "description": "Use when synthesising the current conversation and codebase understanding into a PRD published to the issue tracker \u2014 no fresh interview, the context you already have IS the input.",
+    "description": "Use when synthesising the current conversation and codebase understanding into a PRD published to the issue tracker — no fresh interview, the context you already have IS the input.",
     "whenToUse": [
       "Turning a finished grilling/planning conversation into a durable PRD on the issue tracker",
       "Publishing a feature spec ready for downstream /to-issues breakdown",
@@ -12,23 +12,23 @@
     "keyConcepts": [
       {
         "term": "synthesize, don't interview",
-        "explanation": "This skill assumes the grilling is already done. Use the conversation context and your codebase understanding to write the PRD. Do NOT start a fresh interview \u2014 the input is what you already know."
+        "explanation": "This skill assumes the grilling is already done. Use the conversation context and your codebase understanding to write the PRD. Do NOT start a fresh interview — the input is what you already know."
       },
       {
         "term": "module sketch with user check",
-        "explanation": "Sketch out the major modules you'll need to build or modify, actively looking for opportunities to extract DEEP modules \u2014 small testable interface, lots of functionality behind it, rarely changing. Check with the user that these modules match expectations, and which ones they want tests for."
+        "explanation": "Sketch out the major modules you'll need to build or modify, actively looking for opportunities to extract DEEP modules — small testable interface, lots of functionality behind it, rarely changing. Check with the user that these modules match expectations, and which ones they want tests for."
       },
       {
         "term": "domain glossary throughout",
-        "explanation": "Use CONTEXT.md vocabulary throughout the PRD \u2014 module names, user-story actors, decisions \u2014 and respect ADRs in the area you're touching. The PRD is durable; drift here propagates."
+        "explanation": "Use CONTEXT.md vocabulary throughout the PRD — module names, user-story actors, decisions — and respect ADRs in the area you're touching. The PRD is durable; drift here propagates."
       },
       {
         "term": "long, extensive user-story list",
-        "explanation": "User stories follow 'As an <actor>, I want a <feature>, so that <benefit>.' The list should be EXTREMELY extensive \u2014 cover all aspects of the feature, not just the happy path. Numbered, in the user's voice, not the implementer's."
+        "explanation": "User stories follow 'As an <actor>, I want a <feature>, so that <benefit>.' The list should be EXTREMELY extensive — cover all aspects of the feature, not just the happy path. Numbered, in the user's voice, not the implementer's."
       },
       {
         "term": "no file paths or code snippets",
-        "explanation": "Implementation decisions describe modules, interfaces, contracts, schemas, and architectural choices in prose. Do NOT include specific file paths or code snippets \u2014 they go stale very quickly. Exception: a prototype-derived state machine / reducer / schema / type shape can be inlined when it encodes a decision more precisely than prose, trimmed to decision-rich parts."
+        "explanation": "Implementation decisions describe modules, interfaces, contracts, schemas, and architectural choices in prose. Do NOT include specific file paths or code snippets — they go stale very quickly. Exception: a prototype-derived state machine / reducer / schema / type shape can be inlined when it encodes a decision more precisely than prose, trimmed to decision-rich parts."
       },
       {
         "term": "test the external behavior",
@@ -36,14 +36,14 @@
       },
       {
         "term": "publish with ready-for-agent label",
-        "explanation": "Publish the PRD to the project issue tracker and apply the `ready-for-agent` triage label. No additional triage step needed \u2014 the synthesis IS the triage."
+        "explanation": "Publish the PRD to the project issue tracker and apply the `ready-for-agent` triage label. No additional triage step needed — the synthesis IS the triage."
       }
     ],
     "apiReference": [
       {
         "signature": "PRD template (use verbatim)",
-        "purpose": "The shape of every PRD this skill produces. Each section is load-bearing \u2014 skipping one leaves a downstream gap.",
-        "example": "## Problem Statement\nThe problem from the USER's perspective.\n\n## Solution\nThe solution from the USER's perspective.\n\n## User Stories\nA LONG numbered list of \"As an <actor>, I want a <feature>, so that <benefit>\" \u2014 extensive, covers all aspects.\n\nExample:\n1. As a mobile bank customer, I want to see balance on my accounts, so that I can make better informed decisions about my spending.\n\n## Implementation Decisions\nModules being built/modified, their interfaces, technical clarifications, architectural decisions, schema changes, API contracts, specific interactions. Prose only \u2014 no file paths or code snippets (exception: a prototype-derived snippet that encodes a decision more precisely, trimmed to the decision-rich parts).\n\n## Testing Decisions\nWhat makes a good test (external behavior, not implementation), which modules will be tested, prior art in the codebase.\n\n## Out of Scope\nWhat is explicitly NOT covered by this PRD.\n\n## Further Notes\nAnything else."
+        "purpose": "The shape of every PRD this skill produces. Each section is load-bearing — skipping one leaves a downstream gap.",
+        "example": "## Problem Statement\nThe problem from the USER's perspective.\n\n## Solution\nThe solution from the USER's perspective.\n\n## User Stories\nA LONG numbered list of \"As an <actor>, I want a <feature>, so that <benefit>\" — extensive, covers all aspects.\n\nExample:\n1. As a mobile bank customer, I want to see balance on my accounts, so that I can make better informed decisions about my spending.\n\n## Implementation Decisions\nModules being built/modified, their interfaces, technical clarifications, architectural decisions, schema changes, API contracts, specific interactions. Prose only — no file paths or code snippets (exception: a prototype-derived snippet that encodes a decision more precisely, trimmed to the decision-rich parts).\n\n## Testing Decisions\nWhat makes a good test (external behavior, not implementation), which modules will be tested, prior art in the codebase.\n\n## Out of Scope\nWhat is explicitly NOT covered by this PRD.\n\n## Further Notes\nAnything else."
       },
       {
         "signature": "Pre-publish checklist",
@@ -52,16 +52,16 @@
       }
     ],
     "gotchas": [
-      "Do NOT interview the user \u2014 synthesize from the existing conversation. Re-interviewing wastes their time and signals you weren't listening.",
-      "Look for DEEP-module opportunities during the module sketch \u2014 small interface, lots behind it, rarely changes.",
+      "Do NOT interview the user — synthesize from the existing conversation. Re-interviewing wastes their time and signals you weren't listening.",
+      "Look for DEEP-module opportunities during the module sketch — small interface, lots behind it, rarely changes.",
       "Confirm the module breakdown AND which modules get tests with the user before writing the PRD.",
-      "Use CONTEXT.md vocabulary throughout \u2014 drift in a durable doc propagates to every downstream issue.",
+      "Use CONTEXT.md vocabulary throughout — drift in a durable doc propagates to every downstream issue.",
       "User stories must be EXTENSIVE. A short list signals the spec isn't fleshed out.",
-      "No file paths or code snippets in Implementation Decisions \u2014 they rot. Exception: prototype-derived state machines / schemas / types when prose can't encode the decision as precisely.",
+      "No file paths or code snippets in Implementation Decisions — they rot. Exception: prototype-derived state machines / schemas / types when prose can't encode the decision as precisely.",
       "Out of Scope is a load-bearing section, not a throwaway. Be explicit about what's excluded so future contributors don't re-scope it.",
-      "Apply the `ready-for-agent` triage label on publish \u2014 no separate triage pass needed."
+      "Apply the `ready-for-agent` triage label on publish — no separate triage pass needed."
     ],
-    "category": "concept",
+    "category": "pm",
     "audience": "engineers",
     "trust": "verified",
     "videoUrls": [],

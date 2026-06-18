@@ -21,6 +21,9 @@ type SearchCategory =
   | "tool"
   | "language"
   | "concept"
+  | "security"
+  | "design"
+  | "pm"
   | "job-search"
   | "prompt-pack"
   | "other";

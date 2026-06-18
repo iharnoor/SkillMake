@@ -69,7 +69,7 @@
       "CVE lookups call the OSV.dev API at scan time, so dependency findings need network access",
       "Use SARIF output to wire results into GitHub code scanning rather than parsing terminal text"
     ],
-    "category": "tool",
+    "category": "security",
     "audience": "ai",
     "trust": "official",
     "videoUrls": [],

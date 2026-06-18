@@ -45,7 +45,7 @@
       "If the existing stack is mid-migration (e.g., partial Tailwind v3→v4), audit but don't fix until the migration lands",
       "Some pages are intentionally plain (docs, settings); apply the audit but lower the variance dial for those screens"
     ],
-    "category": "concept",
+    "category": "design",
     "audience": "design",
     "trust": "verified",
     "videoUrls": [],

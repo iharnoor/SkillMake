@@ -82,7 +82,7 @@
       "prefer external/user-reported bugs and PRs with clear proof.",
       "Do not run destructive local actions (local reset, branch deletes, checkout moves) unless the user explicitly asks."
     ],
-    "category": "tool",
+    "category": "pm",
     "audience": "engineers",
     "trust": "verified",
     "videoUrls": [],
