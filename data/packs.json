@@ -57,6 +57,42 @@
           "prompt": "Analyze the disk space used by Codex on my computer, without deleting anything.\n\nMeasure separately:\n- ~/.codex\n- /Applications/Codex.app\n- ~/.cache/codex-runtimes\n- the main Codex SQLite files\n- archived_sessions, sessions, worktrees, plugins, generated_images, memories\n\nThen create a clear, polished visualization of this breakdown:\n- premium dashboard style, readable and understated\n- main chart as a donut chart or treemap\n- figures in GB/MB\n- distinct colors by category\n- title: \"Disk Space Used by Codex\"\n- subtitle with the measurement date\n- add a short conclusion: what takes up the most space, what is probably safe to clean up, and what should not be deleted while Codex is running\n- do not show any secrets, tokens, conversation content, or full sensitive paths\n- do not delete anything, do not modify anything\n\nGenerate an HTML preview.",
           "tip": "A safe, read-only way to see where Codex is eating your disk. It measures each store separately and renders a dashboard-style donut/treemap, then tells you what's safe to clean up and what to leave alone while Codex is running — nothing gets deleted or modified.",
           "addedAt": "2026-06-23"
+        },
+        {
+          "id": "mac-disk-space-treemap",
+          "title": "Whole-Mac Disk Audit → Treemap",
+          "category": "Maintenance",
+          "model": "Claude Code · Codex CLI",
+          "prompt": "Analyze where disk space is going on my Mac, read-only — do not delete, move, or modify anything.\n\nMeasure the biggest space consumers across:\n- ~/Library/Caches and application caches\n- ~/Downloads, ~/Desktop, ~/Documents\n- developer junk: ~/Library/Developer (Xcode), node_modules, build/ and dist/ folders\n- Docker images and volumes, if Docker is installed\n- the system and user Trash\n\nReport the top 20 largest directories with sizes in GB/MB, then render a dashboard:\n- a treemap as the main chart, sized by bytes\n- distinct colors per category\n- title \"Where My Disk Went\" and a subtitle with today's date\n- a short conclusion: biggest consumers, what is safe to clean, and what to leave alone\n\nFor anything you suggest removing, print the exact command but DO NOT run it — I will review and run it myself. Never touch system files, keychains, or anything outside my home folder.\n\nGenerate an HTML preview.",
+          "tip": "Generalizes the Codex audit to your whole Mac. The hard guardrails — read-only, no deletes, commands printed for you to run — are the safety: a widely-shared cautionary tale had an agent wipe a home directory when a cleanup prompt lacked exactly these limits.",
+          "addedAt": "2026-06-24"
+        },
+        {
+          "id": "ship-report-from-git",
+          "title": "What Did I Ship This Week?",
+          "category": "Git",
+          "model": "Claude Code",
+          "prompt": "You are my release scribe. Using only git history in this repo, summarize what I shipped in the last 7 days — read-only, make no commits or changes.\n\n- Run git log for the last 7 days for commits I authored\n- Group the work into themes (features, fixes, refactors, chores), not a raw commit dump\n- For each theme, write one plain-English line a non-engineer would understand\n- Note anything risky or unfinished (reverts, TODOs in the diffs, unusually large churn)\n- End with a 3-bullet standup: shipped / in progress / blocked\n\nDo not invent work that is not in the history. Quote the commit hash for each claim so I can verify it.",
+          "tip": "Turns a week of commits into a standup or changelog in one pass. The 'quote the hash for each claim' rule keeps it honest — it can't pad your week with work you didn't actually do.",
+          "addedAt": "2026-06-24"
+        },
+        {
+          "id": "reclaim-dev-disk",
+          "title": "Reclaim Dev Disk (node_modules, caches, Docker)",
+          "category": "Maintenance",
+          "model": "Claude Code · Codex CLI",
+          "prompt": "Find reclaimable developer disk space on my machine, read-only — do not delete anything.\n\nLocate and total the size of:\n- every node_modules folder under my projects, with the largest 10 listed\n- build outputs: dist/, build/, .next/, target/, .gradle/, DerivedData\n- package-manager caches: npm, pnpm, yarn, pip, cargo, Homebrew\n- dangling or unused Docker images and volumes, if Docker is present\n\nReport total reclaimable space and a per-category breakdown in GB/MB. For each category, print the exact, safe clean command (the relevant prune/clean) but DO NOT run any of them — I will choose what to run. Flag anything where deleting forces a slow rebuild so I know the trade-off.\n\nGenerate an HTML summary with a bar chart of reclaimable space by category.",
+          "tip": "Dev caches and node_modules quietly eat tens of GB. This tallies what's reclaimable and hands you the exact clean commands without running them — you decide what actually gets deleted.",
+          "addedAt": "2026-06-24"
+        },
+        {
+          "id": "dependency-risk-triage",
+          "title": "Dependency Risk Triage",
+          "category": "Audit",
+          "model": "Claude Code",
+          "prompt": "Audit the dependencies in this project, read-only — make no edits, no installs, no lockfile changes.\n\n- List dependencies that are outdated, grouped by how far behind: patch / minor / major\n- Flag any with known security advisories, with severity\n- Separate 'safe to bump now' (patch/minor, no breaking changes) from 'needs care' (majors, peer-dependency conflicts)\n- For the risky ones, name the specific breaking change or migration step — do not just give a version number\n\nDo not modify package.json, lockfiles, or node_modules. End with a prioritized upgrade order and the exact command for each step, for me to run.\n\nGenerate an HTML report grouped by risk.",
+          "tip": "A read-only second opinion before you touch dependencies — it sorts the trivial bumps from the ones that will break your build, and names the actual breaking change instead of just a newer version.",
+          "addedAt": "2026-06-24"
         }
       ]
     },
