@@ -13,6 +13,15 @@
       "accent": "#c084fc",
       "prompts": [
         {
+          "id": "codex-disk-space-audit",
+          "title": "Codex Disk-Space Audit (No Deletes)",
+          "category": "Hacks",
+          "model": "Codex CLI",
+          "prompt": "Analyze the disk space used by Codex on my computer, without deleting anything.\n\nMeasure separately:\n- ~/.codex\n- /Applications/Codex.app\n- ~/.cache/codex-runtimes\n- the main Codex SQLite files\n- archived_sessions, sessions, worktrees, plugins, generated_images, memories\n\nThen create a clear, polished visualization of this breakdown:\n- premium dashboard style, readable and understated\n- main chart as a donut chart or treemap\n- figures in GB/MB\n- distinct colors by category\n- title: \"Disk Space Used by Codex\"\n- subtitle with the measurement date\n- add a short conclusion: what takes up the most space, what is probably safe to clean up, and what should not be deleted while Codex is running\n- do not show any secrets, tokens, conversation content, or full sensitive paths\n- do not delete anything, do not modify anything\n\nGenerate an HTML preview.",
+          "tip": "A safe, read-only way to see where Codex is eating your disk. It measures each store separately and renders a dashboard-style donut/treemap, then tells you what's safe to clean up and what to leave alone while Codex is running — nothing gets deleted or modified.",
+          "addedAt": "2026-06-23"
+        },
+        {
           "id": "suzanne-stay-in-the-loop",
           "title": "Stay in the Loop: Suzanne's Teacher Prompt",
           "category": "Learning",
