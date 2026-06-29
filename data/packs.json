@@ -736,6 +736,116 @@
           "model": "AGENTS.md · any agent",
           "prompt": "In formal technical prose (research papers, grant proposals, API specifications, technical documentation), prefer \"it is\" over \"it's\", \"does not\" over \"doesn't\", \"cannot\" over \"can't\", \"will not\" over \"won't\", \"I am\" over \"I'm\", \"you are\" over \"you're\". Contractions are acceptable in informal registers (blog posts, release notes, commit messages, casual documentation), but even there, be deliberate: a contraction sets a register, and if the surrounding prose is formal, the contraction reads as a tonal break. The operational test: if the surrounding sentences use full forms, the contraction stands out; if the surrounding sentences use contractions, the full form stands out. Pick the register and hold it within the document.",
           "tip": "e.g. GOOD: The model does not converge when the learning rate is too high.` (The \"it is worth noting that\" phrase is itself filler and should also be cut per RULE-04.)"
+        },
+        {
+          "id": "stop-slop-audit",
+          "title": "Stop Slop Audit",
+          "category": "Editing Passes",
+          "model": "Hardik Pandya · stop-slop",
+          "prompt": "Apply Stop Slop to the draft below. Remove throat-clearing openers, emphasis crutches, adverbs, passive voice, inanimate subjects doing human actions, binary contrasts, negative listings, rhetorical setups, em dashes, vague declaratives, and pull-quote endings. Keep the meaning and preserve any required facts, names, links, numbers, and constraints. Return:\n\n1. Revised draft\n2. Five bullets naming the highest-impact cuts\n3. Scores from 1 to 10 for directness, rhythm, trust, authenticity, and density\n\nDRAFT:\n[paste draft]",
+          "tip": "Best as the final writing pass before publishing. The five scores make the cleanup actionable instead of vibes.",
+          "sourceUrl": "https://github.com/hardikpandya/stop-slop",
+          "sourceLabel": "github.com/hardikpandya/stop-slop",
+          "author": "Hardik Pandya",
+          "addedAt": "2026-06-29"
+        }
+      ]
+    },
+    {
+      "slug": "marketing-writing",
+      "title": "Marketing Writing Cleanup",
+      "tagline": "Sharper launches, pages, emails, and posts without AI gloss.",
+      "description": "Copy-paste prompts for turning draft marketing copy into direct, specific, credible writing. Built around Stop Slop's anti-pattern list: cut filler, name the actor, remove false drama, and keep the buyer in the room.",
+      "audience": "marketing",
+      "category": "prompt-pack",
+      "source": "hardikpandya/stop-slop",
+      "sourceUrl": "https://github.com/hardikpandya/stop-slop",
+      "accent": "#f97316",
+      "prompts": [
+        {
+          "id": "landing-page-stop-slop",
+          "title": "Landing Page Stop Slop Pass",
+          "category": "Landing Pages",
+          "model": "Claude",
+          "prompt": "Rewrite this landing-page copy using Stop Slop rules. Remove AI tells: throat-clearing openers, generic claims, adverbs, business jargon, binary contrasts, passive voice, inanimate abstractions doing human verbs, em dashes, and punchy pull-quote endings. Keep the offer, audience, proof, feature facts, and CTA intact. Make every section name the specific buyer problem, product action, and concrete outcome.\n\nReturn:\n1. Revised copy by section\n2. A table with Before, Problem, Fix for the 8 most important edits\n3. Five-dimension score: directness, rhythm, trust, authenticity, density\n\nCOPY:\n[paste page copy]",
+          "tip": "Use after the page already has positioning. This prompt edits copy; it should not reinvent the offer.",
+          "sourceUrl": "https://github.com/hardikpandya/stop-slop",
+          "sourceLabel": "hardikpandya/stop-slop",
+          "author": "Hardik Pandya",
+          "addedAt": "2026-06-29"
+        },
+        {
+          "id": "launch-post-stop-slop",
+          "title": "Launch Post Without AI Hype",
+          "category": "Launches",
+          "model": "Claude",
+          "prompt": "Edit this launch post so it sounds like a founder or operator wrote it, not an AI. Cut launch cliches, vague significance claims, 'this changes everything' energy, rhetorical setups, 'not X but Y' pivots, and meta-commentary. Keep concrete facts: what shipped, who it helps, what changed, proof, limitations, and CTA. Use active voice and varied sentence length. No em dashes.\n\nReturn the revised post plus a short edit note listing the phrases or structures you removed.\n\nPOST:\n[paste launch post]",
+          "tip": "Works for LinkedIn, X, email intros, and Product Hunt copy. Add the channel if character length matters.",
+          "sourceUrl": "https://github.com/hardikpandya/stop-slop",
+          "sourceLabel": "hardikpandya/stop-slop",
+          "author": "Hardik Pandya",
+          "addedAt": "2026-06-29"
+        },
+        {
+          "id": "email-sequence-stop-slop",
+          "title": "Email Sequence Specificity Pass",
+          "category": "Email",
+          "model": "Claude",
+          "prompt": "Run a Stop Slop edit on this marketing email sequence. For each email, remove filler phrases, softeners, hype, passive voice, vague benefits, false urgency, and formulaic paragraph endings. Replace abstract benefits with the buyer's concrete situation, action, and payoff. Preserve compliance language and required offer details.\n\nReturn:\n1. Revised subject line and body for each email\n2. The single strongest buyer-specific line in each email\n3. Any claim that needs evidence before sending\n\nSEQUENCE:\n[paste emails]",
+          "tip": "Useful before lifecycle emails, nurture campaigns, and sponsor reads where generic copy burns trust.",
+          "sourceUrl": "https://github.com/hardikpandya/stop-slop",
+          "sourceLabel": "hardikpandya/stop-slop",
+          "author": "Hardik Pandya",
+          "addedAt": "2026-06-29"
+        }
+      ]
+    },
+    {
+      "slug": "productivity-writing",
+      "title": "Productivity Writing Cleanup",
+      "tagline": "Clear updates, decisions, docs, and asks in fewer words.",
+      "description": "Prompts for everyday operator writing: status updates, decision memos, async asks, and meeting notes. The goal is not fancy prose; it is writing that names the actor, action, owner, deadline, and risk without filler.",
+      "audience": "general",
+      "category": "prompt-pack",
+      "source": "hardikpandya/stop-slop",
+      "sourceUrl": "https://github.com/hardikpandya/stop-slop",
+      "accent": "#14b8a6",
+      "prompts": [
+        {
+          "id": "status-update-stop-slop",
+          "title": "Status Update Stop Slop Pass",
+          "category": "Async Updates",
+          "model": "Claude",
+          "prompt": "Rewrite this status update with Stop Slop rules and operator clarity. Cut filler, passive voice, vague progress language, rhetorical setup, and performative confidence. Name the owner, action, current state, blocker, risk, and next checkpoint. Keep it concise, direct, and human. No em dashes.\n\nReturn:\n1. Revised update\n2. One-line executive summary\n3. Open questions or risks that still need an owner\n\nUPDATE:\n[paste status update]",
+          "tip": "Use for Slack, email, Linear updates, and weekly reports when the draft has too much 'progress is being made' language.",
+          "sourceUrl": "https://github.com/hardikpandya/stop-slop",
+          "sourceLabel": "hardikpandya/stop-slop",
+          "author": "Hardik Pandya",
+          "addedAt": "2026-06-29"
+        },
+        {
+          "id": "decision-memo-stop-slop",
+          "title": "Decision Memo Cleanup",
+          "category": "Decision Memos",
+          "model": "Claude",
+          "prompt": "Edit this decision memo so a busy operator can decide fast. Apply Stop Slop: remove throat-clearing, negative listing, binary contrast theater, passive voice, abstract nouns doing actions, and vague importance claims. Preserve the decision, options, tradeoffs, evidence, owner, deadline, and rollback plan. Convert distant narration into direct statements about who does what.\n\nReturn:\n1. Revised memo\n2. Decision, owner, deadline, and rollback plan as four bullets\n3. Claims that need evidence\n\nMEMO:\n[paste memo]",
+          "tip": "Good for replacing long 'context' sections with what changed, who decides, and what happens next.",
+          "sourceUrl": "https://github.com/hardikpandya/stop-slop",
+          "sourceLabel": "hardikpandya/stop-slop",
+          "author": "Hardik Pandya",
+          "addedAt": "2026-06-29"
+        },
+        {
+          "id": "async-ask-stop-slop",
+          "title": "Async Ask That Gets Answered",
+          "category": "Requests",
+          "model": "Claude",
+          "prompt": "Rewrite this async request so the recipient can answer without a meeting. Use Stop Slop rules: cut throat-clearing, hedges, adverbs, passive voice, vague stakes, and meta-commentary. Put the ask in the first two sentences. Include context only if it changes the answer. Name the requested action, deadline, default if no response, and links or evidence needed.\n\nReturn the revised request plus a checklist showing Ask, Owner, Deadline, Default, Context, Links.\n\nREQUEST:\n[paste request]",
+          "tip": "Use before sending cross-functional asks where polite buildup hides the actual decision.",
+          "sourceUrl": "https://github.com/hardikpandya/stop-slop",
+          "sourceLabel": "hardikpandya/stop-slop",
+          "author": "Hardik Pandya",
+          "addedAt": "2026-06-29"
         }
       ]
     },

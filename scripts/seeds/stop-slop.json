@@ -1,0 +1,69 @@
+{
+  "sourceUrl": "https://github.com/hardikpandya/stop-slop/blob/main/SKILL.md",
+  "skill": {
+    "name": "stop-slop",
+    "description": "Use when drafting, editing, or reviewing prose so the agent removes predictable AI writing tells and returns direct, specific, human-sounding copy.",
+    "whenToUse": [
+      "Cleaning up marketing copy, launch posts, landing-page sections, newsletters, or social drafts that sound AI-written",
+      "Reviewing executive updates, internal docs, or productivity writing for filler, passive voice, and formulaic structure",
+      "Turning generic AI prose into direct prose with concrete actors, specifics, and varied sentence rhythm",
+      "Scoring a draft before publishing using directness, rhythm, trust, authenticity, and density"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Filler phrase removal",
+        "explanation": "Cut throat-clearing openers, emphasis crutches, business jargon, adverbs, self-referential asides, and vague importance claims. The skill points to a reference list of common offenders."
+      },
+      {
+        "term": "Formulaic structure cleanup",
+        "explanation": "Avoid AI-shaped patterns such as binary contrasts, negative listings, dramatic fragments, rhetorical setups, false transformation arcs, and three-item rhythm."
+      },
+      {
+        "term": "Human subject discipline",
+        "explanation": "Every sentence should name a human actor when possible. Passive constructions and inanimate abstractions doing human verbs hide responsibility and flatten the prose."
+      },
+      {
+        "term": "Specificity over vague authority",
+        "explanation": "Replace sweeping claims, lazy extremes, and sentences like 'the implications are significant' with the exact person, action, constraint, number, or consequence."
+      },
+      {
+        "term": "Reader-in-the-room voice",
+        "explanation": "Write to the reader directly instead of narrating from above. 'You' and concrete scenes beat distant generalizations about people, teams, or markets."
+      },
+      {
+        "term": "Five-dimension scoring",
+        "explanation": "Before delivery, rate directness, rhythm, trust, authenticity, and density from 1 to 10. Below 35 out of 50 means revise before handing over the draft."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Install stop-slop from GitHub",
+        "purpose": "Use the upstream skill by copying its SKILL.md into the agent's skill directory.",
+        "example": "git clone https://github.com/hardikpandya/stop-slop\nmkdir -p ~/.codex/skills/stop-slop\ncp stop-slop/SKILL.md ~/.codex/skills/stop-slop/SKILL.md"
+      },
+      {
+        "signature": "Stop Slop revision pass",
+        "purpose": "A reusable prompt shape for applying the skill to any draft.",
+        "example": "Apply stop-slop to this draft. Remove filler phrases, binary contrasts, passive voice, vague declaratives, em dashes, and pull-quote endings. Keep the meaning. Return the revised draft, then score directness, rhythm, trust, authenticity, and density out of 10.\n\nDRAFT:\n<paste text>"
+      },
+      {
+        "signature": "Quick checks before delivery",
+        "purpose": "Run a compact checklist after writing or editing prose.",
+        "example": "Check this draft for adverbs, passive voice, inanimate subjects doing human actions, Wh- sentence starters, 'here is what' openers, 'not X but Y' contrasts, repeated sentence length, punchy one-liner paragraph endings, em dashes, vague significance claims, distant narrator voice, and meta-joiners."
+      }
+    ],
+    "gotchas": [
+      "Do not preserve AI-sounding phrasing just because it is grammatically correct; the point is to remove recognizable patterns.",
+      "Do not remove specificity while compressing. A shorter generic sentence is still slop.",
+      "The skill forbids em dashes, but one upstream example still contains one; follow the rule, not that example.",
+      "Active voice does not mean aggressive voice. Name the actor and action without manufacturing hype.",
+      "A pull-quote ending can sound polished and still feel fake. Rewrite it as a normal sentence or cut it.",
+      "Use the scoring rubric as a revision gate, not as decoration after the draft is already done."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/hardikpandya/stop-slop"
+  }
+}
