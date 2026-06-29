@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/onboarding",
+  "skill": {
+    "name": "onboarding",
+    "description": "Use when improving user onboarding, activation, lifecycle nudges, and first-value moments so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help improving user onboarding, activation, lifecycle nudges, and first-value moments",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable onboarding workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Core Principles",
+        "explanation": "Core part of the onboarding workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "1. Time-to-Value Is Everything",
+        "explanation": "Remove every step between signup and experiencing core value."
+      },
+      {
+        "term": "2. One Goal Per Session",
+        "explanation": "Focus first session on one successful outcome. Save advanced features for later."
+      },
+      {
+        "term": "3. Do, Don't Show",
+        "explanation": "Interactive Tutorial. Doing the thing Learning about the thing."
+      },
+      {
+        "term": "4. Progress Creates Motivation",
+        "explanation": "Show advancement. Celebrate completions. Make the path visible."
+      },
+      {
+        "term": "Defining Activation",
+        "explanation": "Core part of the onboarding workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill onboarding",
+        "purpose": "Install the onboarding skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill onboarding"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

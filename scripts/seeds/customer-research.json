@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/customer-research",
+  "skill": {
+    "name": "customer-research",
+    "description": "Use when running customer research, extracting pain points, and turning voice-of-customer data into strategy so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help running customer research, extracting pain points, and turning voice-of-customer data into strategy",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable customer research workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Before Starting",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context to skip questions already answered."
+      },
+      {
+        "term": "Two Modes of Research",
+        "explanation": "Core part of the customer research workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "Mode 1: Analyze Existing Assets",
+        "explanation": "You have raw research material (transcripts, surveys, reviews, tickets). Your job is to extract signal."
+      },
+      {
+        "term": "Mode 2: Go Find Research",
+        "explanation": "You need to gather intel from online sources (Reddit, G2, forums, communities, review sites). Your job is to know where to look and what to extract. Most engagements combine both. Establish which mode applies before proceeding."
+      },
+      {
+        "term": "Mode 1: Analyzing Existing Research Assets",
+        "explanation": "Core part of the customer research workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "Asset Types",
+        "explanation": "Customer interview / sales call transcripts Extract: pains, triggers, desired outcomes, language used, objections, alternatives considered Look for: the moment they decided to look for a solution, what they tried before, what success looks like to them"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill customer-research",
+        "purpose": "Install the customer-research skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill customer-research"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

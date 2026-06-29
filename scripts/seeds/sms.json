@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/sms",
+  "skill": {
+    "name": "sms",
+    "description": "Use when writing SMS campaigns, transactional texts, opt-in flows, and retention nudges so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help writing SMS campaigns, transactional texts, opt-in flows, and retention nudges",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable sms workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Before Starting",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task."
+      },
+      {
+        "term": "1. Business Type",
+        "explanation": "B2C ecom / DTC, B2B SaaS, mobile app, services, fintech Order volume or list size (SMS economics depend on scale) Geographic mix (US, EU, both — compliance differs dramatically)"
+      },
+      {
+        "term": "2. Current State",
+        "explanation": "Existing SMS program (platform, list size, opt-in rate, opt-out rate, revenue/send) Email program (SMS works best as a layer on top, not a replacement) Phone number type: short code, toll-free, long code (10DLC)"
+      },
+      {
+        "term": "3. Compliance Posture",
+        "explanation": "US: A2P 10DLC registration complete? (Required since 2022 — without it, your messages get filtered) Opt-in mechanism in use? (Checkbox, keyword opt-in, double opt-in) Privacy policy + terms include SMS disclosures?"
+      },
+      {
+        "term": "4. Goal",
+        "explanation": "Drive revenue (promotional, cart recovery, post-purchase) Drive activation (welcome, onboarding, milestone nudges) Transactional (order updates, auth codes, alerts)"
+      },
+      {
+        "term": "When SMS Beats Email",
+        "explanation": "SMS is not \"another email.\" Use it where the channel's properties win: Use Case SMS or Email? Why Abandoned cart recovery SMS first 98% open rate within 3 min vs 20% for email in 24h"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill sms",
+        "purpose": "Install the sms skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill sms"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

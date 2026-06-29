@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/analytics",
+  "skill": {
+    "name": "analytics",
+    "description": "Use when setting up marketing analytics, funnels, attribution, and event tracking so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help setting up marketing analytics, funnels, attribution, and event tracking",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable analytics workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Core Principles",
+        "explanation": "Core part of the analytics workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "1. Track for Decisions, Not Data",
+        "explanation": "Every event should inform a decision Avoid vanity metrics Quality quantity of events"
+      },
+      {
+        "term": "2. Start with the Questions",
+        "explanation": "What do you need to know? What actions will you take based on this data? Work backwards to what you need to track"
+      },
+      {
+        "term": "3. Name Things Consistently",
+        "explanation": "Naming conventions matter Establish patterns before implementing Document everything"
+      },
+      {
+        "term": "4. Maintain Data Quality",
+        "explanation": "Validate implementation Monitor for issues Clean data more data"
+      },
+      {
+        "term": "Tracking Plan Framework",
+        "explanation": "Core part of the analytics workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill analytics",
+        "purpose": "Install the analytics skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill analytics"
+      }
+    ],
+    "gotchas": [
+      "Do not recommend dashboards before defining the decision each metric is supposed to support.",
+      "Event names and properties should be consistent before any attribution or funnel analysis is trusted.",
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

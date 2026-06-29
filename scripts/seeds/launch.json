@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/launch",
+  "skill": {
+    "name": "launch",
+    "description": "Use when planning product launches, launch assets, channel sequencing, and post-launch follow-up so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help planning product launches, launch assets, channel sequencing, and post-launch follow-up",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable launch workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Before Starting",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task."
+      },
+      {
+        "term": "Core Philosophy",
+        "explanation": "The best companies don't just launch once—they launch again and again. Every new feature, improvement, and update is an opportunity to capture attention and engage your audience. A strong launch isn't about a single moment. It's about:"
+      },
+      {
+        "term": "The ORB Framework",
+        "explanation": "Structure your launch marketing across three channel types. Everything should ultimately lead back to owned channels."
+      },
+      {
+        "term": "Owned Channels",
+        "explanation": "You own the channel (though not the audience). Direct access without algorithms or platform rules. Examples: Email list Blog Podcast Branded community (Slack, Discord) Website/product"
+      },
+      {
+        "term": "Rented Channels",
+        "explanation": "Platforms that provide visibility but you don't control. Algorithms shift, rules change, pay-to-play increases. Examples: Social media (Twitter/X, LinkedIn, Instagram) App stores and marketplaces"
+      },
+      {
+        "term": "Borrowed Channels",
+        "explanation": "Tap into someone else's audience to shortcut the hardest part—getting noticed. Examples: Guest content (blog posts, podcast interviews, newsletter features) Collaborations (webinars, co-marketing, social takeovers)"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill launch",
+        "purpose": "Install the launch skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill launch"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

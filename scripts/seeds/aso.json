@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/aso",
+  "skill": {
+    "name": "aso",
+    "description": "Use when optimizing app store listings, keywords, screenshots, and conversion so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help optimizing app store listings, keywords, screenshots, and conversion",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable aso workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Before Auditing",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task."
+      },
+      {
+        "term": "Phase 1 — Identify Store & Fetch",
+        "explanation": "Core part of the aso workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "Detect store type from URL",
+        "explanation": "Apple: apps.apple.com/{country}/app/{name}/id{digits} Google: play.google.com/store/apps/details?id={package} If the user gives an app name instead of a URL, search the web for: site:apps.apple.com \"{app name}\" or site:play.google.com \"{app name}\""
+      },
+      {
+        "term": "Fetch the listing",
+        "explanation": "Use WebFetch to retrieve the listing page. Extract every available field: Apple App Store fields: App name (title) — 30 char limit Subtitle — 30 char limit Description (long) — not indexed for search, but matters for conversion"
+      },
+      {
+        "term": "Visual asset assessment",
+        "explanation": "WebFetch cannot extract screenshot images or caption text. Take a screenshot of the listing page to get visual data: Navigate to the listing URL and capture a full-page screenshot Assess the screenshot for: icon quality, screenshot count, caption text,"
+      },
+      {
+        "term": "Phase 1.5 — Assess Brand Maturity",
+        "explanation": "Before scoring, classify the app into one of three tiers. This determines how you interpret \"textbook ASO\" deviations — a deliberate brand choice by a household name is not the same as a missed opportunity by an unknown app."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill aso",
+        "purpose": "Install the aso skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill aso"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

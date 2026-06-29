@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/copy-editing",
+  "skill": {
+    "name": "copy-editing",
+    "description": "Use when tightening existing marketing copy for clarity, flow, specificity, and conversion so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help tightening existing marketing copy for clarity, flow, specificity, and conversion",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable copy editing workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Core Philosophy",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before editing. Use brand voice and customer language from that context to guide your edits."
+      },
+      {
+        "term": "The Seven Sweeps Framework",
+        "explanation": "Edit copy through seven sequential passes, each focusing on one dimension. After each sweep, loop back to check previous sweeps aren't compromised."
+      },
+      {
+        "term": "Sweep 1: Clarity",
+        "explanation": "Focus: Can the reader understand what you're saying? What to check: Confusing sentence structures Unclear pronoun references Jargon or insider language Ambiguous statements Missing context"
+      },
+      {
+        "term": "Sweep 2: Voice and Tone",
+        "explanation": "Focus: Is the copy consistent in how it sounds? What to check: Shifts between formal and casual Inconsistent brand personality Mood changes that feel jarring Word choices that don't match the brand"
+      },
+      {
+        "term": "Sweep 3: So What",
+        "explanation": "Focus: Does every claim answer \"why should I care?\" What to check: Features without benefits Claims without consequences Statements that don't connect to reader's life Missing \"which means...\" bridges"
+      },
+      {
+        "term": "Sweep 4: Prove It",
+        "explanation": "Focus: Is every claim supported with evidence? What to check: Unsubstantiated claims Missing social proof Assertions without backup \"Best\" or \"leading\" without evidence Types of proof to look for:"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill copy-editing",
+        "purpose": "Install the copy-editing skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill copy-editing"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/marketing-ideas",
+  "skill": {
+    "name": "marketing-ideas",
+    "description": "Use when generating and prioritizing marketing ideas grounded in product, audience, and constraints so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help generating and prioritizing marketing ideas grounded in product, audience, and constraints",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable marketing ideas workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "How to Use This Skill",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task."
+      },
+      {
+        "term": "Ideas by Category (Quick Reference)",
+        "explanation": "Category Ideas Examples Content & SEO 1-10 Programmatic SEO, Glossary marketing, Content repurposing Competitor 11-13 Comparison pages, Marketing jiu-jitsu Free Tools 14-22 Calculators, Generators, Chrome extensions"
+      },
+      {
+        "term": "Implementation Tips",
+        "explanation": "Core part of the marketing ideas workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "By Stage",
+        "explanation": "Pre-launch: Waitlist referrals (79) Early access pricing (81) Product Hunt prep (78) Early stage: Content & SEO (1-10) Community (35) Founder-led sales (47) Growth stage: Paid acquisition (23-34)"
+      },
+      {
+        "term": "By Budget",
+        "explanation": "Free: Content & SEO Community building Social media Comment marketing Low budget: Targeted ads Sponsorships Free tools Medium budget: Events Partnerships PR High budget: Acquisitions"
+      },
+      {
+        "term": "By Timeline",
+        "explanation": "Quick wins: Ads, email, social posts Medium-term: Content, SEO, community Long-term: Brand, thought leadership, platform effects"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill marketing-ideas",
+        "purpose": "Install the marketing-ideas skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill marketing-ideas"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

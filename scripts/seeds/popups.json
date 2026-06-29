@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/popups",
+  "skill": {
+    "name": "popups",
+    "description": "Use when writing and targeting popups, banners, modals, and onsite capture prompts so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help writing and targeting popups, banners, modals, and onsite capture prompts",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable popups workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Core Principles",
+        "explanation": "Core part of the popups workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "1. Timing Is Everything",
+        "explanation": "Too early = annoying interruption Too late = missed opportunity Right time = helpful offer at moment of need"
+      },
+      {
+        "term": "2. Value Must Be Obvious",
+        "explanation": "Clear, immediate benefit Relevant to page context Worth the interruption"
+      },
+      {
+        "term": "3. Respect the User",
+        "explanation": "Easy to dismiss Don't trap or trick Remember preferences Don't ruin the experience"
+      },
+      {
+        "term": "Trigger Strategies",
+        "explanation": "Core part of the popups workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "Time-Based",
+        "explanation": "Not recommended: \"Show after 5 seconds\" Better: \"Show after 30-60 seconds\" (proven engagement) Best for: General site visitors"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill popups",
+        "purpose": "Install the popups skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill popups"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

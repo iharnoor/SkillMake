@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/directory-submissions",
+  "skill": {
+    "name": "directory-submissions",
+    "description": "Use when finding and submitting to directories, launch sites, and listing channels so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help finding and submitting to directories, launch sites, and listing channels",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable directory submissions workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Before Starting",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task."
+      },
+      {
+        "term": "Core Philosophy",
+        "explanation": "Directory submissions are the foundation layer of distribution — never the whole strategy. They do three things well: Pass dofollow backlinks from high domain-rating sites into your marketing pages. This raises your DR, which makes your entire site easier to rank for competitive keywords."
+      },
+      {
+        "term": "The Three Hard Rules",
+        "explanation": "Core part of the directory submissions workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "Rule 1: Foundation before submission",
+        "explanation": "Never submit to a directory until the landing page it will link to is live, indexed, and has: A single <h1 and sequential heading hierarchy — pages with clean hierarchy have 2.8× higher AI citation rates, and 87% of ChatGPT-cited pages use a single H1."
+      },
+      {
+        "term": "Rule 2: Destination pages before directories",
+        "explanation": "Directories are the source of link equity. You need destinations that can convert the resulting traffic. Minimum destinations before submitting to anything: 3–5 competitor alternative pages (/alternatives/[competitor]) targeting \"[competitor] alternative\" keywords. Comparison/alternative pages convert at 5–15% vs 0.5–2% for generic content."
+      },
+      {
+        "term": "Rule 3: Positioning varies by directory type",
+        "explanation": "Never copy-paste the same description everywhere. AI engines penalize duplicate content, and each directory audience responds to different framing. See references/positioning-variations.md for the full variant library. Short version:"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill directory-submissions",
+        "purpose": "Install the directory-submissions skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill directory-submissions"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

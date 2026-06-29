@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/co-marketing",
+  "skill": {
+    "name": "co-marketing",
+    "description": "Use when planning partner campaigns, webinars, swaps, and shared launches so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help planning partner campaigns, webinars, swaps, and shared launches",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable co marketing workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Before Starting",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task."
+      },
+      {
+        "term": "When to Use This Skill",
+        "explanation": "Finding potential co-marketing partners Brainstorming campaign ideas with a specific partner Planning joint launches or promotions Evaluating partnership fit Structuring co-marketing agreements"
+      },
+      {
+        "term": "Partner Identification Framework",
+        "explanation": "Core part of the co marketing workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "1. Audience Overlap Analysis",
+        "explanation": "The best partners share your audience but don't compete for the same budget. Ideal partner characteristics: Same buyer persona, different problem solved Adjacent in the workflow (before, after, or alongside your tool)"
+      },
+      {
+        "term": "2. Partner Scoring Criteria",
+        "explanation": "Rate potential partners (1-5) on: Criteria What to Evaluate Audience fit How closely does their audience match your ICP? Audience size Do they have reach worth partnering for? Brand alignment Would you be proud to be associated?"
+      },
+      {
+        "term": "3. Where to Find Partners",
+        "explanation": "Integration ecosystem: Your existing integration partners Tools in the same app marketplace category Platforms your product plugs into Adjacent categories: Tools that solve the problem before yours"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill co-marketing",
+        "purpose": "Install the co-marketing skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill co-marketing"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

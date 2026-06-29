@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/marketing-plan",
+  "skill": {
+    "name": "marketing-plan",
+    "description": "Use when building a practical marketing plan across audience, channels, assets, cadence, and metrics so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help building a practical marketing plan across audience, channels, assets, cadence, and metrics",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable marketing plan workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "How this skill is invoked",
+        "explanation": "/marketing-plan {client-name-or-domain} Examples: /marketing-plan quietude.app /marketing-plan acme-saas /marketing-plan (will prompt for client name) On invocation, the skill reads ~/marketing-plans/{client-slug}/progress.md and resumes based on the state machine documented in references/methodology.md Step 1.1."
+      },
+      {
+        "term": "The three phases",
+        "explanation": "The full workflow lives in references/methodology.md. Quick summary:"
+      },
+      {
+        "term": "Phase 1 — INIT (research + intake)",
+        "explanation": "Read all available materials about the client. Pull data from any wired tools (Ahrefs, GA4 MCP, Stripe MCP, etc.). Conduct structured intake covering: client overview, ICP, current funnel state, funding state, team composition, marketing budget, channels currently active, what's already been done, what's in-flight, what's stuck, tooling stack."
+      },
+      {
+        "term": "Phase 2 — REVIEW (walk through each of 13 sections interactively)",
+        "explanation": "Present each section's draft in chat. For each section you can: Approve as-is (\"good,\" \"next\") Adjust (\"change X to Y\") Add observations (\"also mention Z\") Expand (\"go deeper on this\")"
+      },
+      {
+        "term": "Phase 3 — FINALIZE (compile + verify + publish)",
+        "explanation": "Compile all 13 sections into finalplan.md. Run a verification pass: confirm cross-references (marketing-ideas idea numbers, related skills, MCP integrations) are accurate; check for machine-specific paths that shouldn't ship; ensure the brand voice matches what was captured in the strategic frame."
+      },
+      {
+        "term": "The 13-section plan structure",
+        "explanation": "Full template lives in references/plan-template.md. The structure: Executive summary — 3 big bets, 90-day priorities, 12-month outcome. Written so it can be lifted into an investor or board update."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill marketing-plan",
+        "purpose": "Install the marketing-plan skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill marketing-plan"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

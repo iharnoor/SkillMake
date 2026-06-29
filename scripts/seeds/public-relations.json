@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/public-relations",
+  "skill": {
+    "name": "public-relations",
+    "description": "Use when planning PR angles, pitches, media lists, and earned-media outreach so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help planning PR angles, pitches, media lists, and earned-media outreach",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable public relations workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Before Starting",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task."
+      },
+      {
+        "term": "Core Philosophy",
+        "explanation": "PR is not a substitute for distribution. It's a multiplier for it. Earned media doesn't drive direct conversions. A TechCrunch hit will not give you 1,000 paying customers. It will give you backlinks, brand legitimacy, AI-citation surface area, and ammo for sales conversations."
+      },
+      {
+        "term": "When PR is worth it",
+        "explanation": "You have a real story — proprietary data, a strong opinion, a milestone, a customer with a sharp before/after, or a fresh angle on a trending topic You have founder/exec time — journalists want quotes from people with skin in the game, not from a PR rep"
+      },
+      {
+        "term": "When to skip PR (for now)",
+        "explanation": "Pre-launch with no story beyond \"we exist\" No one on the team can sustain pitching for 4–6 weeks (PR is a momentum game) You don't have a clear ICP — journalists ask \"who reads my piece because of this?\" and if you can't answer, neither can they"
+      },
+      {
+        "term": "The PR Mix",
+        "explanation": "Four modes. Most teams over-index on one. Run at least three. Mode What it is Effort Speed to coverage Reactive (newsjacking) Inject your POV into trending news Low–medium Hours to days"
+      },
+      {
+        "term": "Owned: Press Page + Media Kit",
+        "explanation": "Set this up once. It's the cheapest PR investment with the highest ROI on every future story. Press page (/press or /newsroom) should include: One-paragraph company description (copy/paste ready)"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill public-relations",
+        "purpose": "Install the public-relations skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill public-relations"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

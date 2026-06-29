@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/ab-testing",
+  "skill": {
+    "name": "ab-testing",
+    "description": "Use when planning, designing, or interpreting A/B tests and growth experiments so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help planning, designing, or interpreting A/B tests and growth experiments",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable ab testing workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Core Principles",
+        "explanation": "Core part of the ab testing workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "1. Start with a Hypothesis",
+        "explanation": "Not just \"let's see what happens\" Specific prediction of outcome Based on reasoning or data"
+      },
+      {
+        "term": "2. Test One Thing",
+        "explanation": "Single variable per test Otherwise you don't know what worked"
+      },
+      {
+        "term": "3. Statistical Rigor",
+        "explanation": "Pre-determine sample size Don't peek and stop early Commit to the methodology"
+      },
+      {
+        "term": "4. Measure What Matters",
+        "explanation": "Primary metric tied to business value Secondary metrics for context Guardrail metrics to prevent harm"
+      },
+      {
+        "term": "Hypothesis Framework",
+        "explanation": "Core part of the ab testing workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill ab-testing",
+        "purpose": "Install the ab-testing skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill ab-testing"
+      }
+    ],
+    "gotchas": [
+      "Do not peek at results and stop early; pre-commit the sample size and decision rule before launch.",
+      "Avoid testing multiple major changes at once unless the task is explicitly a multivariate test.",
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/ads",
+  "skill": {
+    "name": "ads",
+    "description": "Use when planning, launching, or diagnosing paid acquisition campaigns so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help planning, launching, or diagnosing paid acquisition campaigns",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable ads workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Before Starting",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task."
+      },
+      {
+        "term": "1. Campaign Goals",
+        "explanation": "What's the primary objective? (Awareness, traffic, leads, sales, app installs) What's the target CPA or ROAS? What's the monthly/weekly budget? Any constraints? (Brand guidelines, compliance, geographic)"
+      },
+      {
+        "term": "2. Product & Offer",
+        "explanation": "What are you promoting? (Product, free trial, lead magnet, demo) What's the landing page URL? What makes this offer compelling?"
+      },
+      {
+        "term": "3. Audience",
+        "explanation": "Who is the ideal customer? What problem does your product solve for them? What are they searching for or interested in? Do you have existing customer data for lookalikes?"
+      },
+      {
+        "term": "4. Current State",
+        "explanation": "Have you run ads before? What worked/didn't? Do you have existing pixel/conversion data? What's your current funnel conversion rate?"
+      },
+      {
+        "term": "Platform Selection Guide",
+        "explanation": "Platform Best For Use When Google Ads High-intent search traffic People actively search for your solution Meta Demand generation, visual products Creating demand, strong creative assets"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill ads",
+        "purpose": "Install the ads skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill ads"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

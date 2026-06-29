@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/prospecting",
+  "skill": {
+    "name": "prospecting",
+    "description": "Use when finding prospects, building target lists, and researching outbound accounts so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help finding prospects, building target lists, and researching outbound accounts",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable prospecting workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Before Starting",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task."
+      },
+      {
+        "term": "Pick the Branch",
+        "explanation": "Prospecting motions differ enough that the workflow forks at intake. Pick one branch based on who the user is selling to: Branch Sell to What \"qualified\" looks like Primary sources SaaS Other SaaS companies / digital businesses ICP fit + tech stack match + growth signals (funding, hiring, product velocity) LinkedIn, BuiltWith, Crunchbase, Apollo, Clay."
+      },
+      {
+        "term": "Shared Framework (all branches)",
+        "explanation": "Every prospecting engagement follows the same five phases. Tools and qualification signals change per branch; the phases don't."
+      },
+      {
+        "term": "Phase 1 — Define the ICP",
+        "explanation": "Pull from product-marketing.md if available. Otherwise, gather: Firmographic fit — industry, company size, revenue band, geography, business model Technographic fit (SaaS branch) — what tools they already use, what they're missing"
+      },
+      {
+        "term": "Phase 2 — Build the candidate list (discovery)",
+        "explanation": "Source 2–3× more candidates than the user wants in the final list — qualification will cull aggressively. SaaS / B2B: combine 2–3 sources for cross-verification. Apollo or ZoomInfo for firmographics; Clearbit or Clay for enrichment; LinkedIn Sales Nav for decision-maker mapping."
+      },
+      {
+        "term": "Phase 3 — Qualify each candidate",
+        "explanation": "Score every candidate against the ICP checklist. Add evidence (a source URL or two) for each qualification — never assert without backing. Confidence levels (used across all branches):"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill prospecting",
+        "purpose": "Install the prospecting skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill prospecting"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

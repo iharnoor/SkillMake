@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/cro",
+  "skill": {
+    "name": "cro",
+    "description": "Use when improving conversion on landing pages, funnels, pricing pages, and signup flows so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help improving conversion on landing pages, funnels, pricing pages, and signup flows",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable cro workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "CRO Analysis Framework",
+        "explanation": "Analyze the page across these dimensions, in order of impact:"
+      },
+      {
+        "term": "1. Value Proposition Clarity (Highest Impact)",
+        "explanation": "Check for: Can a visitor understand what this is and why they should care within 5 seconds? Is the primary benefit clear, specific, and differentiated? Is it written in the customer's language (not company jargon)?"
+      },
+      {
+        "term": "2. Headline Effectiveness",
+        "explanation": "Evaluate: Does it communicate the core value proposition? Is it specific enough to be meaningful? Does it match the traffic source's messaging? Strong headline patterns: Outcome-focused: \"Get [desired outcome] without [pain point]\""
+      },
+      {
+        "term": "3. CTA Placement, Copy, and Hierarchy",
+        "explanation": "Primary CTA assessment: Is there one clear primary action? Is it visible without scrolling? Does the button copy communicate value, not just action? - Weak: \"Submit,\" \"Sign Up,\" \"Learn More\""
+      },
+      {
+        "term": "4. Visual Hierarchy and Scannability",
+        "explanation": "Check: Can someone scanning get the main message? Are the most important elements visually prominent? Is there enough white space? Do images support or distract from the message?"
+      },
+      {
+        "term": "5. Trust Signals and Social Proof",
+        "explanation": "Types to look for: Customer logos (especially recognizable ones) Testimonials (specific, attributed, with photos) Case study snippets with real numbers Review scores and counts Security badges (where relevant)"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill cro",
+        "purpose": "Install the cro skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill cro"
+      }
+    ],
+    "gotchas": [
+      "Do not treat conversion issues as copy-only problems; inspect traffic source, offer, friction, trust, and page intent.",
+      "A prettier page is not necessarily a higher-converting page; tie every change to a conversion hypothesis.",
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

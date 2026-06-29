@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/pricing",
+  "skill": {
+    "name": "pricing",
+    "description": "Use when working through pricing, packaging, tiers, value metrics, and price tests so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help working through pricing, packaging, tiers, value metrics, and price tests",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable pricing workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Before Starting",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task."
+      },
+      {
+        "term": "1. Business Context",
+        "explanation": "What type of product? (SaaS, marketplace, e-commerce, service) What's your current pricing (if any)? What's your target market? (SMB, mid-market, enterprise) What's your go-to-market motion? (self-serve, sales-led, hybrid)"
+      },
+      {
+        "term": "2. Value & Competition",
+        "explanation": "What's the primary value you deliver? What alternatives do customers consider? How do competitors price?"
+      },
+      {
+        "term": "3. Current Performance",
+        "explanation": "What's your current conversion rate? What's your ARPU and churn rate? Any feedback on pricing from customers/prospects?"
+      },
+      {
+        "term": "4. Goals",
+        "explanation": "Optimizing for growth, revenue, or profitability? Moving upmarket or expanding downmarket?"
+      },
+      {
+        "term": "Pricing Fundamentals",
+        "explanation": "Core part of the pricing workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill pricing",
+        "purpose": "Install the pricing skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill pricing"
+      }
+    ],
+    "gotchas": [
+      "Do not change pricing without clarifying value metric, buyer segment, packaging, and expected behavior change.",
+      "Separate willingness-to-pay research from public price testing; they answer different questions.",
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

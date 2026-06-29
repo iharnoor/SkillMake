@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/competitors",
+  "skill": {
+    "name": "competitors",
+    "description": "Use when mapping a competitive landscape across alternatives, categories, and positioning gaps so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help mapping a competitive landscape across alternatives, categories, and positioning gaps",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable competitors workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Core Principles",
+        "explanation": "Core part of the competitors workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "1. Honesty Builds Trust",
+        "explanation": "Acknowledge competitor strengths Be accurate about your limitations Don't misrepresent competitor features Readers are comparing—they'll verify claims"
+      },
+      {
+        "term": "2. Depth Over Surface",
+        "explanation": "Go beyond feature checklists Explain why differences matter Include use cases and scenarios Show, don't just tell"
+      },
+      {
+        "term": "3. Help Them Decide",
+        "explanation": "Different tools fit different needs Be clear about who you're best for Be clear about who competitor is best for Reduce evaluation friction"
+      },
+      {
+        "term": "4. Modular Content Architecture",
+        "explanation": "Competitor data should be centralized Updates propagate to all pages Single source of truth per competitor"
+      },
+      {
+        "term": "Page Formats",
+        "explanation": "Core part of the competitors workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill competitors",
+        "purpose": "Install the competitors skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill competitors"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

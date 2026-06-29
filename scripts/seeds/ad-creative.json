@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/ad-creative",
+  "skill": {
+    "name": "ad-creative",
+    "description": "Use when briefing, critiquing, or iterating paid-ad creative so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help briefing, critiquing, or iterating paid-ad creative",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable ad creative workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Before Starting",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task."
+      },
+      {
+        "term": "1. Platform & Format",
+        "explanation": "What platform? (Google Ads, Meta, LinkedIn, TikTok, Twitter/X) What ad format? (Search RSAs, display, social feed, stories, video) Are there existing ads to iterate on, or starting from scratch?"
+      },
+      {
+        "term": "2. Product & Offer",
+        "explanation": "What are you promoting? (Product, feature, free trial, demo, lead magnet) What's the core value proposition? What makes this different from competitors?"
+      },
+      {
+        "term": "3. Audience & Intent",
+        "explanation": "Who is the target audience? What stage of awareness? (Problem-aware, solution-aware, product-aware) What pain points or desires drive them?"
+      },
+      {
+        "term": "4. Performance Data (if iterating)",
+        "explanation": "What creative is currently running? Which headlines/descriptions are performing best? (CTR, conversion rate, ROAS) Which are underperforming? What angles or themes have been tested?"
+      },
+      {
+        "term": "5. Constraints",
+        "explanation": "Brand voice guidelines or words to avoid? Compliance requirements? (Industry regulations, platform policies) Any mandatory elements? (Brand name, trademark symbols, disclaimers)"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill ad-creative",
+        "purpose": "Install the ad-creative skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill ad-creative"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

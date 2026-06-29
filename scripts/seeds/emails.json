@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/emails",
+  "skill": {
+    "name": "emails",
+    "description": "Use when writing lifecycle, launch, sales, onboarding, and retention email sequences so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help writing lifecycle, launch, sales, onboarding, and retention email sequences",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable emails workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Core Principles",
+        "explanation": "Core part of the emails workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "1. One Email, One Job",
+        "explanation": "Each email has one primary purpose One main CTA per email Don't try to do everything"
+      },
+      {
+        "term": "2. Value Before Ask",
+        "explanation": "Lead with usefulness Build trust through content Earn the right to sell"
+      },
+      {
+        "term": "3. Relevance Over Volume",
+        "explanation": "Fewer, better emails win Segment for relevance Quality frequency"
+      },
+      {
+        "term": "4. Clear Path Forward",
+        "explanation": "Every email moves them somewhere Links should do something useful Make next steps obvious"
+      },
+      {
+        "term": "Email Sequence Strategy",
+        "explanation": "Core part of the emails workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill emails",
+        "purpose": "Install the emails skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill emails"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

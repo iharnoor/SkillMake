@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/offers",
+  "skill": {
+    "name": "offers",
+    "description": "Use when designing offers, bundles, guarantees, bonuses, and purchase incentives so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help designing offers, bundles, guarantees, bonuses, and purchase incentives",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable offers workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Before Starting",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task."
+      },
+      {
+        "term": "Core Philosophy",
+        "explanation": "The offer is the thing, not the page. Better copy on a weak offer compounds slowly. A stronger offer with average copy converts immediately. Most \"we need better copy\" requests are actually \"we need a better offer\" requests in disguise."
+      },
+      {
+        "term": "When this skill matters",
+        "explanation": "You sell: Services — consulting, freelance, agency retainers, productized services Courses — async, cohort-based, live Coaching — 1:1, group, mastermind Info products — guides, swipe files, templates, communities"
+      },
+      {
+        "term": "When pricing does more of the work",
+        "explanation": "You sell: Self-serve SaaS with tiered subscriptions — the levers are mostly tier structure, value metric, and packaging; offer construction (bonuses, guarantees) is secondary Marketplaces — the offer is structural, not constructed"
+      },
+      {
+        "term": "The Value Equation",
+        "explanation": "The single most useful frame for offer design. Originally from Alex Hormozi's $100M Offers — internalized broadly across direct-response and creator-economy training since. Dream Outcome × Perceived Likelihood of Achievement"
+      },
+      {
+        "term": "The Anatomy of a Complete Offer",
+        "explanation": "A complete offer has six components. Skip any one and conversion suffers. Component Question it answers 1 Core deliverable What do they get? 2 Bonus stack What else do they get that makes the core feel undervalued?"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill offers",
+        "purpose": "Install the offers skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill offers"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

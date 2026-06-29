@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/cold-email",
+  "skill": {
+    "name": "cold-email",
+    "description": "Use when writing outbound campaigns, prospecting angles, and follow-up sequences so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help writing outbound campaigns, prospecting angles, and follow-up sequences",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable cold email workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Before Writing",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task."
+      },
+      {
+        "term": "Writing Principles",
+        "explanation": "Core part of the cold email workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "Write like a peer, not a vendor",
+        "explanation": "The email should read like it came from someone who understands their world — not someone trying to sell them something. Use contractions. Read it aloud. If it sounds like marketing copy, rewrite it."
+      },
+      {
+        "term": "Every sentence must earn its place",
+        "explanation": "Cold email is ruthlessly short. If a sentence doesn't move the reader toward replying, cut it. The best cold emails feel like they could have been shorter, not longer."
+      },
+      {
+        "term": "Personalization must connect to the problem",
+        "explanation": "If you remove the personalized opening and the email still makes sense, the personalization isn't working. The observation should naturally lead into why you're reaching out. See personalization.md for the 4-level system and research signals."
+      },
+      {
+        "term": "Lead with their world, not yours",
+        "explanation": "The reader should see their own situation reflected back. \"You/your\" should dominate over \"I/we.\" Don't open with who you are or what your company does."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill cold-email",
+        "purpose": "Install the cold-email skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill cold-email"
+      }
+    ],
+    "gotchas": [
+      "Do not write outbound before narrowing the ICP, trigger, pain, proof, and one clear CTA.",
+      "Personalization should change the reason for reaching out, not just insert a company name.",
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

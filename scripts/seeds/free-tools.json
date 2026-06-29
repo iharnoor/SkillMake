@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/free-tools",
+  "skill": {
+    "name": "free-tools",
+    "description": "Use when designing free tools, calculators, generators, and lead magnets for acquisition so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help designing free tools, calculators, generators, and lead magnets for acquisition",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable free tools workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Core Principles",
+        "explanation": "Core part of the free tools workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "1. Solve a Real Problem",
+        "explanation": "Tool must provide genuine value Solves a problem your audience actually has Useful even without your main product"
+      },
+      {
+        "term": "2. Adjacent to Core Product",
+        "explanation": "Related to what you sell Natural path from tool to product Educates on problem you solve"
+      },
+      {
+        "term": "3. Simple and Focused",
+        "explanation": "Does one thing well Low friction to use Immediate value"
+      },
+      {
+        "term": "4. Worth the Investment",
+        "explanation": "Lead value × expected leads build cost + maintenance"
+      },
+      {
+        "term": "Tool Types Overview",
+        "explanation": "Type Examples Best For Calculators ROI, savings, pricing estimators Decisions involving numbers Generators Templates, policies, names Creating something quickly Analyzers Website graders, SEO auditors Evaluating existing work"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill free-tools",
+        "purpose": "Install the free-tools skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill free-tools"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

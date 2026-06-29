@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/product-marketing",
+  "skill": {
+    "name": "product-marketing",
+    "description": "Use when creating or updating product marketing context, ICP, positioning, and messaging foundations so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help creating or updating product marketing context, ICP, positioning, and messaging foundations",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable product marketing workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Step 1: Check for Existing Context",
+        "explanation": "First, check if .agents/product-marketing.md already exists. Also check .claude/product-marketing.md and the legacy filename product-marketing-context.md (in either .agents/ or .claude/) for older setups — if found anywhere other than .agents/product-marketing.md, offer to move it to the canonical location."
+      },
+      {
+        "term": "Step 2: Gather Information",
+        "explanation": "If auto-drafting: Read the codebase: README, landing pages, marketing copy, about pages, meta descriptions, package.json, any existing docs Draft all sections based on what you find"
+      },
+      {
+        "term": "Sections to Capture",
+        "explanation": "Core part of the product marketing workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "1. Product Overview",
+        "explanation": "One-line description What it does (2-3 sentences) Product category (what \"shelf\" you sit on—how customers search for you) Product type (SaaS, marketplace, e-commerce, service, etc.)"
+      },
+      {
+        "term": "2. Target Audience",
+        "explanation": "Target company type (industry, size, stage) Target decision-makers (roles, departments) Primary use case (the main problem you solve) Jobs to be done (2-3 things customers \"hire\" you for)"
+      },
+      {
+        "term": "3. Personas (B2B only)",
+        "explanation": "If multiple stakeholders are involved in buying, capture for each: User, Champion, Decision Maker, Financial Buyer, Technical Influencer What each cares about, their challenge, and the value you promise them"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill product-marketing",
+        "purpose": "Install the product-marketing skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill product-marketing"
+      }
+    ],
+    "gotchas": [
+      "Keep the canonical context in .agents/product-marketing.md so every other marketing skill can reuse it.",
+      "Do not polish positioning language before collecting target audience, switching triggers, proof, and objections.",
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

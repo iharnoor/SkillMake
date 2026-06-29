@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/schema",
+  "skill": {
+    "name": "schema",
+    "description": "Use when adding structured data and schema markup for SEO and rich results so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help adding structured data and schema markup for SEO and rich results",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable schema workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Core Principles",
+        "explanation": "Core part of the schema workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "1. Accuracy First",
+        "explanation": "Schema must accurately represent page content Don't markup content that doesn't exist Keep updated when content changes"
+      },
+      {
+        "term": "2. Use JSON-LD",
+        "explanation": "Google recommends JSON-LD format Easier to implement and maintain Place in <head or end of <body"
+      },
+      {
+        "term": "3. Follow Google's Guidelines",
+        "explanation": "Only use markup Google supports Avoid spam tactics Review eligibility requirements"
+      },
+      {
+        "term": "4. Validate Everything",
+        "explanation": "Test before deploying Monitor Search Console Fix errors promptly"
+      },
+      {
+        "term": "Common Schema Types",
+        "explanation": "Type Use For Required Properties Organization Company homepage/about name, url WebSite Homepage (search box) name, url Article Blog posts, news headline, image, datePublished, author"
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill schema",
+        "purpose": "Install the schema skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill schema"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

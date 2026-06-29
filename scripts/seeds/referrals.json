@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/referrals",
+  "skill": {
+    "name": "referrals",
+    "description": "Use when designing referral loops, incentives, invite flows, and word-of-mouth programs so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help designing referral loops, incentives, invite flows, and word-of-mouth programs",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable referrals workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Before Starting",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task."
+      },
+      {
+        "term": "1. Program Type",
+        "explanation": "Customer referral program, affiliate program, or both? B2B or B2C? What's the average customer LTV? What's your current CAC from other channels?"
+      },
+      {
+        "term": "2. Current State",
+        "explanation": "Existing referral/affiliate program? Current referral rate (% who refer)? What incentives have you tried?"
+      },
+      {
+        "term": "3. Product Fit",
+        "explanation": "Is your product shareable? Does it have network effects? Do customers naturally talk about it?"
+      },
+      {
+        "term": "4. Resources",
+        "explanation": "Tools/platforms you use or consider? Budget for referral incentives?"
+      },
+      {
+        "term": "Referral vs. Affiliate",
+        "explanation": "Core part of the referrals workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill referrals",
+        "purpose": "Install the referrals skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill referrals"
+      }
+    ],
+    "gotchas": [
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps.",
+      "Pick a primary metric before launch so the result can be judged without retrofitting success criteria.",
+      "Respect channel mechanics; copy, cadence, and format should change between email, ads, social, SEO, and sales collateral."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}

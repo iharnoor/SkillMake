@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/sales-enablement",
+  "skill": {
+    "name": "sales-enablement",
+    "description": "Use when creating sales collateral, objection handling, battlecards, scripts, and handoff materials so the agent follows the marketingskills playbook instead of producing generic marketing advice.",
+    "whenToUse": [
+      "The user asks for help creating sales collateral, objection handling, battlecards, scripts, and handoff materials",
+      "A marketing task needs product, audience, positioning, and channel context before execution",
+      "The agent should create a repeatable sales enablement workflow instead of a one-off generic answer",
+      "The work needs clear success metrics, deliverables, and next steps for a growth or GTM motion"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Before Starting",
+        "explanation": "Check for product marketing context first: If .agents/product-marketing.md exists (or .claude/product-marketing.md, or the legacy product-marketing-context.md filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task."
+      },
+      {
+        "term": "Core Principles",
+        "explanation": "Core part of the sales enablement workflow; use it to keep the agent focused on concrete marketing inputs, decisions, and outputs instead of vague recommendations."
+      },
+      {
+        "term": "Sales Uses What Sales Trusts",
+        "explanation": "Involve reps in creation. Use their language, not marketing's. If reps rewrite your deck before sending it, you wrote the wrong deck. Test drafts with your top performers first."
+      },
+      {
+        "term": "Situation-Specific, Not Generic",
+        "explanation": "Tailor to persona, deal stage, and use case. A deck for a CTO should look different from one for a VP of Sales. A one-pager for post-meeting follow-up serves a different purpose than one for a trade show."
+      },
+      {
+        "term": "Scannable Over Comprehensive",
+        "explanation": "Reps need information in 3 seconds, not 30. Use bold headers, short bullets, and visual hierarchy. If a rep can't find the answer mid-call, the doc has failed."
+      },
+      {
+        "term": "Tie Back to Business Outcomes",
+        "explanation": "Every claim connects to revenue, efficiency, or risk reduction. Features mean nothing without the \"so what.\" Replace \"AI-powered analytics\" with \"cut reporting time by 80%.\""
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add coreyhaines31/marketingskills --skill sales-enablement",
+        "purpose": "Install the sales-enablement skill from coreyhaines31/marketingskills.",
+        "example": "npx skills add coreyhaines31/marketingskills --skill sales-enablement"
+      }
+    ],
+    "gotchas": [
+      "Do not create sales collateral without knowing the buyer stage, objection, proof point, and seller motion.",
+      "Battlecards should be factual and usable in conversation, not competitor hit pieces.",
+      "Read product-marketing context first when present; otherwise the agent may ask repeated setup questions or make weak positioning assumptions.",
+      "Do not ship generic best practices without tying recommendations to the product, audience, channel, and conversion goal.",
+      "Separate strategy from execution: clarify the campaign decision before drafting assets or implementation steps."
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/coreyhaines31/marketingskills"
+  }
+}
