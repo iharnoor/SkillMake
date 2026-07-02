@@ -1,0 +1,63 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/bio-research",
+  "skill": {
+    "name": "knowledge-work-bio-research",
+    "description": "Use when accelerating early-stage life sciences R&D with preclinical tools for literature search, genomics analysis, and drug target prioritization.",
+    "whenToUse": [
+      "Running QC on scRNA-seq data and then integrating or batch-correcting with deep-learning models",
+      "Running nf-core sequencing pipelines (RNA-seq, variant calling, ATAC-seq) on local or public GEO/SRA data",
+      "Searching biomedical literature and prioritizing drug targets for early discovery",
+      "Converting lab instrument output files to a standard Allotrope Simple Model format"
+    ],
+    "keyConcepts": [
+      {
+        "term": "single-cell-rna-qc skill",
+        "explanation": "Automated QC for scRNA-seq following scverse best practices, supporting .h5ad and .h5 files with MAD-based filtering and visualizations."
+      },
+      {
+        "term": "scvi-tools skill",
+        "explanation": "Deep-learning toolkit for single-cell omics covering scVI, scANVI, totalVI, PeakVI, MultiVI, DestVI, veloVI, and sysVI for integration, batch correction, label transfer, and multi-modal analysis."
+      },
+      {
+        "term": "nextflow-development skill",
+        "explanation": "Runs nf-core bioinformatics pipelines including rnaseq (differential expression), sarek (germline/somatic variant calling), and atacseq (chromatin accessibility)."
+      },
+      {
+        "term": "instrument-data-to-allotrope skill",
+        "explanation": "Converts instrument output (PDF, CSV, Excel, TXT) to Allotrope Simple Model format across 40+ instrument types like plate readers, qPCR, and chromatography systems."
+      },
+      {
+        "term": "scientific-problem-selection skill",
+        "explanation": "A systematic research problem-selection framework based on Fischbach & Walsh, covering ideation, risk assessment, optimization, decision trees, and synthesis."
+      },
+      {
+        "term": "11 MCP integrations",
+        "explanation": "Bundles data sources including NLM literature, bioRxiv/medRxiv, Consensus, OpenTargets, clinical trial registries, BioRender, and Benchling for research workflows."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install bio-research@knowledge-work-plugins",
+        "purpose": "Install the Bio-Research plugin.",
+        "example": "/plugin install bio-research@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "Some MCP servers (10X Genomics txg-mcp, ToolUniverse) require a separate binary download and are not bundled",
+      "Skills are Apache 2.0, but MCP servers are third-party — check each provider's own terms before use",
+      "Run the bundled /start command first to see which tools are actually connected and available",
+      "Benchling and several connectors are placeholders that must be wired up before genomics/lab workflows work",
+      "The plugin targets preclinical, early-stage R&D; it is not a substitute for validated clinical analysis"
+    ],
+    "category": "concept",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

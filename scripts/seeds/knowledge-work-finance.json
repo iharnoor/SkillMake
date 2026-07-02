@@ -1,0 +1,63 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/finance",
+  "skill": {
+    "name": "knowledge-work-finance",
+    "description": "Use when you need finance and accounting workflows — journal entries, reconciliation, financial statements, variance analysis, and month-end close support.",
+    "whenToUse": [
+      "Preparing journal entries — accruals, prepaids, fixed assets, payroll, revenue with debits/credits",
+      "Reconciling GL balances against subledger, bank, or third-party balances",
+      "Generating income statements with period-over-period comparison and flux analysis",
+      "Running SOX 404 control testing — sample selection, workpapers, deficiency classification"
+    ],
+    "keyConcepts": [
+      {
+        "term": "journal-entry-prep",
+        "explanation": "JE preparation best practices — standard accrual types, supporting documentation requirements, and review workflows, with proper debits and credits."
+      },
+      {
+        "term": "reconciliation",
+        "explanation": "Methodology for GL-to-subledger, bank recs, and intercompany, including reconciling-item categorization and aging."
+      },
+      {
+        "term": "variance-analysis",
+        "explanation": "Variance decomposition (price/volume, rate/mix) into drivers with materiality thresholds, narrative explanations, and waterfall charts."
+      },
+      {
+        "term": "close-management",
+        "explanation": "Month-end close checklist with task sequencing, dependencies, status tracking, and common close activities by day."
+      },
+      {
+        "term": "financial-statements",
+        "explanation": "Income statement, balance sheet, and cash flow formats with GAAP presentation and flux-analysis methodology."
+      },
+      {
+        "term": "audit-support",
+        "explanation": "SOX 404 control-testing methodology — sample selection, documentation standards, and deficiency classification."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install finance@knowledge-work-plugins",
+        "purpose": "Install the Finance & Accounting plugin.",
+        "example": "/plugin install finance@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "Primarily designed for Cowork, Anthropic's agentic desktop app, though it also runs in Claude Code",
+      "Does not provide financial, tax, or audit advice — all outputs must be reviewed by qualified professionals before use",
+      "Works best connected to ERP and data-warehouse MCP servers; without them you must paste or upload data",
+      "Commands take structured arguments like '/journal-entry ap-accrual 2024-12', not just free text",
+      "Month-end close is a sequenced flow — entries, then recs, then statements — so running steps out of order breaks dependencies"
+    ],
+    "category": "concept",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/pptx",
+  "skill": {
+    "name": "pptx",
+    "description": "Use when a .pptx file is involved in any way — creating decks, reading or extracting slide content, editing existing presentations, or working with templates, notes, and comments.",
+    "whenToUse": [
+      "Creating a slide deck, pitch deck, or presentation from scratch or a template",
+      "Reading or extracting text from a .pptx, even to reuse the content elsewhere",
+      "Editing, combining, or splitting existing presentations",
+      "Working with templates, layouts, speaker notes, or comments in a deck"
+    ],
+    "keyConcepts": [
+      {
+        "term": "markitdown for reading",
+        "explanation": "Text and content extraction runs through `python -m markitdown presentation.pptx`, which is also the tool used in content QA to catch missing content, typos, and leftover placeholders."
+      },
+      {
+        "term": "Unpack / edit / pack workflow",
+        "explanation": "Editing a template means analyzing it with thumbnail.py, then unpacking to raw XML, manipulating slides, editing content, cleaning, and repacking (detailed in editing.md)."
+      },
+      {
+        "term": "pptxgenjs for scratch decks",
+        "explanation": "When no template or reference presentation exists, decks are built from scratch with the pptxgenjs Node library (see pptxgenjs.md)."
+      },
+      {
+        "term": "Design guidance",
+        "explanation": "The skill pushes bold content-informed color palettes, a repeated visual motif, color dominance (60-70% one color), and a visual element on every slide — never plain title-plus-bullets."
+      },
+      {
+        "term": "Mandatory QA bug hunt",
+        "explanation": "QA is treated as an adversarial bug hunt with both content checks (markitdown, placeholder grep) and visual checks; success isn't declared until at least one fix-and-verify cycle completes."
+      },
+      {
+        "term": "Subagent visual inspection",
+        "explanation": "Slides are rendered to images via LibreOffice + pdftoppm and inspected by a fresh subagent, because the author's eyes see what they expect rather than what's there."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add anthropics/skills --skill pptx",
+        "purpose": "Install the PowerPoint (.pptx) skill.",
+        "example": "npx skills add anthropics/skills --skill pptx"
+      },
+      {
+        "signature": "python -m markitdown presentation.pptx",
+        "purpose": "Extract slide text for reading and content QA.",
+        "example": "python -m markitdown output.pptx | grep -iE \"xxxx|lorem|ipsum\""
+      },
+      {
+        "signature": "soffice.py --convert-to pdf + pdftoppm",
+        "purpose": "Render slides to images for visual QA inspection.",
+        "example": "python scripts/office/soffice.py --headless --convert-to pdf output.pptx\npdftoppm -jpeg -r 150 output.pdf slide"
+      }
+    ],
+    "gotchas": [
+      "NEVER put accent lines under titles — they're a hallmark of AI-generated slides; use whitespace or background color instead",
+      "Don't default to blue or Arial; pick a palette and font pairing informed by the specific topic",
+      "Don't create text-only slides — every slide needs an image, chart, icon, or shape",
+      "Your first render is almost never correct; do not declare success without a fix-and-verify cycle",
+      "Use subagents for visual QA even for 2-3 slides — you'll see what you expect, not what's there",
+      "After using a template, grep the output for leftover placeholder text (xxxx, lorem, ipsum) and fix before shipping"
+    ],
+    "category": "tool",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}

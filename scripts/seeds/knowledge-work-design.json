@@ -1,0 +1,63 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/design",
+  "skill": {
+    "name": "knowledge-work-design",
+    "description": "Use when running design workflows — critique, design-system management, UX writing, accessibility audits, research synthesis, and dev handoff — standalone or connected to Figma.",
+    "whenToUse": [
+      "Getting structured design feedback on usability, visual hierarchy, and consistency",
+      "Auditing, documenting, or extending a design system — components, tokens, patterns",
+      "Generating developer handoff specs — measurements, tokens, states, and edge cases",
+      "Running a WCAG accessibility audit for contrast, screen reader, and keyboard navigation"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Commands vs skills",
+        "explanation": "Commands are explicit slash workflows (/critique, /design-system, /handoff, /ux-copy, /accessibility, /research-synthesis); skills are domain knowledge Claude applies automatically."
+      },
+      {
+        "term": "design-critique skill",
+        "explanation": "Evaluates designs for usability, visual hierarchy, consistency, and adherence to design principles, backing the /critique command."
+      },
+      {
+        "term": "design-system-management skill",
+        "explanation": "Manages design tokens, component libraries, and pattern documentation behind the /design-system command."
+      },
+      {
+        "term": "accessibility-review skill",
+        "explanation": "Audits designs and code for WCAG 2.1 AA compliance, driving the /accessibility workflow."
+      },
+      {
+        "term": "ux-writing and user-research",
+        "explanation": "ux-writing produces clear, brand-aligned microcopy; user-research plans, conducts, and synthesizes interviews, surveys, and usability tests."
+      },
+      {
+        "term": "design-handoff skill",
+        "explanation": "Creates comprehensive developer handoff documentation from designs, behind the /handoff command."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install design@knowledge-work-plugins",
+        "purpose": "Install the Design plugin.",
+        "example": "/plugin install design@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "Primarily designed for Cowork, Anthropic's agentic desktop app, though it also works in Claude Code",
+      "Commands run standalone from a screenshot or description but are supercharged when you connect Figma",
+      "It's a plugin bundling seven skills, not a single skill; skills fire automatically while commands are invoked explicitly",
+      "/critique needs a Figma link, screenshot, or description — it won't invent the design under review",
+      "accessibility-review targets WCAG 2.1 AA specifically, not arbitrary or custom compliance levels"
+    ],
+    "category": "design",
+    "audience": "design",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

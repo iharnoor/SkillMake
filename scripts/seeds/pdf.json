@@ -1,0 +1,68 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/pdf",
+  "skill": {
+    "name": "pdf",
+    "description": "Use when a task involves a PDF file — extracting text or tables, merging or splitting, rotating, watermarking, filling forms, encrypting, OCR, or creating one — so the agent picks the right library or CLI tool.",
+    "whenToUse": [
+      "Extracting text or tables from a PDF, including scanned pages that need OCR",
+      "Merging, splitting, rotating, or watermarking pages across PDF files",
+      "Creating a new PDF from scratch or filling out a PDF form",
+      "Encrypting, decrypting, or extracting embedded images from a PDF"
+    ],
+    "keyConcepts": [
+      {
+        "term": "pypdf for structural edits",
+        "explanation": "The go-to Python library for merging, splitting, rotating, watermarking, and encrypting — you copy pages between a PdfReader and PdfWriter and write the result out."
+      },
+      {
+        "term": "pdfplumber for extraction",
+        "explanation": "Used to pull text with layout and to extract tables (page.extract_tables), which can be loaded into pandas DataFrames and exported to Excel."
+      },
+      {
+        "term": "reportlab for creation",
+        "explanation": "Builds new PDFs either with a low-level Canvas or the higher-level Platypus flow (SimpleDocTemplate, Paragraph, Spacer, PageBreak) for multi-page documents."
+      },
+      {
+        "term": "OCR for scanned PDFs",
+        "explanation": "Scanned documents are converted to images with pdf2image, then run through pytesseract to make the text searchable/extractable."
+      },
+      {
+        "term": "Command-line tools",
+        "explanation": "poppler-utils (pdftotext, pdfimages), qpdf, and pdftk handle merge/split/rotate/decrypt from the shell when a Python round-trip isn't warranted."
+      },
+      {
+        "term": "Progressive references",
+        "explanation": "SKILL.md is the quick start; REFERENCE.md covers advanced pypdfium2 and JavaScript (pdf-lib) usage, and FORMS.md must be read before filling any PDF form."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add anthropics/skills --skill pdf",
+        "purpose": "Install the PDF processing skill.",
+        "example": "npx skills add anthropics/skills --skill pdf"
+      },
+      {
+        "signature": "PdfReader / PdfWriter (pypdf)",
+        "purpose": "Read pages and assemble output for merge, split, rotate, watermark, and encrypt operations.",
+        "example": "from pypdf import PdfReader, PdfWriter\nwriter = PdfWriter()\nfor f in [\"doc1.pdf\", \"doc2.pdf\"]:\n    for page in PdfReader(f).pages:\n        writer.add_page(page)\nwith open(\"merged.pdf\", \"wb\") as out:\n    writer.write(out)"
+      },
+      {
+        "signature": "qpdf --empty --pages ... -- out.pdf",
+        "purpose": "Merge, split, rotate, or decrypt PDFs from the command line.",
+        "example": "qpdf --empty --pages file1.pdf file2.pdf -- merged.pdf\nqpdf --password=pw --decrypt encrypted.pdf decrypted.pdf"
+      }
+    ],
+    "gotchas": [
+      "Never use Unicode subscript/superscript glyphs in reportlab — the built-in fonts lack them and they render as black boxes; use <sub>/<super> tags in Paragraphs instead",
+      "Filling a PDF form requires reading FORMS.md first; don't wing it with generic page edits",
+      "Scanned PDFs have no extractable text layer — you must OCR via pdf2image + pytesseract before extraction works",
+      "Table extraction quality depends on pdfplumber over pypdf; pypdf's extract_text loses tabular structure",
+      "OCR and image conversion need system deps (tesseract, poppler) beyond the pip packages"
+    ],
+    "category": "tool",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}

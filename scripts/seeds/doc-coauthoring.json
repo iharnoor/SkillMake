@@ -1,0 +1,55 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring",
+  "skill": {
+    "name": "doc-coauthoring",
+    "description": "Use when a user wants to write a doc, proposal, spec, PRD, RFC, or decision doc, so the agent guides a structured workflow — gather context, refine section by section, then test it on a fresh reader.",
+    "whenToUse": [
+      "A user says 'write a doc', 'draft a proposal', 'create a spec', or names a PRD/RFC/design doc",
+      "Someone is starting a substantial writing task and needs help transferring context efficiently",
+      "Building a document section by section through brainstorm-curate-draft-refine loops",
+      "Checking whether a finished doc actually works for readers who lack the authors' context"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Three-stage workflow",
+        "explanation": "Context Gathering, Refinement & Structure, and Reader Testing. The agent acts as an active guide through each stage rather than just drafting, and offers a freeform path if the user declines the workflow."
+      },
+      {
+        "term": "Stage 1: Context Gathering",
+        "explanation": "Close the gap between what the user knows and what Claude knows. Start with meta-questions (doc type, audience, desired impact, template), invite an unstructured info-dump, then ask 5-10 clarifying questions once gaps are visible."
+      },
+      {
+        "term": "Stage 2: brainstorm → curate → draft → refine",
+        "explanation": "For each section: ask clarifying questions, brainstorm 5-20 options, let the user keep/remove/combine them, draft with a scaffold, then refine via surgical str_replace edits. Start with the highest-unknown section; leave summaries for last."
+      },
+      {
+        "term": "Stage 3: Reader Testing",
+        "explanation": "Test the doc against a fresh Claude with no conversation context. Predict 5-10 reader questions, run them (via sub-agent in Claude Code, or manually in claude.ai), and check for ambiguity, false assumptions, and contradictions."
+      },
+      {
+        "term": "Edit surgically, never reprint",
+        "explanation": "Use create_file for the scaffold and str_replace for every edit; never reprint the whole doc, and never put brainstorming lists into an artifact — those stay in conversation."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add anthropics/skills --skill doc-coauthoring",
+        "purpose": "Install the document co-authoring workflow skill.",
+        "example": "npx skills add anthropics/skills --skill doc-coauthoring"
+      }
+    ],
+    "gotchas": [
+      "Offer the workflow first and honor a decline — if the user wants freeform, don't force the three stages",
+      "Reader Testing must use a fresh Claude with no context bleed, or it won't catch the blind spots authors can't see",
+      "Learn the user's style from their keep/remove feedback and prior edits; ask them to describe changes rather than editing silently",
+      "Use str_replace for edits and never reprint the whole document after each change",
+      "Flag images without alt-text — readers who paste the doc into Claude can't see un-described images",
+      "If a stage drags, acknowledge it and offer to move faster; always give the user agency to adjust the process"
+    ],
+    "category": "concept",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}

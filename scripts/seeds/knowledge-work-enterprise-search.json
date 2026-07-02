@@ -1,0 +1,59 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/enterprise-search",
+  "skill": {
+    "name": "knowledge-work-enterprise-search",
+    "description": "Use when you need to search across all your company's tools at once — email, chat, documents, and wikis — and get one synthesized answer without switching apps.",
+    "whenToUse": [
+      "Answering a question that spans chat, email, and cloud docs in a single query",
+      "Finding where a decision was made across scattered sources with attribution",
+      "Generating a daily or weekly digest of activity across all connected tools",
+      "Searching with filters like from:, in:, after: applied across each source's native syntax"
+    ],
+    "keyConcepts": [
+      {
+        "term": "search-strategy",
+        "explanation": "Query decomposition and source-specific translation — breaks a natural-language question into targeted searches per source, handles ambiguity, and falls back gracefully when a source is unavailable."
+      },
+      {
+        "term": "knowledge-synthesis",
+        "explanation": "Merges results from every source into a single coherent answer with source attribution, instead of returning separate raw result lists."
+      },
+      {
+        "term": "source-management",
+        "explanation": "Each searchable source is an MCP connection — chat, email, cloud storage, wiki, project management, CRM, ticketing — added and managed in MCP settings."
+      },
+      {
+        "term": "digest",
+        "explanation": "Generates daily (--daily) or weekly (--weekly) rollups of activity, highlighting action items, decisions, and mentions of you, grouped by topic."
+      },
+      {
+        "term": "search command",
+        "explanation": "/enterprise-search:search runs one query across all connected sources, supporting from:, in:, after:, before:, and type: filters intelligently."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install enterprise-search@knowledge-work-plugins",
+        "purpose": "Install the Enterprise Search plugin.",
+        "example": "/plugin install enterprise-search@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "Primarily designed for Cowork, Anthropic's agentic desktop app, though it also runs in Claude Code",
+      "Answer completeness scales with connected sources — unconnected tools are simply invisible to the search",
+      "Each source is a separate MCP connection you configure in MCP settings before it can be queried",
+      "Filters are translated to each source's native query syntax, so results can vary by source capability",
+      "Check CONNECTORS.md if you see unfamiliar placeholders or need to verify which tools are wired up"
+    ],
+    "category": "tool",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

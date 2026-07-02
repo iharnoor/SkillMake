@@ -1,0 +1,63 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/engineering",
+  "skill": {
+    "name": "knowledge-work-engineering",
+    "description": "Use when running engineering workflows — standups, code review, architecture decisions, incident response, and technical docs — standalone or wired to your source control, tracker, and monitoring.",
+    "whenToUse": [
+      "Generating a standup update from recent commits, PRs, tickets, and chat activity",
+      "Reviewing a PR or diff for security, performance, correctness, and style",
+      "Writing an architecture decision record with trade-off analysis",
+      "Running an incident from triage through communication, mitigation, and postmortem"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Commands vs skills",
+        "explanation": "Commands are explicit slash workflows you invoke (/standup, /review, /debug, /architecture, /incident, /deploy-checklist); skills are domain knowledge Claude applies automatically when relevant."
+      },
+      {
+        "term": "code-review skill",
+        "explanation": "Reviews code changes for bugs, security issues, performance, and maintainability, backing the /review command on a PR link, diff, or files."
+      },
+      {
+        "term": "incident-response skill",
+        "explanation": "Triages and manages production incidents — status updates, runbooks, and postmortems — driving the /incident workflow end to end."
+      },
+      {
+        "term": "system-design skill",
+        "explanation": "Designs systems and services with architecture diagrams, API design, and data modeling, backing the ADR-format /architecture command."
+      },
+      {
+        "term": "tech-debt and testing-strategy",
+        "explanation": "tech-debt identifies, categorizes, and prioritizes remediation; testing-strategy designs unit, integration, and e2e coverage and test plans."
+      },
+      {
+        "term": "Standalone or MCP-supercharged",
+        "explanation": "Every command works standalone by pasting code or describing the system, and gets supercharged when you connect source control, project tracker, and monitoring MCP connectors."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install engineering@knowledge-work-plugins",
+        "purpose": "Install the Engineering plugin.",
+        "example": "/plugin install engineering@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "Primarily designed for Cowork, Anthropic's agentic desktop app, though it also works in Claude Code",
+      "Commands run standalone but only pull real commits, PRs, and tickets once you connect MCP connectors",
+      "/standup with no connected tools falls back to you describing what you worked on",
+      "/review expects a PR link, diff, or file pointer — it won't guess which changes to review",
+      "It's a plugin bundling ten skills, not a single skill; skills fire automatically while commands are invoked explicitly"
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

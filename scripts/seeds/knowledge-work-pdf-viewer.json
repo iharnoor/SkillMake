@@ -1,0 +1,59 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/pdf-viewer",
+  "skill": {
+    "name": "knowledge-work-pdf-viewer",
+    "description": "Use when you need to view, annotate, or sign PDFs in a live interactive viewer — marking up contracts, filling forms, and stamping approvals, then downloading the annotated copy.",
+    "whenToUse": [
+      "Opening a PDF from a local file or academic source (arXiv, bioRxiv) in a visual viewer",
+      "Annotating a document — proposing highlights, notes, and stamps section by section for review",
+      "Filling PDF form fields interactively with live preview",
+      "Placing a signature or initials image, or stamping APPROVED/DRAFT/CONFIDENTIAL"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Interactive viewer commands",
+        "explanation": "Four commands: /pdf-viewer:open, /pdf-viewer:annotate, /pdf-viewer:fill-form, and /pdf-viewer:sign, backed by the view-pdf skill."
+      },
+      {
+        "term": "Collaborative annotation",
+        "explanation": "Claude proposes highlights, notes, and stamps section by section, and you review each batch in the viewer before it's applied."
+      },
+      {
+        "term": "Local MCP server",
+        "explanation": "Runs @modelcontextprotocol/server-pdf on your machine via npx — no API keys or remote services; the PDF server starts automatically when the plugin loads."
+      },
+      {
+        "term": "Supported PDF sources",
+        "explanation": "Local file paths, arXiv /abs/ URLs that auto-convert to PDF, and any direct HTTPS PDF URL (bioRxiv, Zenodo, OSF) — use the PDF link, not the landing page."
+      },
+      {
+        "term": "Visual, not cryptographic, signing",
+        "explanation": "/pdf-viewer:sign places a visual signature image on the page; it is not a certified or cryptographic e-signature."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install pdf-viewer@knowledge-work-plugins",
+        "purpose": "Install the PDF Viewer plugin.",
+        "example": "/plugin install pdf-viewer@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "Don't use this for pure text extraction or summary — Claude reads PDFs natively and that's faster",
+      "Requires Node.js >= 18, and internet access for remote PDFs like arXiv",
+      "Signatures are visual images, not legally binding e-signatures — use a dedicated signing service for that",
+      "For remote sources, point at the direct PDF link, not the landing page, or it won't open",
+      "The local MCP server runs via npx on your machine and starts automatically when the plugin loads"
+    ],
+    "category": "tool",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

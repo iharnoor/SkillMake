@@ -1,0 +1,54 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/brand-guidelines",
+  "skill": {
+    "name": "brand-guidelines",
+    "description": "Use when an artifact should carry Anthropic's look-and-feel — applying the official brand colors and Poppins/Lora typography to documents, slides, or other visual output.",
+    "whenToUse": [
+      "Styling a presentation, document, or artifact to match Anthropic's brand colors and fonts",
+      "Applying Poppins to headings and Lora to body text with sensible Arial/Georgia fallbacks",
+      "Post-processing an existing deliverable so its visual formatting is on-brand",
+      "Choosing accent colors for shapes and non-text elements from Anthropic's palette"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Main color palette",
+        "explanation": "Dark #141413 for primary text and dark backgrounds, Light #faf9f5 for light backgrounds and text on dark, Mid Gray #b0aea5 for secondary elements, and Light Gray #e8e6dc for subtle backgrounds."
+      },
+      {
+        "term": "Accent colors",
+        "explanation": "Orange #d97757 is the primary accent, Blue #6a9bcc the secondary, and Green #788c5d the tertiary. Non-text shapes cycle through these to add interest while staying on-brand."
+      },
+      {
+        "term": "Typography pairing",
+        "explanation": "Poppins for headings (24pt and larger) with an Arial fallback; Lora for body text with a Georgia fallback. This preserves text hierarchy and readability across systems."
+      },
+      {
+        "term": "Smart font application",
+        "explanation": "The skill applies Poppins to large headings and Lora to body automatically, and falls back to Arial/Georgia when the custom fonts aren't installed — no font installation strictly required."
+      },
+      {
+        "term": "RGB color fidelity via python-pptx",
+        "explanation": "Colors are applied using precise RGB values through python-pptx's RGBColor class so brand matching stays exact across different systems."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add anthropics/skills --skill brand-guidelines",
+        "purpose": "Install the Anthropic brand styling skill.",
+        "example": "npx skills add anthropics/skills --skill brand-guidelines"
+      }
+    ],
+    "gotchas": [
+      "Poppins and Lora aren't guaranteed installed; pre-install them in your environment or the output falls back to Arial/Georgia",
+      "The Poppins/Lora split keys off size — headings are treated as 24pt and larger, so mis-sized headings won't get the heading font",
+      "Use accent colors (orange/blue/green) only for non-text shapes; text color is chosen for readability against its background",
+      "Color values are exact hex/RGB — approximating them breaks brand fidelity across systems",
+      "Color application is wired through python-pptx's RGBColor, so it's oriented toward PowerPoint-style artifacts"
+    ],
+    "category": "design",
+    "audience": "design",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/internal-comms",
+  "skill": {
+    "name": "internal-comms",
+    "description": "Use when writing internal company communications — status reports, leadership updates, 3P updates, newsletters, FAQs, incident reports — so the agent matches your company's preferred formats and tone.",
+    "whenToUse": [
+      "Drafting a weekly 3P update (Progress, Plans, Problems) for a team or leadership",
+      "Writing a company-wide newsletter that needs a consistent house voice",
+      "Answering an FAQ or common question in the company's standard format",
+      "Producing a status report, project update, or incident report for internal readers"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Communication-type routing",
+        "explanation": "The skill first classifies the request into a known type (3P update, newsletter, FAQ, general) and loads the matching guideline file so formatting and tone fit that specific format rather than a generic template."
+      },
+      {
+        "term": "3P updates (Progress, Plans, Problems)",
+        "explanation": "A structured team-update format organized around what shipped (Progress), what's next (Plans), and what's blocked or risky (Problems). Backed by its own guideline in examples/3p-updates.md."
+      },
+      {
+        "term": "Format-specific guideline files",
+        "explanation": "Each comms type has a dedicated guide in the examples/ directory (3p-updates.md, company-newsletter.md, faq-answers.md, general-comms.md) that dictates content gathering, tone, and layout."
+      },
+      {
+        "term": "General-comms fallback",
+        "explanation": "Anything that doesn't match a named type routes to general-comms.md; if even that doesn't fit, the skill asks for clarification instead of guessing the desired format."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add anthropics/skills --skill internal-comms",
+        "purpose": "Install the internal communications writing skill.",
+        "example": "npx skills add anthropics/skills --skill internal-comms"
+      }
+    ],
+    "gotchas": [
+      "The skill only shines when the request clearly names a comms type; vague asks land in the general fallback",
+      "Formatting and tone come from the loaded guideline file, so skipping that load produces off-brand output",
+      "If the type matches no existing guideline, the intended behavior is to ask for clarification, not invent a format",
+      "It's tuned to one company's preferred formats; another org's conventions won't be encoded unless you adapt the examples"
+    ],
+    "category": "concept",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}

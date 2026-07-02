@@ -1,0 +1,64 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/web-artifacts-builder",
+  "skill": {
+    "name": "web-artifacts-builder",
+    "description": "Use when building an elaborate multi-component claude.ai HTML artifact with React, Tailwind, and shadcn/ui that needs state, routing, or shadcn components — not for simple single-file artifacts.",
+    "whenToUse": [
+      "Building a claude.ai artifact that needs real state management or client-side routing",
+      "Assembling an artifact from multiple shadcn/ui components rather than a single JSX blob",
+      "Bundling a React + TypeScript + Vite app down to one self-contained shareable HTML file",
+      "Deciding whether an artifact is complex enough to warrant the full frontend toolchain over inline HTML"
+    ],
+    "keyConcepts": [
+      {
+        "term": "React + Vite + Parcel + Tailwind + shadcn/ui stack",
+        "explanation": "The artifact is developed as a React 18 + TypeScript project via Vite, styled with Tailwind and shadcn/ui, then bundled with Parcel into a single HTML file."
+      },
+      {
+        "term": "init-artifact.sh scaffold",
+        "explanation": "scripts/init-artifact.sh creates a fully configured project: Tailwind 3.4.1 with shadcn theming, @/ path aliases, 40+ shadcn components, Radix deps, Parcel config, and Node 18+ compatibility."
+      },
+      {
+        "term": "bundle-artifact.sh single-file output",
+        "explanation": "scripts/bundle-artifact.sh builds with Parcel and inlines all JS, CSS, and dependencies into bundle.html — a self-contained artifact you can drop directly into a Claude conversation."
+      },
+      {
+        "term": "Avoiding AI slop",
+        "explanation": "The skill explicitly warns against excessive centered layouts, purple gradients, uniform rounded corners, and the Inter font — the tells of generic AI-generated UI."
+      },
+      {
+        "term": "Test-later workflow",
+        "explanation": "Present the finished artifact first; testing/visualizing (via Playwright, Puppeteer, or other tools) is optional and deferred to avoid latency, done only if requested or if issues arise."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add anthropics/skills --skill web-artifacts-builder",
+        "purpose": "Install the web artifacts builder skill.",
+        "example": "npx skills add anthropics/skills --skill web-artifacts-builder"
+      },
+      {
+        "signature": "bash scripts/init-artifact.sh <project-name>",
+        "purpose": "Scaffold a fully configured React + Tailwind + shadcn/ui artifact project.",
+        "example": "bash scripts/init-artifact.sh my-artifact\ncd my-artifact"
+      },
+      {
+        "signature": "bash scripts/bundle-artifact.sh",
+        "purpose": "Bundle the React app into a single self-contained bundle.html for sharing.",
+        "example": "bash scripts/bundle-artifact.sh"
+      }
+    ],
+    "gotchas": [
+      "Don't reach for this on simple single-file HTML/JSX artifacts — the toolchain overhead isn't worth it",
+      "bundle-artifact.sh requires an index.html in the project root or the build fails",
+      "Avoid AI-slop tells: excessive centered layouts, purple gradients, uniform rounded corners, and the Inter font",
+      "Don't test the artifact upfront — it adds latency between the request and a viewable result; test after presenting if needed",
+      "The scaffold auto-detects and pins a Vite version for Node 18+ compatibility; running on older Node can break setup"
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}
