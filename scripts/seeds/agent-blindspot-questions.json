@@ -1,0 +1,59 @@
+{
+  "sourceUrl": "https://x.com",
+  "skill": {
+    "name": "agent-blindspot-questions",
+    "description": "Use two questions to surface what an AI agent skipped or is unsure about before you trust its work — its low-confidence list and its 'what am I missing?' blind spots.",
+    "whenToUse": [
+      "An agent hands back a confident answer and you want to stress-test it before acting",
+      "Before merging, shipping, or deciding on something the agent produced",
+      "You suspect the model glossed over details or made unstated assumptions",
+      "You want the agent to self-audit instead of you manually hunting for gaps",
+      "A plan or analysis feels too clean and you want the risks it didn't volunteer"
+    ],
+    "keyConcepts": [
+      {
+        "term": "The confidence question",
+        "explanation": "Ask: 'What are you least confident about right now?' The model will list 6-7 things it never properly investigated. Roughly 1 in 4 times, one of them turns out to be a big deal — a wrong assumption or an unchecked path it silently glossed over."
+      },
+      {
+        "term": "Investigate the list exhaustively",
+        "explanation": "Once it surfaces the low-confidence items, follow up with 'investigate each one exhaustively, find the root cause.' This converts a vague hedge into concrete verification work instead of leaving the uncertainty buried."
+      },
+      {
+        "term": "The blind-spot question (Sam Altman's)",
+        "explanation": "Ask: 'What's the biggest thing I'm missing about this situation? What don't I realize?' It pulls out framing errors and unstated assumptions the model saw but didn't consider worth raising unprompted."
+      },
+      {
+        "term": "The model knows what it skipped",
+        "explanation": "Models generally track what they didn't investigate or were unsure about — they just don't volunteer it unless asked. These questions make the skipped work explicit rather than letting a confident tone hide it."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Least-confident prompt",
+        "purpose": "Surface the things the agent never properly investigated.",
+        "example": "What are you least confident about right now?"
+      },
+      {
+        "signature": "Exhaustive-investigation follow-up",
+        "purpose": "Turn the low-confidence list into real root-cause verification.",
+        "example": "Investigate each one exhaustively, find the root cause."
+      },
+      {
+        "signature": "Blind-spot prompt",
+        "purpose": "Expose framing errors and unstated assumptions the model didn't raise.",
+        "example": "What's the biggest thing I'm missing about this situation? What don't I realize?"
+      }
+    ],
+    "gotchas": [
+      "Not every low-confidence item is a real problem — expect noise, and triage the list rather than chasing all 6-7 blindly",
+      "'Investigate exhaustively' can burn tokens; scope it if the list is long",
+      "These prompts reduce, but don't eliminate, missed issues — treat them as a fast self-audit, not a guarantee",
+      "Ask before you act on the agent's work, not after you've already shipped it"
+    ],
+    "category": "concept",
+    "audience": "general",
+    "trust": "community",
+    "videoUrls": []
+  }
+}

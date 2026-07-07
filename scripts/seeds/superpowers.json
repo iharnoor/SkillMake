@@ -2,19 +2,23 @@
   "sourceUrl": "https://github.com/obra/superpowers",
   "skill": {
     "name": "superpowers",
-    "description": "Use when you want a full agentic software-development methodology — brainstorm, worktree, plan, TDD, subagent review, and land — wired into your coding agent.",
+    "description": "Use when you want a full agentic dev methodology — brainstorm, worktree, plan, TDD, subagent review, and land — wired into your coding agent. v6 combines review agents for up to 50% faster, 60% cheaper builds.",
     "whenToUse": [
       "Starting a non-trivial feature and you want an opinionated plan-first workflow",
       "Spinning up isolated git worktrees per task instead of mutating main",
       "Driving development through RED-GREEN-REFACTOR TDD instead of ad-hoc coding",
       "Dispatching subagents to execute bite-sized 2-5 minute tasks with review gates",
       "Running a pre-merge code review pass that blocks on critical severity issues",
-      "Standardizing on a 'systematic over ad-hoc' workflow across Claude Code, Codex, Cursor, Gemini, Droid, or Copilot CLI"
+      "Standardizing on a 'systematic over ad-hoc' workflow across Claude Code, Codex, OpenCode, Cursor, Pi, Antigravity, Kimi Code, Droid, or Copilot CLI"
     ],
     "keyConcepts": [
       {
         "term": "Brainstorming stage",
         "explanation": "Superpowers begins by refining rough ideas through questions, exploring alternatives, and presenting the design in sections for validation before any code is written, so scope is locked in before execution starts."
+      },
+      {
+        "term": "Visual Brainstorming",
+        "explanation": "An optional design-visualization step in the brainstorm workflow that renders the design so you can validate the shape of the work visually, not just in prose. Disableable via environment variable."
       },
       {
         "term": "Git worktrees per task",
@@ -26,7 +30,7 @@
       },
       {
         "term": "Subagent-driven development",
-        "explanation": "Tasks are dispatched to fresh subagents that execute one task per session, with a two-stage review process between subagent output and the main agent committing the change."
+        "explanation": "Tasks are dispatched to fresh subagents that execute one task per session, with a two-stage review — first checking specification compliance, then code quality — before the main agent commits the change."
       },
       {
         "term": "TDD as the primary loop",
@@ -35,6 +39,10 @@
       {
         "term": "Branch completion gate",
         "explanation": "Before landing, the framework verifies tests pass against the original plan, reports issues by severity, and presents merge / PR / keep / discard options. Critical issues block progress until resolved."
+      },
+      {
+        "term": "v6 efficiency pass",
+        "explanation": "Superpowers 6 combines the review agents, pre-generates review packages to cut git commands, and tunes orchestrator guidance for agent selection — landing builds up to 50% faster and up to 60% cheaper than prior versions."
       }
     ],
     "apiReference": [
@@ -44,14 +52,34 @@
         "example": "/plugin install superpowers@claude-plugins-official"
       },
       {
+        "signature": "/plugins → search superpowers (Codex)",
+        "purpose": "Install Superpowers into Codex CLI/App: open /plugins, search 'superpowers', and select Install.",
+        "example": "/plugins"
+      },
+      {
+        "signature": "OpenCode INSTALL.md",
+        "purpose": "Install Superpowers into OpenCode by following the repo's OpenCode install instructions.",
+        "example": "Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.opencode/INSTALL.md"
+      },
+      {
         "signature": "/add-plugin superpowers (Cursor)",
         "purpose": "Install Superpowers into Cursor via its plugin command.",
         "example": "/add-plugin superpowers"
       },
       {
-        "signature": "gemini extensions install <repo>",
-        "purpose": "Install Superpowers as a Gemini CLI extension directly from the GitHub repo.",
-        "example": "gemini extensions install https://github.com/obra/superpowers\ngemini extensions update superpowers"
+        "signature": "pi install git:github.com/obra/superpowers",
+        "purpose": "Install Superpowers into Pi directly from the GitHub repo.",
+        "example": "pi install git:github.com/obra/superpowers"
+      },
+      {
+        "signature": "agy plugin install <repo> (Antigravity)",
+        "purpose": "Install Superpowers into Antigravity from the GitHub repo.",
+        "example": "agy plugin install https://github.com/obra/superpowers"
+      },
+      {
+        "signature": "/plugins install <repo> (Kimi Code)",
+        "purpose": "Install Superpowers into Kimi Code via the plugin marketplace or repo URL.",
+        "example": "/plugins install https://github.com/obra/superpowers"
       },
       {
         "signature": "droid plugin marketplace add / install",
@@ -69,7 +97,8 @@
       "Critical-severity issues from the code review stage block progress; you cannot land a branch over them",
       "RED-GREEN-REFACTOR is mandatory: you must actually watch the test fail before writing implementation code",
       "Worktree-per-branch means project setup has to be verified inside the new worktree, not assumed from the parent checkout",
-      "Skipping the brainstorm stage and jumping to plans defeats the methodology — design validation in sections is load-bearing"
+      "Skipping the brainstorm stage and jumping to plans defeats the methodology — design validation in sections is load-bearing",
+      "Gemini is no longer in the documented agent list as of v6 — supported harnesses are Claude Code, Codex, OpenCode, Cursor, Pi, Antigravity, Kimi Code, Droid, and Copilot CLI"
     ],
     "category": "framework",
     "audience": "engineers",
