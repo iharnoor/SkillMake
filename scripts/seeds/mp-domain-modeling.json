@@ -1,0 +1,47 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/domain-modeling/SKILL.md",
+  "skill": {
+    "name": "mp-domain-modeling",
+    "description": "Use when pinning down domain terminology or a ubiquitous language, recording an architectural decision, or actively building and sharpening a project's domain model.",
+    "whenToUse": [
+      "Pinning down domain terminology or a ubiquitous language",
+      "Challenging fuzzy or overloaded terms as they come up in design",
+      "Recording an architectural decision that's hard to reverse",
+      "Another skill needs to maintain the domain model, not just read it"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Active discipline, not reading",
+        "explanation": "This skill is for changing the model — challenging terms, inventing edge-case scenarios, writing the glossary and decisions the moment they crystallise. Merely reading CONTEXT.md for vocabulary is a one-line habit, not this skill."
+      },
+      {
+        "term": "CONTEXT.md is a glossary, nothing else",
+        "explanation": "CONTEXT.md is devoid of implementation details — not a spec, scratchpad, or decision store. A CONTEXT-MAP.md at the root signals multiple bounded contexts, each with its own CONTEXT.md and docs/adr/."
+      },
+      {
+        "term": "Challenge and sharpen language",
+        "explanation": "When a term conflicts with the glossary, call it out immediately. When language is vague or overloaded ('account' — Customer or User?), propose a precise canonical term. Stress-test relationships with concrete edge-case scenarios."
+      },
+      {
+        "term": "Cross-reference with code",
+        "explanation": "When the user states how something works, check whether the code agrees, and surface contradictions: 'Your code cancels entire Orders, but you said partial cancellation is possible — which is right?'"
+      },
+      {
+        "term": "Capture inline, lazily",
+        "explanation": "Update CONTEXT.md the moment a term resolves — don't batch. Create files only when there's something to write: CONTEXT.md on the first resolved term, docs/adr/ on the first needed ADR."
+      }
+    ],
+    "apiReference": [],
+    "gotchas": [
+      "Offer an ADR sparingly — only when the decision is hard to reverse (and the other criteria hold), not for every choice",
+      "Keep implementation details out of CONTEXT.md entirely",
+      "Don't batch glossary updates — capture each term as it's resolved",
+      "A CONTEXT-MAP.md means multiple contexts; decisions may be system-wide (root docs/adr/) or context-specific"
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

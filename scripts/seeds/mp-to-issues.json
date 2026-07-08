@@ -1,5 +1,5 @@
 {
-  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/to-issues/SKILL.md",
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/to-tickets/SKILL.md",
   "skill": {
     "name": "mp-to-issues",
     "description": "Use when breaking a plan, spec, or PRD into independently-grabbable tracker issues — vertical tracer-bullet slices that cut through every layer end-to-end, each one demoable on its own.",

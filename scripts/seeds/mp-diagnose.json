@@ -1,5 +1,5 @@
 {
-  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/diagnose/SKILL.md",
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/diagnosing-bugs/SKILL.md",
   "skill": {
     "name": "mp-diagnose",
     "description": "Use when chasing hard bugs or perf regressions \u2014 disciplined reproduce\u2192minimise\u2192hypothesise\u2192instrument\u2192fix\u2192regression-test loop, with feedback loop quality treated as the actual skill.",

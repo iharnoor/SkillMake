@@ -1,0 +1,47 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/personal/obsidian-vault/SKILL.md",
+  "skill": {
+    "name": "mp-obsidian-vault",
+    "description": "Use when finding, creating, or organizing notes in an Obsidian vault — a flat, wikilink-and-index-note convention instead of folders.",
+    "whenToUse": [
+      "Searching an Obsidian vault by filename or content",
+      "Creating a new note that follows the vault's conventions",
+      "Finding notes related to or backlinking a given note",
+      "Organizing knowledge via index notes rather than folders"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Flat, link-first structure",
+        "explanation": "The vault is mostly flat at the root — no folders for organization. Structure comes from links and index notes, not directories."
+      },
+      {
+        "term": "Index notes",
+        "explanation": "Index notes aggregate related topics (e.g. 'Skills Index.md', 'RAG Index.md') and are just lists of [[wikilinks]] pointing at the member notes."
+      },
+      {
+        "term": "Wikilinks",
+        "explanation": "Link with Obsidian [[wikilinks]] syntax. Notes link to their dependencies/related notes at the bottom; backlinks are found by grepping for [[Note Title]] across the vault."
+      },
+      {
+        "term": "Naming conventions",
+        "explanation": "All note names use Title Case. Numbered sequences use a hierarchical numbering scheme. Content is written as a unit of learning per the vault's rules."
+      },
+      {
+        "term": "Search workflows",
+        "explanation": "Find by filename (find ... -name '*.md' | grep -i keyword) or by content (grep -rl keyword ... --include='*.md'), or use Grep/Glob directly on the vault path."
+      }
+    ],
+    "apiReference": [],
+    "gotchas": [
+      "Don't create folders to organize — use index notes and links instead",
+      "Use Title Case for every note name",
+      "Add related-note [[wikilinks]] at the bottom of each note",
+      "The vault path is environment-specific — confirm the location before writing"
+    ],
+    "category": "tool",
+    "audience": "general",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

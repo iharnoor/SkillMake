@@ -1,0 +1,47 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/resolving-merge-conflicts/SKILL.md",
+  "skill": {
+    "name": "mp-resolve-merge-conflicts",
+    "description": "Use when resolving an in-progress git merge or rebase conflict — understand each side's intent from primary sources, preserve both where possible, then finish the merge.",
+    "whenToUse": [
+      "A git merge or rebase is in progress with conflicts to resolve",
+      "You need to reconcile two changes without losing either intent",
+      "You want conflicts resolved from original intent, not guesswork",
+      "You need the merge finished and verified, not aborted"
+    ],
+    "keyConcepts": [
+      {
+        "term": "See the current state",
+        "explanation": "Start by inspecting the merge/rebase state — git history and the conflicting files — before touching anything."
+      },
+      {
+        "term": "Find the primary sources",
+        "explanation": "For each conflict, understand deeply why each change was made: read commit messages, check the PRs, and check the original issues/tickets. Resolve from intent, not from the text alone."
+      },
+      {
+        "term": "Preserve both intents",
+        "explanation": "Resolve each hunk preserving both intents where possible; where incompatible, pick the one matching the merge's stated goal and note the trade-off. Never invent new behaviour."
+      },
+      {
+        "term": "Run the project's checks",
+        "explanation": "Discover the project's automated checks — typically typecheck, then tests, then format — and run them, fixing anything the merge broke."
+      },
+      {
+        "term": "Always finish the merge",
+        "explanation": "Stage everything and commit; if rebasing, continue until all commits are rebased. Always resolve — never `--abort`."
+      }
+    ],
+    "apiReference": [],
+    "gotchas": [
+      "Never `git --abort` — always resolve the conflict through",
+      "Don't invent new behaviour while resolving; preserve existing intents",
+      "When intents are incompatible, follow the merge's stated goal and record the trade-off",
+      "Run the project's checks after resolving and fix what the merge broke before committing"
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

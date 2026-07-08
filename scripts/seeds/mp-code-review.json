@@ -1,0 +1,48 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/code-review/SKILL.md",
+  "skill": {
+    "name": "mp-code-review",
+    "description": "Use when reviewing a branch, PR, or work-in-progress: reviews the diff since a fixed point along two axes — Standards and Spec — in parallel sub-agents.",
+    "whenToUse": [
+      "Reviewing a branch, PR, or uncommitted changes before merge",
+      "Asked to 'review since X' where X is a commit, branch, tag, or merge-base",
+      "You want a standards check and a spec-conformance check that don't pollute each other's context",
+      "Checking whether code both follows repo conventions and implements what the originating issue asked for"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Two-axis review",
+        "explanation": "Every review runs on two axes: Standards (does the diff follow the repo's documented coding standards?) and Spec (does it faithfully implement the originating issue/PRD?). The two are reported side by side rather than blended."
+      },
+      {
+        "term": "Fixed point + three-dot diff",
+        "explanation": "The user supplies a fixed point (SHA, branch, tag, main, HEAD~5). The diff is captured once as `git diff <fixed-point>...HEAD` (three-dot, against the merge-base). A bad ref or empty diff fails fast, before any sub-agent spawns."
+      },
+      {
+        "term": "Parallel sub-agents",
+        "explanation": "Standards and Spec each run as a general-purpose sub-agent in a single message, so neither contaminates the other's context; the skill then aggregates their findings."
+      },
+      {
+        "term": "Fowler smell baseline",
+        "explanation": "On top of any documented repo standard, the Standards axis always carries a fixed set of Fowler code smells (Mysterious Name, Duplicated Code, Feature Envy, Data Clumps, Primitive Obsession, Shotgun Surgery, etc.). Documented repo standards override the baseline; smells are judgement calls, not hard violations."
+      },
+      {
+        "term": "Spec source discovery",
+        "explanation": "The spec is found in order: issue refs in commit messages, a path the user passed, a PRD under docs/specs/.scratch matching the branch, else ask. If there is genuinely no spec, the Spec axis reports 'no spec available' rather than inventing one."
+      }
+    ],
+    "apiReference": [],
+    "gotchas": [
+      "Skip anything tooling already enforces — don't flag what a linter or formatter would catch",
+      "A documented repo standard always wins over the smell baseline; suppress a smell the repo explicitly endorses",
+      "Baseline smells are always judgement calls ('possible Feature Envy'), never hard violations",
+      "Needs the repo's issue tracker configured — run setup-matt-pocock-skills if docs/agents/issue-tracker.md is missing",
+      "Fail on a bad ref or empty diff up front, not inside the sub-agents"
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}
