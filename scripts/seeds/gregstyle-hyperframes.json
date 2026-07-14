@@ -2,53 +2,57 @@
   "sourceUrl": "https://github.com/iharnoor/skillit/blob/main/scripts/seeds/gregstyle-hyperframes.json",
   "skill": {
     "name": "gregstyle-hyperframes",
-    "description": "Use when creating Greg-style vertical HyperFrames videos: researched, visual-first 9:16 explainers with sourced public images, sparse copy, portrait cards, diagrams, GSAP motion, and MP4 output.",
+    "description": "Use when creating Greg-style HyperFrames videos in 9:16 or 16:9: researched, visual-first explainers with sourced public images, extremely sparse copy, center-weighted poster compositions, GSAP motion, visual QA, and rendered MP4 output.",
     "whenToUse": [
-      "Creating or recreating a short Greg-style HyperFrames visual video from a topic or reference screenshots",
-      "Making a researched, public-asset-based 9:16 explainer about real people, products, companies, or places",
-      "Iterating a vertical HyperFrames composition with sparse copy, centered portrait cards, and simple diagrams",
-      "Validating and rendering a local HyperFrames project into a polished MP4 with inspected preview frames"
+      "Creating or recreating a short Greg-style HyperFrames visual video from a topic, reference screenshots, or local design references",
+      "Making a researched, public-asset-based 9:16 or 16:9 explainer about real people, products, companies, or places",
+      "Iterating a HyperFrames composition toward center-weighted poster layouts with large imagery and sparse copy",
+      "Validating and rendering a local HyperFrames project into a polished MP4 with a per-scene contact sheet"
     ],
     "keyConcepts": [
       {
-        "term": "Greg-style vertical explainer",
-        "explanation": "The target format is a 1080x1920, 30fps, 12-18 second social video with off-white paper texture, sparse labels, centered portrait or product cards, geometric blocks, dashed connector lines, and clear scene beats."
+        "term": "Greg-style explainer",
+        "explanation": "A 12-18 second, 30fps social video at 1080x1920 (default) or 1920x1080, with off-white paper texture, subtle radial light, dot grain, heavy-bordered cards, geometric blocks, dashed connector diagrams, and a fixed palette (ink #16241f, paper #eee9df, mint #66b79a, coral #c84a35, gold #e2b54c)."
+      },
+      {
+        "term": "Center-weighted poster composition",
+        "explanation": "Every frame should read like an editorial poster at thumbnail size. Keep the focal composition in the central 70% of the canvas, let the visual object (portrait, logo, product image, diagram) dominate over copy, preserve generous negative space, and never let edge elements carry the main idea."
       },
       {
         "term": "Sourced local assets",
-        "explanation": "When the video depends on real people, products, companies, places, or current facts, research reliable sources and save usable images into assets/<topic>/ instead of using remote image URLs in the composition."
+        "explanation": "When the video depends on real people, products, companies, places, or current facts, research reliable sources (official pages, Wikimedia, reputable publications), download usable images into assets/<topic>/, use local paths in the composition, and report source URLs in the final response."
       },
       {
-        "term": "Four-scene structure",
-        "explanation": "Most videos use a network opener, a contrast scene, a roster/list scene, and a pattern-map scene with a concise takeaway band. Copy stays minimal: short titles, labels, company names, and one- or two-word chips."
+        "term": "Four-scene poster structure",
+        "explanation": "Most 15-second videos use four scenes: a poster opener (thesis plus central motif), a hero comparison (two large image-led cards), a pattern map (one centered 3-4 node diagram), and a closing thesis with up to three watch items. One idea per scene, target 12 visible words or fewer per scene with a hard maximum of 20."
       },
       {
         "term": "HyperFrames composition contract",
-        "explanation": "The active index.html should define one root composition with data-composition-id=\"main\", data-start=\"0\", data-width=\"1080\", data-height=\"1920\", and data-fps=\"30\"."
+        "explanation": "The active index.html defines one root composition with data-composition-id=\"main\", data-start=\"0\", data-fps=\"30\", and data-width/data-height matching the aspect ratio; GSAP motion registers on window.__timelines[\"main\"]."
       },
       {
         "term": "Frame-verified iteration",
-        "explanation": "After building the composition, run validation, render the MP4, extract representative frames with ffmpeg, inspect for blank, clipped, off-center, or too-wordy scenes, then patch and rerender."
+        "explanation": "After building, run npm run check, render with npm run render, extract representative frames with ffmpeg, and build a contact sheet with one settled frame per scene chosen from actual scene timings. Patch and rerender if any scene is blank, off-center, too wordy, visually timid, clipped, or unclear."
       }
     ],
     "apiReference": [
       {
         "signature": "Preserve current index.html before replacing it",
-        "purpose": "Before editing, inspect the workspace and copy the current active composition into variants/ so the prior version can be recovered."
+        "purpose": "Before editing, inspect the workspace and copy the current active composition into variants/ so the prior version can be recovered; reuse the project's existing patterns, duration, dimensions, naming, and render scripts."
       },
       {
         "signature": "Root HyperFrames composition",
-        "purpose": "Use a single main composition root with fixed vertical dimensions and 30fps timing.",
+        "purpose": "Use a single main composition root with fixed dimensions and 30fps timing; 1080x1920 for 9:16 (default) or 1920x1080 for 16:9.",
         "example": "<div data-composition-id=\"main\" data-start=\"0\" data-width=\"1080\" data-height=\"1920\" data-fps=\"30\">\n  <!-- scene content -->\n</div>"
       },
       {
         "signature": "window.__timelines[\"main\"]",
-        "purpose": "Register GSAP motion on the main HyperFrames timeline so cards, lines, diagrams, and scene fades advance deterministically during render.",
+        "purpose": "Register GSAP motion on the main HyperFrames timeline: reveal kicker/headline from a slight vertical offset, bring cards in with scale/y/small rotation using back.out, draw lines with scaleX from 0, add one slow living pulse, and fade each scene out in the final 0.2s.",
         "example": "window.__timelines = window.__timelines || {};\nwindow.__timelines[\"main\"] = gsap.timeline({ paused: true });"
       },
       {
         "signature": "npm run check",
-        "purpose": "Run HyperFrames lint, validation, and inspection checks before rendering; fix structural and layout issues before producing the final MP4."
+        "purpose": "Run HyperFrames lint, validation, and inspection checks before rendering; fix structural and layout issues, treating contrast warnings as judgment calls for stylized editorial pieces unless readability is clearly poor."
       },
       {
         "signature": "npm run render",
@@ -56,19 +60,21 @@
       },
       {
         "signature": "ffmpeg preview frame extraction",
-        "purpose": "Extract representative frames after rendering so layout, centering, copy density, and blank scenes can be inspected.",
+        "purpose": "Extract representative frames after rendering and assemble a per-scene contact sheet so layout, centering, copy density, and blank scenes can be inspected.",
         "example": "ffmpeg -y -i output.mp4 -vf \"select='eq(n,75)+eq(n,195)+eq(n,315)+eq(n,426)',scale=360:640\" -vsync 0 preview/frame-%02d.png"
       }
     ],
     "gotchas": [
       "Preserve the current active index.html in variants/ before replacing it.",
       "Use local images under assets/<topic>/ in the composition; avoid remote image URLs.",
-      "Keep primary content centered with generous margins and avoid edge-heavy layouts unless the reference requires it.",
-      "Keep copy sparse: titles, short labels, company names, and one- or two-word takeaway chips.",
+      "Keep all primary content center-weighted inside the safe area (roughly 110-130px from left/right, 120-140px from top, 120px from bottom); reject layouts with large dead zones, tiny cards, long subheads, or text spread across the whole canvas.",
+      "Scale visual assets assertively: paired 16:9 cards should usually occupy about 60-75% of canvas width and 50-65% of its height.",
+      "Keep copy minimal: headlines 2-6 words, kickers 3-6 words, cards limited to a name plus one proof point, diagram nodes 1-3 words per line, takeaway chips 1-2 words; target 12 visible words per scene, hard maximum 20.",
+      "Prefer one idea per scene; do not shrink text to fit a second idea, and use scale, color blocks, borders, and whitespace for contrast instead of extra paragraphs.",
       "Add position: absolute to every map or card element that uses left, right, top, or bottom.",
       "Avoid duplicate image source/start/duration warnings by copying reused images to alternate local filenames when needed.",
-      "Treat contrast warnings as judgment calls only when readability is still clearly acceptable.",
-      "Patch and rerender if any extracted preview frame is blank, off-center, clipped, too wordy, or visually unclear."
+      "Choose contact-sheet timestamps from actual scene timings rather than generic frame numbers.",
+      "Patch and rerender if any extracted preview frame is blank, off-center, clipped, too wordy, visually timid, or unclear."
     ],
     "category": "tool",
     "audience": "creators",
