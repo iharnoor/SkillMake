@@ -1,0 +1,71 @@
+{
+  "sourceUrl": "https://github.com/remotion-dev/remotion",
+  "skill": {
+    "name": "demo-video-generator",
+    "description": "Use when turning a finished product, pull request, or agent skill into a polished 30–90 second proof video — plan the story, capture real behavior, edit, caption, render, and verify the MP4.",
+    "whenToUse": [
+      "Creating a short marketplace demo that proves an agent skill completes its promised workflow",
+      "Turning a merged feature or finished application into a narrated product walkthrough",
+      "Producing repeatable browser captures, captions, title cards, and a thumbnail from one shot plan",
+      "Rebuilding a demo after the interface or workflow changes while preserving project style",
+      "Verifying that a rendered video is readable, correctly timed, and free of blank or broken frames"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Proof-first story",
+        "explanation": "Open with the outcome, then show the smallest real sequence that proves it. Prefer an authentic before-action-after capture over a feature list or simulated terminal output."
+      },
+      {
+        "term": "Shot contract",
+        "explanation": "Define each shot's purpose, source, start state, action, expected end state, duration, narration, and fallback before recording. This makes recapture deterministic when a shot fails."
+      },
+      {
+        "term": "Real interaction capture",
+        "explanation": "Record an actual working build with stable data and deliberate cursor movement. Hide secrets and personal data, disable distracting notifications, and never fabricate a successful state the product did not produce."
+      },
+      {
+        "term": "Timeline composition",
+        "explanation": "Use a code-driven timeline such as Remotion when repeatability matters: compose captures, crops, callouts, narration, music, and captions from explicit frame ranges rather than destructive manual edits."
+      },
+      {
+        "term": "Frame verification",
+        "explanation": "Inspect representative frames from every shot plus transitions, not only the final file's existence. Check safe areas, text size, cursor visibility, clipping, blank frames, caption timing, and final duration."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "shots.json",
+        "purpose": "Store a reproducible shot list that separates capture from editing and records expected evidence.",
+        "example": "[{\n  \"id\": \"install\",\n  \"purpose\": \"prove one-command install\",\n  \"action\": \"run the documented install command\",\n  \"expect\": \"skill folder appears and validation passes\",\n  \"durationSec\": 8\n}]"
+      },
+      {
+        "signature": "npx remotion render <entry> <composition> <output.mp4>",
+        "purpose": "Render the selected composition to a deterministic MP4 after validating assets and timing.",
+        "example": "npx remotion render src/index.ts DemoVideo out/demo-video.mp4"
+      },
+      {
+        "signature": "ffmpeg representative-frame extraction",
+        "purpose": "Extract frames at planned timestamps for a contact-sheet QA pass before publication.",
+        "example": "ffmpeg -i out/demo-video.mp4 -vf \"fps=1/5,scale=480:-1,tile=4x3\" -frames:v 1 out/contact-sheet.png"
+      },
+      {
+        "signature": "Publication bundle",
+        "purpose": "Deliver the MP4, thumbnail, captions, shot plan, source attribution, and verification summary together.",
+        "example": "out/demo-video.mp4\nout/thumbnail.jpg\nout/captions.vtt\nout/shots.json\nout/sources.md"
+      }
+    ],
+    "gotchas": [
+      "Do not record secrets, tokens, private repository names, personal notifications, or production customer data",
+      "Do not begin editing before the product path works end to end; fix or clearly disclose broken behavior first",
+      "Keep UI text and captions readable at mobile playback size, not merely on the editor's large monitor",
+      "Use licensed or owned music, fonts, images, and footage and retain source attribution where required",
+      "Avoid long typing sequences and dead time; accelerate repetitive action without hiding the evidence of success",
+      "Verify audio peaks, caption timing, representative frames, file size, codec compatibility, and the final upload after rendering"
+    ],
+    "category": "tool",
+    "audience": "creators",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/remotion-dev/remotion"
+  }
+}

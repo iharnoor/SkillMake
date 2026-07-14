@@ -1,0 +1,66 @@
+{
+  "sourceUrl": "https://github.com/hamelsmu/evals-skills",
+  "skill": {
+    "name": "skill-eval-builder",
+    "description": "Use when proving that an agent skill triggers at the right time and improves results — build positive, negative, baseline, regression, and efficiency evals with explicit assertions.",
+    "whenToUse": [
+      "Creating an eval suite for a new or revised SKILL.md before publishing it",
+      "Testing whether a skill activates on intended prompts without over-triggering on adjacent requests",
+      "Comparing with-skill results against a no-skill baseline using repeatable assertions",
+      "Turning a reported skill failure into a permanent regression case",
+      "Measuring whether a skill improves correctness enough to justify its token and tool cost"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Activation matrix",
+        "explanation": "Pair clear positive prompts, paraphrased positives, hard negatives, and near-miss negatives. A useful skill must trigger reliably on its job while staying quiet when a neighboring workflow is more appropriate."
+      },
+      {
+        "term": "Baseline comparison",
+        "explanation": "Run the same task without the skill and with the skill. Grade both against identical assertions so improvements are attributable to the skill rather than to an easy prompt or evaluator drift."
+      },
+      {
+        "term": "Observable assertions",
+        "explanation": "Grade artifacts and behavior that can be inspected: required files, exact fields, command exit codes, citations, forbidden mutations, user confirmations, or structured output. Avoid assertions based only on whether prose sounds good."
+      },
+      {
+        "term": "Regression corpus",
+        "explanation": "Every real failure becomes a small frozen test case containing the user request, minimal fixture, expected behavior, and failure mode. Re-run the corpus after every material skill edit."
+      },
+      {
+        "term": "Efficiency budget",
+        "explanation": "Track turns, tool calls, elapsed time, and approximate prompt size alongside correctness. Reject changes that add substantial overhead without a measurable quality or safety gain."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "evals/<case-id>/case.json",
+        "purpose": "Store one portable test case with its prompt, fixture path, expected activation, assertions, and tags.",
+        "example": "{\n  \"id\": \"reject-near-miss\",\n  \"prompt\": \"Summarize this SKILL.md\",\n  \"expectSkill\": false,\n  \"assertions\": [{ \"type\": \"no-files-changed\" }],\n  \"tags\": [\"activation\", \"negative\"]\n}"
+      },
+      {
+        "signature": "with-skill vs baseline run",
+        "purpose": "Execute identical prompts against isolated copies of the same fixture, changing only whether the candidate skill is available.",
+        "example": "baseline: fixture + user prompt\nvariant:  fixture + user prompt + candidate skill\ngrade:    apply the same assertions to both artifacts"
+      },
+      {
+        "signature": "eval summary",
+        "purpose": "Report activation precision/recall, assertion pass rate, regressions, and efficiency deltas before recommending publication.",
+        "example": "activation: 18/20 correct\nassertions: baseline 61% -> skill 92%\nregressions: 0\ntool calls: +1.3 median\nverdict: publish after fixing two false negatives"
+      }
+    ],
+    "gotchas": [
+      "Do not leak the expected answer or suspected failure into the execution prompt; keep grading knowledge outside the agent run",
+      "A passing happy-path example does not validate triggering — include paraphrases, ambiguous prompts, and near-miss negatives",
+      "Do not compare runs made against different fixtures, dependency versions, or repository states",
+      "Prefer deterministic artifact assertions before adding an LLM judge; use rubric-based judging only for genuinely qualitative output",
+      "Treat flaky tool or network failures separately from skill failures and record the raw evidence",
+      "Do not publish a skill that beats baseline only by doing more work while correctness and safety remain unchanged"
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/hamelsmu/evals-skills"
+  }
+}

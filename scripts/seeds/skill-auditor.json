@@ -1,0 +1,66 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/skill-creator",
+  "skill": {
+    "name": "skill-auditor",
+    "description": "Use when reviewing a SKILL.md before installation or publication — audit triggering, structure, safety, evidence, freshness, context cost, and testability, then propose bounded fixes.",
+    "whenToUse": [
+      "Reviewing a new or changed skill before it enters a marketplace or shared repository",
+      "Investigating why a skill under-triggers, over-triggers, wastes context, or produces inconsistent results",
+      "Checking a third-party skill for unsafe commands, hidden side effects, weak provenance, or stale instructions",
+      "Comparing two versions of a skill and deciding whether the revision is safer and more effective",
+      "Producing a repeatable quality report that separates blocking defects from optional polish"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Trigger contract",
+        "explanation": "The frontmatter description is the routing surface. It must state the job and concrete request contexts, distinguish neighboring skills, and avoid promises that the body cannot fulfill."
+      },
+      {
+        "term": "Progressive disclosure",
+        "explanation": "Keep the core workflow concise and route detailed schemas, provider variants, and large examples into directly linked references. Every bundled file must have a clear load condition."
+      },
+      {
+        "term": "Safety boundary",
+        "explanation": "Identify commands, credentials, external writes, deployments, purchases, messages, destructive operations, and privilege changes. Require explicit confirmation where consequences exceed the user's stated scope."
+      },
+      {
+        "term": "Evidence chain",
+        "explanation": "Technical claims should trace to primary documentation, executable checks, or repository evidence. Flag uncited version-specific APIs, copied secrets, dead links, and instructions that cannot be reproduced."
+      },
+      {
+        "term": "Bounded remediation",
+        "explanation": "Preserve the skill's intent and protected sections. Propose the smallest edits that resolve a demonstrated defect, and keep opinionated rewrites separate from blocking fixes."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "Audit gates: structure -> trigger -> safety -> evidence -> efficiency -> evals",
+        "purpose": "Run gates in order so malformed structure and unsafe behavior block publication before subjective quality scoring begins.",
+        "example": "BLOCK: invalid frontmatter, destructive default, exposed credential\nWARN: stale source, vague trigger, unbounded reference loading\nINFO: naming, examples, optional compression"
+      },
+      {
+        "signature": "Finding format",
+        "purpose": "Make every finding actionable with severity, evidence, impact, and a minimal remediation.",
+        "example": "[BLOCK] Unsafe publish default\nEvidence: SKILL.md:84 deploys without confirmation\nImpact: external production mutation\nFix: require explicit target and confirmation before deploy"
+      },
+      {
+        "signature": "Publication verdict",
+        "purpose": "Return a clear decision based on unresolved findings rather than an opaque numeric score.",
+        "example": "PASS: no blockers; warnings documented\nCONDITIONAL: fix listed blockers and rerun affected gates\nFAIL: unsafe, unverifiable, or materially misleading"
+      }
+    ],
+    "gotchas": [
+      "Do not label a skill safe merely because it contains no shell commands; external API calls and messages can be equally consequential",
+      "Do not reward length — duplicated guidance and unconditional reference loading reduce skill quality",
+      "Do not rewrite protected or source-faithful sections to satisfy stylistic preferences",
+      "A GitHub star count is provenance context, not proof that instructions are current, safe, or correct",
+      "Separate source defects from local packaging defects so maintainers know where the fix belongs",
+      "Never auto-fix blocking findings and publish in the same step without re-validation"
+    ],
+    "category": "security",
+    "audience": "engineers",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}
