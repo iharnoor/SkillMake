@@ -7,12 +7,13 @@ import {
   packLastUpdated,
   NEW_WINDOW_DAYS,
 } from "./packs-util.ts";
+import type { PromptItem } from "./packs.ts";
 
 const daysAgo = (n: number) =>
   new Date(Date.now() - n * 86_400_000).toISOString();
 
-const item = (id: string, addedAt?: string) =>
-  ({ id, title: id, category: "x", prompt: "p", addedAt }) as never;
+const item = (id: string, addedAt?: string): PromptItem =>
+  ({ id, title: id, category: "x", prompt: "p", addedAt }) as PromptItem;
 
 test("isNew: within window is new, outside/missing/invalid is not", () => {
   assert.equal(isNew(daysAgo(0)), true);

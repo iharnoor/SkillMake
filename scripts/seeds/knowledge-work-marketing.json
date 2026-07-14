@@ -1,0 +1,62 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/marketing",
+  "skill": {
+    "name": "knowledge-work-marketing",
+    "description": "Use when a marketing team needs help with content creation, campaign planning, performance analysis, brand voice consistency, or competitor tracking.",
+    "whenToUse": [
+      "Drafting a blog post, social post, email newsletter, landing page, press release, or case study",
+      "Building a full campaign brief with objectives, channels, a content calendar, and success metrics",
+      "Reviewing content against your brand voice, style guide, and messaging pillars",
+      "Researching competitors or building a marketing performance report with trends and recommendations"
+    ],
+    "keyConcepts": [
+      {
+        "term": "content-creation skill",
+        "explanation": "Content type templates, per-channel writing best practices, SEO fundamentals, headline formulas, and CTA guidance driving the draft-content command."
+      },
+      {
+        "term": "campaign-plan skill",
+        "explanation": "Campaign frameworks covering channel selection, content calendar creation, budget allocation, and success metrics for a full campaign brief."
+      },
+      {
+        "term": "brand-review skill",
+        "explanation": "Brand voice documentation, voice attributes, tone adaptation, and style-guide/terminology enforcement so drafts stay on-brand."
+      },
+      {
+        "term": "competitive-brief skill",
+        "explanation": "Competitive research methodology with messaging comparison, content gap analysis, positioning, and battlecard creation."
+      },
+      {
+        "term": "performance-report skill",
+        "explanation": "Key metrics by channel, reporting templates, trend analysis, attribution modeling, and optimization frameworks for marketing performance."
+      },
+      {
+        "term": "seo-audit and email-sequence skills",
+        "explanation": "seo-audit runs keyword research, on-page analysis, content gaps, and technical checks; email-sequence designs multi-email nurture, onboarding, and drip flows."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install marketing@knowledge-work-plugins",
+        "purpose": "Install the Marketing plugin.",
+        "example": "/plugin install marketing@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "brand-review only enforces your voice if a brand style guide is configured in local settings; otherwise it gives a generic clarity review",
+      "Configure brand voice, style guide, and personas once so draft-content and brand-review apply standards without re-prompting each time",
+      "Best results depend on MCP connections (HubSpot, Amplitude, Ahrefs, Similarweb, etc.); without them performance and competitive data must be supplied manually",
+      "The plugin is primarily designed for Cowork though it also runs in Claude Code"
+    ],
+    "category": "concept",
+    "audience": "marketing",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

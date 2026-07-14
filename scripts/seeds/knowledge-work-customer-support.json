@@ -1,0 +1,58 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/customer-support",
+  "skill": {
+    "name": "knowledge-work-customer-support",
+    "description": "Use when a support team needs to triage tickets, draft customer responses, package escalations, build a knowledge base, or research customer context.",
+    "whenToUse": [
+      "Categorizing, prioritizing, and routing an incoming support ticket or customer issue",
+      "Drafting a professional customer-facing response tuned to situation, urgency, and channel",
+      "Packaging an escalation for engineering or product with reproduction steps and business impact",
+      "Turning a resolved issue into a searchable knowledge base article"
+    ],
+    "keyConcepts": [
+      {
+        "term": "ticket-triage skill",
+        "explanation": "Category taxonomy, a P1-P4 priority framework, routing rules, and duplicate detection for structured triage of incoming tickets."
+      },
+      {
+        "term": "customer-research skill",
+        "explanation": "Multi-source research methodology with source prioritization and answer synthesis, including confidence scoring and source attribution."
+      },
+      {
+        "term": "draft-response skill",
+        "explanation": "Communication best practices, tone guidelines, and templates for common scenarios to draft empathetic, professional replies."
+      },
+      {
+        "term": "customer-escalation skill",
+        "explanation": "Escalation tiers, a structured escalation format, impact assessment, and follow-up cadence for handing off to engineering or leadership."
+      },
+      {
+        "term": "kb-article skill",
+        "explanation": "Article structure standards, writing for searchability, review cadence, and maintenance for building self-service content from resolved issues."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install customer-support@knowledge-work-plugins",
+        "purpose": "Install the Customer Support plugin.",
+        "example": "/plugin install customer-support@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "For richest results connect a support platform (Intercom), knowledge base (Guru/Notion), CRM (HubSpot), and issue tracker; without them you must supply customer context manually",
+      "Without connected data sources the plugin only offers frameworks and templates you fill in yourself",
+      "Research answers carry confidence levels and source attribution; low-confidence syntheses should be verified before sending",
+      "The plugin is primarily designed for Cowork though it also runs in Claude Code"
+    ],
+    "category": "concept",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md",
+  "skill": {
+    "name": "mp-grilling",
+    "description": "Use when you want to stress-test a plan or design before building — a relentless one-question-at-a-time interview that resolves every decision to a shared understanding.",
+    "whenToUse": [
+      "Stress-testing a plan or design before you start building",
+      "You want every branch of the design tree walked and its decisions resolved",
+      "You keep hand-waving details and want them forced into the open",
+      "Any 'grill me' trigger phrase"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Relentless interview",
+        "explanation": "Interview the user about every aspect of the plan until you reach a shared understanding, walking down each branch of the design tree and resolving dependencies between decisions one by one."
+      },
+      {
+        "term": "One question at a time",
+        "explanation": "Ask questions one at a time and wait for feedback on each before continuing. Asking multiple questions at once is bewildering."
+      },
+      {
+        "term": "Recommend an answer",
+        "explanation": "For each question, provide your recommended answer — don't just ask, take a position the user can react to."
+      },
+      {
+        "term": "Facts vs decisions",
+        "explanation": "If a fact can be found by exploring the codebase, look it up rather than asking. The decisions, though, are the user's — put each one to them and wait for their answer."
+      }
+    ],
+    "apiReference": [],
+    "gotchas": [
+      "Never ask multiple questions at once — it's bewildering; strictly one at a time",
+      "Don't ask the user for facts you can find in the codebase yourself",
+      "Do not enact the plan until the user confirms a shared understanding is reached",
+      "Always attach your recommended answer to each question"
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

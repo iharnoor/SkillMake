@@ -1,0 +1,54 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/cowork-plugin-management",
+  "skill": {
+    "name": "knowledge-work-cowork-plugin-management",
+    "description": "Use when you need to create, customize, or manage Cowork plugins tailored to your org's tools — configuring MCP servers, plugin behavior, and templates.",
+    "whenToUse": [
+      "Scaffolding a new Cowork plugin tailored to your organization's tools and workflows",
+      "Customizing an existing plugin's behavior to match how your team works",
+      "Configuring MCP servers so a plugin can reach your internal tools",
+      "Adapting plugin templates rather than building plugin structure from scratch"
+    ],
+    "keyConcepts": [
+      {
+        "term": "create-cowork-plugin",
+        "explanation": "Scaffolds a new plugin tailored to an organization's tools and workflows, generating the plugin structure so you start from a working template instead of a blank slate."
+      },
+      {
+        "term": "cowork-plugin-customizer",
+        "explanation": "Adjusts an existing plugin's behavior and adapts its templates to match how a specific team works."
+      },
+      {
+        "term": "MCP server configuration",
+        "explanation": "Wires plugins to your organization's tools by configuring the MCP servers a plugin depends on for data and actions."
+      },
+      {
+        "term": "Org-tailored templates",
+        "explanation": "Plugins are built from adaptable templates so the same base can be shaped to different teams' tools, terminology, and workflows."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install cowork-plugin-management@knowledge-work-plugins",
+        "purpose": "Install the Cowork Plugin Management plugin.",
+        "example": "/plugin install cowork-plugin-management@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "Primarily designed for Cowork, Anthropic's agentic desktop app, though it also runs in Claude Code",
+      "This is a meta-plugin for building other plugins — it manages plugins rather than doing end-user work itself",
+      "Customized plugins are only as useful as their MCP wiring; misconfigured servers leave the plugin blind to your tools",
+      "It is early-stage (version 0.2.x), so behavior and templates may change more than the 1.x plugins"
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

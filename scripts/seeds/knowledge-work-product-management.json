@@ -1,0 +1,62 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/product-management",
+  "skill": {
+    "name": "knowledge-work-product-management",
+    "description": "Use when a product manager needs help writing feature specs, planning roadmaps, synthesizing user research, sending stakeholder updates, or analyzing the competitive landscape.",
+    "whenToUse": [
+      "Writing a structured feature spec or PRD from a problem statement or feature idea",
+      "Creating, updating, or reprioritizing a roadmap in Now/Next/Later, quarterly, or OKR formats",
+      "Synthesizing interview notes, surveys, and tickets into themes, personas, and opportunity areas",
+      "Generating a stakeholder update or competitive brief tailored to a specific audience"
+    ],
+    "keyConcepts": [
+      {
+        "term": "write-spec skill",
+        "explanation": "PRD structure, user stories, requirements categorization, and acceptance criteria to turn a problem statement into a full spec."
+      },
+      {
+        "term": "roadmap-update skill",
+        "explanation": "Prioritization frameworks like RICE and MoSCoW, multiple roadmap formats, and dependency mapping for roadmap management."
+      },
+      {
+        "term": "synthesize-research skill",
+        "explanation": "Thematic analysis, affinity mapping, persona development, and opportunity sizing to turn raw research into evidence-backed insights."
+      },
+      {
+        "term": "stakeholder-update skill",
+        "explanation": "Update templates by audience (exec, engineering, customer), risk communication, and decision documentation, pulling context from connected tools."
+      },
+      {
+        "term": "competitive-brief and metrics-review skills",
+        "explanation": "competitive-brief builds feature comparison matrices, positioning, and win/loss analysis; metrics-review analyzes trends against targets with OKR-aligned tracking."
+      },
+      {
+        "term": "product-brainstorming skill",
+        "explanation": "A sparring-partner mode using frameworks like How Might We, Jobs-to-be-Done, First Principles, and Opportunity Solution Trees to test assumptions and explore strategy."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install product-management@knowledge-work-plugins",
+        "purpose": "Install the Product Management plugin.",
+        "example": "/plugin install product-management@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "Stakeholder updates and metrics reviews are far richer when project trackers (Linear/Asana/Jira), analytics (Amplitude/Pendo), and Notion are connected via MCP",
+      "Without connected data sources you must provide roadmap, research, and metrics context manually",
+      "product-brainstorming intentionally pushes back and challenges assumptions rather than just generating ideas",
+      "The plugin is primarily designed for Cowork though it also runs in Claude Code"
+    ],
+    "category": "pm",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

@@ -24,17 +24,19 @@ interface CollectionEntry {
 const ROUTER_REPO = "https://github.com/musistudio/claude-code-router";
 const HEADROOM_REPO = "https://github.com/zereight/headroom";
 const CODE_MODE_REPO = "https://github.com/cloudflare/agents";
+const PXPIPE_REPO = "https://github.com/teamchong/pxpipe";
 
 export default async function BudgetPage() {
   const h = await headers();
   after(() => track("budget_view", { headers: h }));
 
-  const [caveman, fcc, routerStars, headroomStars, codeModeStars] = await Promise.all([
+  const [caveman, fcc, routerStars, headroomStars, codeModeStars, pxpipeStars] = await Promise.all([
     findApprovedByName("caveman"),
     findApprovedByName("free-claude-code"),
     fetchRepoStars(ROUTER_REPO),
     fetchRepoStars(HEADROOM_REPO),
     fetchRepoStars(CODE_MODE_REPO),
+    fetchRepoStars(PXPIPE_REPO),
   ]);
 
   const entries: CollectionEntry[] = [
@@ -82,6 +84,17 @@ export default async function BudgetPage() {
       stars: codeModeStars ?? 5051,
     },
     {
+      name: "code-to-image OCR",
+      description:
+        "pxpipe renders source code to an image and has the model OCR it back — Fable reads an image far cheaper than the equivalent code tokens, so read-heavy turns land a ~60% cost cut with the code intact.",
+      audience: "general",
+      category: "tool",
+      source: "github.com/teamchong",
+      href: PXPIPE_REPO,
+      repoUrl: PXPIPE_REPO,
+      stars: pxpipeStars,
+    },
+    {
       name: "fan out subagents",
       description:
         "Run independent investigations in parallel subagents so the parent context stays clean and the work finishes at the same wall-clock minute.",
@@ -116,7 +129,7 @@ export default async function BudgetPage() {
         active="budget"
         eyebrow="Budget"
         title="Save money. Same agent."
-        description="Eight practical ways to drop agent cost or context waste. Five are installable tools; three are pure technique."
+        description="Nine practical ways to drop agent cost or context waste. Six are installable tools; three are pure technique."
         countLabel={`${entries.length} ways to save`}
       />
       <CollectionTable entries={entries} />
@@ -164,6 +177,13 @@ export default async function BudgetPage() {
           </a>{" "}
           keeps MCP tool schemas and intermediate results in a sandbox instead of
           the context window,{" "}
+          <a
+            href="#code-to-image-ocr"
+            className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+          >
+            code-to-image OCR
+          </a>{" "}
+          swaps expensive code tokens for a cheap image the model OCRs back,{" "}
           <a
             href="#fan-out-subagents"
             className="text-[color:var(--accent)] underline underline-offset-4 decoration-1"

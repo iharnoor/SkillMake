@@ -1,0 +1,60 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/algorithmic-art",
+  "skill": {
+    "name": "algorithmic-art",
+    "description": "Use when a user asks for generative or algorithmic art — flow fields, particle systems, noise-driven visuals — so the agent designs an aesthetic philosophy then ships it as interactive p5.js.",
+    "whenToUse": [
+      "Turning a loose request like 'make me some generative art' into a coherent, tunable p5.js sketch",
+      "Building flow fields, particle systems, or noise-driven visuals with seeded reproducibility",
+      "Producing a single self-contained interactive HTML artifact with parameter sliders and seed navigation",
+      "Encoding a subtle conceptual reference into generative parameters without copying an existing artist's work"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Two-step: philosophy then code",
+        "explanation": "The skill first writes an 'algorithmic philosophy' (a 4-6 paragraph manifesto naming a generative movement), then expresses it as p5.js. The art is meant to be ~90% algorithm, ~10% essential parameters."
+      },
+      {
+        "term": "Seeded randomness (Art Blocks pattern)",
+        "explanation": "randomSeed(seed) and noiseSeed(seed) are set from one value so the same seed always reproduces identical output. Seed navigation (prev/next/random/jump) lets users explore variations from one algorithm."
+      },
+      {
+        "term": "Process over product",
+        "explanation": "Beauty is meant to emerge from the algorithm's execution, not a static frame. The skill steers toward living systems — accumulation, feedback, emergence — rather than images with random noise sprinkled on."
+      },
+      {
+        "term": "viewer.html template is the starting point",
+        "explanation": "templates/viewer.html holds the fixed layout, Anthropic branding (Poppins/Lora, light theme), seed controls, and action buttons. You replace only the algorithm and parameter controls, never rebuild the shell."
+      },
+      {
+        "term": "Deduced conceptual seed",
+        "explanation": "A subtle, niche reference from the user's request is woven invisibly into parameters and behaviors — recognizable to those who know it, while everyone else just sees a masterful composition."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add anthropics/skills --skill algorithmic-art",
+        "purpose": "Install the algorithmic art (p5.js generative art) skill.",
+        "example": "npx skills add anthropics/skills --skill algorithmic-art"
+      },
+      {
+        "signature": "randomSeed(seed); noiseSeed(seed);",
+        "purpose": "Fix the seed so a given seed always reproduces the same artwork.",
+        "example": "let seed = 12345;\nrandomSeed(seed);\nnoiseSeed(seed);"
+      }
+    ],
+    "gotchas": [
+      "Read templates/viewer.html first and build on it — creating HTML from scratch loses the fixed layout, branding, and seed controls",
+      "Keep the Anthropic branding (Poppins/Lora fonts, light theme, gradient backdrop); don't invent custom color schemes or dark themes for the UI",
+      "Same seed must always produce identical output — non-deterministic code breaks the whole reproducibility model",
+      "Don't copy the flow-field example in the template; build what the philosophy demands rather than reusing the sample algorithm",
+      "Create original algorithmic art, not reproductions of existing artists' work, to avoid copyright violations",
+      "Ship one self-contained HTML artifact with everything inline (only p5.js from CDN) — no external files or separate .js imports"
+    ],
+    "category": "design",
+    "audience": "creative",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}

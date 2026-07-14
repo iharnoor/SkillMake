@@ -1,5 +1,5 @@
 {
-  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/to-prd/SKILL.md",
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/to-spec/SKILL.md",
   "skill": {
     "name": "mp-to-prd",
     "description": "Use when synthesising the current conversation and codebase understanding into a PRD published to the issue tracker — no fresh interview, the context you already have IS the input.",

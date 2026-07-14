@@ -1,0 +1,63 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/operations",
+  "skill": {
+    "name": "knowledge-work-operations",
+    "description": "Use when running business-operations work — vendor management, process documentation, change management, capacity planning, and compliance tracking — standalone or connected to your ITSM and tracker.",
+    "whenToUse": [
+      "Evaluating a vendor — cost analysis, risk assessment, contract summary, renewal call",
+      "Documenting a business process with flowcharts, RACI matrices, SOPs, and runbooks",
+      "Creating a change request with impact analysis, rollback plan, and approval routing",
+      "Planning resource capacity — workload analysis, headcount modeling, utilization forecasting"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Commands vs skills",
+        "explanation": "Commands are explicit slash workflows (/vendor-review, /process-doc, /change-request, /capacity-plan, /status-report, /runbook); skills are domain knowledge Claude applies automatically."
+      },
+      {
+        "term": "vendor-management skill",
+        "explanation": "Evaluates, compares, and manages vendor relationships across contracts, performance, and risk, backing the /vendor-review command."
+      },
+      {
+        "term": "process-optimization skill",
+        "explanation": "Analyzes and improves business processes — identifying bottlenecks, reducing waste, and streamlining workflows."
+      },
+      {
+        "term": "change-management skill",
+        "explanation": "Plans and executes organizational or technical changes with communication, training, and adoption, behind /change-request."
+      },
+      {
+        "term": "risk-assessment and compliance-tracking",
+        "explanation": "risk-assessment builds risk registers and impact analysis with controls; compliance-tracking tracks audits, certifications, and regulatory deadlines."
+      },
+      {
+        "term": "resource-planning skill",
+        "explanation": "Plans and optimizes resource allocation — capacity, utilization, forecasting, and budget — backing the /capacity-plan command."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install operations@knowledge-work-plugins",
+        "purpose": "Install the Operations plugin.",
+        "example": "/plugin install operations@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "Primarily designed for Cowork, Anthropic's agentic desktop app, though it also works in Claude Code",
+      "Commands run standalone but are supercharged only when you connect your ITSM, project tracker, and other tools",
+      "It's a plugin bundling nine skills, not a single skill; skills fire automatically while commands are invoked explicitly",
+      "/vendor-review needs the vendor name, contract details, or an uploaded proposal to produce a real evaluation",
+      "Compliance-tracking outputs are working aids, not a substitute for a qualified auditor or legal review"
+    ],
+    "category": "concept",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

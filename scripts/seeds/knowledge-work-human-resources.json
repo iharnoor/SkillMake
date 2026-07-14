@@ -1,0 +1,63 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/human-resources",
+  "skill": {
+    "name": "knowledge-work-human-resources",
+    "description": "Use when running people-operations work — recruiting, onboarding, performance reviews, compensation analysis, and policy guidance — standalone or connected to your HRIS and ATS.",
+    "whenToUse": [
+      "Drafting an offer letter with compensation, start date, equity, and terms",
+      "Building an onboarding checklist and first-week plan for a new hire",
+      "Structuring a performance review with self-assessment prompts and calibration prep",
+      "Benchmarking compensation or modeling band placement and equity refreshes"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Commands vs skills",
+        "explanation": "Commands are explicit slash workflows (/draft-offer, /onboarding, /performance-review, /policy-lookup, /comp-analysis, /people-report); skills are domain knowledge Claude applies automatically."
+      },
+      {
+        "term": "recruiting-pipeline skill",
+        "explanation": "Tracks and manages the recruiting pipeline across source, screen, interview, and offer stages."
+      },
+      {
+        "term": "compensation-benchmarking skill",
+        "explanation": "Benchmarks compensation against market data across base, equity, and total comp, backing the /comp-analysis command."
+      },
+      {
+        "term": "employee-handbook skill",
+        "explanation": "Answers questions about company policies, benefits, and procedures — PTO, expense, travel, remote work — behind /policy-lookup."
+      },
+      {
+        "term": "people-analytics and org-planning",
+        "explanation": "people-analytics analyzes attrition trends, engagement signals, and diversity metrics; org-planning handles headcount planning, org design, and team structure."
+      },
+      {
+        "term": "interview-prep skill",
+        "explanation": "Creates structured interview plans — competency-based questions, scorecards, and debrief templates."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install human-resources@knowledge-work-plugins",
+        "purpose": "Install the Human Resources plugin.",
+        "example": "/plugin install human-resources@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "Primarily designed for Cowork, Anthropic's agentic desktop app, though it also works in Claude Code",
+      "Commands run standalone but are supercharged only when you connect your HRIS, ATS, and other tools",
+      "It's a plugin bundling nine skills, not a single skill; skills fire automatically while commands are invoked explicitly",
+      "Compensation and people outputs are drafts to review, not authoritative HR, legal, or tax advice",
+      "/draft-offer needs role, level, location, and comp details before it produces a complete letter"
+    ],
+    "category": "concept",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

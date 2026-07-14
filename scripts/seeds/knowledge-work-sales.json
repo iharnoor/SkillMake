@@ -1,0 +1,63 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/sales",
+  "skill": {
+    "name": "knowledge-work-sales",
+    "description": "Use when you need to prospect, craft personalized outreach, build deal strategy, manage pipeline, or prep for sales calls with research-backed context.",
+    "whenToUse": [
+      "Researching a company or contact before a call, with news and hiring signals",
+      "Drafting research-first personalized outreach emails and LinkedIn messages",
+      "Reviewing pipeline health — prioritizing deals, flagging risks, building a weekly plan",
+      "Processing call notes into action items, follow-ups, and internal summaries"
+    ],
+    "keyConcepts": [
+      {
+        "term": "account-research",
+        "explanation": "Researches a company or person via web search — company intel, key contacts, recent news, and hiring signals — triggering automatically when you ask about a prospect."
+      },
+      {
+        "term": "draft-outreach",
+        "explanation": "Research-first outreach: researches the prospect, then drafts personalized email and LinkedIn messages with multiple angles."
+      },
+      {
+        "term": "pipeline-review and forecast",
+        "explanation": "/pipeline-review scores pipeline health and flags stale or single-threaded deals; /forecast produces a weighted forecast with best/likely/worst scenarios and gap analysis."
+      },
+      {
+        "term": "call-prep and call-summary",
+        "explanation": "call-prep assembles account context, attendee research, agenda, and discovery questions; /call-summary turns notes or transcripts into action items and a draft follow-up."
+      },
+      {
+        "term": "competitive-intelligence",
+        "explanation": "Researches competitors for product comparison, pricing intel, recent releases, a differentiation matrix, and sales talk tracks."
+      },
+      {
+        "term": "Standalone or CRM-supercharged",
+        "explanation": "Every workflow runs standalone from pasted notes, uploaded CSVs, or your description, and gets richer when CRM, email, and other MCP connectors are attached."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install sales@knowledge-work-plugins",
+        "purpose": "Install the Sales plugin.",
+        "example": "/plugin install sales@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "Primarily designed for Cowork, Anthropic's agentic desktop app, though it also runs in Claude Code",
+      "Works standalone with web search and your input, but CRM/email connectors are needed to log activity or auto-create tasks",
+      "/forecast and /pipeline-review expect a CSV export or a described pipeline — no connector, no automatic data",
+      "account-research and draft-outreach fire automatically when relevant, so phrasing a request as prospect research triggers them",
+      "Outreach is research-first by design; skipping the research step defeats the personalization the plugin is built for"
+    ],
+    "category": "concept",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

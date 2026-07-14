@@ -1,0 +1,67 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/docx",
+  "skill": {
+    "name": "docx",
+    "description": "Use when creating, reading, or editing Word .docx files — reports, memos, letters, templates with TOCs, tables, images, tracked changes, or comments — via docx-js or raw XML round-trips.",
+    "whenToUse": [
+      "Producing a polished Word document with headings, a table of contents, tables, or page numbers",
+      "Editing an existing .docx by unpacking its XML, changing it, and repacking",
+      "Adding tracked changes or comments to a Word file, or accepting existing ones",
+      "Extracting or reorganizing content from a .docx, or converting a legacy .doc first"
+    ],
+    "keyConcepts": [
+      {
+        "term": ".docx is a ZIP of XML",
+        "explanation": "A Word file is a ZIP archive of XML parts. Reading uses pandoc or a raw unpack; creating uses docx-js; editing means unpack → edit XML → repack via the skill's scripts."
+      },
+      {
+        "term": "Create with docx-js",
+        "explanation": "New documents are generated in JavaScript with the docx library (Document, Paragraph, TextRun, Table, etc.), then written with Packer.toBuffer. Install globally with npm install -g docx and validate afterward."
+      },
+      {
+        "term": "Edit via unpack → edit → pack",
+        "explanation": "unpack.py extracts and pretty-prints XML (merging runs, converting smart quotes to entities); you edit word/*.xml with the Edit tool directly; pack.py validates, condenses, and rebuilds the .docx."
+      },
+      {
+        "term": "DXA units and explicit page size",
+        "explanation": "Measurements are in DXA where 1440 DXA = 1 inch. docx-js defaults to A4, so US Letter (12240 x 15840) must be set explicitly; content width for 1-inch margins is 9360."
+      },
+      {
+        "term": "Tracked changes and comments in XML",
+        "explanation": "Insertions use <w:ins>, deletions use <w:del> with <w:delText>; author defaults to 'Claude'. comment.py handles comment boilerplate, and commentRange markers are siblings of <w:r>, never inside a run."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add anthropics/skills --skill docx",
+        "purpose": "Install the Word document (.docx) creation and editing skill.",
+        "example": "npx skills add anthropics/skills --skill docx"
+      },
+      {
+        "signature": "python scripts/office/unpack.py document.docx unpacked/ ; python scripts/office/pack.py unpacked/ output.docx --original document.docx",
+        "purpose": "Unpack a .docx to editable XML, then repack it with validation and auto-repair.",
+        "example": "python scripts/office/unpack.py document.docx unpacked/\n# edit files in unpacked/word/\npython scripts/office/pack.py unpacked/ output.docx --original document.docx"
+      },
+      {
+        "signature": "python scripts/office/validate.py doc.docx",
+        "purpose": "Validate a generated .docx; on failure, unpack, fix the XML, and repack.",
+        "example": "python scripts/office/validate.py doc.docx"
+      }
+    ],
+    "gotchas": [
+      "docx-js defaults to A4 — set US Letter (12240 x 15840 DXA) explicitly for US documents",
+      "Never use unicode bullets; use LevelFormat.BULLET with a numbering config instead",
+      "Tables need dual widths — set columnWidths on the table AND width on each cell, and they must match and sum correctly",
+      "Always use WidthType.DXA for table widths; WidthType.PERCENTAGE breaks in Google Docs",
+      "Use ShadingType.CLEAR (not SOLID) for table shading or you get black backgrounds",
+      "Never use '\\n' — use separate Paragraph elements; PageBreak must live inside a Paragraph",
+      "ImageRun requires the 'type' parameter (png/jpg/etc.); TOC headings must use HeadingLevel only with outlineLevel set",
+      "Legacy .doc files must be converted to .docx (via soffice.py) before editing"
+    ],
+    "category": "tool",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}

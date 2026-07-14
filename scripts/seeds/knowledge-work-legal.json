@@ -1,0 +1,63 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/legal",
+  "skill": {
+    "name": "knowledge-work-legal",
+    "description": "Use when an in-house legal team needs help with contract review, NDA triage, compliance workflows, legal briefs, or precedent research against a configured playbook.",
+    "whenToUse": [
+      "Reviewing a vendor contract clause-by-clause against your organization's negotiation playbook and generating redlines",
+      "Rapidly triaging an incoming NDA into approve / counsel-review / escalate buckets",
+      "Checking existing agreements, DPAs, and expiration dates for a vendor across connected systems",
+      "Preparing a daily legal brief or a research brief on a specific legal question"
+    ],
+    "keyConcepts": [
+      {
+        "term": "review-contract skill",
+        "explanation": "Playbook-based contract analysis that classifies deviations, generates redline language, and flags clauses GREEN / YELLOW / RED with business-impact context."
+      },
+      {
+        "term": "triage-nda skill",
+        "explanation": "Screens incoming NDAs against standard criteria and routing rules, categorizing each as standard approval, counsel review, or significant-issue escalation."
+      },
+      {
+        "term": "compliance-check skill",
+        "explanation": "Covers privacy regulations like GDPR and CCPA, DPA review, and data subject requests to keep processing workflows compliant."
+      },
+      {
+        "term": "legal-risk-assessment skill",
+        "explanation": "A risk severity framework with classification levels and escalation criteria for deciding what needs senior or outside counsel review."
+      },
+      {
+        "term": "Configurable playbook",
+        "explanation": "A legal.local.md file encodes your standard positions, acceptable ranges, and escalation triggers so review reflects your team's terms and risk tolerance."
+      },
+      {
+        "term": "vendor-check and meeting-briefing skills",
+        "explanation": "vendor-check reports existing NDAs/MSAs/DPAs and key terms for a vendor; meeting-briefing provides meeting prep, context gathering, and action-item tracking."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install legal@knowledge-work-plugins",
+        "purpose": "Install the Legal plugin.",
+        "example": "/plugin install legal@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "This plugin assists with legal work but does not provide legal advice; AI analysis must be reviewed by a licensed attorney",
+      "Default playbook examples reflect U.S. jurisdictions (Delaware, New York, California); customize legal.local.md for EU/UK/other systems before relying on it",
+      "Without a configured playbook, contract review has no organization-specific positions to flag deviations against",
+      "The plugin degrades gracefully when MCP tools are unavailable, noting gaps and suggesting manual checks rather than guessing",
+      "Templated responses include built-in escalation triggers; some inquiry types should not receive a templated reply"
+    ],
+    "category": "concept",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

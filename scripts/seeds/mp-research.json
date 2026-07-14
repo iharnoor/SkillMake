@@ -1,0 +1,42 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/engineering/research/SKILL.md",
+  "skill": {
+    "name": "mp-research",
+    "description": "Use when a topic needs researching, docs or API facts gathered, or reading legwork delegated — investigates against primary sources and captures cited findings as a repo Markdown file.",
+    "whenToUse": [
+      "The user wants a topic researched or docs/API facts gathered",
+      "You want reading legwork delegated so you can keep working",
+      "A claim needs to be traced back to the source that owns it",
+      "Findings should be captured as a durable, cited artifact in the repo"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Background agent",
+        "explanation": "Spin up a background agent to do the research so the main session keeps working while it reads."
+      },
+      {
+        "term": "Primary sources only",
+        "explanation": "Investigate against official docs, source code, specs, and first-party APIs — not a secondary write-up of them. Follow every claim back to the source that owns it."
+      },
+      {
+        "term": "Cited Markdown output",
+        "explanation": "Write findings to a single Markdown file, citing each claim's source, so the research is verifiable rather than trust-me prose."
+      },
+      {
+        "term": "Match repo conventions",
+        "explanation": "Save the file where the repo already keeps such notes; match the existing convention, and if there is none, put it somewhere sensible and say where."
+      }
+    ],
+    "apiReference": [],
+    "gotchas": [
+      "Don't cite a secondary write-up when the primary source is reachable",
+      "Every claim needs a source — uncited findings defeat the purpose",
+      "If there's no existing notes convention, state where you saved the file"
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

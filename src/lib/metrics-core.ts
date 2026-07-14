@@ -9,6 +9,7 @@ export type MetricEvent =
   | "budget_view"
   | "mcps_view"
   | "packs_view"
+  | "loops_view"
   | "powerhouse_view"
   | "search_submitted"
   | "github_click"

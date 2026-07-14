@@ -1,0 +1,53 @@
+{
+  "sourceUrl": "https://github.com/DietrichGebert/ponytail",
+  "skill": {
+    "name": "ponytail",
+    "description": "Use when you want an AI coding agent to write less code — it runs a decision ladder before generating anything, reaching for existing code, stdlib, and native features first.",
+    "whenToUse": [
+      "Stopping an agent from reflexively writing new code when the feature already exists or isn't needed",
+      "Enforcing a minimalist bias across a codebase to cut diff size, cost, and review time",
+      "Making an agent prefer stdlib, native platform features, and installed packages over hand-rolled code",
+      "Standardizing a 'least code that works' policy across Claude Code, Codex, Copilot CLI, and other agents"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Decision ladder",
+        "explanation": "Before writing code, the agent walks a fixed sequence: Is this needed? Does it already exist? Can stdlib do it? Is there a native feature? Is an installed package available? Can it be one line? Only after exhausting these does it write new, minimal code."
+      },
+      {
+        "term": "The best code is the code you never wrote",
+        "explanation": "Ponytail's core principle: every line added is a line to maintain, review, and pay for. The cheapest, safest, fastest code is the code that was never generated in the first place."
+      },
+      {
+        "term": "Safety is non-negotiable",
+        "explanation": "Minimalism never trades away validation, error handling, security, or accessibility. In the authors' testing, safety was maintained at 100% while code volume dropped."
+      },
+      {
+        "term": "Multi-platform plugin",
+        "explanation": "Ships as an installable plugin/skill for Claude Code, Codex, GitHub Copilot CLI, OpenCode, Gemini, Devin and others, with manual file-copy for tools lacking a plugin system."
+      },
+      {
+        "term": "Measured impact",
+        "explanation": "On a real FastAPI + React codebase the authors report roughly 54% less code, ~20% cheaper, and ~27% faster runs versus an unguided agent."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add DietrichGebert/ponytail",
+        "purpose": "Install ponytail as a Claude Code plugin so the decision ladder is applied before code generation.",
+        "example": "/plugin marketplace add DietrichGebert/ponytail"
+      }
+    ],
+    "gotchas": [
+      "Minimalism is not an excuse to skip validation, error handling, security, or accessibility — those stay in",
+      "Reaching for an installed package is preferred over hand-rolling, but don't add a new heavy dependency just to save a few lines",
+      "The ladder only helps if the agent actually checks whether the code exists first — encourage it to search the repo before writing",
+      "Tools without a plugin system need the files copied in manually; the behavior isn't automatic there"
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "videoUrls": [],
+    "trust": "community",
+    "repoUrl": "https://github.com/DietrichGebert/ponytail"
+  }
+}

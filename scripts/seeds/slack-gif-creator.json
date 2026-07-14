@@ -1,0 +1,68 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/slack-gif-creator",
+  "skill": {
+    "name": "slack-gif-creator",
+    "description": "Use when a user wants an animated GIF optimized for Slack, like \"make me a GIF of X doing Y for Slack\" — provides constraints, animation concepts, and validation utilities.",
+    "whenToUse": [
+      "Creating an animated emoji GIF sized for Slack (128x128, under 3 seconds)",
+      "Building a larger message GIF (480x480) with custom animation",
+      "Animating or splitting a user-uploaded image into frames",
+      "Shrinking a GIF's file size to meet Slack's constraints"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Slack size constraints",
+        "explanation": "Emoji GIFs are 128x128 and should stay under 3 seconds; message GIFs are 480x480. FPS (10-30) and color count (48-128) trade quality against file size."
+      },
+      {
+        "term": "GIFBuilder",
+        "explanation": "The core assembler (core.gif_builder) that collects PIL frames via add_frame/add_frames and writes an optimized GIF with num_colors, optimize_for_emoji, and remove_duplicates options."
+      },
+      {
+        "term": "PIL-primitive drawing",
+        "explanation": "Frames are drawn from scratch with ImageDraw primitives (ellipse, polygon, line, rectangle) using thick outlines (width 2+); the skill deliberately ships no pre-made graphics or emoji fonts."
+      },
+      {
+        "term": "Easing functions",
+        "explanation": "core.easing.interpolate applies non-linear motion (ease_in, ease_out, bounce_out, elastic_out, back_out) so movement feels natural instead of robotic and linear."
+      },
+      {
+        "term": "Animation concepts",
+        "explanation": "Reusable recipes — shake, pulse/heartbeat, bounce, spin, fade, slide, zoom, and particle burst — that can be combined for richer effects rather than fixed templates."
+      },
+      {
+        "term": "Validators",
+        "explanation": "core.validators (validate_gif, is_slack_ready) checks a finished GIF against Slack's requirements before you hand it over."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add anthropics/skills --skill slack-gif-creator",
+        "purpose": "Install the Slack GIF creator skill.",
+        "example": "npx skills add anthropics/skills --skill slack-gif-creator"
+      },
+      {
+        "signature": "GIFBuilder(width, height, fps).save(path, num_colors, optimize_for_emoji, remove_duplicates)",
+        "purpose": "Assemble PIL frames and export an optimized, Slack-ready GIF.",
+        "example": "from core.gif_builder import GIFBuilder\nbuilder = GIFBuilder(width=128, height=128, fps=10)\nfor frame in frames:\n    builder.add_frame(frame)\nbuilder.save('emoji.gif', num_colors=48, optimize_for_emoji=True, remove_duplicates=True)"
+      },
+      {
+        "signature": "validate_gif(path, is_emoji=True) / is_slack_ready(path)",
+        "purpose": "Verify a finished GIF meets Slack's dimension, duration, and size requirements.",
+        "example": "from core.validators import is_slack_ready\nif is_slack_ready('my.gif'):\n    print('Ready!')"
+      }
+    ],
+    "gotchas": [
+      "Don't use emoji fonts — they render unreliably across platforms; draw shapes with PIL primitives instead",
+      "Don't assume pre-packaged graphics exist in the skill; it ships utilities and knowledge, not clip art",
+      "Thin lines (width=1) look choppy and amateurish; always set width=2 or higher on outlines",
+      "Keep emoji GIFs under 3 seconds and at 128x128, or they won't work as Slack emoji",
+      "Only apply the aggressive optimization strategies (fewer frames/colors, remove_duplicates) when explicitly asked to shrink the file"
+    ],
+    "category": "tool",
+    "audience": "creative",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}

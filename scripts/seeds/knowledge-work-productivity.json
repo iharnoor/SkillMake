@@ -1,0 +1,59 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/productivity",
+  "skill": {
+    "name": "knowledge-work-productivity",
+    "description": "Use when you want Claude to manage tasks, plan your day, and build persistent memory of your work context, syncing from calendar, email, and chat.",
+    "whenToUse": [
+      "Setting up a persistent task list Claude reads, writes, and executes against",
+      "Teaching Claude your workplace shorthand — people, projects, deals, terminology",
+      "Running a morning sync that scans email, calendar, and chat for missed action items",
+      "Getting a visual dashboard board view of tasks and what Claude knows about your work"
+    ],
+    "keyConcepts": [
+      {
+        "term": "task-management",
+        "explanation": "Markdown-based task tracking in a shared TASKS.md file that Claude reads, writes, triages for stale items, and syncs with external tools."
+      },
+      {
+        "term": "memory-management",
+        "explanation": "Two-tier memory: CLAUDE.md for working memory plus a memory/ directory for deep storage, teaching Claude your people, projects, and shorthand so it acts like a colleague."
+      },
+      {
+        "term": "Visual dashboard",
+        "explanation": "A local dashboard.html giving a board view of tasks and a live view of workplace memory; edits from the board or the file stay in sync."
+      },
+      {
+        "term": "/start and /update commands",
+        "explanation": "/start initializes tasks, memory, and dashboard; /update triages stale items and checks memory gaps; /update --comprehensive deep-scans email, calendar, and chat."
+      },
+      {
+        "term": "Workplace shorthand decoding",
+        "explanation": "Once memory is populated, Claude resolves terse requests like 'ask todd to do the PSR for oracle' to the right person, deal, and artifact without clarifying questions."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install productivity@knowledge-work-plugins",
+        "purpose": "Install the Productivity plugin.",
+        "example": "/plugin install productivity@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "Primarily designed for Cowork, Anthropic's agentic desktop app, though it also runs in Claude Code",
+      "Memory must be seeded first — Claude only decodes shorthand after /start populates people, projects, and terminology",
+      "External sync (email, calendar, chat) requires connected tools; --comprehensive is a no-op without them",
+      "Tasks live in a plain TASKS.md, so the file is the source of truth — editing it and the dashboard both mutate the same state",
+      "Stale-task triage happens on /update, not automatically; skip it and the list drifts out of date"
+    ],
+    "category": "tool",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

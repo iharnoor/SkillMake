@@ -1,0 +1,63 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/small-business",
+  "skill": {
+    "name": "knowledge-work-small-business",
+    "description": "Use when running small-business workflows — payroll planning, month-end close, weekly briefs, and growth campaigns — via plain English over connected tools like QuickBooks and HubSpot.",
+    "whenToUse": [
+      "Handling money-adjacent tasks — planning payroll, month-end close, cash forecasts, tax prep",
+      "Running growth and marketing — campaigns, lead triage, content, and Canva assets",
+      "Getting a weekly or Friday brief pulling across your finance, CRM, and calendar tools",
+      "Describing a situation in plain English and letting the router pick the right workflow"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Skills, commands, and router",
+        "explanation": "Three layers: 15 building-block skills that each do one thing, 15 commands that chain them into multi-step recipes, and a router that maps plain-English requests to the right workflow."
+      },
+      {
+        "term": "smb-router skill",
+        "explanation": "The front door — you talk in plain English (\"a customer is angry\", \"what should I charge?\") and the router figures out which workflow fits, so you never memorize command names."
+      },
+      {
+        "term": "smb-onboard skill",
+        "explanation": "Say \"set me up\" to run onboarding, which learns your business, pain points, and the tools you already use before recommending connections."
+      },
+      {
+        "term": "Finance workflows",
+        "explanation": "Skills like plan-payroll, close-month/month-end-prep, cash-flow-snapshot, margin-analyzer, and tax-prep power cash forecasts, margins, close, and tax prep, mostly via QuickBooks."
+      },
+      {
+        "term": "Growth and customer workflows",
+        "explanation": "run-campaign, lead-triage, content-strategy, canva-creator, handle-complaint, and invoice-chase cover marketing, CRM, and customer care over HubSpot, PayPal, Canva, and email."
+      },
+      {
+        "term": "Approval checkpoints",
+        "explanation": "Every workflow pauses before taking action; nothing that touches money or customers happens without your explicit say-so."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install small-business@knowledge-work-plugins",
+        "purpose": "Install the Small Business plugin.",
+        "example": "/plugin install small-business@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "Primarily designed for Cowork, Anthropic's agentic desktop app, though it also works in Claude Code",
+      "Every step that touches money or customers pauses for your approval — you approve before it acts",
+      "It assists with workflows but does not give financial, tax, legal, or HR advice; review outputs yourself",
+      "Core tools QuickBooks, PayPal, and HubSpot power the financial and CRM workflows — connect them first",
+      "You don't need all connectors; connect one or two and the plugin tells you when adding another unlocks more"
+    ],
+    "category": "concept",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

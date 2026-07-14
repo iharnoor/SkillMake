@@ -1,0 +1,63 @@
+{
+  "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/data",
+  "skill": {
+    "name": "knowledge-work-data",
+    "description": "Use when you need to write SQL, explore datasets, generate insights, and build visualizations or interactive dashboards across any data warehouse or dialect.",
+    "whenToUse": [
+      "Answering a data question end-to-end — from a quick lookup to a full analysis",
+      "Profiling a dataset to understand its shape, quality, and patterns",
+      "Writing optimized SQL for a specific dialect like Snowflake or BigQuery",
+      "Building interactive HTML dashboards or publication-quality charts from results"
+    ],
+    "keyConcepts": [
+      {
+        "term": "sql-queries",
+        "explanation": "SQL best practices across dialects, common query patterns, and performance optimization, producing dialect-specific optimized SQL."
+      },
+      {
+        "term": "data-exploration",
+        "explanation": "Data profiling, quality assessment, and pattern discovery — reporting row counts, null rates, cardinality, and unexpected values."
+      },
+      {
+        "term": "data-visualization",
+        "explanation": "Chart selection, Python viz code patterns, and design principles for publication-quality charts."
+      },
+      {
+        "term": "interactive-dashboard-builder",
+        "explanation": "HTML/JS dashboard construction with Chart.js, filters, and styling for interactive, shareable dashboards."
+      },
+      {
+        "term": "statistical-analysis",
+        "explanation": "Descriptive stats, trend analysis, outlier detection, and hypothesis testing to back insights with rigor."
+      },
+      {
+        "term": "data-validation",
+        "explanation": "Pre-delivery QA — methodology, accuracy, and bias checks plus sanity checks and documentation standards before sharing."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "/plugin marketplace add anthropics/knowledge-work-plugins",
+        "purpose": "Add Anthropic's knowledge-work plugin marketplace (one-time).",
+        "example": "/plugin marketplace add anthropics/knowledge-work-plugins"
+      },
+      {
+        "signature": "/plugin install data@knowledge-work-plugins",
+        "purpose": "Install the Data Analyst plugin.",
+        "example": "/plugin install data@knowledge-work-plugins"
+      }
+    ],
+    "gotchas": [
+      "Primarily designed for Cowork, Anthropic's agentic desktop app, though it also runs in Claude Code",
+      "Best with a data-warehouse MCP connection; without one you paste SQL results or upload CSV/Excel for analysis",
+      "/write-query needs the SQL dialect specified to produce correctly optimized queries",
+      "Run /validate before sharing — the plugin's QA catches methodology, accuracy, and bias issues",
+      "Works with any SQL-compatible warehouse and dialect, so answers depend on you naming your stack correctly"
+    ],
+    "category": "concept",
+    "audience": "engineers",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/knowledge-work-plugins"
+  }
+}

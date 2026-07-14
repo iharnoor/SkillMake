@@ -1,0 +1,64 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/xlsx",
+  "skill": {
+    "name": "xlsx",
+    "description": "Use when a spreadsheet is the primary input or output — reading, editing, creating, or converting .xlsx, .xlsm, .csv, or .tsv files, including cleaning messy tabular data.",
+    "whenToUse": [
+      "Opening, reading, editing, or fixing an existing .xlsx, .xlsm, .csv, or .tsv file",
+      "Creating a new spreadsheet from scratch or from other data sources",
+      "Cleaning or restructuring messy tabular data — malformed rows, misplaced headers, junk — into a proper spreadsheet",
+      "Building a financial model where the deliverable is a spreadsheet with live formulas and correct formatting"
+    ],
+    "keyConcepts": [
+      {
+        "term": "pandas vs openpyxl",
+        "explanation": "pandas is best for data analysis, bulk operations, and simple export; openpyxl is best for formulas, formatting, and Excel-specific features. The skill picks the tool per task."
+      },
+      {
+        "term": "Formulas, not hardcoded values",
+        "explanation": "Always write Excel formulas (=SUM(B2:B9)) instead of computing in Python and hardcoding the result, so the spreadsheet stays dynamic and recalculates when source data changes."
+      },
+      {
+        "term": "scripts/recalc.py recalculation",
+        "explanation": "openpyxl writes formulas as strings without values; recalc.py drives LibreOffice to recalculate all sheets and returns JSON reporting error types and locations."
+      },
+      {
+        "term": "Zero formula errors requirement",
+        "explanation": "Every model must ship with no #REF!, #DIV/0!, #VALUE!, #N/A, or #NAME? errors — verified by scanning recalc.py output and fixing until clean."
+      },
+      {
+        "term": "Financial model formatting standards",
+        "explanation": "Industry color coding (blue inputs, black formulas, green intra-workbook links, red external links, yellow key assumptions) plus number-format rules for currency, percentages, multiples, and negatives."
+      },
+      {
+        "term": "Preserve existing templates",
+        "explanation": "When modifying an existing file, exactly match its established format and conventions; the template's patterns always override the skill's default guidelines."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add anthropics/skills --skill xlsx",
+        "purpose": "Install the spreadsheet creation, editing, and analysis skill.",
+        "example": "npx skills add anthropics/skills --skill xlsx"
+      },
+      {
+        "signature": "python scripts/recalc.py <excel_file> [timeout_seconds]",
+        "purpose": "Recalculate all formulas via LibreOffice and report any Excel errors as JSON.",
+        "example": "python scripts/recalc.py output.xlsx 30"
+      }
+    ],
+    "gotchas": [
+      "recalc.py needs LibreOffice installed; formulas written by openpyxl have no values until it runs",
+      "Opening with data_only=True and saving permanently replaces formulas with their cached values — data loss",
+      "openpyxl cell indices are 1-based (row=1, column=1 is A1); mixing with 0-based pandas rows causes off-by-one bugs",
+      "Never impose standardized formatting on a file with an established template; its conventions override the defaults",
+      "Don't hardcode calculated results in Python — use Excel formulas so the sheet recalculates on data changes",
+      "Don't trigger this skill when the real deliverable is a Word doc, HTML report, standalone script, or Google Sheets integration"
+    ],
+    "category": "tool",
+    "audience": "general",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}

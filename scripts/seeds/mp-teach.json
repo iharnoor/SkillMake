@@ -1,0 +1,47 @@
+{
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/productivity/teach/SKILL.md",
+  "skill": {
+    "name": "mp-teach",
+    "description": "Use when you want to be taught a skill or concept over multiple sessions — a stateful teaching workspace of lessons, references, and learning records grounded in your mission.",
+    "whenToUse": [
+      "You want to learn a topic or skill across multiple sessions, not one-off",
+      "You want interactive lessons grounded in high-trust sources, not the model's memory",
+      "You want your progress and insights captured so future sessions build on them",
+      "You want beautiful, reviewable reference materials and lessons"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Teaching workspace",
+        "explanation": "The current directory holds the learning state: MISSION.md (why you care about the topic, grounds everything), reference/*.html (compressed cheat-sheets), RESOURCES.md, learning-records/*.md (insights driving future sessions), lessons/*.html, assets/*, and NOTES.md."
+      },
+      {
+        "term": "Knowledge, skills, wisdom",
+        "explanation": "Deep learning needs knowledge (from high-trust resources), skills (interactive lessons you devise from that knowledge), and wisdom (from other learners/practitioners). Never trust parametric knowledge — populate RESOURCES.md first."
+      },
+      {
+        "term": "Lessons are the unit of teaching",
+        "explanation": "A lesson is one self-contained, beautiful (Tufte-like) HTML file, short enough to complete quickly within working-memory limits, giving a single tangible win tied to the mission and inside the learner's zone of proximal development."
+      },
+      {
+        "term": "Fluency vs storage strength",
+        "explanation": "Fluency (in-the-moment retrieval) gives an illusory sense of mastery; storage strength (long-term retention) is the real goal. Design for desirable difficulty: retrieval practice, spacing, and interleaving."
+      },
+      {
+        "term": "Learning records",
+        "explanation": "Like ADRs for learning — numbered records (0001-...) capturing non-obvious lessons and key insights, used to calculate the zone of proximal development for the next session."
+      }
+    ],
+    "apiReference": [],
+    "gotchas": [
+      "Never trust parametric knowledge — ground teaching in high-trust resources captured in RESOURCES.md first",
+      "Keep lessons short — learners' working memory is small; one tangible win per lesson",
+      "Optimise for storage strength, not fluency; fluency can feel like mastery it hasn't earned",
+      "Interleaving is for skills practice only, not pure-knowledge topics"
+    ],
+    "category": "concept",
+    "audience": "general",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/mattpocock/skills"
+  }
+}

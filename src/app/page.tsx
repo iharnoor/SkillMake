@@ -14,9 +14,10 @@ import { track } from "@/lib/metrics";
 export const dynamic = "force-dynamic";
 
 const LIVE_AUDIENCES: Audience[] = ["creators", "engineers", "devops", "marketing", "design"];
+// Note: no "design" category pill here — "design" is already a live audience
+// pill above, and two identical "design" links in the filter row read as a bug.
 const LIVE_CATEGORIES = [
   { slug: "security", label: "security" },
-  { slug: "design", label: "design" },
   { slug: "pm", label: "PMs" },
   { slug: "job-search", label: "job search" },
 ] as const;
@@ -221,6 +222,24 @@ export default async function Home({
         ))}
       </div>
 
+      {/* Security recommendation — installing a skill grants it file, network,
+          and env access. Point users at SkillSpector to scan before installing. */}
+      <a
+        href="https://github.com/NVIDIA/SkillSpector"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-6 card flex items-start sm:items-center gap-3 p-4 hover:border-[color:var(--accent)] transition"
+      >
+        <span className="tag tag-accent shrink-0 mt-0.5 sm:mt-0">security</span>
+        <p className="text-[13px] leading-relaxed text-[color:var(--fg-muted)]">
+          Before installing any skill, scan it with{" "}
+          <span className="mono text-[color:var(--fg)]">SkillSpector</span> — NVIDIA&apos;s
+          open-source security scanner for agent skills. A skill gets file, network, and
+          environment access on install, so run it through a security check first.{" "}
+          <span className="text-[color:var(--accent)]">Learn more →</span>
+        </p>
+      </a>
+
       {/* Filter row + count, separated only by a hairline. Click a live pill
           to filter the list by audience; "all" clears the filter. */}
       <div id="marketplace-list" className="mt-14 flex items-baseline justify-between gap-4 flex-wrap border-b border-[color:var(--border)] pb-3 scroll-mt-20">
@@ -299,6 +318,13 @@ export default async function Home({
             className="text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
           >
             packs
+          </Link>
+          <Link
+            href="/loops"
+            prefetch={false}
+            className="text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
+          >
+            loops
           </Link>
           {AUDIENCES.filter((a) => a !== "general" && !LIVE_AUDIENCES.includes(a)).map((a) => (
             <span
@@ -510,10 +536,17 @@ function collectionEntries(slug: CollectionSlug, entries: MarketplaceEntry[]): (
   }
 
   if (slug === "productivity") {
-    // Agent skills and tools that compress real knowledge-work. Excalidraw
-    // leads; each links to its source repo. The trailing trending repos carry
-    // curated star snapshots (see TRENDING); the rest have no fabricated stars.
+    // Agent skills and tools that compress real knowledge-work. Loop + prompting
+    // techniques lead (curator-authored entries with no stars, so they'd sink in
+    // the default star-sorted list); the trailing trending repos carry curated
+    // star snapshots (see TRENDING); the rest have no fabricated stars.
     return [
+      syntheticFromSkill(
+        byName,
+        "agent-blindspot-questions",
+        "Two questions that make any agent self-audit: 'what are you least confident about?' and 'what's the biggest thing I'm missing?' Surfaces what the model skipped before you trust its work.",
+        "concept"
+      ),
       skillEntry(
         "excalidraw-diagram",
         "excalidraw diagram",
@@ -581,6 +614,12 @@ function collectionEntries(slug: CollectionSlug, entries: MarketplaceEntry[]): (
     ),
     TRENDING.headroom,
     CODE_MODE,
+    skillEntry(
+      "pxpipe",
+      "code-to-image OCR",
+      "pxpipe renders source code to an image and has the model OCR it back — a vision model reads an image far cheaper than the equivalent code tokens, so read-heavy turns land a ~60% cost cut with the code intact.",
+      "https://github.com/teamchong/pxpipe"
+    ),
     syntheticEntry("fan out subagents", "Run independent investigations in parallel subagents so the parent context stays clean.", "technique"),
     syntheticEntry("/goal", "Write explicit success criteria, non-goals, and the riskiest unknown before a session drifts.", "technique"),
     syntheticEntry("ask-expert-mcp", "Let a cheap model escalate to a stronger one only when stuck — pay frontier prices for the hard 5%, not the easy 95%.", "technique"),

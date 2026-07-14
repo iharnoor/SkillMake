@@ -1,5 +1,5 @@
 {
-  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/productivity/write-a-skill/SKILL.md",
+  "sourceUrl": "https://github.com/mattpocock/skills/blob/main/skills/productivity/writing-great-skills/SKILL.md",
   "skill": {
     "name": "mp-write-a-skill",
     "description": "Use when authoring a new agent skill — covers structure, progressive disclosure, when to add scripts, when to split files, and the trigger-rich description format that controls whether your agent picks the skill at all.",

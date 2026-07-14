@@ -1,0 +1,54 @@
+{
+  "sourceUrl": "https://github.com/anthropics/skills/tree/main/skills/theme-factory",
+  "skill": {
+    "name": "theme-factory",
+    "description": "Use when styling an artifact — a slide deck, doc, report, or HTML landing page — with a cohesive, professional theme drawn from 10 presets or generated on the fly.",
+    "whenToUse": [
+      "Applying a consistent color palette and font pairing to a slide deck before sharing it",
+      "Styling an HTML landing page, doc, or report so it reads as professionally designed",
+      "Picking from the 10 preset themes when the user wants a curated look without deciding every hex code",
+      "Generating a bespoke theme on the fly when none of the presets fit the artifact's audience"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Theme = palette + font pairing + identity",
+        "explanation": "Each theme bundles a cohesive color palette with hex codes, complementary header/body font pairings, and a distinct visual identity suited to a particular context and audience."
+      },
+      {
+        "term": "10 preset themes",
+        "explanation": "Curated set spanning Ocean Depths, Sunset Boulevard, Forest Canopy, Modern Minimalist, Golden Hour, Arctic Frost, Desert Rose, Tech Innovation, Botanical Garden, and Midnight Galaxy."
+      },
+      {
+        "term": "theme-showcase.pdf",
+        "explanation": "A visual catalog of all 10 themes shown to the user for selection. It is display-only — the skill instructs never to modify it, just to present it for viewing."
+      },
+      {
+        "term": "Selection-then-apply workflow",
+        "explanation": "Show the showcase, ask for a choice, wait for explicit confirmation, then read the chosen theme file from themes/ and apply its colors and fonts consistently across the artifact."
+      },
+      {
+        "term": "Custom theme generation",
+        "explanation": "When no preset works, generate a new theme in the same style from a basic description, name it descriptively, show it for review, then apply it like a preset."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add anthropics/skills --skill theme-factory",
+        "purpose": "Install the theme factory skill for styling artifacts.",
+        "example": "npx skills add anthropics/skills --skill theme-factory"
+      }
+    ],
+    "gotchas": [
+      "Never modify theme-showcase.pdf; it is display-only and shown to the user purely for theme selection",
+      "Get explicit confirmation of the chosen theme before applying — don't assume from an offhand preference",
+      "Read the actual theme file from themes/ for exact hex codes and fonts; don't approximate the palette from memory",
+      "Apply the theme consistently across every slide or section — partial styling breaks the visual identity",
+      "When generating a custom theme, ensure proper contrast and readability, not just an attractive palette"
+    ],
+    "category": "design",
+    "audience": "design",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/anthropics/skills"
+  }
+}
