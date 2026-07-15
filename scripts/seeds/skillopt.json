@@ -1,0 +1,85 @@
+{
+  "sourceUrl": "https://github.com/microsoft/SkillOpt",
+  "skill": {
+    "name": "skillopt",
+    "description": "Use when you want to train, optimize, or nightly-evolve agent skills — SkillOpt treats SKILL.md as a trainable parameter, improving it with eval-gated bounded edits mined from a frozen agent's real transcripts.",
+    "whenToUse": [
+      "A SKILL.md underperforms and you want measurable, eval-gated improvement instead of hand-tweaking",
+      "Setting up nightly self-evolution for a deployed coding agent with skillopt-sleep (harvest → mine → replay → adopt)",
+      "Running a full training loop against a benchmark to distill a best_skill.md for a frozen model",
+      "Checking whether a proposed skill edit actually improves held-out task performance before adopting it"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Training loop",
+        "explanation": "rollout → reflect → aggregate → select → update → evaluate. Forward pass: the frozen target model executes training tasks with the current skill. Backward pass: a separate optimizer model reflects on scored trajectories in minibatches and proposes edits. Model weights never change — the skill markdown is the trainable parameter."
+      },
+      {
+        "term": "Textual learning rate",
+        "explanation": "Edits are bounded add/delete/replace operations under an explicit edit budget. The cap is the textual analog of a learning rate — remove it and the optimizer destabilizes. Typical deployments accept only 1–4 edits total."
+      },
+      {
+        "term": "Validation gate",
+        "explanation": "A candidate skill is accepted only if it strictly improves a held-out validation score. Rejected edits land in a rejected-edit buffer that feeds back as negative examples; epoch-wise slow/meta updates consolidate longer-horizon lessons."
+      },
+      {
+        "term": "SkillOpt-Sleep",
+        "explanation": "The nightly offline self-evolution engine (v0.2.0): harvest → mine → replay → consolidate → stage → adopt. Reads local agent transcripts (e.g. ~/.claude) read-only, mines recurring tasks, replays them offline, and stages bounded-edit proposals for human review by default."
+      },
+      {
+        "term": "best_skill.md",
+        "explanation": "The output artifact: a compact skill of typically 300–2,000 tokens (~920 typical) deployed unchanged at inference — zero inference-time overhead. Trained skills transfer across model scales and harnesses (direct chat, Codex CLI, Claude Code)."
+      },
+      {
+        "term": "Backends",
+        "explanation": "Sleep backends: mock (default — deterministic, no API spend), claude, codex, handoff. Model backends: openai_chat (Azure), openai_compatible (DeepSeek/vLLM/Ollama), claude_chat, qwen_chat, minimax_chat. Execution backends: codex_exec, claude_code_exec. Credentials via .env."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "pip install skillopt",
+        "purpose": "Install the Python package (Python ≥ 3.10). From source, install editable with benchmark extras.",
+        "example": "git clone https://github.com/microsoft/SkillOpt.git\ncd SkillOpt\npython -m pip install -e \".[searchqa]\""
+      },
+      {
+        "signature": "python scripts/train.py --config <config.yaml>",
+        "purpose": "Run a full training loop against a benchmark; writes outputs/<run>/best_skill.md.",
+        "example": "python scripts/materialize_searchqa.py\npython scripts/train.py --config configs/searchqa/default.yaml"
+      },
+      {
+        "signature": "python scripts/eval_only.py --config <config.yaml> --skill <best_skill.md> --split valid_unseen",
+        "purpose": "Evaluate a trained skill on a held-out split without further training.",
+        "example": "python scripts/eval_only.py --config configs/searchqa/default.yaml \\\n  --skill outputs/<run>/best_skill.md --split valid_unseen"
+      },
+      {
+        "signature": "skillopt-sleep dry-run | run | status | adopt | schedule | unschedule",
+        "purpose": "Nightly self-evolution lifecycle for a real project: preview, optimize a target SKILL.md, inspect staged proposals, adopt them, or install a nightly cron.",
+        "example": "skillopt-sleep dry-run --project \"$PWD\" --source auto --backend mock\nskillopt-sleep run --project \"$PWD\" --target-skill-path path/to/SKILL.md --source auto --backend claude\nskillopt-sleep status --project \"$PWD\"\nskillopt-sleep adopt --project \"$PWD\"\nskillopt-sleep schedule --hour 3 --minute 17"
+      },
+      {
+        "signature": "/plugin install skillopt-sleep@skillopt-sleep",
+        "purpose": "Install the official Claude Code plugin (ships in the repo, not the PyPI wheel); adds /skillopt-sleep slash commands.",
+        "example": "git clone https://github.com/microsoft/SkillOpt.git\n# inside Claude Code:\n/plugin marketplace add ./SkillOpt/plugins/claude-code\n/plugin install skillopt-sleep@skillopt-sleep\n/skillopt-sleep status"
+      },
+      {
+        "signature": "python -m skillopt_webui.app --port 7860",
+        "purpose": "Launch the WebUI dashboard for inspecting runs (install with the .[webui] extra)."
+      }
+    ],
+    "gotchas": [
+      "Real backends transmit transcript excerpts to model providers and secret redaction is not guaranteed — review harvest files before adopting",
+      "Proposals are staged for human review by default; use --auto-adopt only with independent rollback and validation in place",
+      "SkillOpt only shines where tasks recur and correctness is automatically checkable — no verifier, no gradient",
+      "The default sleep backend is mock (deterministic, zero API spend); pass --backend claude or codex for real optimization",
+      "Validation gates are not security boundaries — a passing candidate can still carry injected instructions, so read the diff",
+      "The Claude Code plugin lives in plugins/claude-code in the repo, not the PyPI wheel; it requires claude or codex on PATH",
+      "Expect refinement, not rewrites: the edit budget means a deployment typically lands 1–4 accepted edits",
+      "Experimental knobs (dream_rollouts, recall_k, dream_factor) are off by default — turn them on deliberately, not first"
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/microsoft/SkillOpt"
+  }
+}
