@@ -29,7 +29,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="min-h-full flex flex-col">
         <header className="sticky top-0 z-30 backdrop-blur-md bg-[color:var(--bg)]/70 border-b border-[color:var(--border)]">
           <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-            <div className="flex items-baseline gap-2.5">
+            <div className="flex items-center gap-2.5">
               <Link href="/" prefetch={false} className="flex items-center gap-2.5 group">
                 <span className="dot" />
                 <span className="mono text-[15px] tracking-tight font-semibold">
