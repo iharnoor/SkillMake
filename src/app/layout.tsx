@@ -29,15 +29,27 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="min-h-full flex flex-col">
         <header className="sticky top-0 z-30 backdrop-blur-md bg-[color:var(--bg)]/70 border-b border-[color:var(--border)]">
           <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-            <Link href="/" prefetch={false} className="flex items-center gap-2.5 group">
-              <span className="dot" />
-              <span className="mono text-[15px] tracking-tight font-semibold">
-                skill<span className="text-[color:var(--accent)]">make</span>
-              </span>
-              <span className="hidden sm:inline mono text-[11px] text-[color:var(--fg-dim)] ml-1">
-                v0.1
-              </span>
-            </Link>
+            <div className="flex items-baseline gap-2.5">
+              <Link href="/" prefetch={false} className="flex items-center gap-2.5 group">
+                <span className="dot" />
+                <span className="mono text-[15px] tracking-tight font-semibold">
+                  skill<span className="text-[color:var(--accent)]">make</span>
+                </span>
+                <span className="hidden sm:inline mono text-[11px] text-[color:var(--fg-dim)] ml-1">
+                  v0.1
+                </span>
+              </Link>
+              {/* Brand lockup back to HydraDB, which powers the site's semantic
+                  search — sibling anchor, not nested inside the home Link. */}
+              <a
+                href="https://hydradb.com?utm_source=skillmake&utm_medium=header"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mono text-[11px] text-[color:var(--fg-dim)] hover:text-[color:var(--accent)] transition-colors"
+              >
+                by HydraDB
+              </a>
+            </div>
             <nav className="flex items-center gap-1">
               <Link
                 href="/"
