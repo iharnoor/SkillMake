@@ -1,0 +1,64 @@
+{
+  "sourceUrl": "https://github.com/upstash/context7",
+  "skill": {
+    "name": "context7",
+    "description": "Use when you need up-to-date, version-specific library docs and real code examples pulled into the prompt — add 'use context7' so the agent stops guessing outdated APIs.",
+    "whenToUse": [
+      "Writing code against a fast-moving library where your model's training data is stale",
+      "You keep getting hallucinated methods, wrong import paths, or APIs that no longer exist",
+      "You want docs and examples for a specific version of a framework, not a generic average",
+      "Wiring an MCP server into Claude Code, Cursor, or another agent to fetch live documentation on demand"
+    ],
+    "keyConcepts": [
+      {
+        "term": "'use context7' prompt trigger",
+        "explanation": "Appending the phrase 'use context7' to a prompt tells the MCP-enabled agent to fetch current, version-specific documentation and code snippets for the libraries mentioned, injecting them into context before answering."
+      },
+      {
+        "term": "resolve-library-id then get-library-docs",
+        "explanation": "Context7 exposes two MCP tools: resolve-library-id maps a package name to a Context7-compatible library ID, and get-library-docs pulls that library's docs (optionally scoped to a topic and token budget)."
+      },
+      {
+        "term": "Version-specific documentation",
+        "explanation": "Rather than serving one blended snapshot, Context7 indexes docs per library version so the examples it returns match the exact release you are building against."
+      },
+      {
+        "term": "Remote vs local MCP server",
+        "explanation": "You can point an agent at the hosted endpoint https://mcp.context7.com/mcp or run the server locally via npx @upstash/context7-mcp — both expose the same tools; the remote endpoint needs no install."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "claude mcp add --transport http context7 https://mcp.context7.com/mcp",
+        "purpose": "Register the hosted Context7 MCP server in Claude Code (no local install needed).",
+        "example": "claude mcp add --transport http context7 https://mcp.context7.com/mcp"
+      },
+      {
+        "signature": "npx -y @upstash/context7-mcp",
+        "purpose": "Run the Context7 MCP server locally over stdio.",
+        "example": "npx -y @upstash/context7-mcp"
+      },
+      {
+        "signature": "resolve-library-id(libraryName)",
+        "purpose": "Resolve a human package name (e.g. 'next.js') to a Context7-compatible library ID.",
+        "example": "resolve-library-id({ libraryName: \"next.js\" })"
+      },
+      {
+        "signature": "get-library-docs(context7CompatibleLibraryID, topic?, tokens?)",
+        "purpose": "Fetch up-to-date docs for a resolved library, optionally scoped to a topic and token budget.",
+        "example": "get-library-docs({ context7CompatibleLibraryID: \"/vercel/next.js\", topic: \"app router\", tokens: 5000 })"
+      }
+    ],
+    "gotchas": [
+      "You must add 'use context7' (or otherwise invoke the tools) — the server does not fire automatically on every prompt",
+      "The library must be indexed by Context7; obscure or private packages may not resolve to an ID",
+      "Higher token budgets pull more docs but eat into your context window — scope with a topic when you can",
+      "It surfaces documentation, not your private codebase — pair it with repo-aware tooling for internal APIs"
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "trust": "official",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/upstash/context7"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "sourceUrl": "https://github.com/thedotmack/claude-mem",
+  "skill": {
+    "name": "claude-mem",
+    "description": "Use when you want Claude Code to remember past sessions — it compresses each session's work into observations and auto-injects the relevant ones so you stop re-explaining your codebase.",
+    "whenToUse": [
+      "You keep re-explaining the same codebase context at the start of every session",
+      "You want to ask 'did we already solve this?' or 'how did we do X last time?' across sessions",
+      "You want decisions and discoveries from prior work carried forward automatically",
+      "You want a searchable, local knowledge graph of everything an agent has done in a project"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Observations from tool calls",
+        "explanation": "Every Read, Edit, and Bash the agent runs is compressed into an observation. Observations are summarized at session end, and relevant ones are auto-injected into future prompts."
+      },
+      {
+        "term": "Injection starts on session two",
+        "explanation": "The first session in a fresh project seeds memory; from the second session onward the plugin auto-injects context for relevant past work so the agent starts already oriented."
+      },
+      {
+        "term": "Local-first storage",
+        "explanation": "Everything lives in ~/.claude-mem on your machine — a SQLite database, vector index, logs, and settings. Nothing leaves except calls to whichever provider you configured for compression."
+      },
+      {
+        "term": "Memory search workflow",
+        "explanation": "The mem-search skill follows search -> filter -> fetch to pull work from previous sessions, answering questions about what was done before rather than the current conversation."
+      },
+      {
+        "term": "learn-codebase front-load",
+        "explanation": "Running /learn-codebase does an optional one-time (~5 minute) pass that loads the entire repo into memory up front instead of accumulating context session by session."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "claude plugin marketplace add thedotmack/claude-mem",
+        "purpose": "Add the claude-mem marketplace so the plugin can be installed.",
+        "example": "claude plugin marketplace add thedotmack/claude-mem"
+      },
+      {
+        "signature": "claude plugin install claude-mem@thedotmack",
+        "purpose": "Install the claude-mem plugin (memory hooks + MCP search server).",
+        "example": "claude plugin install claude-mem@thedotmack"
+      },
+      {
+        "signature": "/learn-codebase",
+        "purpose": "Optional one-pass front-load of the whole repository into memory (~5 minutes).",
+        "example": "/learn-codebase"
+      },
+      {
+        "signature": "npx claude-mem uninstall",
+        "purpose": "Cleanly remove claude-mem and delete its ~/.claude-mem data directory.",
+        "example": "npx claude-mem uninstall"
+      }
+    ],
+    "gotchas": [
+      "Memory injection only kicks in from your second session in a project — the first session just seeds it",
+      "Compression sends observations to whichever AI provider you configure (Claude / OpenRouter / Gemini), so it is not fully offline",
+      "State is per-machine under ~/.claude-mem — it does not sync across machines unless you enable cloud-sync",
+      "mem-search answers about PREVIOUS sessions, not the current conversation — use it for 'how did we do X last time?'"
+    ],
+    "category": "tool",
+    "audience": "engineers",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/thedotmack/claude-mem"
+  }
+}

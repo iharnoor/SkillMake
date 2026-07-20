@@ -1,0 +1,64 @@
+{
+  "sourceUrl": "https://github.com/Jakubantalik/transitions.dev",
+  "skill": {
+    "name": "transitions-dev",
+    "description": "Use when you want production-ready, framework-free CSS transitions — dropdowns, modals, toasts, tabs, accordions, success checks — pasted in as portable t-* snippets with reduced-motion guards.",
+    "whenToUse": [
+      "Adding a specific interaction like an animated dropdown, modal, toast, or sliding tabs",
+      "Making something 'animate smoothly' without pulling in a JS animation library",
+      "Standardizing motion by replacing hardcoded durations with shared motion tokens",
+      "Auditing or polishing existing transitions so timing, easing, and stagger feel consistent"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Portable t-* snippets",
+        "explanation": "Each of the 27 transitions is namespaced under t-* selectors with semantic CSS custom properties. You paste the snippet, wire the documented HTML hooks, and it works with no framework dependency or demo-specific markup."
+      },
+      {
+        "term": "Motion tokens",
+        "explanation": "Durations, distances, scale, and easing live in :root custom properties so motion can be tokenized project-wide and tuned in one place rather than as ad-hoc per-element values."
+      },
+      {
+        "term": "Match element then verb",
+        "explanation": "The skill's decision rules say to identify the UI element first (badge, dropdown, panel, number, icon) and then the action, so the right transition is picked deterministically."
+      },
+      {
+        "term": "prefers-reduced-motion guard",
+        "explanation": "Every snippet ships a @media (prefers-reduced-motion: reduce) block so motion degrades gracefully for users who ask for less animation."
+      },
+      {
+        "term": "transitions-polish add-on",
+        "explanation": "A companion skill tunes what already animates — open/close asymmetry, hover-in vs hover-out, stagger offsets, intent delays — against the transitions.dev motion-token scale."
+      }
+    ],
+    "apiReference": [
+      {
+        "signature": "npx skills add Jakubantalik/transitions.dev",
+        "purpose": "Install the transitions-dev agent skill into your project.",
+        "example": "npx skills add Jakubantalik/transitions.dev"
+      },
+      {
+        "signature": "npx transitions-pro add <name>",
+        "purpose": "Pull a single transition's CSS into your project from the terminal (free tier needs no account).",
+        "example": "npx transitions-pro add card-resize"
+      },
+      {
+        "signature": "npx transitions-pro list",
+        "purpose": "List every transition available to add.",
+        "example": "npx transitions-pro list"
+      }
+    ],
+    "gotchas": [
+      "Each snippet expects specific HTML hooks — read the per-transition reference before wiring it up",
+      "Snippets set semantic custom properties on :root; if you already define matching names, scope them to avoid clashes",
+      "Match the transition to the visible element first, then the verb — picking by animation style alone leads to the wrong one",
+      "Some Pro transitions require a passwordless browser sign-in via the CLI; the free set does not",
+      "transitions-polish refines existing motion — it does not add new transitions on its own"
+    ],
+    "category": "design",
+    "audience": "design",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/Jakubantalik/transitions.dev"
+  }
+}
