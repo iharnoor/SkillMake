@@ -1,0 +1,54 @@
+{
+  "sourceUrl": "https://github.com/petergyang/no-ai-slop",
+  "skill": {
+    "name": "no-ai-slop",
+    "description": "Use when a draft needs to sound human — edits out 20+ named AI-slop patterns (colon reveals, binary contrasts, banned words) while preserving the writer's voice, or detects and names the patterns without rewriting.",
+    "whenToUse": [
+      "A draft sounds AI-generated and should read like a human wrote it, without losing the writer's voice",
+      "Editing a blog post, launch note, or thread to be clearer, more direct, and more opinionated",
+      "Auditing a piece for AI-slop patterns in detect mode — name and quote each pattern, no rewrite",
+      "Deciding whether tics like 'delve', colon reveals, or 'not X, it's Y' contrasts should be cut"
+    ],
+    "keyConcepts": [
+      {
+        "term": "Two jobs: Edit vs Detect",
+        "explanation": "Edit is the default: make the minimum effective edit and return the draft plus a 'What changed' section. Detect answers 'is this AI slop?': name each pattern from the skill that appears, quote the line, give the fix in a few words — no rewriting, no scoring, no guessing whether AI wrote it."
+      },
+      {
+        "term": "Minimum effective edit",
+        "explanation": "Fix AI patterns, errors, repetition, and unclear passages; leave strong human sentences alone. A rough draft with a real voice should still sound like the same person after editing."
+      },
+      {
+        "term": "Voice signals",
+        "explanation": "Before editing, identify the core point and 3–5 traits to preserve — vocabulary, cadence, bluntness, humor, uncertainty, digressions. The note stays internal; distinctive lines are never rewritten merely for consistency."
+      },
+      {
+        "term": "Banned words",
+        "explanation": "Cut outright: delve, foster, leverage, utilize, facilitate, empower, streamline, robust, cutting-edge, paradigm shift, game changer, tapestry, realm, transformative, elevate, embark, supercharge, harness, ever-evolving. Often-empty adverbs and phrases ('just', 'it's worth noting') are cut only when they add nothing."
+      },
+      {
+        "term": "Pattern catalog",
+        "explanation": "20+ named patterns with before/after fixes: binary contrasts, throat-clearing openers, faux-insight setups, colon reveals, importance puffery, weasel attribution, synonym cycling, negative listing, dramatic fragmentation, rhetorical setups, fake-profound kickers, summary-recap endings, formatting slop, em-dash clusters."
+      },
+      {
+        "term": "eval.md self-check",
+        "explanation": "After editing, the draft is checked against the repo's eval.md; any failing check sends the editor back to fix and re-check before output. The workflow ends with the full edited draft plus a short 'What changed' section."
+      }
+    ],
+    "apiReference": [],
+    "gotchas": [
+      "Detect mode never rewrites, scores, or guesses whether AI wrote a piece — detectors guess; named, quoted patterns are evidence the user can check",
+      "Keep 'I think', 'maybe', 'honestly' when they carry real uncertainty or the writer's spoken rhythm — only cut them when empty",
+      "Don't rewrite a fake-profound kicker into a better metaphor — delete it and end on the clearest concrete sentence already in the draft",
+      "Em dashes: none in short copy; 1–2 in longer drafts only when they clearly beat commas, periods, or parentheses",
+      "Never invent claims, examples, stats, or sources — name the source or ask the user instead of smoothing over the gap",
+      "Front-load conclusions only when it improves clarity; don't force every paragraph into the same point-detail-background shape",
+      "If audience or format is unclear, ask exactly one question before editing: who is this for and where will it be published?"
+    ],
+    "category": "concept",
+    "audience": "creators",
+    "trust": "verified",
+    "videoUrls": [],
+    "repoUrl": "https://github.com/petergyang/no-ai-slop"
+  }
+}
