@@ -205,7 +205,7 @@ function CollectionHeader({
   description,
   countLabel,
 }: {
-  active: "budget" | "mcps";
+  active: "budget" | "mcps" | "prompting";
   eyebrow: string;
   title: string;
   description: string;
@@ -259,6 +259,16 @@ function CollectionHeader({
             }
           >
             mcps
+          </Link>
+          <Link
+            href="/prompting"
+            className={
+              active === "prompting"
+                ? "text-[color:var(--accent)] underline underline-offset-4 decoration-1"
+                : "text-[color:var(--accent)]/80 hover:text-[color:var(--accent)] transition"
+            }
+          >
+            prompting
           </Link>
         </div>
         <span className="mono text-[11px] text-[color:var(--fg-dim)] tabular-nums">

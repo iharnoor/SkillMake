@@ -11,6 +11,7 @@ export type MetricEvent =
   | "packs_view"
   | "loops_view"
   | "powerhouse_view"
+  | "prompting_view"
   | "search_submitted"
   | "github_click"
   | "prompt_copy"
